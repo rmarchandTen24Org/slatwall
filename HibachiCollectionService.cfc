@@ -1,5 +1,5 @@
 component extends="HibachiService" {
-	
-	'test';
-	
+
+	'new test';
+
 }
