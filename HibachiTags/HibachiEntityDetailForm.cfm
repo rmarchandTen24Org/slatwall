@@ -1,4 +1,3 @@
-<cfimport prefix="swa" taglib="../../../tags" />
 <cfimport prefix="hb" taglib="../../../org/Hibachi/HibachiTags" />
 <cfif thisTag.executionMode is "start">
 	<cfparam name="attributes.hibachiScope" type="any" default="#request.context.fw.getHibachiScope()#" />
@@ -17,25 +16,25 @@
 	<cfparam name="attributes.sRedirectQS" type="string" default="#request.context.entityActionDetails.sRedirectQS#">
 	<cfparam name="attributes.fRedirectQS" type="string" default="#request.context.entityActionDetails.fRedirectQS#">
 	<cfparam name="attributes.forceSSLFlag" type="boolean" default="false" />
-	
+
 	<cfset formAction ="" />
-	
+
 	<cfif attributes.forceSSLFlag AND (findNoCase("off", CGI.HTTPS) OR NOT CGI.SERVER_PORT_SECURE)>
 		<cfset formAction &= "https://#cgi.SERVER_NAME##attributes.hibachiScope.getApplicationValue('baseURL')#/" >
 	</cfif>
-	
+
 	<cfset formAction &= "?s=1" />
-	
+
 	<cfif len(attributes.saveActionQueryString)>
 		<cfset formAction &= "&#attributes.saveActionQueryString#" />
 	</cfif>
-	
+
 	<cfif len(attributes.saveActionHash)>
 		<cfset formAction &= "###attributes.saveActionHash#" />
 	</cfif>
-	
+
 	<cfoutput>
-		<cfif attributes.edit>			
+		<cfif attributes.edit>
 			<form method="post" action="#formAction#" class="" enctype="#attributes.enctype#" id="#replaceNoCase(replaceNoCase(lcase(attributes.saveaction),':','','all'),'.','','all')#">
 			<input type="hidden" name="#request.context.fw.getAction()#" value="#attributes.saveaction#" />
 			<input type="hidden" name="#attributes.object.getPrimaryIDPropertyName()#" value="#attributes.object.getPrimaryIDValue()#" />

@@ -1,10 +1,9 @@
-<cfimport prefix="swa" taglib="../../../tags" />
 <cfimport prefix="hb" taglib="../../../org/Hibachi/HibachiTags" />
 <cfif thisTag.executionMode is "start">
 
 	<cfparam name="attributes.edit" type="boolean" default="false" />					<!--- hint: When in edit mode this will create a Form Field, otherwise it will just display the value" --->
 	<cfparam name="attributes.requiredFlag" type="boolean" default="false" />			<!--- Determines whether property is required or not in edit mode --->
-	
+
 	<cfparam name="attributes.title" type="string" default="" />						<!--- hint: This can be used to override the displayName of a property" --->
 	<cfparam name="attributes.hint" type="string" default="" />							<!--- hint: This is the hint value associated with whatever field we are displaying.  If specified, you will get a tooltip popup --->
 
@@ -49,7 +48,7 @@
 				<cfoutput>
 					<div class="form-group">
 						<label class="control-label col-sm-4 title<cfif len(attributes.titleClass)> #attributes.titleClass#</cfif>" style="text-align:left;">#attributes.title#<cfif len(attributes.hint)> <a href="##" tabindex="-1" data-toggle="tooltip" class="hint" data-title="#attributes.hint#"><i class="icon-question-sign"></i></a></cfif><cfif attributes.requiredFlag><i class="fa fa-asterisk"></i></cfif></label>
-						
+
 						<div class="col-sm-8">
 							<cfif attributes.fieldType eq "listingMultiselect">
 								<p class="form-control-static value<cfif len(attributes.valueClass)> #attributes.valueClass#</cfif>"><hb:HibachiListingDisplay smartList="#attributes.valueOptionsSmartList#" multiselectFieldName="#attributes.fieldName#" multiselectValues="#attributes.value#" multiselectPropertyIdentifier="#attributes.multiselectPropertyIdentifier#" edit="false"></hb:HibachiListingDisplay></p>

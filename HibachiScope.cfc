@@ -2,25 +2,25 @@ component output="false" accessors="true" extends="HibachiTransient" {
 
 	property name="account" type="any";
 	property name="session" type="any";
-	
+
 	property name="loggedInFlag" type="boolean";
 	property name="loggedInAsAdminFlag" type="boolean";
 	property name="publicPopulateFlag" type="boolean";
 	property name="persistSessionFlag" type="boolean";
 	property name="sessionFoundNPSIDCookieFlag" type="boolean";
 	property name="sessionFoundPSIDCookieFlag" type="boolean";
-	
+
 	property name="ormHasErrors" type="boolean" default="false";
 	property name="rbLocale";
 	property name="url" type="string";
-	
+
 	property name="calledActions" type="array";
 	property name="failureActions" type="array";
 	property name="successfulActions" type="array";
-	
+
 	property name="auditsToCommitStruct" type="struct";
 	property name="modifiedEntities" type="array";
-	
+
 	public any function init() {
 		setORMHasErrors( false );
 		setRBLocale( "en_us" );
@@ -28,18 +28,18 @@ component output="false" accessors="true" extends="HibachiTransient" {
 		setPersistSessionFlag( true );
 		setSessionFoundNPSIDCookieFlag( false );
 		setSessionFoundPSIDCookieFlag( false );
-		
+
 		setCalledActions( [] );
 		setSuccessfulActions( [] );
 		setFailureActions( [] );
-		
+
 		setAuditsToCommitStruct( {} );
 		setModifiedEntities( [] );
-		
-		
+
+
 		return super.init();
 	}
-	
+
 	public string function renderJSObject() {
 		var config = {};
 		config[ 'baseURL' ] = getApplicationValue('baseURL');
@@ -49,39 +49,39 @@ component output="false" accessors="true" extends="HibachiTransient" {
 		config[ 'rbLocale' ] = '#getRBLocale()#';
 		config[ 'debugFlag' ] = getApplicationValue('debugFlag');
 		config[ 'instantiationKey' ] = '#getApplicationValue('instantiationKey')#';
-		
+
 		var returnHTML = '';
 		returnHTML &= '<script type="text/javascript" src="#getApplicationValue('baseURL')#/org/Hibachi/HibachiAssets/js/hibachi-scope.js"></script>';
 		returnHTML &= '<script type="text/javascript">(function( $ ){$.#lcase(getApplicationValue('applicationKey'))# = new Hibachi(#serializeJSON(config)#);})( jQuery );</script>';
 		return returnHTML;
 	}
-	
+
 	public void function addModifiedEntity( required any entity ) {
 		arrayAppend(getModifiedEntities(), arguments.entity);
 	}
-	
+
 	public void function clearModifiedEntities() {
 		setModifiedEntities([]);
 	}
-	
+
 	public void function clearAuditsToCommitStruct() {
 		setAuditsToCommitStruct({});
 	}
-	
+
 	public boolean function getLoggedInFlag() {
 		if(!getSession().getAccount().getNewFlag()) {
 			return true;
 		}
 		return false;
 	}
-	
+
 	public boolean function getLoggedInAsAdminFlag() {
 		if(getAccount().getAdminAccountFlag()) {
 			return true;
 		}
 		return false;
 	}
-	
+
 	public string function getURL() {
 		if(!structKeyExists(variables, "url")) {
 			variables.url = getPageContext().getRequest().GetRequestUrl().toString();
@@ -91,23 +91,23 @@ component output="false" accessors="true" extends="HibachiTransient" {
 		}
 		return variables.url;
 	}
-	
+
 	// ==================== GENERAL API METHODS ===============================
-	
+
 	// Action Methods ===
 	public string function doAction( required string action ) {
 		arrayAppend(getCalledActions(), arguments.action);
 		return getApplicationValue('application').doAction( arguments.action );
 	}
-	
+
 	public boolean function hasSuccessfulAction( required string action ) {
 		return arrayFindNoCase(getSuccessfulActions(), arguments.action) > 0;
 	}
-	
+
 	public boolean function hasFailureAction( required string action ) {
 		return arrayFindNoCase(getFailureActions(), arguments.action) > 0;
 	}
-	
+
 	public void function addActionResult( required string action, required failure=false ) {
 		if(arguments.failure) {
 			arrayAppend(getFailureActions(), arguments.action);
@@ -115,82 +115,82 @@ component output="false" accessors="true" extends="HibachiTransient" {
 			arrayAppend(getSuccessfulActions(), arguments.action);
 		}
 	}
-	
+
 	// Simple API Methods ===
 	public any function newEntity(required string entityName) {
 		var entityService = getService( "hibachiService" ).getServiceByEntityName( arguments.entityName );
-		
+
 		return entityService.invokeMethod("new#arguments.entityName#");
 	}
-	
+
 	public any function getEntity(required string entityName, any entityID="", boolean isReturnNewOnNotFound=false) {
 		var entityService = getService( "hibachiService" ).getServiceByEntityName( arguments.entityName );
-		
+
 		return entityService.invokeMethod("get#arguments.entityName#", {1=arguments.entityID, 2=arguments.isReturnNewOnNotFound});
 	}
-	
+
 	public any function saveEntity(required any entity, struct data={}) {
 		var entityService = getService( "hibachiService" ).getServiceByEntityName( arguments.entity.getClassName() );
-		
+
 		return entityService.invokeMethod("save#arguments.entity.getClassName()#", {1=arguments.entity, 2=arguments.data});
 	}
-	
+
 	public any function deleteEntity(required any entity) {
 		var entityService = getService( "hibachiService" ).getServiceByEntityName( arguments.entity.getClassName() );
-		
+
 		return entityService.invokeMethod("delete#arguments.entity.getClassName()#", {1=arguments.entity});
 	}
-	
+
 	public any function getSmartList(required string entityName, struct data={}) {
 		var entityService = getService( "hibachiService" ).getServiceByEntityName( arguments.entityName );
-		
+
 		return entityService.invokeMethod("get#arguments.entityName#SmartList", {1=arguments.data});
 	}
-	
+
 	public void function flushORMSession(){
 		if(!getORMHasErrors()) {
 			getDAO( "hibachiDAO" ).flushORMSession();
 		}
 	}
-	
+
 	// ==================== SESSION / ACCOUNT SETUP ===========================
-	
+
 	public any function getSession() {
 		if(!structKeyExists(variables, "session")) {
 			getService("hibachiSessionService").setPropperSession();
 		}
 		return variables.session;
 	}
-	
+
 	public any function getAccount() {
 		return getSession().getAccount();
 	}
-	
+
 	// ==================== REQUEST CACHING METHODS ===========================
-	
+
 	public boolean function hasValue(required string key) {
 		return structKeyExists(variables, arguments.key);
 	}
 
 	public any function getValue(required string key) {
 		if(hasValue( arguments.key )) {
-			return variables[ arguments.key ]; 
+			return variables[ arguments.key ];
 		}
-		
+
 		throw("You have requested '#arguments.key#' as a value in the #getApplicationValue('applicationKey')# scope, however that value has not been set in the request.  In the futuer you should check for it's existance with hasValue().");
 	}
-	
+
 	public void function setValue(required string key, required any value) {
 		variables[ arguments.key ] = arguments.value;
 	}
-	
-	
+
+
 	// ==================== RENDERING HELPERS ================================
-	
+
 	public void function showMessageKey(required any messageKey) {
 		var messageType = listLast(messageKey, "_");
 		var message = rbKey(arguments.messageKey);
-		
+
 		if(right(message, 8) == "_missing") {
 			if(left(listLast(arguments.messageKey, "."), 4) == "save") {
 				var entityName = listFirst(right(listLast(arguments.messageKey, "."), len(listLast(arguments.messageKey, "."))-4), "_");
@@ -208,7 +208,7 @@ component output="false" accessors="true" extends="HibachiTransient" {
 		}
 		showMessage(message=message, messageType=messageType);
 	}
-	
+
 	public void function showMessage(string message="", string messageType="info") {
 		param name="request.context['messages']" default="#arrayNew(1)#";
 		arguments.message=getService('HibachiUtilityService').replaceStringTemplate(arguments.message,request.context);
@@ -217,9 +217,9 @@ component output="false" accessors="true" extends="HibachiTransient" {
 		messageStruct['messageType'] = arguments.messageType;
 		arrayAppend(request.context['messages'], messageStruct);
 	}
-	
+
 	// ========================== HELPER DELIGATION METHODS ===============================
-	
+
 	// @hint helper function to return the RB Key from RB Factory in any component
 	public string function rbKey(required string key, struct replaceStringData) {
 		var keyValue = getService("hibachiRBService").getRBKey(arguments.key, getRBLocale());
@@ -228,11 +228,11 @@ component output="false" accessors="true" extends="HibachiTransient" {
 		}
 		return keyValue;
 	}
-	
+
 	public string function getRBKey(required string key, struct replaceStringData) {
 		return rbKey(argumentcollection=arguments);
 	}
-	
+
 	public boolean function authenticateAction( required string action ) {
 		return getService("hibachiAuthenticationService").authenticateActionByAccount( action=arguments.action, account=getAccount() );
 	}
@@ -240,7 +240,7 @@ component output="false" accessors="true" extends="HibachiTransient" {
 	public boolean function authenticateEntity( required string crudType, required string entityName ) {
 		return getService("hibachiAuthenticationService").authenticateEntityCrudByAccount( crudType=arguments.crudType, entityName=arguments.entityName, account=getAccount() );
 	}
-	
+
 	public boolean function authenticateEntityProperty( required string crudType, required string entityName, required string propertyName ) {
 		return getService("hibachiAuthenticationService").authenticateEntityPropertyCrudByAccount( crudType=arguments.crudType, entityName=arguments.entityName, propertyName=arguments.propertyName, account=getAccount() );
 	}
