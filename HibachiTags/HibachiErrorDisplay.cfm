@@ -1,16 +1,15 @@
-<cfimport prefix="swa" taglib="../../../tags" />
 <cfimport prefix="hb" taglib="../../../org/Hibachi/HibachiTags" />
 <cfif thisTag.executionMode is "start">
 	<!--- You can pass in a object, or just an array of errors --->
 	<cfparam name="attributes.object" type="any" default="" />
 	<cfparam name="attributes.errors" type="array" default="#arrayNew(1)#" />
-	
+
 	<cfparam name="attributes.errorName" type="string" default="" />
 	<cfparam name="attributes.displayType" type="string" default="label" />
 	<cfparam name="attributes.for" type="string" default="" />
-	
+
 	<cfsilent>
-		
+
 		<cfif not arrayLen(attributes.errors) && isObject(attributes.object)>
 			<cfif attributes.errorName eq "">
 				<cfloop collection="#attributes.object.getErrors()#" item="errorName">
@@ -24,7 +23,7 @@
 				</cfif>
 			</cfif>
 		</cfif>
-		
+
 	</cfsilent>
 	<cfif arrayLen(attributes.errors)>
 		<cfswitch expression="#attributes.displaytype#">
@@ -64,6 +63,6 @@
 					<cfoutput><li class="error">#error#</li></cfoutput>
 				</cfloop>
 			</cfcase>
-		</cfswitch>	
+		</cfswitch>
 	</cfif>
 </cfif>

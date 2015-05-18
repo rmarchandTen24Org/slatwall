@@ -1,10 +1,9 @@
-<cfimport prefix="swa" taglib="../../../tags" />
 <cfimport prefix="hb" taglib="../../../org/Hibachi/HibachiTags" />
 <cfif thisTag.executionMode is "start">
 	<cfparam name="attributes.hibachiScope" type="any" default="#request.context.fw.getHibachiScope()#" />
-	
+
 	<cfparam name="attributes.report" type="any" />
-	
+
 	<cfoutput>
 		<form action="?s=1" method="post" style="margin:0px;">
 			<input type="hidden" name="reportName" value="#attributes.report.getClassName()#" />
@@ -46,12 +45,12 @@
 									<ul class="dropdown-menu">
 										<cfloop array="#attributes.report.getMetricDefinitions()#" index="metricDefinition">
 											<cfif not listFindNoCase(attributes.report.getMetrics(), metricDefinition.alias)><li><a href="" class="hibachi-report-add-metric" data-metric="#metricDefinition.alias#">#attributes.report.getMetricTitle(metricDefinition.alias)#</a></li></cfif>
-										</cfloop>		 
+										</cfloop>
 									</ul>
 								</span>
 							</cfif>
 						</dd>
-						
+
 						<!--- Dimensions --->
 						<input type="hidden" name="dimensions" value="#trim(attributes.report.getDimensions())#" />
 						<dt style="width:100px;"><strong>Dimensions</strong></dt>
@@ -67,28 +66,28 @@
 									<ul class="dropdown-menu">
 										<cfloop array="#attributes.report.getDimensionDefinitions()#" index="dimensionDefinition">
 											<cfif not listFindNoCase(attributes.report.getDimensions(), dimensionDefinition.alias)><li><a href="" class="hibachi-report-add-dimension" data-dimension="#dimensionDefinition.alias#">#attributes.report.getDimensionTitle(dimensionDefinition.alias)#</a></li></cfif>
-										</cfloop>		 
+										</cfloop>
 									</ul>
 								</span>
 							</cfif>
 						</dd>
-						
+
 						<!--- Action Buttons --->
 						<dt style="width:100px;"><strong>#attributes.hibachiScope.rbKey('define.actions')#</strong></dt>
 						<dd style="margin-left:100px;">
 							<cfif not isNull(attributes.report.getReportEntity())>
 								<hb:HibachiActionCaller action="admin:entity.editreport" queryString="reportID=#attributes.report.getReportEntity().getReportID()#&reportName=#attributes.report.getClassName()#&reportDateTime=#attributes.report.getReportDateTime()#&reportDateTimeGroupBy=#attributes.report.getReportDateTimeGroupBy()#&reportCompareFlag=#attributes.report.getReportCompareFlag()#&dimensions=#attributes.report.getDimensions()#&metrics=#attributes.report.getMetrics()#&redirectAction=admin:report.default" icon="pencil" class="btn btn-xs s-btn-dgrey" modal=true />
 								<hb:HibachiActionCaller action="admin:entity.deletereport" queryString="reportID=#attributes.report.getReportEntity().getReportID()#&redirectAction=admin:report.default" icon="remove" class="btn btn-xs s-btn-dgrey" />
-							</cfif>	
+							</cfif>
 							<hb:HibachiActionCaller action="admin:entity.createreport" queryString="reportName=#attributes.report.getClassName()#&reportDateTime=#attributes.report.getReportDateTime()#&reportDateTimeGroupBy=#attributes.report.getReportDateTimeGroupBy()#&reportCompareFlag=#attributes.report.getReportCompareFlag()#&dimensions=#attributes.report.getDimensions()#&metrics=#attributes.report.getMetrics()#&redirectAction=admin:report.default" icon="plus" class="btn btn-xs s-btn-dgrey" modal=true />
 							<hb:HibachiActionCaller action="admin:report.exportxls" name="slatAction" icon="share" type="button" class="btn-xs s-btn-dgrey" submit="true" />
-							<hb:HibachiActionCaller action="admin:report.exportcsv" name="slatAction" icon="share" type="button" class="btn-xs s-btn-dgrey" submit="true" />	
+							<hb:HibachiActionCaller action="admin:report.exportcsv" name="slatAction" icon="share" type="button" class="btn-xs s-btn-dgrey" submit="true" />
 						</dd>
 					</dl>
 				</div>
 				<div class="col-md-5">
-					
-					<!--- Report DateTime GroupBy ---> 
+
+					<!--- Report DateTime GroupBy --->
 					<div class="btn-group-vertical pull-right" style="vertical-align:top; margin-bottom:5px;">
 						<a href="" class="hibachi-report-date-group btn btn-xs btn-default<cfif attributes.report.getReportDateTimeGroupBy() eq 'hour'> active</cfif>" data-groupby="hour">Hour</a>
 						<a href="" class="hibachi-report-date-group btn btn-xs btn-default<cfif attributes.report.getReportDateTimeGroupBy() eq 'day'> active</cfif>" data-groupby="day">Day</a>
@@ -96,7 +95,7 @@
 						<a href="" class="hibachi-report-date-group btn btn-xs btn-default<cfif attributes.report.getReportDateTimeGroupBy() eq 'month'> active</cfif>" data-groupby="month">Month</a>
 						<a href="" class="hibachi-report-date-group btn btn-xs btn-default<cfif attributes.report.getReportDateTimeGroupBy() eq 'year'> active</cfif>" data-groupby="year">Year</a>
 					</div>
-					
+
 					<!--- DateTime Selector --->
 					<div class="pull-right" style="margin-right:10px;">
 						<div style="margin-bottom:5px;">
@@ -116,7 +115,7 @@
 							<input type="text" name="reportCompareStartDateTime" class="datepicker hibachi-report-date" style="width:80px;margin-right:10px;" value="#attributes.report.getFormattedValue('reportCompareStartDateTime')#" /> - <input type="text" name="reportCompareEndDateTime" class="datepicker hibachi-report-date" style="width:80px;margin-left:10px;" value="#attributes.report.getFormattedValue('reportCompareEndDateTime')#" />
 						</div>
 					</div>
-					
+
 				</div>
 			</div>
 		</form>

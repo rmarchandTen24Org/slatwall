@@ -1,4 +1,3 @@
-<cfimport prefix="swa" taglib="../../../tags" />
 <cfimport prefix="hb" taglib="../../../org/Hibachi/HibachiTags" />
 <cfif thisTag.executionMode is "start">
 	<cfparam name="attributes.fieldType" type="string" />
@@ -78,7 +77,7 @@
 		</cfcase>
 		<cfcase value="file">
 			<cfoutput>
-				
+
 				<div class="s-file-upload">
 					<ul class="list-unstyled list-inline">
 						<li><input type="file" name="#attributes.fieldName#" #attributes.fieldAttributes#></li>
@@ -87,7 +86,7 @@
 						</cfif>
 					</ul>
 				</div>
-				
+
 			</cfoutput>
 		</cfcase>
 		<cfcase value="listingMultiselect">

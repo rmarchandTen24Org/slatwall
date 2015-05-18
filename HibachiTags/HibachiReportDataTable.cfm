@@ -1,4 +1,3 @@
-<cfimport prefix="swa" taglib="../../../tags" />
 <cfimport prefix="hb" taglib="../../../org/Hibachi/HibachiTags" />
 <cfif thisTag.executionMode is "start">
 	<cfparam name="attributes.hibachiScope" type="any" default="#request.context.fw.getHibachiScope()#" />
@@ -8,9 +7,9 @@
 	<cfset thisTag.dimentionDefinitions = attributes.report.getDimensions()>
 	<cfset thisTag.metricDefinitions = attributes.report.getMetrics()>
 	<cfset thisTag.defaultCurrency = attributes.report.getCurrencyCode()>
-	
+
 	<cfoutput>
-		<div id="reportDataTable"> 
+		<div id="reportDataTable">
 			<table class="table table-condensed table-bordered">
 				<!--- Headers --->
 				<tr>
@@ -23,7 +22,7 @@
 						<th class="s-metric-bullet-icon" style="background-color:##e3e3e3;" <cfif attributes.report.getReportCompareFlag()>colspan="2"</cfif>>
 							<span style="color:#attributes.report.getMetricColorDetails()[m].color#;"></span>
 							<cfif attributes.report.getReportCompareFlag()>
-								<span style="color:#attributes.report.getMetricColorDetails()[m].compareColor#;"></span>	
+								<span style="color:#attributes.report.getMetricColorDetails()[m].compareColor#;"></span>
 							</cfif>
 							| #attributes.report.getMetricTitle( metricDefinition.alias )#
 						</th>
@@ -52,9 +51,9 @@
 						</cfif>
 					</cfloop>
 				</tr>
-	
+
 				<!--- Data --->
-				<cfset tableData = attributes.report.getTableDataQuery() /> 
+				<cfset tableData = attributes.report.getTableDataQuery() />
 				<cfloop query="tableData" startrow="1" endrow="#attributes.report.getDataTableEndRow()#">
 					<tr>
 						<cfloop from="1" to="#listLen(thisTag.dimentionDefinitions)#" step="1" index="d">
@@ -67,7 +66,7 @@
 								<td>#attributes.hibachiScope.formatValue( tableData[ dimensionDefinition.alias ][ tableData.currentRow ], attributes.report.getAliasFormatType(dimensionDefinition.alias))#</td>
 							</cfif>
 							--->
-	
+
 							<!--- Temporary --->
 							<td>#attributes.hibachiScope.formatValue( tableData[ dimensionDefinition.alias ][ tableData.currentRow ], attributes.report.getAliasFormatType(dimensionDefinition.alias))#</td>
 						</cfloop>
@@ -81,7 +80,7 @@
 					</tr>
 				</cfloop>
 			</table>
-			
+
 			<cfif tableData.recordCount gt attributes.report.getDataTableEndRow()>
 				<strong>Data Truncated ...</strong><br />
 				<a href="##" class="hibachi-report-data-table-load" data-page="#attributes.report.getCurrentPage() + 1#">Load More Data</a>
