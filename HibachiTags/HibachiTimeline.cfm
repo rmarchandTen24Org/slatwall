@@ -40,7 +40,7 @@
 
 	<!---
 
-		SELECT a FROM SlatwallAudit a INNER JOIN FETCH
+		SELECT a FROM HibachiAudit a INNER JOIN FETCH
 
 	--->
 

@@ -1,5 +1,48 @@
+/*
+    Hibachi
+    Copyright (C) ten24, LLC
+
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+    Linking this program statically or dynamically with other modules is
+    making a combined work based on this program.  Thus, the terms and
+    conditions of the GNU General Public License cover the whole
+    combination.
+
+    As a special exception, the copyright holders of this program give you
+    permission to combine this program with independent modules and your
+    custom code, regardless of the license terms of these independent
+    modules, and to copy and distribute the resulting program under terms
+    of your choice, provided that you follow these specific guidelines:
+	- You also meet the terms and conditions of the license of each
+	  independent module
+	- You must not alter the default display of the Hibachi name or logo from
+	  any part of the application
+	- Your custom code must not alter or create any files inside Hibachi,
+	  except in the following directories:
+		/integrationServices/
+	You may copy and distribute the modified version of this program that meets
+	the above guidelines as a combined work under the terms of GPL for this program,
+	provided that you include the source code of that other code when and as the
+	GNU GPL requires distribution of source code.
+
+    If you modify this program, you may extend this exception to your version
+    of the program, but you are not obligated to do so.
+Notes:
+*/
 <cfcomponent accessors="true" output="false" extends="HibachiObject">
-	
+
 	<!--- Import all of the Hibachi services and DAO's --->
 	<cfproperty name="hibachiDAO" type="any">
 	<cfproperty name="hibachiAuthenticationService" type="any">
@@ -10,7 +53,7 @@
 	<cfproperty name="hibachiTagService" type="any">
 	<cfproperty name="hibachiUtilityService" type="any">
 	<cfproperty name="hibachiValidationService" type="any">
-	
+
 	<!--- Variables Scope Used For Caching --->
 	<cfset variables.entitiesMetaData = {} />
 	<cfset variables.entitiesProcessContexts = {} />
@@ -18,100 +61,100 @@
 	<cfset variables.entityObjects = {} />
 	<cfset variables.entityHasProperty = {} />
 	<cfset variables.entityHasAttribute = {} />
-	
+
 	<cfscript>
 		public any function get(required string entityName, required any idOrFilter, boolean isReturnNewOnNotFound = false ) {
 			return getHibachiDAO().get(argumentcollection=arguments);
 		}
-	
+
 		public any function getSmartList(string entityName, struct data={}){
 			var smartList = getHibachiDAO().getSmartList(argumentcollection=arguments);
-			
+
 			if(structKeyExists(arguments.data, "keyword") || structKeyExists(arguments.data, "keywords")) {
 				var example = this.new(arguments.entityName);
 				var simpleRepresentationPropertyName = example.getSimpleRepresentationPropertyName();
 				var primaryIDPropertyName = example.getPrimaryIDPropertyName();
 				var pmd = example.getPropertyMetaData( primaryIDPropertyName );
 				if(!structKeyExists(pmd, "ormtype") || pmd.ormtype != 'integer') {
-					smartList.addKeywordProperty(propertyIdentifier=primaryIDPropertyName, weight=1);	
+					smartList.addKeywordProperty(propertyIdentifier=primaryIDPropertyName, weight=1);
 				}
 				if(simpleRepresentationPropertyName != primaryIDPropertyName) {
-					smartList.addKeywordProperty(propertyIdentifier=simpleRepresentationPropertyName, weight=1);	
+					smartList.addKeywordProperty(propertyIdentifier=simpleRepresentationPropertyName, weight=1);
 				}
 			}
-			
+
 			return smartList;
 		}
-		
+
 		public any function list(required string entityName, struct filterCriteria = {}, string sortOrder = '', struct options = {} ) {
 			return getHibachiDAO().list(argumentcollection=arguments);
 		}
-	
+
 		public any function new(required string entityName ) {
 			return getHibachiDAO().new(argumentcollection=arguments);
 		}
-	
+
 		public any function count(required string entityName ) {
 			return getHibachiDAO().count(argumentcollection=arguments);
 		}
-		
+
 		public boolean function delete(required any entity){
-			
+
 			// Add the entity by it's name to the arguments for calling events
 	    	arguments[ lcase(arguments.entity.getClassName()) ] = arguments.entity;
-			
+
 			// Announce Before Event
 			getHibachiEventService().announceEvent("before#arguments.entity.getClassName()#Delete", arguments);
-			
+
 			// Do delete validation
 			arguments.entity.validate(context="delete");
-			
+
 			// If the entity Passes validation
 			if(!arguments.entity.hasErrors()) {
-				
+
 				// Remove any Many-to-Many relationships
 				arguments.entity.removeAllManyToManyRelationships();
-				
+
 				// Call delete in the DAO
 				getHibachiDAO().delete(target=arguments.entity);
-				
+
 				// Announce After Events for Success
 				getHibachiEventService().announceEvent("after#arguments.entity.getClassName()#Delete", arguments);
 				getHibachiEventService().announceEvent("after#arguments.entity.getClassName()#DeleteSuccess", arguments);
-				
+
 				// Return that the delete was sucessful
 				return true;
-				
+
 			}
-			
+
 			// Announce After Events for Failure
 			getHibachiEventService().announceEvent("after#arguments.entity.getClassName()#Delete", arguments);
 			getHibachiEventService().announceEvent("after#arguments.entity.getClassName()#DeleteFailure", arguments);
-			
+
 			return false;
 		}
-		
-		
+
+
 		// @hint default process method
 		public any function process(required any entity, struct data={}, string processContext=""){
-			
+
 			// Create the invoke arguments struct
 			var invokeArguments = {};
 			invokeArguments[ "data" ] = arguments.data;
 			invokeArguments[ lcase(arguments.entity.getClassName()) ] = arguments.entity;
 			invokeArguments.entity = arguments.entity;
-			
+
 			// Announce the processContext specific  event
 			getHibachiEventService().announceEvent("before#arguments.entity.getClassName()#Process_#arguments.processContext#", invokeArguments);
-			
+
 			// Verify the preProcess
 			arguments.entity.validate( context=arguments.processContext );
-			
+
 			// If we pass preProcess validation then we can try to setup the processObject if the entity has one, and validate that
 			if(!arguments.entity.hasErrors() && arguments.entity.hasProcessObject(arguments.processContext)) {
-				
+
 				invokeArguments[ "processObject" ] = arguments.entity.getProcessObject(arguments.processContext);
-				
+
 				if(!invokeArguments[ "processObject" ].getPopulatedFlag()) {
 					invokeArguments[ "processObject" ].populate( arguments.data );
 					invokeArguments[ "processObject" ].setPopulatedFlag( true );
@@ -120,11 +163,11 @@
 						invokeArguments[ "processObject" ].addPopulatedSubProperty( arguments.entity.getClassName(), arguments.entity );
 					}
 				}
-				
+
 				invokeArguments[ "processObject" ].validate( context=arguments.processContext );
-				
+
 			}
-			
+
 			// if the entity still has no errors then we call call the process method
 			if(!arguments.entity.hasErrors()) {
 				var methodName = "process#arguments.entity.getClassName()#_#arguments.processContext#";
@@ -132,7 +175,7 @@
 				if(isNull(arguments.entity)) {
 					throw("You have created a process method: #methodName# that does not return an entity.  All process methods should return an entity.");
 				}
-			}	
+			}
 
 			// Announce the after events
 			getHibachiEventService().announceEvent("after#arguments.entity.getClassName()#Process_#arguments.processContext#", invokeArguments);
@@ -141,55 +184,55 @@
 			} else {
 				getHibachiEventService().announceEvent("after#arguments.entity.getClassName()#Process_#arguments.processContext#Success", invokeArguments);
 			}
-			
+
 			return arguments.entity;
 		}
-		
+
 		// @hint the default save method will populate, validate, and if not errors delegate to the DAO where entitySave() is called.
 	    public any function save(required any entity, struct data, string context="save") {
-	    	
+
 	    	if(!isObject(arguments.entity) || !arguments.entity.isPersistent()) {
 	    		throw("The entity being passed to this service is not a persistent entity. READ THIS!!!! -> Make sure that you aren't calling the oMM method with named arguments. Also, make sure to check the spelling of your 'fieldname' attributes.");
 	    	}
-	    	
+
 	    	// Add the entity by it's name to the arguments for calling events
 	    	arguments[ lcase(arguments.entity.getClassName()) ] = arguments.entity;
-	    	
+
 	    	// Announce Before Event
 	    	getHibachiEventService().announceEvent("before#arguments.entity.getClassName()#Save", arguments);
-	    	
+
 			// If data was passed in to this method then populate it with the new data
 	        if(structKeyExists(arguments,"data")){
-	        	
+
 	        	// Populate this object
 				arguments.entity.populate(argumentCollection=arguments);
-	
+
 	        }
-	        
+
 	        // Validate this object now that it has been populated
 			arguments.entity.validate(context=arguments.context);
-	        
+
 	        // If the object passed validation then call save in the DAO, otherwise set the errors flag
 	        if(!arguments.entity.hasErrors()) {
 	            arguments.entity = getHibachiDAO().save(target=arguments.entity);
-        
+
                 // Announce After Events for Success
 				getHibachiEventService().announceEvent("after#arguments.entity.getClassName()#Save", arguments);
 				getHibachiEventService().announceEvent("after#arguments.entity.getClassName()#SaveSuccess", arguments);
 		    } else {
-            
+
                 // Announce After Events for Failure
 				getHibachiEventService().announceEvent("after#arguments.entity.getClassName()#Save", arguments);
 				getHibachiEventService().announceEvent("after#arguments.entity.getClassName()#SaveFailure", arguments);
 	        }
-	        
+
 	        // Return the entity
 	        return arguments.entity;
 	    }
-	    
+
 		/**
 		* exports the given query/array to file.
-		* 
+		*
 		* @param data      Data to export. (Required) (Currently only supports query).
 		* @param columns      list of columns to export. (optional, default: all)
 		* @param columnNames      list of column headers to export. (optional, default: none)
@@ -210,7 +253,7 @@
 			}
 			var columnArray = listToArray(arguments.columns);
 			var columnCount = arrayLen(columnArray);
-			
+
 			if(arguments.fileType == 'csv'){
 				var dataArray=[arguments.columnNames];
 				for(var i=1; i <= data.recordcount; i++){
@@ -225,12 +268,12 @@
 			} else {
 				throw("Implement export for fileType #arguments.fileType#");
 			}
-	
+
 			// Open / Download File
 			getHibachiUtilityService().downloadFile(fileNameWithExt,filePath,"application/#arguments.fileType#",true);
 		}
-			
-			    
+
+
 	 	/**
 		 * Generic ORM CRUD methods and dynamic methods by convention via onMissingMethod.
 		 *
@@ -273,7 +316,7 @@
 		*/
 		public any function onMissingMethod( required string missingMethodName, required struct missingMethodArguments ) {
 			var lCaseMissingMethodName = lCase( missingMethodName );
-	
+
 			if ( lCaseMissingMethodName.startsWith( 'get' ) ) {
 				if(right(lCaseMissingMethodName,9) == "smartlist") {
 					return onMissingGetSmartListMethod( missingMethodName, missingMethodArguments );
@@ -298,15 +341,15 @@
 
 			throw('You have called a method #arguments.missingMethodName#() which does not exists in the #getClassName()# service.');
 		}
-		
-	
-	
+
+
+
 		/********** PRIVATE ************************************************************/
 		private function onMissingDeleteMethod( required string missingMethodName, required struct missingMethodArguments ) {
 			return delete( missingMethodArguments[ 1 ] );
 		}
-	
-	
+
+
 		/**
 		 * Provides dynamic get methods, by convention, on missing method:
 		 *
@@ -323,9 +366,9 @@
 		 */
 		private function onMissingGetMethod( required string missingMethodName, required struct missingMethodArguments ){
 			var isReturnNewOnNotFound = structKeyExists( missingMethodArguments, '2' ) ? missingMethodArguments[ 2 ] : false;
-	
+
 			var entityName = missingMethodName.substring( 3 );
-	
+
 			if ( entityName.matches( '(?i).+by.+' ) ) {
 				var tokens = entityName.split( '(?i)by', 2 );
 				entityName = tokens[ 1 ];
@@ -345,7 +388,7 @@
 				return get( entityName, id, isReturnNewOnNotFound );
 			}
 		}
-	
+
 		/**
 		 * Provides dynamic getSmarList method, by convention, on missing method:
 		 *
@@ -355,21 +398,21 @@
 		 *
 		 * NOTE: Ordered arguments only--named arguments not supported.
 		 */
-		 
+
 		private function onMissingGetSmartListMethod( required string missingMethodName, required struct missingMethodArguments ){
 			var smartListArgs = {};
 			var entityNameLength = len(arguments.missingMethodName) - 12;
-			
+
 			var entityName = missingMethodName.substring( 3,entityNameLength + 3 );
 			var data = {};
 			if( structCount(missingMethodArguments) && !isNull(missingMethodArguments[ 1 ]) && isStruct(missingMethodArguments[ 1 ]) ) {
 				data = missingMethodArguments[ 1 ];
 			}
-			
+
 			return getSmartList(entityName=entityName, data=data);
-		} 
-		 
-	
+		}
+
+
 		/**
 		 * Provides dynamic list methods, by convention, on missing method:
 		 *
@@ -387,31 +430,31 @@
 		 */
 		private function onMissingListMethod( required string missingMethodName, required struct missingMethodArguments ){
 			var listMethodForm = 'listXXX';
-	
+
 			if ( findNoCase( 'FilterBy', missingMethodName ) ) {
 				listMethodForm &= 'FilterByYYY';
 			}
-	
+
 			if ( findNoCase( 'OrderBy', missingMethodName ) ) {
 				listMethodForm &= 'OrderByZZZ';
 			}
-	
+
 			switch( listMethodForm ) {
 				case 'listXXX':
 					return onMissingListXXXMethod( missingMethodName, missingMethodArguments );
-	
+
 				case 'listXXXFilterByYYY':
 					return onMissingListXXXFilterByYYYMethod( missingMethodName, missingMethodArguments );
-	
+
 				case 'listXXXOrderByZZZ':
 					return onMissingListXXXOrderByZZZMethod( missingMethodName, missingMethodArguments );
-	
+
 				case 'listXXXFilterByYYYOrderByZZZ':
 					return onMissingListXXXFilterByYYYOrderByZZZMethod( missingMethodName, missingMethodArguments );
 			}
 		}
-	
-	
+
+
 		/**
 		 * Provides dynamic list method, by convention, on missing method:
 		 *
@@ -423,25 +466,25 @@
 		 */
 		private function onMissingListXXXMethod( required string missingMethodName, required struct missingMethodArguments ) {
 			var listArgs = {};
-	
+
 			listArgs.entityName = missingMethodName.substring( 4 );
-			
+
 			if ( structKeyExists( missingMethodArguments, '1' ) ) {
 				listArgs.filterCriteria = missingMethodArguments[ '1' ];
-	
+
 				if ( structKeyExists( missingMethodArguments, '2' ) ) {
 					listArgs.sortOrder = missingMethodArguments[ '2' ];
-	
+
 					if ( structKeyExists( missingMethodArguments, '3' ) ) {
 						listArgs.options = missingMethodArguments[ '3' ];
 					}
 				}
 			}
-	
+
 			return list( argumentCollection = listArgs );
 		}
-	
-	
+
+
 		/**
 		 * Provides dynamic list method, by convention, on missing method:
 		 *
@@ -454,29 +497,29 @@
 		private function onMissingListXXXFilterByYYYMethod( required string missingMethodName, required struct missingMethodArguments )
 		{
 			var listArgs = {};
-	
+
 			var temp = missingMethodName.substring( 4 );
-	
+
 			var tokens = temp.split( '(?i)FilterBy', 2 );
-	
+
 			listArgs.entityName = tokens[ 1 ];
-	
+
 			listArgs.filterCriteria = { '#tokens[ 2 ]#' = missingMethodArguments[ 1 ] };
-	
+
 			if ( structKeyExists( missingMethodArguments, '2' ) )
 			{
 				listArgs.sortOrder = missingMethodArguments[ '2' ];
-	
+
 				if ( structKeyExists( missingMethodArguments, '3' ) )
 				{
 					listArgs.options = missingMethodArguments[ '3' ];
 				}
 			}
-	
+
 			return list( argumentCollection = listArgs );
 		}
-	
-	
+
+
 		/**
 		 * Provides dynamic list method, by convention, on missing method:
 		 *
@@ -489,28 +532,28 @@
 		private function onMissingListXXXFilterByYYYOrderByZZZMethod( required string missingMethodName, required struct missingMethodArguments )
 		{
 			var listArgs = {};
-	
+
 			var temp = missingMethodName.substring( 4 );
-	
+
 			var tokens = temp.split( '(?i)FilterBy', 2 );
-	
+
 			listArgs.entityName = tokens[ 1 ];
-	
+
 			tokens = tokens[ 2 ].split( '(?i)OrderBy', 2 );
-	
+
 			listArgs.filterCriteria = { '#tokens[ 1 ]#' = missingMethodArguments[ 1 ] };
-	
+
 			listArgs.sortOrder = tokens[ 2 ];
-	
+
 			if ( structKeyExists( missingMethodArguments, '2' ) )
 			{
 				listArgs.options = missingMethodArguments[ '2' ];
 			}
-	
+
 			return list( argumentCollection = listArgs );
 		}
-	
-	
+
+
 		/**
 		 * Provides dynamic list method, by convention, on missing method:
 		 *
@@ -523,29 +566,29 @@
 		private function onMissingListXXXOrderByZZZMethod( required string missingMethodName, required struct missingMethodArguments )
 		{
 			var listArgs = {};
-	
+
 			var temp = missingMethodName.substring( 4 );
-	
+
 			var tokens = temp.split( '(?i)OrderBy', 2 );
-	
+
 			listArgs.entityName = tokens[ 1 ];
-	
+
 			listArgs.sortOrder = tokens[ 2 ];
-	
+
 			if ( structKeyExists( missingMethodArguments, '1' ) )
 			{
 				listArgs.filterCriteria = missingMethodArguments[ '1' ];
-	
+
 				if ( structKeyExists( missingMethodArguments, '2' ) )
 				{
 					listArgs.options = missingMethodArguments[ '2' ];
 				}
 			}
-	
+
 			return list( argumentCollection = listArgs );
 		}
-	
-	
+
+
 		/**
 		 * Provides dynamic count methods, by convention, on missing method:
 		 *
@@ -555,19 +598,19 @@
 		 */
 		private function onMissingCountMethod( required string missingMethodName, required struct missingMethodArguments ){
 			var entityName = missingMethodName.substring( 5 );
-	
+
 			return count( entityName );
 		}
-	
-	
+
+
 		private function onMissingNewMethod( required string missingMethodName, required struct missingMethodArguments )
 		{
 			var entityName = missingMethodName.substring( 3 );
-	
+
 			return new( entityName );
 		}
-	
-	
+
+
 		private function onMissingSaveMethod( required string missingMethodName, required struct missingMethodArguments ) {
 			if ( structKeyExists( missingMethodArguments, '3' ) ) {
 				return save( entity=missingMethodArguments[1], data=missingMethodArguments[2], context=missingMethodArguments[3]);
@@ -577,7 +620,7 @@
 				return save( entity=missingMethodArguments[1] );
 			}
 		}
-		
+
 		private function onMissingProcessMethod( required string missingMethodName, required struct missingMethodArguments ) {
 			if ( structKeyExists( missingMethodArguments, '3' ) ) {
 				return process( entity=missingMethodArguments[1], data=missingMethodArguments[2], processContext=missingMethodArguments[3]);
@@ -585,7 +628,7 @@
 				return process( entity=missingMethodArguments[1], processContext=missingMethodArguments[2]);
 			}
 		}
-		
+
 		/**
 		 * Provides dynamic export methods, by convention, on missing method:
 		 *
@@ -596,67 +639,67 @@
 		private function onMissingExportMethod( required string missingMethodName, required struct missingMethodArguments ){
 			var entityMeta = getMetaData(getEntityObject( missingMethodName.substring( 6 ) ));
 			var exportQry = getHibachiDAO().getExportQuery(tableName = entityMeta.table);
-			
+
 			export(data=exportQry);
 		}
-		
+
 		// @hint returns the correct service on a given entityName.  This is very useful for creating abstract code
 		public boolean function getEntityNameIsValidFlag( required string entityName ) {
-			
+
 			// Use the short version of the entityName
 			if(len(getProperlyCasedShortEntityName(arguments.entityName, true))){
 				return true;
 			}
-			
+
 			return false;
 		}
-		
+
 		// @hint returns the correct service on a given entityName.  This is very useful for creating abstract code
 		public any function getServiceByEntityName( required string entityName ) {
-			
+
 			// Use the short version of the entityName
 			arguments.entityName = getProperlyCasedShortEntityName(arguments.entityName);
-			
+
 			if(structKeyExists(getEntitiesMetaData(), arguments.entityName) && structKeyExists(getEntitiesMetaData()[arguments.entityName], "hb_serviceName")) {
 				return getService( getEntitiesMetaData()[ arguments.entityName ].hb_serviceName );
 			}
-			
+
 			// By default just return the base hibachi service
 			return getService("hibachiService");
 		}
-		
+
 		// ======================= START: Entity Name Helper Methods ==============================
-		
+
 		public string function getProperlyCasedShortEntityName( required string entityName, boolean returnBlankIfNotFound=false ) {
 			if(left(arguments.entityName, len(getApplicationValue('applicationKey'))) == getApplicationValue('applicationKey')) {
 				arguments.entityName = right(arguments.entityName, len(arguments.entityName)-len(getApplicationValue('applicationKey')));
 			}
-			
+
 			if( structKeyExists(getEntitiesMetaData(), arguments.entityName) ) {
 				var keyList = structKeyList(getEntitiesMetaData());
 				var keyIndex = listFindNoCase(keyList, arguments.entityName);
 				return listGetAt(keyList, keyIndex);
 			}
-			
+
 			if(arguments.returnBlankIfNotFound) {
 				return "";
 			}
-			
+
 			throw("The entity name that you have requested: '#arguments.entityname#' is not configured in ORM.");
 		}
-		
+
 		public string function getProperlyCasedFullEntityName( required string entityName ) {
 			return "#getApplicationValue('applicationKey')##getProperlyCasedShortEntityName( arguments.entityName )#";
 		}
-		
+
 		public string function getProperlyCasedFullClassNameByEntityName( required string entityName ) {
 			return "#getApplicationValue('applicationKey')#.model.entity.#getProperlyCasedShortEntityName( arguments.entityName )#";
 		}
-		
+
 		// =======================  END: Entity Name Helper Methods ===============================
-		
+
 		// ===================== START: Cached Entity Meta Data Methods ===========================
-		
+
 		public any function getEntitiesMetaData() {
 			if(!structCount(variables.entitiesMetaData)) {
 				var entityNamesArr = listToArray(structKeyList(ORMGetSessionFactory().getAllClassMetadata()));
@@ -673,59 +716,59 @@
 				}
 				variables.entitiesMetaData = allMD;
 			}
-			
+
 			return variables.entitiesMetaData;
 		}
-		
+
 		public any function getEntityMetaData( required string entityName ) {
 			return getEntitiesMetaData()[ getProperlyCasedShortEntityName( arguments.entityName ) ];
 		}
-		
+
 		// @hint returns the entity meta data object that is used by a lot of the helper methods below
 		public any function getEntityORMMetaDataObject( required string entityName ) {
 			arguments.entityName = getProperlyCasedFullEntityName( arguments.entityName );
 			if(!structKeyExists(variables.entityORMMetaDataObjects, arguments.entityName)) {
 				variables.entityORMMetaDataObjects[ arguments.entityName ] = ormGetSessionFactory().getClassMetadata( arguments.entityName );
 			}
-			
+
 			return variables.entityORMMetaDataObjects[ arguments.entityName ];
 		}
-		
+
 		// @hint returns the metaData struct for an entity
 		public any function getEntityObject( required string entityName ) {
-			
+
 			arguments.entityName = getProperlyCasedFullEntityName( arguments.entityName );
-			
+
 			if(!structKeyExists(variables.entityObjects, arguments.entityName)) {
 				variables.entityObjects[ arguments.entityName ] = entityNew(arguments.entityName);
 			}
-			
+
 			return variables.entityObjects[ arguments.entityName ];
 		}
-		
+
 		// @hint returns the properties of a given entity
 		public any function getPropertiesByEntityName( required string entityName ) {
-			
+
 			// First Check the application cache
 			if( hasApplicationValue("classPropertyCache_#getProperlyCasedFullClassNameByEntityName( arguments.entityName )#") ) {
 				return getApplicationValue("classPropertyCache_#getProperlyCasedFullClassNameByEntityName( arguments.entityName )#");
 			}
-			
+
 			// Pull the meta data from the object (which in turn will cache it in the application for the next time)
 			return getEntityObject( arguments.entityName ).getProperties();
 		}
-		
+
 		// @hint returns the properties of a given entity
 		public any function getPropertiesStructByEntityName( required string entityName ) {
 			// Pull the meta data from the object (which in turn will cache it in the application for the next time)
-			return getEntityObject( arguments.entityName ).getPropertiesStruct(); 
+			return getEntityObject( arguments.entityName ).getPropertiesStruct();
 		}
-		
+
 		// @hint returns a property of a given entity
 		public any function getPropertyByEntityNameAndPropertyName( required string entityName, required string propertyName ) {
-			return getPropertiesStructByEntityName( entityName=arguments.entityName )[ arguments.propertyName ]; 
+			return getPropertiesStructByEntityName( entityName=arguments.entityName )[ arguments.propertyName ];
 		}
-		
+
 		public any function getEntitiesProcessContexts() {
 			if(!structCount(variables.entitiesProcessContexts)) {
 				var processContexts = {};
@@ -735,47 +778,47 @@
 						processContexts[ entityName ] = listToArray(emd[ entityName ].hb_processContexts);
 					}
 				}
-				
+
 				variables.entitiesProcessContexts = processContexts;
 			}
 			return variables.entitiesProcessContexts;
 		}
-		
+
 		// =====================  END: Cached Entity Meta Data Methods ============================
-		
-		
+
+
 		// ============================== START: Logical Methods ==================================
-		
+
 		// @hint returns an array of ID columns based on the entityName
 		public array function getIdentifierColumnNamesByEntityName( required string entityName ) {
 			return getEntityORMMetaDataObject( arguments.entityName ).getIdentifierColumnNames();
 		}
-		
+
 		// @hint returns the primary id property name of a given entityName
 		public string function getPrimaryIDPropertyNameByEntityName( required string entityName ) {
 			var idColumnNames = getIdentifierColumnNamesByEntityName( arguments.entityName );
-			
+
 			if( arrayLen(idColumnNames)) {
 				var shortEntityName = getProperlyCasedShortEntityName(arguments.entityName);
 				shortEntityName = lcase(shortEntityName.charAt(0)) & shortEntityName.subString(1);
 				return replaceNoCase(replaceNoCase(idColumnNames[1],shortEntityName,shortEntityName),"code","Code");
 			}
 		}
-		
-		// @hint returns true or false based on an entityName, and checks if that property exists for that entity 
+
+		// @hint returns true or false based on an entityName, and checks if that property exists for that entity
 		public boolean function getEntityHasPropertyByEntityName( required string entityName, required string propertyName ) {
 			return structKeyExists(getPropertiesStructByEntityName(arguments.entityName), arguments.propertyName );
 		}
-		
+
 		// @hint leverages the getEntityHasPropertyByEntityName() by traverses a propertyIdentifier first using getLastEntityNameInPropertyIdentifier()
 		public boolean function getHasPropertyByEntityNameAndPropertyIdentifier( required string entityName, required string propertyIdentifier ) {
 			try {
-				return getEntityHasPropertyByEntityName( entityName=getLastEntityNameInPropertyIdentifier(arguments.entityName, arguments.propertyIdentifier), propertyName=listLast(arguments.propertyIdentifier, ".") );	
+				return getEntityHasPropertyByEntityName( entityName=getLastEntityNameInPropertyIdentifier(arguments.entityName, arguments.propertyIdentifier), propertyName=listLast(arguments.propertyIdentifier, ".") );
 			} catch(any e) {
-				return false;	
+				return false;
 			}
 		}
-		
+
 		// @hint traverses a propertyIdentifier to find the last entityName in the list... this is then used by the hasProperty and hasAttribute methods()
 		public string function getLastEntityNameInPropertyIdentifier( required string entityName, required string propertyIdentifier ) {
 			if(listLen(arguments.propertyIdentifier, ".") gt 1) {
@@ -783,37 +826,37 @@
 				if( !structKeyExists(propertiesSruct, listFirst(arguments.propertyIdentifier, ".")) || !structKeyExists(propertiesSruct[listFirst(arguments.propertyIdentifier, ".")], "cfc") ) {
 					throw("The Property Identifier #arguments.propertyIdentifier# is invalid for the entity #arguments.entityName#");
 				}
-				return getLastEntityNameInPropertyIdentifier( entityName=listLast(propertiesSruct[listFirst(arguments.propertyIdentifier, ".")].cfc, "."), propertyIdentifier=right(arguments.propertyIdentifier, len(arguments.propertyIdentifier)-(len(listFirst(arguments.propertyIdentifier, "._"))+1)));	
+				return getLastEntityNameInPropertyIdentifier( entityName=listLast(propertiesSruct[listFirst(arguments.propertyIdentifier, ".")].cfc, "."), propertyIdentifier=right(arguments.propertyIdentifier, len(arguments.propertyIdentifier)-(len(listFirst(arguments.propertyIdentifier, "._"))+1)));
 			}
-			
+
 			return arguments.entityName;
 		}
-		
-			
+
+
 		public any function getTableTopSortOrder(required string tableName, string contextIDColumn, string contextIDValue) {
 			return getHibachiDAO().getTableTopSortOrder(argumentcollection=arguments);
 		}
-	
+
 		public any function updateRecordSortOrder(required string recordIDColumn, required string recordID, required string entityName, required numeric newSortOrder) {
 			var entityMetaData = getEntityMetaData( arguments.entityName );
 			arguments.tableName = entityMetaData.table;
 			getHibachiDAO().updateRecordSortOrder(argumentcollection=arguments);
 		}
-		
+
 		// @hint leverages the getEntityHasAttributeByEntityName() by traverses a propertyIdentifier first using getLastEntityNameInPropertyIdentifier()
 		public boolean function getHasAttributeByEntityNameAndPropertyIdentifier( required string entityName, required string propertyIdentifier ) {
 			return getEntityHasAttributeByEntityName( entityName=getLastEntityNameInPropertyIdentifier(arguments.entityName, arguments.propertyIdentifier), attributeCode=listLast(arguments.propertyIdentifier, "._") );
 		}
-		
+
 		// @hint returns true or false based on an entityName, and checks if that entity has an extended attribute with that attributeCode
 		public boolean function getEntityHasAttributeByEntityName( required string entityName, required string attributeCode ) {
 			var attributeCodesList = getHibachiCacheService().getOrCacheFunctionValue("attributeService_getAttributeCodesListByAttributeSetType_ast#getProperlyCasedShortEntityName(arguments.entityName)#", "attributeService", "getAttributeCodesListByAttributeSetType", {1="ast#getProperlyCasedShortEntityName(arguments.entityName)#"});
 			if(listFindNoCase(attributeCodesList, arguments.attributeCode)) {
 				return true;
 			}
-			
-			return false; 
-		}		
-		
+
+			return false;
+		}
+
 	</cfscript>
 </cfcomponent>
