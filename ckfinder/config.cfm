@@ -23,19 +23,19 @@ function CheckAuthentication()
 	//some kind of session validation here. Even something very simple as...
 	//... where session.IsAuthorized is set to "true" as soon as the
 	//user logs in your system.
-	
+
 	var currentArray = listToArray(replace(getDirectoryFromPath(getCurrentTemplatePath()),"\","/","all"),"/");
 	var applicationKey = currentArray[arrayLen(currentArray)-7];
-	
+
 	if(!structKeyExists(session, "#applicationKey#CKFinderAccess")) {
 		session["#applicationKey#CKFinderAccess"] = false;
 	}
-	
+
 	return session["#applicationKey#CKFinderAccess"];
-	
+
 }
 
-config.licenseName = 'Slatwall eCommerce';
+config.licenseName = 'Hibachi';
 config.licenseKey = 'ESB4-VJNP-SPDK-NEJG-X44A-XK1B-S8BC';
 
 /* To make it easy to configure CKFinder, the config.baseUrl and config.baseDir can be used.
