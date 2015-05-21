@@ -1,3 +1,46 @@
+/*
+    Hibachi
+    Copyright (C) ten24, LLC
+
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+    Linking this program statically or dynamically with other modules is
+    making a combined work based on this program.  Thus, the terms and
+    conditions of the GNU General Public License cover the whole
+    combination.
+
+    As a special exception, the copyright holders of this program give you
+    permission to combine this program with independent modules and your
+    custom code, regardless of the license terms of these independent
+    modules, and to copy and distribute the resulting program under terms
+    of your choice, provided that you follow these specific guidelines:
+	- You also meet the terms and conditions of the license of each
+	  independent module
+	- You must not alter the default display of the Hibachi name or logo from
+	  any part of the application
+	- Your custom code must not alter or create any files inside Hibachi,
+	  except in the following directories:
+		/integrationServices/
+	You may copy and distribute the modified version of this program that meets
+	the above guidelines as a combined work under the terms of GPL for this program,
+	provided that you include the source code of that other code when and as the
+	GNU GPL requires distribution of source code.
+
+    If you modify this program, you may extend this exception to your version
+    of the program, but you are not obligated to do so.
+Notes:
+*/
 component output="false" accessors="true" persistent="false" extends="HibachiObject" {
 
 	property name="hibachiErrors" type="any" persistent="false";							// This porpery holds errors that are not part of ValidateThis, for example processing errors.
@@ -157,11 +200,11 @@ component output="false" accessors="true" persistent="false" extends="HibachiObj
 
 	// ==========================  END: ERRORS / MESSAGES ===========================================
 	// ======================= START: POPULATION & VALIDATION =======================================
-	
+
 	public any function beforePopulate( required struct data={} ) {
 		// Left Blank to be overridden by objects
 	}
-	
+
 	public any function afterPopulate( required struct data={} ) {
 		// Left Blank to be overridden by objects
 	}
@@ -239,13 +282,13 @@ component output="false" accessors="true" persistent="false" extends="HibachiObj
 							// Load the specifiv entity, if one doesn't exist, this will return a new entity
 							var currentEntity = this.invokeMethod("get#currentProperty.name#");
 							if(!isNull(currentEntity) && currentEntity.getPrimaryIDValue() == manyToOneStructData[primaryIDPropertyName]) {
-								var thisEntity = currentEntity;	
+								var thisEntity = currentEntity;
 							} else if (len(manyToOneStructData[primaryIDPropertyName])) {
 								var thisEntity = entityService.invokeMethod( "get#listLast(currentProperty.cfc,'.')#", {1=manyToOneStructData[primaryIDPropertyName],2=true});
 							} else {
 								var thisEntity = entityService.invokeMethod( "new#listLast(currentProperty.cfc,'.')#" );
 							}
-							
+
 							// Set the value of the property as the loaded entity
 							_setProperty(currentProperty.name, thisEntity );
 
@@ -269,7 +312,7 @@ component output="false" accessors="true" persistent="false" extends="HibachiObj
 
 								if(!isNull(thisEntity)) {
 									// Set the value of the property as the loaded entity
-									_setProperty(currentProperty.name, thisEntity );	
+									_setProperty(currentProperty.name, thisEntity );
 								}
 
 							}
@@ -305,7 +348,7 @@ component output="false" accessors="true" persistent="false" extends="HibachiObj
 
 								// Populate the sub property
 								thisEntity.populate(oneToManyArrayData[a]);
-								
+
 								addPopulatedSubProperty(currentProperty.name, thisEntity);
 							}
 						}
@@ -395,36 +438,36 @@ component output="false" accessors="true" persistent="false" extends="HibachiObj
 				}
 			}
 		}
-		
+
 		// Call afterPopulate
 		afterPopulate(data=arguments.data);
 
 		// Return this object
 		return this;
 	}
-	
+
 	public void function addPopulatedSubProperty( required string propertyName, required any entity ) {
 		// Make sure the structure exists
 		if(!structKeyExists(variables, "populatedSubProperties")){
 			variables.populatedSubProperties = {};
 		}
-		
+
 		// Get the meta data from the objects property
 		var propertyMeta = getPropertyMetaData( arguments.propertyName );
-		
+
 		// If fieldtype = many-to-one
 		if(structKeyExists(propertyMeta, "fieldtype") && propertyMeta.fieldType == "many-to-one") {
 			variables.populatedSubProperties[ arguments.propertyName ] = arguments.entity;
-			
+
 		// If fieldtype = one-to-many
 		} else if (structKeyExists(propertyMeta, "fieldtype") && propertyMeta.fieldType == "one-to-many") {
 			if(!structKeyExists(variables.populatedSubProperties, arguments.propertyName)) {
-				variables.populatedSubProperties[ arguments.propertyName ] = [];			
+				variables.populatedSubProperties[ arguments.propertyName ] = [];
 			}
 			arrayAppend(variables.populatedSubProperties[ arguments.propertyName ], arguments.entity);
 		}
 	}
-	
+
 
 	// @hind public method to see all of the validations for a particular context
 	public struct function getValidations( string context="" ) {
@@ -621,7 +664,7 @@ component output="false" accessors="true" persistent="false" extends="HibachiObj
 
 		return validationClass;
 	}
-	
+
 	// @hint public method for getting the title to be used for a property from the rbFactory, this is used a lot by the HibachiPropertyDisplay
 	public string function getPropertyTitle(required string propertyName) {
 
@@ -797,7 +840,7 @@ component output="false" accessors="true" persistent="false" extends="HibachiObj
 	public array function getProperties() {
 		if( !getHibachiScope().hasApplicationValue("classPropertyCache_#getClassFullname()#") ) {
 			var metaData = getMetaData(this);
-			
+
 			var hasExtends = structKeyExists(metaData, "extends");
 			var metaProperties = [];
 			do {
@@ -809,7 +852,7 @@ component output="false" accessors="true" persistent="false" extends="HibachiObj
 					metaData = metaData.extends;
 				}
 			} while( hasExtends );
-			
+
 			var metaPropertiesArrayCount = arraylen(metaProperties);
 			for(var i=1; i < metaPropertiesArrayCount;i++){
 				metaProperties[i] = convertStructToLowerCase(metaProperties[i]);
@@ -819,7 +862,7 @@ component output="false" accessors="true" persistent="false" extends="HibachiObj
 
 		return getApplicationValue("classPropertyCache_#getClassFullname()#");
 	}
-	
+
 	private struct function convertStructToLowerCase(struct st){
 		var aKeys = structKeyArray(st);
         var stN = structNew();
@@ -841,7 +884,7 @@ component output="false" accessors="true" persistent="false" extends="HibachiObj
         		stN['#lcase(i)#'] = st[i];
         	}
         }
-       
+
         return stn;
 	}
 
