@@ -1,4 +1,4 @@
-/*
+<!---
     Hibachi
     Copyright (C) ten24, LLC
 
@@ -40,7 +40,7 @@
     If you modify this program, you may extend this exception to your version
     of the program, but you are not obligated to do so.
 Notes:
-*/
+--->
 <cfcomponent accessors="true" output="false" extends="HibachiObject">
 
 	<!--- Import all of the Hibachi services and DAO's --->

@@ -1,4 +1,4 @@
-/*
+<!---
     Hibachi
     Copyright (C) ten24, LLC
 
@@ -40,7 +40,7 @@
     If you modify this program, you may extend this exception to your version
     of the program, but you are not obligated to do so.
 Notes:
-*/
+--->
 <cfcomponent output="false" accessors="true" extends="HibachiService">
 
 	<cffunction name="cfcookie">
