@@ -36,7 +36,7 @@ component output="false" accessors="true" extends="HibachiController" {
 		getFW().setView("api:main.blank");
 		//could possibly check whether we want a different contentType other than json in the future
 		param name="rc.headers.contentType" default="application/json";
-		arguments.rc.headers.contentType = rc.headers.contentType;
+		arguments.rc.headers["Content-Type"] = rc.headers.contentType;
 		if(isnull(arguments.rc.apiResponse.content)){
 			arguments.rc.apiResponse.content = {};
 		}
@@ -230,7 +230,7 @@ component output="false" accessors="true" extends="HibachiController" {
 		getPageContext().getResponse().setHeader('expires',strExpires);
 
 		var resourceBundle = getService('HibachiRBService').getResourceBundle(arguments.rc.locale);
-		data = {};
+		var data = {};
 
 		getPageContext().getResponse().setHeader('expires', GetHTTPTimeString( now() + 60 ));
 		//lcase all the resourceBundle keys so we can have consistent casing for the js

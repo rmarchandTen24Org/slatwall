@@ -160,7 +160,11 @@ component output="false" accessors="true" extends="HibachiService" {
 			// Check to see if the controller is for rest, and then verify against the entity itself
 
 			if(getActionPermissionDetails()[ subsystemName ].sections[ sectionName ].restController){
+				if (StructKeyExists(arguments.restInfo, "context")){
 				var hasProcess = invokeMethod('new'&arguments.restInfo.entityName).hasProcessObject(arguments.restInfo.context);
+				}else{
+					var hasProcess = false;
+				}
 				if(hasProcess){
 					authDetails.authorizedFlag = true;
 				}else if(itemName == 'get'){
@@ -383,7 +387,7 @@ component output="false" accessors="true" extends="HibachiService" {
 				}
 
 				// Setup the 'hasSecureMethods' value
-				if(len(subsystemPermissions.sections[ section ].secureMethods)) {
+				if(len(subsystemPermissions.sections[ section ].secureMethods & subsystemPermissions.sections[ section ].anyAdminMethods & subsystemPermissions.sections[ section ].anyLoginMethods)) {
 					subsystemPermissions.hasSecureMethods = true;
 				}
 
