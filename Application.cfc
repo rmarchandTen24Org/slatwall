@@ -46,6 +46,9 @@
 Notes: 
 	
 */
+
+
+
 component extends="org.Hibachi.Hibachi" output="false" {
 
 	// ===================================== HIBACHI HOOKS
@@ -88,6 +91,22 @@ component extends="org.Hibachi.Hibachi" output="false" {
 		request.slatwallScope.setApplicationValue("databaseType", this.ormSettings.dialect);
 	}
 	
+	public function AUTOVERSION(fileName) {
+		var absPath = expandPath("#ARGUMENTS.fileName#");
+	    if (!fileExists(absPath))
+	    {
+	        return fileName;
+	    }    
+	     
+	    //get the last modified datetime of the file 
+	     lstModified = getfileInfo(absPath).lastmodified;
+	     
+	    //get the unix timestamp     
+	     mtime =  dateDiff("s", "January 1 1970 00:00", lstModified);
+	    var fileNameWithTimestamp = listFirst(ARGUMENTS.fileName, '.') & '.' & mtime & '.' & listLast(ARGUMENTS.fileName, '.');
+	    return fileNameWithTimestamp;
+	}
+
 	public void function onUpdateRequest() {
 		// Setup Default Data... Not called on soft reloads.
 		getBeanFactory().getBean("dataService").loadDataFromXMLDirectory(xmlDirectory = ExpandPath("/Slatwall/config/dbdata"));
