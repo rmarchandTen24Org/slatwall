@@ -91,7 +91,7 @@ component extends="org.Hibachi.Hibachi" output="false" {
 		request.slatwallScope.setApplicationValue("databaseType", this.ormSettings.dialect);
 	}
 	
-	public function AUTOVERSION(fileName) {
+	public function autoversion(fileName) {
 		var absPath = expandPath("#ARGUMENTS.fileName#");
 	    if (!fileExists(absPath))
 	    {
