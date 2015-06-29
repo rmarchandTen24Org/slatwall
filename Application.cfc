@@ -92,19 +92,18 @@ component extends="org.Hibachi.Hibachi" output="false" {
 	}
 	
 	public function autoversion(fileName) {
-		var absPath = expandPath("#ARGUMENTS.fileName#");
-	    if (!fileExists(absPath))
-	    {
-	        return fileName;
-	    }    
-	     
-	    //get the last modified datetime of the file 
-	     lstModified = getfileInfo(absPath).lastmodified;
-	     
-	    //get the unix timestamp     
-	     mtime =  dateDiff("s", "January 1 1970 00:00", lstModified);
-	    var fileNameWithTimestamp = listFirst(ARGUMENTS.fileName, '.') & '.' & mtime & '.' & listLast(ARGUMENTS.fileName, '.');
-	    return fileNameWithTimestamp;
+		var absPath = expandPath("#argument.fileName#");
+		if (!fileExists(absPath)){
+			return fileName;
+		}    
+
+		//get the last modified datetime of the file 
+		lstModified = getfileInfo(absPath).lastmodified;
+
+		//get the unix timestamp     
+		mtime =  dateDiff("s", "January 1 1970 00:00", lstModified);
+		var fileNameWithTimestamp = listFirst(argument.fileName, '.') & '.' & mtime & '.' & listLast(argument.fileName, '.');
+		return fileNameWithTimestamp;
 	}
 
 	public void function onUpdateRequest() {
