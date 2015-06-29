@@ -92,7 +92,7 @@ component extends="org.Hibachi.Hibachi" output="false" {
 	}
 	
 	public function autoversion(fileName) {
-		var absPath = expandPath("#argument.fileName#");
+		var absPath = expandPath("#arguments.fileName#");
 		if (!fileExists(absPath)){
 			return fileName;
 		}    
@@ -102,7 +102,7 @@ component extends="org.Hibachi.Hibachi" output="false" {
 
 		//get the unix timestamp     
 		mtime =  dateDiff("s", "January 1 1970 00:00", lstModified);
-		var fileNameWithTimestamp = listFirst(argument.fileName, '.') & '.' & mtime & '.' & listLast(argument.fileName, '.');
+		var fileNameWithTimestamp = listFirst(arguments.fileName, '.') & '.' & mtime & '.' & listLast(arguments.fileName, '.');
 		return fileNameWithTimestamp;
 	}
 
