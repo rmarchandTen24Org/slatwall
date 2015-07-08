@@ -20,6 +20,8 @@ var GulpConfig = (function () {
         this.es6Path = './admin/client/js/es6/**/*.js';
         this.es5Path = './admin/client/js/es5/**/*.js';
         this.modelPath = './model/entity/**/*.cfc';
+        this.cf2tsInput = 'model/entity/'
+        this.cf2tsOutput = 'admin/client/ts/model/';
         
         //this.es5Path = 'admin/client/js/es5/**/*.js',
         //this.propertiesPath = 'config/resourceBundles/*.properties',

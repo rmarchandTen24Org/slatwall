@@ -7,7 +7,6 @@ var gulp = require('gulp'),
     sourcemaps = require('gulp-sourcemaps'),
     concat = require('gulp-concat'),
     gzip = require('gulp-gzip'),
-    properties = require ("properties"),
     fs = require('fs'),
     debug = require('gulp-debug'),
     inject = require('gulp-inject'),
@@ -18,42 +17,10 @@ var gulp = require('gulp'),
 	request = require('request'),
 	chmod = require('gulp-chmod'),
 	runSequence = require('run-sequence'),
-	changed = require('gulp-changed');
+	changed = require('gulp-changed'),
+	exec = require('child_process').exec;
 
 	var config = new Config();
-	
-/*
-gulp.task('properties2json',function(){
-	//get all files in a directory
-	var dir = 'config/resourceBundles';
-    var results = [];
-    fs.readdirSync(dir).forEach(function(file) {
-        file = dir+'/'+file;
-        properties.parse(file,{path:true}, function (error, obj){
-        	if (error) return console.error (error);
-        	var newobj = {};
-        	for(key in obj){
-        		newobj[key.toLowerCase()] = obj[key];
-        	}
-        	var newfile = file.replace('.properties','.json');
-        	
-        	if(fs.existsSync(newfile)){
-        		fs.unlink(newfile, function (err) {
-    				console.log(err);
-        		  if (err) throw err;
-        		  console.log('successfully deleted '+newfile);
-        		  	fs.writeFile(newfile, JSON.stringify(newobj), function(){
-              			console.log('It\'s saved!');
-              		});
-        		});
-        	}else{
-        		fs.writeFile(newfile, JSON.stringify(newobj), function(){
-            		console.log('It\'s saved!');
-            	});
-        	}
-	  	});
-    });
-});*/
 
 gulp.task('watch', function() {
 	//gulp.watch([config.ngSlatwallcfm],['flattenNgslatwall']);
@@ -68,6 +35,11 @@ gulp.task('watch', function() {
 	[
 		'traceur'
 	]);
+	gulp.watch([config.modelPath],
+	[
+		'cf2ts'
+	]);
+	
     //gulp.watch([config.es6Path],['traceur']);
     //gulp.watch([config.es5Path],['compress']);
     //gulp.watch([propertiesPath],['properties2json']);
@@ -80,6 +52,16 @@ gulp.task('watch', function() {
 gulp.task('ts-lint', function () {
     return gulp.src(config.allTypeScript).pipe(tslint()).pipe(tslint.report('prose'));
 });
+
+gulp.task('cf2ts',function(cb){
+	var command = 'java -jar org/Hibachi/cf2ts/cf2ts.jar -action transpile -all -s '+config.cf2tsInput+' -o '+config.cf2tsOutput;
+	console.log(command);
+	 exec(command, function (err, stdout, stderr) {
+	    console.log(stdout);
+	    console.log(stderr);
+	    cb(err);
+	  });
+})
 
 /**
  * Compile TypeScript and include references to library and app .d.ts files.
