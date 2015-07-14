@@ -449,6 +449,17 @@ Notes:
 			WHERE productTypeID = <cfqueryparam value="#arguments.fromProductTypeID#" cfsqltype="cf_sql_varchar" >
 		</cfquery>
 	</cffunction>
+	
+	<cffunction name="getFirstScheduledSku" hint="Return the event sku with the earliest startDateTime">
+		<cfargument name="productScheduleID" type="any" required ="true">
+		
+		<cfset ps = getService('hibachiService').newProductSchedule()>
+		<cfdump var="#ps.getProductScheduleID()#">
+		<cfdump var="#ps#" top=2><cfabort>
 
+			
+		<!---<cfset test = ormExecuteQuery("FROM #getApplicationKey()#Sku s WHERE s.productSchedule.productScheduleID = :productScheduleID ORDER BY s.eventStartDateTime ASC", {productScheduleID=arguments.productScheduleID},false, {maxresults=1}) />--->
+		<cfdump var="#arrayLen(test)#" top=1 abort="true" >
+	</cffunction>
 </cfcomponent>
 
