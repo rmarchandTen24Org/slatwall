@@ -3,7 +3,7 @@
 	<cfparam name="attributes.report" type="any" />
 
 	<cfoutput>
-		<script type="text/javascript" src="#request.slatwallScope.getBaseURL()#/org/Hibachi/HibachiAssets/js/highcharts.js"></script>
+		<script type="text/javascript" src="#request.context.fw.getHibachiScope().getBaseURL()#/org/Hibachi/HibachiAssets/js/highcharts.js"></script>
 
 		<div id="hibachi-report" data-reportname="#attributes.report.getClassName()#">
 			<!--- Chart --->
