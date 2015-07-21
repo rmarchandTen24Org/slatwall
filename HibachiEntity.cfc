@@ -296,7 +296,7 @@ component output="false" accessors="true" persistent="false" extends="HibachiTra
 	// @hint public method to determine if this entity is audited
 	public any function getAuditableFlag() {
 		var metaData = getThisMetaData();
-		if(isPersistent() && (setting('globalAuditAutoArchiveVersionLimit') > 0) && (!structKeyExists(metaData, "hb_auditable") || (structKeyExists(metaData, "hb_auditable") && metaData.hb_auditable))) {
+		if(isPersistent() && (getHibachiScope().setting('globalAuditAutoArchiveVersionLimit') > 0) && (!structKeyExists(metaData, "hb_auditable") || (structKeyExists(metaData, "hb_auditable") && metaData.hb_auditable))) {
 			return true;
 		}
 		return false;
