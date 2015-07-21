@@ -1,3 +1,4 @@
+
 <cfimport prefix="hb" taglib="../../../org/Hibachi/HibachiTags" />
 <cfif thisTag.executionMode is "start">
 	<cfparam name="attributes.hibachiScope" type="any" default="#request.context.fw.getHibachiScope()#" />
@@ -6,44 +7,44 @@
 	<cfparam name="attributes.object" type="any" default="" />
 	<cfparam name="attributes.recordsShow" type="string" default="10" />
 	<cfparam name="attributes.auditSmartList" type="any" default="" />
-
+	
 	<cfset thisTag.hibachiAuditService = attributes.hibachiScope.getService('HibachiAuditService') />
 	<cfset thisTag.mode = "" />
 	<cfset thisTag.auditArray = [] />
-
+	
 	<!--- AuditSmartList was passed in, so use as is --->
 	<cfif isObject(attributes.auditSmartList)>
 		<cfset thisTag.mode = "auditSmartList" />
-
+		
 	<!--- There is a specific entity, so use that entities auditSmartList --->
 	<cfelseif isObject(attributes.object) && attributes.object.isPersistent()>
 		<cfset thisTag.mode = "object" />
 		<cfset attributes.auditSmartList = attributes.object.getAuditSmartList() />
-
+		
 	<!--- No AuditSmartList was pased in, and no object was passed in so just create a new auditSmartList --->
 	<cfelse>
 		<cfset thisTag.mode = "baseObjectList" />
 		<cfset attributes.auditSmartList = thisTag.hibachiAuditService.getAuditSmartList() />
-
+		
 		<!--- Determine which base object types to display --->
 		<cfif listLen(attributes.baseObjectList)>
 			<cfset attributes.auditSmartList.addInFilter("baseObject", attributes.baseObjectList) />
 		</cfif>
-
+		
 		<!--- Only add the orderBy here, because all other options would already have an orderBy defined --->
 		<cfset attributes.auditSmartList.addOrder("auditDateTime|DESC") />
 	</cfif>
-
+	
 	<cfif listLen(attributes.auditTypeList)>
 		<cfset attributes.auditSmartList.addInFilter("auditType", attributes.auditTypeList) />
 	</cfif>
-
+	
 	<!---
-
-		SELECT a FROM HibachiAudit a INNER JOIN FETCH
-
+		
+		SELECT a FROM SlatwallAudit a INNER JOIN FETCH
+		
 	--->
-
+	
 	<!--- Display page or all --->
 	<cfif isNumeric(attributes.recordsShow) and attributes.recordsShow gt 0>
 		<cfset attributes.auditSmartList.setPageRecordsShow(attributes.recordsShow) />
@@ -51,30 +52,30 @@
 	<cfelse>
 		<cfset thisTag.auditArray = attributes.auditSmartList.getRecords() />
 	</cfif>
-
+	
 	<cfset thisTag.columnCount = 5 />
 	<cfoutput>
-		<div class="col-xs-12 table-responsive">
-			<table class="table table-striped table-bordered table-condensed">
+		<div class="col-xs-12 table-responsive">	
+			<table class="table table-bordered table-hover">
 				<tbody>
 					<cfif arraylen(thisTag.auditArray)>
 						<!--- Remove time for day comparison --->
 						<cfset nowDate = createDate(year(now()), month(now()), day(now())) />
-
+						
 						<!--- Used for determining when to display date row for grouping --->
 						<cfset dateGroupingUsageFlags = {today=false, yesterday=false, thisweek=false, thismonth=false} />
-
+						
 						<cfloop array="#thisTag.auditArray#" index="currentAudit">
 							<!--- Remove time for day comparison --->
 							<cfset auditDate = createDate(year(currentAudit.getAuditDateTime()), month(currentAudit.getAuditDateTime()), day(currentAudit.getAuditDateTime())) />
-
+							
 							<cfset daysDiffNow = dateDiff('d', auditDate, nowDate) />
 							<cfset monthDiffNow = dateDiff('m', auditDate, nowDate) />
-
+							
 							<cfset showTime = false />
 							<cfset dateGroupUsageKey = "" />
 							<cfset dateGroupText = "" />
-
+							
 							<!--- Group by today --->
 							<cfif daysDiffNow eq 0>
 								<cfset dateGroupUsageKey = "today" />
@@ -100,7 +101,7 @@
 									<cfset dateGroupingUsageFlags[dateGroupUsageKey] = false />
 								</cfif>
 							</cfif>
-
+							
 							<!--- Output the date row --->
 							<cfif not dateGroupingUsageFlags[dateGroupUsageKey]>
 								<!--- Determine which format to show --->
@@ -109,7 +110,7 @@
 								</tr>
 								<cfset dateGroupingUsageFlags[dateGroupUsageKey] = true />
 							</cfif>
-
+							
 							<tr>
 								<td style="white-space:nowrap;width:1%;"><cfif showTime>#currentAudit.getFormattedValue("auditDateTime", "time")#</cfif><cfif len(currentAudit.getSessionAccountFullName())> - #currentAudit.getSessionAccountFullName()#</cfif></td>
 								<td class="primary">
@@ -122,7 +123,7 @@
 										</cfif>
 										<br />
 										<cfif listFindNoCase('update,rollback,archive', currentAudit.getAuditType()) or (currentAudit.getAuditType() eq 'create' and thisTag.mode eq "object")>
-											<em>#attributes.hibachiScope.rbKey("entity.audit.changeDetails.propertyChanged.#currentAudit.getAuditType()#")#:
+											<em>#attributes.hibachiScope.rbKey("entity.audit.changeDetails.propertyChanged.#currentAudit.getAuditType()#")#: 
 											<cfset data = deserializeJSON(currentAudit.getData()) />
 											<cfset indexCount = 0 />
 											<cfloop collection="#data.newPropertyData#" item="propertyName">
@@ -152,6 +153,11 @@
 								</td>
 							</tr>
 						</cfloop>
+						<cfif isObject(attributes.object) and attributes.object.hasProperty('createdDateTime') and attributes.object.getCreatedDateTime() lt attributes.auditSmartList.getRecords()[arrayLen(attributes.auditSmartList.getRecords())].getAuditDateTime()>
+							<tr><td colspan="#thisTag.columnCount#" style="text-align:center;"><em>#attributes.hibachiScope.rbKey("entity.audit.frontEndAndAdmin")#</em></td></tr>
+						</cfif>
+					<cfelseif isObject(attributes.object) and attributes.object.hasProperty('createdDateTime') and attributes.object.hasProperty('modifiedDateTime') and attributes.object.getCreatedDateTime() lt attributes.object.getModifiedDateTime()>
+						<tr><td colspan="#thisTag.columnCount#" style="text-align:center;"><em>#attributes.hibachiScope.rbKey("entity.audit.frontEndOnly")#</em></td></tr>
 					<cfelse>
 						<tr><td colspan="#thisTag.columnCount#" style="text-align:center;"><em>#attributes.hibachiScope.rbKey("entity.audit.norecords")#</em></td></tr>
 					</cfif>

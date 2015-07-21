@@ -85,7 +85,7 @@
 		</cfif>
 
 		<!--- Setup the default table class --->
-		<cfset attributes.tableclass = listPrepend(attributes.tableclass, 'table table-striped table-bordered table-condensed', ' ') />
+		<cfset attributes.tableclass = listPrepend(attributes.tableclass, 'table table-bordered table-hover', ' ') />
 
 		<!--- Setup Select --->
 		<cfif len(attributes.selectFieldName)>

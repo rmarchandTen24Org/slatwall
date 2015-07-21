@@ -296,7 +296,7 @@ component output="false" accessors="true" persistent="false" extends="HibachiTra
 	// @hint public method to determine if this entity is audited
 	public any function getAuditableFlag() {
 		var metaData = getThisMetaData();
-		if(isPersistent() && (getHibachiScope().setting('globalAuditAutoArchiveVersionLimit') > 0) && (!structKeyExists(metaData, "hb_auditable") || (structKeyExists(metaData, "hb_auditable") && metaData.hb_auditable))) {
+		if(isPersistent() && (setting('globalAuditAutoArchiveVersionLimit') > 0) && (!structKeyExists(metaData, "hb_auditable") || (structKeyExists(metaData, "hb_auditable") && metaData.hb_auditable))) {
 			return true;
 		}
 		return false;
@@ -567,14 +567,9 @@ component output="false" accessors="true" persistent="false" extends="HibachiTra
 
 	// @hint returns the count of a given property
 	public numeric function getPropertyCount( required string propertyName ) {
-		var cacheKey = "#arguments.propertyName#Count";
-
-		if(!structKeyExists(variables, cacheKey)) {
-			variables[ cacheKey ] = arrayLen(variables[ arguments.propertyName ]);
+		var propertySmartList = this.invokeMethod('get#propertyName#SmartList');
+		return propertySmartList.getRecordsCount();
 		}
-
-		return variables[ cacheKey ];
-	}
 
 	// @hint handles encrypting a property based on conventions
 	public void function encryptProperty(required string propertyName) {
@@ -694,11 +689,6 @@ component output="false" accessors="true" persistent="false" extends="HibachiTra
 
 			return getPropertyAssignedIDList( propertyName=left(right(arguments.missingMethodName, len(arguments.missingMethodName)-3), len(arguments.missingMethodName)-17) );
 
-		// getXXXID()		Where XXX is a many-to-one property that we want to get the primaryIDValue of that property
-		} else if ( left(arguments.missingMethodName, 3) == "get" && right(arguments.missingMethodName, 2) == "ID") {
-
-			return getPropertyPrimaryID( propertyName=left(right(arguments.missingMethodName, len(arguments.missingMethodName)-3), len(arguments.missingMethodName)-5) );
-
 		// getXXXOptions()		Where XXX is a one-to-many or many-to-many property that we need an array of valid options returned
 		} else if ( left(arguments.missingMethodName, 3) == "get" && right(arguments.missingMethodName, 7) == "Options") {
 
@@ -725,11 +715,16 @@ component output="false" accessors="true" persistent="false" extends="HibachiTra
 			return getPropertyCount( propertyName=left(right(arguments.missingMethodName, len(arguments.missingMethodName)-3), len(arguments.missingMethodName)-8) );
 
 		// getXXX() 			Where XXX is either and attributeID or attributeCode
-		} else if (left(arguments.missingMethodName, 3) == "get" && structKeyExists(variables, "getAttributeValue") && hasProperty("attributeValues")) {
+		} else if (left(arguments.missingMethodName, 3) == "get" && structKeyExists(variables, "getAttributeValue") && hasProperty("attributeValues") && hasAttributeCode(right(arguments.missingMethodName, len(arguments.missingMethodName)-3)) ) {
 
 			return getAttributeValue(right(arguments.missingMethodName, len(arguments.missingMethodName)-3));
 
 		}
+		// getXXXID()		Where XXX is a many-to-one property that we want to get the primaryIDValue of that property 		
+		 else if ( left(arguments.missingMethodName, 3) == "get" && right(arguments.missingMethodName, 2) == "ID") {
+			
+			return getPropertyPrimaryID( propertyName=left(right(arguments.missingMethodName, len(arguments.missingMethodName)-3), len(arguments.missingMethodName)-5) );
+		}	
 
 		throw('You have called a method #arguments.missingMethodName#() which does not exists in the #getClassName()# entity.');
 	}
@@ -818,7 +813,7 @@ component output="false" accessors="true" persistent="false" extends="HibachiTra
 					logHibachi("an ormFlush() failed for an Entity Insert of #getEntityName()# with an errorName: #errorName# and errorMessage: #getErrors()[errorName][i]#", true);
 				}
 			}
-			throw("An ormFlush has been called on the hibernate session, however there is a #getEntityName()# entity in the hibernate session with errors.  The specific errors will be shown in the Hibachi log.");
+			throw("An ormFlush has been called on the hibernate session, however there is a #getEntityName()# entity in the hibernate session with errors.  The specific errors will be shown in the Slatwall log.");
 		}
 
 		var timestamp = now();

@@ -60,6 +60,7 @@ Notes:
 	<!--- Definition Properties --->
 	<cfproperty name="metricDefinitions" />
 	<cfproperty name="dimensionDefinitions" />
+	<cfproperty name="orderByType" />
 	<cfproperty name="reportDateTimeDefinitions" />
 
 	<!--- Metric / Dimension States --->
