@@ -53,7 +53,7 @@ component output="false" accessors="true" extends="HibachiController" {
 	/**
 	 * This will return the path to an image based on the skuIDs (sent as a comma seperated list)
 	 * and a 'profile name' that determines the size of that image.
-	 * http://slatwall/index.cfm?slatAction=api:main.getResizedImageByProfileName&profileName=orderItem&skuIDs=8a8080834721af1a0147220714810083,4028818d4b31a783014b5653ad5d00d2,4028818d4b05b871014b102acb0700d5
+	 * http://baseURL/index.cfm?hibachiAction=api:main.getResizedImageByProfileName&profileName=orderItem&skuIDs=8a8080834721af1a0147220714810083,4028818d4b31a783014b5653ad5d00d2,4028818d4b05b871014b102acb0700d5
 	 * ...should return three paths.
 	 */
 	public any function getResizedImageByProfileName(required struct rc){
@@ -72,7 +72,7 @@ component output="false" accessors="true" extends="HibachiController" {
 			var skus = [];
 			
 			//smart list to load up sku array
-			var skuSmartList = request.slatwallScope.getService('skuService').getSkuSmartList();
+			var skuSmartList = request.hibachiScope.getService('skuService').getSkuSmartList();
 			skuSmartList.addInFilter('skuID',rc.skuIDs);
 			
 			if( skuSmartList.getRecordsCount() > 0){
@@ -295,8 +295,8 @@ component output="false" accessors="true" extends="HibachiController" {
 		param name="arguments.rc.propertyIdentifiers" default="";
 		//first check if we have an entityName value
 		if(!structKeyExists(arguments.rc, "entityName")) {
-			arguments.rc.apiResponse.content['account'] = arguments.rc.$.slatwall.invokeMethod("getAccountData");
-			arguments.rc.apiResponse.content['cart'] = arguments.rc.$.slatwall.invokeMethod("getCartData");
+			arguments.rc.apiResponse.content['account'] = arguments.rc.$.hibachi.invokeMethod("getAccountData");
+			arguments.rc.apiResponse.content['cart'] = arguments.rc.$.hibachi.invokeMethod("getCartData");
 		} else {
 			//get entity service by entity name
 			var currentPage = 1;
