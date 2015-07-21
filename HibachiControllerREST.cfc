@@ -87,7 +87,7 @@ component output="false" accessors="true" extends="HibachiController" {
 	
 	public any function getValidationPropertyStatus(required struct rc){
 			
-		var service = request.slatwallScope.getService("hibachiValidationService");
+		var service = request.hibachiScope.getService("hibachiValidationService");
 		var objectName = arguments.rc.object;
 		var propertyIdentifier = arguments.rc.propertyIdentifier;
 		var value = arguments.rc.value;
