@@ -685,7 +685,7 @@ component extends="FW1.framework" {
 				}
 			}
 			
-			// Check to make sure that the redirect stays on the Slatwall site, redirect back to the Slatwall landing page. 
+			// Check to make sure that the redirect stays on the Hibachi site, redirect back to the Hibachi landing page.
 			if ( getPageContext().getRequest().GetRequestUrl().toString() == LEFT(arguments.redirectLocation, len(getPageContext().getRequest().GetRequestUrl().toString())) || redirectDomainApprovedFlag == true ){
 				location(arguments.redirectLocation, arguments.addToken);
 			}else{

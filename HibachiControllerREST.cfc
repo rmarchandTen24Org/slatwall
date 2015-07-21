@@ -35,7 +35,7 @@ component output="false" accessors="true" extends="HibachiController" {
 	
 	public any function before( required struct rc ) {
 		arguments.rc.apiRequest = true;
-		getFW().setView("public:main.blank");
+		getFW().setView("api:main.blank");
 		//could possibly check whether we want a different contentType other than json in the future
 		param name="rc.headers.contentType" default="application/json"; 
 		arguments.rc.headers["Content-Type"] = rc.headers.contentType;
