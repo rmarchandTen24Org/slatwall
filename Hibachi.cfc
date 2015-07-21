@@ -518,14 +518,6 @@ component extends="FW1.framework" {
 						// Set the request timeout to 360
 						getHibachiScope().getService("hibachiTagService").cfsetting(requesttimeout=600);
 						
-						
-						//Update custom properties
-						var success = getHibachiScope().getService('updateService').updateEntitiesWithCustomProperties();
-						if (success){
-							writeLog(file="Slatwall", text="General Log - Attempting to update entities with custom properties.");
-						}else{
-							writeLog(file="Slatwall", text="General Log - Error updating entities with custom properties");
-						}
 						// Reload ORM
 						writeLog(file="#variables.framework.applicationKey#", text="General Log - ORMReload() started");
 						ormReload();
