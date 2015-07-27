@@ -79,14 +79,71 @@
 				</cfoutput>
 			<cfelse>
 				<cfoutput>
-					<tr>
-						<td class="title<cfif len(attributes.titleClass)> #attributes.titleClass#</cfif>">#attributes.title#<cfif len(attributes.hint)> <a href="##" tabindex="-1" rel="tooltip" class="hint" title="#attributes.hint#"><i class="icon-question-sign"></i></a></cfif></td>
-						<cfif attributes.valueLink neq "">
-							<td class="value<cfif len(attributes.valueClass)> #attributes.valueClass#</cfif>"><a href="#attributes.valueLink#" class="#attributes.valueLinkClass#">#attributes.value#</a></td>
-						<cfelse>
+
+					<!--- If the items is discount change layout to show discounts --->
+					<cfif attributes.PROPERTY EQ "discountTotal">
+						<tr>
+							<td class="title<cfif len(attributes.titleClass)> #attributes.titleClass#</cfif>"><a role="button" data-toggle="collapse" href="###attributes.PROPERTY#" aria-expanded="false" aria-controls="collapseExample">#attributes.title# <span class="totalCount">3</span></a><cfif len(attributes.hint)> <a href="##" tabindex="-1" rel="tooltip" class="hint" title="#attributes.hint#"><i class="icon-question-sign"></i></a></cfif></td>
 							<td class="value<cfif len(attributes.valueClass)> #attributes.valueClass#</cfif>">#attributes.value#</td>
-						</cfif>
-					</tr>
+						</tr>
+						<tr class="collapse" id="#attributes.PROPERTY#">
+							<td colspan="2">
+								<div class="list-group s-table-listing-group">	
+								
+									<!--- Loop over promos --->
+									<div class="list-group-item">
+										<span class="title active">
+											<i class="fa fa-circle" data-toggle="tooltip" data-placement="right" title="Active"></i> 
+											<span data-toggle="tooltip" data-placement="right" title="Spring Cleaning Sale">Spring Cleaning S...</span> 
+											<span data-toggle="tooltip" data-placement="right" title="SPRINGCLEAN, TAKETEN, SAVESOMEMONEYYO">(SPRINGCLEAN,...)</span>
+										</span>
+										<span class="savings" data-toggle="tooltip" data-placement="right" title="Get $10 off any order over $50">$10.00 - Merchandise</span>
+										<span class="editOptions">
+											<a href="##"><i class="fa fa-eye"></i></a>
+											<a href="##"><i class="fa fa-trash-o"></i></a>
+										</span>
+									</div>
+
+									<div class="list-group-item">
+										<span class="title">
+											<i class="fa fa-circle" data-toggle="tooltip" data-placement="right" title="Not Active"></i> 
+											<span>Get Ten</span> 
+											<span>(TENOFF)</span>
+										</span>
+										<span class="savings" data-toggle="tooltip" data-placement="right" title="Get 10% all orders over $60">10% - Merchandise</span>
+										<span class="editOptions">
+											<a href="##"><i class="fa fa-eye"></i></a>
+											<a href="##"><i class="fa fa-trash-o"></i></a>
+										</span>
+									</div>
+
+									<div class="list-group-item">
+										<span class="title active">
+											<i class="fa fa-circle" data-toggle="tooltip" data-placement="right" title="Active"></i> 
+											<span>Free Shipping</span>
+										</span>
+										<span class="savings" data-toggle="tooltip" data-placement="right" title="Get free shipping on orders over $100">100% - Fulfillment</span>
+										<span class="editOptions">
+											<a href="##"><i class="fa fa-eye"></i></a>
+											<a href="##"><i class="fa fa-trash-o"></i></a>
+										</span>
+									</div>
+									<!--- //Loop over promos --->
+
+								</div>
+							</td>
+						</tr>
+					<cfelse>
+						<tr>
+							<td class="title<cfif len(attributes.titleClass)> #attributes.titleClass#</cfif>">#attributes.title#<cfif len(attributes.hint)> <a href="##" tabindex="-1" rel="tooltip" class="hint" title="#attributes.hint#"><i class="icon-question-sign"></i></a></cfif></td>
+							<cfif attributes.valueLink neq "">
+								<td class="value<cfif len(attributes.valueClass)> #attributes.valueClass#</cfif>"><a href="#attributes.valueLink#" class="#attributes.valueLinkClass#">#attributes.value#</a></td>
+							<cfelse>
+								<td class="value<cfif len(attributes.valueClass)> #attributes.valueClass#</cfif>">#attributes.value#</td>
+							</cfif>
+						</tr>
+					</cfif>
+
 				</cfoutput>
 			</cfif>
 		</cfcase>
