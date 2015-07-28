@@ -151,7 +151,7 @@
 									<!--- Loop over promos --->
 									<div>
 										<span class="title">
-											<i class="fa fa-circle" data-toggle="tooltip" data-placement="right" title="Active"></i> 
+											<i class="fa fa-circle" data-toggle="tooltip" data-placement="right" title="Not Active"></i> 
 											<span>Free Shipping</span>
 											<a role="button" data-toggle="collapse" data-target="##item3">detail</a>
 											<div class="collapse" id="item3">
