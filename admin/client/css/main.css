@@ -365,36 +365,50 @@ a:hover {
   font-weight: 700;
   font-size: 10px;
 }
+.discountTotal {
+  background-color: #F2F2F2;
+}
+.discountTotal td:first-child {
+  border-right: 0px;
+}
+.discountTotal td:last-child {
+  border-left: 0px;
+}
+.discountTotal .title ul {
+  margin-top: 5px;
+  border-top: 1px dotted #CCC;
+  padding-top: 8px;
+}
+.discountTotal .title ul li {
+  margin-top: 2px;
+  color: #999;
+}
 .s-table-listing-group {
   margin-bottom: 0px;
 }
-.s-table-listing-group .list-group-item > span {
+.s-table-listing-group span {
   vertical-align: top;
 }
-.s-table-listing-group .list-group-item .title {
-  width: 40%;
+.s-table-listing-group .title {
   display: inline-block;
   overflow: auto;
 }
-.s-table-listing-group .list-group-item .title.active i {
+.s-table-listing-group .title.active i {
   color: #449d44;
 }
-.s-table-listing-group .list-group-item .editOptions {
+.s-table-listing-group .editOptions {
   float: right;
 }
-.s-table-listing-group .list-group-item .savings {
-  margin-left: 10%;
-}
-.s-table-listing-group .list-group-item .editOptions a {
+.s-table-listing-group .editOptions a {
   width: 20px;
-  height: 20px;
+  height: 18px;
   margin-left: 5px;
   display: inline-block;
   text-align: center;
   padding-top: 1px;
   color: #666;
 }
-.s-table-listing-group .list-group-item .editOptions a:hover {
+.s-table-listing-group .editOptions a:hover {
   background: #666;
   color: #fff;
   border-radius: 3px;

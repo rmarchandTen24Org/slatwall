@@ -83,54 +83,94 @@
 					<!--- If the items is discount change layout to show discounts --->
 					<cfif attributes.PROPERTY EQ "discountTotal">
 						<tr>
-							<td class="title<cfif len(attributes.titleClass)> #attributes.titleClass#</cfif>"><a role="button" data-toggle="collapse" href="###attributes.PROPERTY#" aria-expanded="false" aria-controls="collapseExample">#attributes.title# <span class="totalCount">3</span></a><cfif len(attributes.hint)> <a href="##" tabindex="-1" rel="tooltip" class="hint" title="#attributes.hint#"><i class="icon-question-sign"></i></a></cfif></td>
+							<td class="title<cfif len(attributes.titleClass)> #attributes.titleClass#</cfif>"><a role="button" data-toggle="collapse" data-target=".#attributes.PROPERTY#" aria-expanded="false" aria-controls="collapseExample">#attributes.title# <span class="totalCount">3</span></a><cfif len(attributes.hint)> <a href="##" tabindex="-1" rel="tooltip" class="hint" title="#attributes.hint#"><i class="icon-question-sign"></i></a></cfif></td>
 							<td class="value<cfif len(attributes.valueClass)> #attributes.valueClass#</cfif>">#attributes.value#</td>
 						</tr>
-						<tr class="collapse" id="#attributes.PROPERTY#">
-							<td colspan="2">
-								<div class="list-group s-table-listing-group">	
+						<tr class="collapse s-table-listing-group #attributes.PROPERTY#">
+							<td>
+								<div>	
 								
 									<!--- Loop over promos --->
-									<div class="list-group-item">
+									<div>
 										<span class="title active">
 											<i class="fa fa-circle" data-toggle="tooltip" data-placement="right" title="Active"></i> 
-											<span data-toggle="tooltip" data-placement="right" title="Spring Cleaning Sale">Spring Cleaning S...</span> 
-											<span data-toggle="tooltip" data-placement="right" title="SPRINGCLEAN, TAKETEN, SAVESOMEMONEYYO">(SPRINGCLEAN,...)</span>
+											<span>Spring Cleaning Savings</span>
+											<a role="button" data-toggle="collapse" data-target="##item1">detail</a>
+											<div class="collapse" id="item1">
+												<ul class="list-unstyled">
+													<li><strong>Promo Codes:</strong> SPRINGCLEANING, GETITNOW, ONLYFORME</li>
+													<li><strong>Type:</strong> Merchandise</li>
+												</ul>
+											</div>
 										</span>
-										<span class="savings" data-toggle="tooltip" data-placement="right" title="Get $10 off any order over $50">$10.00 - Merchandise</span>
-										<span class="editOptions">
-											<a href="##"><i class="fa fa-eye"></i></a>
-											<a href="##"><i class="fa fa-trash-o"></i></a>
-										</span>
-									</div>
-
-									<div class="list-group-item">
-										<span class="title">
-											<i class="fa fa-circle" data-toggle="tooltip" data-placement="right" title="Not Active"></i> 
-											<span>Get Ten</span> 
-											<span>(TENOFF)</span>
-										</span>
-										<span class="savings" data-toggle="tooltip" data-placement="right" title="Get 10% all orders over $60">10% - Merchandise</span>
-										<span class="editOptions">
-											<a href="##"><i class="fa fa-eye"></i></a>
-											<a href="##"><i class="fa fa-trash-o"></i></a>
-										</span>
-									</div>
-
-									<div class="list-group-item">
-										<span class="title active">
-											<i class="fa fa-circle" data-toggle="tooltip" data-placement="right" title="Active"></i> 
-											<span>Free Shipping</span>
-										</span>
-										<span class="savings" data-toggle="tooltip" data-placement="right" title="Get free shipping on orders over $100">100% - Fulfillment</span>
-										<span class="editOptions">
-											<a href="##"><i class="fa fa-eye"></i></a>
-											<a href="##"><i class="fa fa-trash-o"></i></a>
-										</span>
-									</div>
-									<!--- //Loop over promos --->
+									</div
 
 								</div>
+							</td>
+							<td>
+								<span>-$30.98</span>
+								<span class="editOptions">
+									<a href="##"><i class="fa fa-eye"></i></a>
+									<a href="##"><i class="fa fa-trash-o"></i></a>
+								</span>
+							</td>
+						</tr>
+						<tr class="collapse s-table-listing-group #attributes.PROPERTY#">
+							<td>
+								<div>	
+								
+									<!--- Loop over promos --->
+									<div>
+										<span class="title active">
+											<i class="fa fa-circle" data-toggle="tooltip" data-placement="right" title="Active"></i> 
+											<span>Take 10</span>
+											<a role="button" data-toggle="collapse" data-target="##item2">detail</a>
+											<div class="collapse" id="item2">
+												<ul class="list-unstyled">
+													<li><strong>Promo Codes:</strong> 10OFF</li>
+													<li><strong>Type:</strong> Merchandise</li>
+												</ul>
+											</div>
+										</span>
+									</div
+
+								</div>
+							</td>
+							<td>
+								<span>-$10.00</span>
+								<span class="editOptions">
+									<a href="##"><i class="fa fa-eye"></i></a>
+									<a href="##"><i class="fa fa-trash-o"></i></a>
+								</span>
+							</td>
+						</tr>
+						<tr class="collapse s-table-listing-group #attributes.PROPERTY#">
+							<td>
+								<div>	
+								
+									<!--- Loop over promos --->
+									<div>
+										<span class="title">
+											<i class="fa fa-circle" data-toggle="tooltip" data-placement="right" title="Active"></i> 
+											<span>Free Shipping</span>
+											<a role="button" data-toggle="collapse" data-target="##item3">detail</a>
+											<div class="collapse" id="item3">
+												<ul class="list-unstyled">
+													<li><strong>Promo Codes:</strong> FREESHIPPING</li>
+													<li><strong>Type:</strong> Fulfillment</li>
+												</ul>
+											</div>
+										</span>
+									</div
+
+								</div>
+							</td>
+							<td>
+								<span>-$8.00</span>
+								<span class="editOptions">
+									<a href="##"><i class="fa fa-eye"></i></a>
+									<a href="##"><i class="fa fa-trash-o"></i></a>
+								</span>
 							</td>
 						</tr>
 					<cfelse>
