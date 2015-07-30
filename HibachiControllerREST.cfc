@@ -66,7 +66,7 @@ component output="false" accessors="true" extends="HibachiController" {
 			arrayAppend(detailTabs,tab);
 		}    
 		
-		arguments.rc.apiResponse.content.data = detailTabs;
+		arguments.rc.apiResponse.content['data'] = detailTabs;
 	}
 	
 	/**
