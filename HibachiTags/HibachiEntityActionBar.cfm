@@ -14,6 +14,7 @@
 	<cfparam name="attributes.showcreate" type="boolean" default="true" />
 	<cfparam name="attributes.showedit" type="boolean" default="true" />
 	<cfparam name="attributes.showdelete" type="boolean" default="true" />
+	<cfparam name="attributes.showsave" type="boolean" default="true" />
 
 	<!--- Basic Action Caller Overrides --->
 	<cfparam name="attributes.createModal" type="boolean" default="false" />
@@ -168,7 +169,9 @@
 										<hb:HibachiActionCaller action="#attributes.cancelAction#" querystring="#attributes.cancelQueryString#" text="#attributes.hibachiScope.rbKey('define.cancel')#" class="btn btn-default" icon="remove icon-white">
 
 										<!--- Save --->
-										<hb:HibachiActionCaller action="#request.context.entityActionDetails.saveAction#" text="#attributes.hibachiScope.rbKey('define.save')#" class="btn btn-success" type="button" submit="true" icon="ok icon-white">
+                            			<cfif attributes.showsave>
+											<hb:HibachiActionCaller action="#request.context.entityActionDetails.saveAction#" text="#attributes.hibachiScope.rbKey('define.save')#" class="btn btn-success" type="button" submit="true" icon="ok icon-white">
+										</cfif>
 									<cfelse>
 										<!--- Delete --->
 										<cfif attributes.showdelete>
