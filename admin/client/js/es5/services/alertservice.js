@@ -1,33 +1,33 @@
 "use strict";
 var slatwalladmin;
 (function(slatwalladmin) {
-  var AlertService = (function() {
+  var AlertService = function() {
     function AlertService($timeout, alerts) {
-      var _this = this;
+      var $__0 = this;
       this.$timeout = $timeout;
       this.alerts = alerts;
       this.get = function() {
-        return _this.alerts || [];
+        return $__0.alerts || [];
       };
       this.addAlert = function(alert) {
-        _this.alerts.push(alert);
-        _this.$timeout(function(alert) {
-          _this.removeAlert(alert);
+        $__0.alerts.push(alert);
+        $__0.$timeout(function(alert) {
+          $__0.removeAlert(alert);
         }, 3500);
       };
       this.addAlerts = function(alerts) {
         alerts.forEach(function(alert) {
-          _this.addAlert(alert);
+          $__0.addAlert(alert);
         });
       };
       this.removeAlert = function(alert) {
-        var index = _this.alerts.indexOf(alert, 0);
+        var index = $__0.alerts.indexOf(alert, 0);
         if (index != undefined) {
-          _this.alerts.splice(index, 1);
+          $__0.alerts.splice(index, 1);
         }
       };
       this.getAlerts = function() {
-        return _this.alerts;
+        return $__0.alerts;
       };
       this.formatMessagesToAlerts = function(messages) {
         var alerts = [];
@@ -49,13 +49,13 @@ var slatwalladmin;
         return alerts;
       };
       this.removeOldestAlert = function() {
-        _this.alerts.splice(0, 1);
+        $__0.alerts.splice(0, 1);
       };
       this.alerts = [];
     }
-    AlertService.$inject = ['$timeout'];
-    return AlertService;
-  })();
+    return ($traceurRuntime.createClass)(AlertService, {}, {});
+  }();
+  AlertService.$inject = ['$timeout'];
   slatwalladmin.AlertService = AlertService;
 })(slatwalladmin || (slatwalladmin = {}));
 var slatwalladmin;

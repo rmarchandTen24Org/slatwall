@@ -1,13 +1,13 @@
 "use strict";
 var slatwalladmin;
 (function(slatwalladmin) {
-  var Alert = (function() {
+  var Alert = function() {
     function Alert(msg, type) {
       this.msg = msg;
       this.type = type;
     }
-    return Alert;
-  })();
+    return ($traceurRuntime.createClass)(Alert, {}, {});
+  }();
   slatwalladmin.Alert = Alert;
 })(slatwalladmin || (slatwalladmin = {}));
 
