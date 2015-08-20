@@ -720,11 +720,11 @@ component output="false" accessors="true" persistent="false" extends="HibachiTra
 			return getAttributeValue(right(arguments.missingMethodName, len(arguments.missingMethodName)-3));
 
 		}
-		// getXXXID()		Where XXX is a many-to-one property that we want to get the primaryIDValue of that property 		
+		// getXXXID()		Where XXX is a many-to-one property that we want to get the primaryIDValue of that property
 		 else if ( left(arguments.missingMethodName, 3) == "get" && right(arguments.missingMethodName, 2) == "ID") {
-			
+
 			return getPropertyPrimaryID( propertyName=left(right(arguments.missingMethodName, len(arguments.missingMethodName)-3), len(arguments.missingMethodName)-5) );
-		}	
+		}
 
 		throw('You have called a method #arguments.missingMethodName#() which does not exists in the #getClassName()# entity.');
 	}
@@ -901,35 +901,64 @@ component output="false" accessors="true" persistent="false" extends="HibachiTra
 		}
 
 	}
-	
+
 	//can be overridden at the entity level in case we need to always return a relationship entity otherwise the default is only non-relationship and non-persistent
 	public any function getDefaultCollectionProperties(string includesList = "", string excludesList="modifiedByAccountID,createdByAccountID,modifiedDateTime,createdDateTime,remoteID,remoteEmployeeID,remoteCustomerID,remoteContactID,cmsAccountID,cmsContentID,cmsSiteID"){
 		var properties = getProperties();
-		
 		var defaultProperties = [];
-		for(var p=1; p<=arrayLen(properties); p++) {
-			if(len(arguments.excludesList) && ListFind(arguments.excludesList,properties[p].name)){
-				
-			}else{
-				if((len(arguments.includesList) && ListFind(arguments.includesList,properties[p].name)) || 
-				!structKeyExists(properties[p],'FKColumn') && (!structKeyExists(properties[p], "persistent") || 
-				properties[p].persistent)){
-					arrayAppend(defaultProperties,properties[p]);	
+
+		//Check if there is any include column
+		if(len(arguments.includesList)){
+			var includesArray = ListToArray(arguments.includesList);
+			for(var inc in includesArray) {
+				//Loop through IncludeList looking for relational
+				inc = trim(inc);
+				if(inc.contains('.')){
+					//if find, get relational Entity Stuck
+					var entityStructs = getService("hibachiService").getPropertiesByEntityName(
+						getService("hibachiService").getLastEntityNameInPropertyIdentifier(this.getClassName(), inc)
+					);
+
+					for(var property in entityStructs){
+						if(property.name == listLast(inc, '.')){
+							//Create a new struct instead of changing the "property" otherwise it will be cached with the changes.
+							var newProperty = {};
+							structAppend(newProperty,property);
+							newProperty.name = inc;
+							//append the Column struct with relational name.
+							arrayAppend(defaultProperties, newProperty);
+						}
+					}
+				}else{
+					//If its not relationa, just use the current entity struct
+					for(var property in properties){
+						if(property.name == inc){
+							arrayAppend(defaultProperties, property);
+						}
+					}
+				}
+            }
+        }else{
+			//Remove all non Persistent, Relational and Excluded columns
+			for(var property in properties){
+				if(!ListContains(excludesList, property.name) && !structKeyExists(property,'FKColumn') &&
+				(!structKeyExists(property, "persistent") || property.persistent)){
+					arrayAppend(defaultProperties,property);
 				}
 			}
-			
-		}
+        }
+
 		return defaultProperties;
 	}
-	
+
 	public any function getFilterProperties(string includesList = "", string excludesList = ""){
 		var properties = getProperties();
 		var defaultProperties = [];
 		for(var p=1; p<=arrayLen(properties); p++) {
-			if((len(includesList) && ListFind(arguments.includesList,properties[p].name) && !ListFind(arguments.excludesList,properties[p].name)) 
+			if((len(includesList) && ListFind(arguments.includesList,properties[p].name) && !ListFind(arguments.excludesList,properties[p].name))
 			|| (!structKeyExists(properties[p], "persistent") || properties[p].persistent)){
 				properties[p]['displayPropertyIdentifier'] = getPropertyTitle(properties[p].name);
-				arrayAppend(defaultProperties,properties[p]);	
+				arrayAppend(defaultProperties,properties[p]);
 			}
 		}
 		return defaultProperties;
