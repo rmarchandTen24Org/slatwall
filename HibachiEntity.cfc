@@ -905,6 +905,7 @@ component output="false" accessors="true" persistent="false" extends="HibachiTra
 	//can be overridden at the entity level in case we need to always return a relationship entity otherwise the default is only non-relationship and non-persistent
 	public any function getDefaultCollectionProperties(string includesList = "", string excludesList="modifiedByAccountID,createdByAccountID,modifiedDateTime,createdDateTime,remoteID,remoteEmployeeID,remoteCustomerID,remoteContactID,cmsAccountID,cmsContentID,cmsSiteID"){
 		var properties = getProperties();
+
 		var defaultProperties = [];
 
 		//Check if there is any include column
@@ -913,7 +914,7 @@ component output="false" accessors="true" persistent="false" extends="HibachiTra
 			for(var inc in includesArray) {
 				//Loop through IncludeList looking for relational
 				inc = trim(inc);
-				if(inc.contains('.')){
+				if(Find('.', inc) != 0){
 					//if find, get relational Entity Stuck
 					var entityStructs = getService("hibachiService").getPropertiesByEntityName(
 						getService("hibachiService").getLastEntityNameInPropertyIdentifier(this.getClassName(), inc)
@@ -925,6 +926,7 @@ component output="false" accessors="true" persistent="false" extends="HibachiTra
 							var newProperty = {};
 							structAppend(newProperty,property);
 							newProperty.name = inc;
+							newProperty.title = rbKey('entity.'&inc);
 							//append the Column struct with relational name.
 							arrayAppend(defaultProperties, newProperty);
 						}
@@ -947,16 +949,20 @@ component output="false" accessors="true" persistent="false" extends="HibachiTra
 				}
 			}
         }
-
 		return defaultProperties;
 	}
+
 
 	public any function getFilterProperties(string includesList = "", string excludesList = ""){
 		var properties = getProperties();
 		var defaultProperties = [];
 		for(var p=1; p<=arrayLen(properties); p++) {
-			if((len(includesList) && ListFind(arguments.includesList,properties[p].name) && !ListFind(arguments.excludesList,properties[p].name))
-			|| (!structKeyExists(properties[p], "persistent") || properties[p].persistent)){
+			if(len(arguments.includesList)){
+				if(ListFind(arguments.includesList,properties[p].name)){
+					properties[p]['displayPropertyIdentifier'] = getPropertyTitle(properties[p].name);
+					arrayAppend(defaultProperties, properties[p]);
+				}
+			}else if(!ListFind(arguments.excludesList,properties[p].name) && (!structKeyExists(properties[p], "persistent") || properties[p].persistent)){
 				properties[p]['displayPropertyIdentifier'] = getPropertyTitle(properties[p].name);
 				arrayAppend(defaultProperties,properties[p]);
 			}
