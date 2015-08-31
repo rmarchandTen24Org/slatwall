@@ -515,7 +515,7 @@ component output="false" accessors="true" extends="HibachiService" {
 		}
 		
 		collectionEntity.getCollectionConfigStruct().isDistinct = arguments.collectionOptions.isDistinct;
-		
+
 		
 		var response = {};
 		var defaultPropertyIdentifiers = getPropertyIdentifierArray('collection');
@@ -531,6 +531,7 @@ component output="false" accessors="true" extends="HibachiService" {
 				var piAlias = Replace(Replace(column.propertyIdentifier,'.','_','all'),collectionEntity.getCollectionConfigStruct().baseEntityAlias&'_','');
 				if(!ArrayFind(collectionPropertyIdentifiers,piAlias)){
 					ArrayAppend(collectionPropertyIdentifiers,piAlias);
+					arrayDelete(collectionPropertyIdentifiers, Replace(column.propertyIdentifier,collectionEntity.getCollectionConfigStruct().baseEntityAlias&'.',''));
 				}
 			}
 		}

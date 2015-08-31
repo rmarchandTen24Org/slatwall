@@ -518,6 +518,14 @@ component extends="FW1.framework" {
 						// Set the request timeout to 360
 						getHibachiScope().getService("hibachiTagService").cfsetting(requesttimeout=600);
 						
+
+						//Update custom properties
+						var success = getHibachiScope().getService('updateService').updateEntitiesWithCustomProperties();
+						if (success){
+							writeLog(file="Slatwall", text="General Log - Attempting to update entities with custom properties.");
+						}else{
+							writeLog(file="Slatwall", text="General Log - Error updating entities with custom properties");
+						}
 						// Reload ORM
 						writeLog(file="#variables.framework.applicationKey#", text="General Log - ORMReload() started");
 						ormReload();
@@ -595,7 +603,6 @@ component extends="FW1.framework" {
     		if(isStruct(request.context.apiResponse.content) && request.context.headers.contentType eq 'application/xml'){
     			//response String to xml placeholder
     		}
-    		
 			writeOutput( responseString );
 		}		
 		// Check for an Ajax Response
@@ -821,6 +828,7 @@ component extends="FW1.framework" {
 	
 	public void function onError(any exception, string event){
 		//if something fails for any reason then we want to set the response status so our javascript can handle rest errors
+//		writeDump(var=exception, top=2); abort;
 		var context = getPageContext();
 		var response = context.getResponse();
 		response.setStatus(500);
