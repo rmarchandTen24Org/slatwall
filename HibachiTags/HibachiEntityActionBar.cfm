@@ -30,6 +30,8 @@
 	<cfparam name="attributes.deleteAction" type="string" default="#request.context.entityActionDetails.deleteAction#" />
 	<cfparam name="attributes.deleteQueryString" type="string" default="" />
 
+	<cfparam name="attributes.angularCreate" type="string" default="" />
+
 	<!--- Process Specific Values --->
 	<cfparam name="attributes.processAction" type="string" default="">
 	<cfparam name="attributes.processContext" type="string" default="">
@@ -169,9 +171,17 @@
 										<hb:HibachiActionCaller action="#attributes.cancelAction#" querystring="#attributes.cancelQueryString#" text="#attributes.hibachiScope.rbKey('define.cancel')#" class="btn btn-default" icon="remove icon-white">
 
 										<!--- Save --->
-                            			<cfif attributes.showsave>
+                            			<cfif attributes.showsave && !len(attributes.angularCreate)>
 											<hb:HibachiActionCaller action="#request.context.entityActionDetails.saveAction#" text="#attributes.hibachiScope.rbKey('define.save')#" class="btn btn-success" type="button" submit="true" icon="ok icon-white">
 										</cfif>
+
+										<!--- Angular Save --->
+										<cfif len(attributes.angularCreate)>
+                                                <button class="btn btn-success" title="Save" data-ng-click="#attributes.angularCreate#">
+													<i class="glyphicon glyphicon-ok icon-white"></i> #attributes.hibachiScope.rbKey('define.save')#
+												</button>
+										</cfif>
+
 									<cfelse>
 										<!--- Delete --->
 										<cfif attributes.showdelete>
