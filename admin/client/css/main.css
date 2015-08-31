@@ -4040,7 +4040,8 @@ tabel .s-table-header {
 .s-search-filter .dropdown-menu .s-info .s-name {
   font-weight: 600;
 }
-.s-search-filter .s-add-info-dropdown form {
+.s-search-filter .s-add-info-dropdown form,
+.s-search-filter .s-add-info-dropdown .s-add-info-dropdown-inner {
   background-color: #FFF;
   border: 1px solid #DDD;
   padding: 15px;
@@ -4065,7 +4066,7 @@ tabel .s-table-header {
   left: 2px;
   z-index: 3000;
   background-color: #FFF;
-  padding: 5px 0px 5px 9px;
+  padding: 4px 0px 4px 9px;
 }
 .s-search-filter .s-current-selection-item .s-edit-options {
   padding: 6px 2px;
