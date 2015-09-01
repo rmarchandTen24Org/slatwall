@@ -160,6 +160,11 @@ component output="false" accessors="true" extends="HibachiController" {
 						propertyIdentifier = "_collection.collectionObject",
 						comparisonOperator = "=",
 						value=rc.entityName
+					},{
+						logicalOperator: "AND",
+						propertyIdentifier: "_collection.collectionHidden",
+						comparisonOperator: "is",
+						value: "null"
 					}
 				]
 			}
@@ -395,7 +400,7 @@ component output="false" accessors="true" extends="HibachiController" {
 				//should be able to add select and where filters here
 				var result = getCollectionService().getAPIResponseForEntityName(	arguments.rc.entityName,
 																			collectionOptions);
-				
+
 				structAppend(arguments.rc.apiResponse.content,result);
 			}else{
 				//figure out if we have a collection or a basic entity
