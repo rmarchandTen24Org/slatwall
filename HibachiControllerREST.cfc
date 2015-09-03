@@ -23,7 +23,9 @@ component output="false" accessors="true" extends="HibachiController" {
 	this.anyAdminMethods=listAppend(this.anyAdminMethods, 'delete');
 	
 	this.publicMethods=listAppend(this.publicMethods, 'log');
-	
+	this.publicMethods=listAppend(this.publicMethods, 'getDetailTabs');
+	this.publicMethods=listAppend(this.publicMethods, 'noaccess');
+
 	//	this.secureMethods='';
 	//	this.secureMethods=listAppend(this.secureMethods, 'get');
 	//	this.secureMethods=listAppend(this.secureMethods, 'post');
@@ -51,6 +53,18 @@ component output="false" accessors="true" extends="HibachiController" {
 		}
 	}
 	
+	public void function noaccess(required struct rc){
+		var message = {};
+		message['message'] =arguments.rc.pagetitle;
+		message['messageType']="error";
+		arrayAppend(arguments.rc['messages'],message);
+		arguments.rc.apiResponse.content.success = false;
+		var context = getPageContext();
+		context.getOut().clearBuffer();
+		var response = context.getResponse();
+		response.setStatus(403);
+	}
+
 	public any function getDetailTabs(required struct rc){
 		var detailTabs = [];
 		var tabsDirectory = expandPath( '/' ) & 'admin/client/partials/entity/#lcase(rc.entityName)#/';
@@ -87,7 +101,7 @@ component output="false" accessors="true" extends="HibachiController" {
     				imageWidth  = 150;
  			}
 			arguments.rc.apiResponse.content = {};
-			arguments.rc.apiResponse.content.resizedImagePaths = [];
+			arguments.rc.apiResponse.content['resizedImagePaths'] = [];
 			var skus = [];
 			
 			//smart list to load up sku array
@@ -98,7 +112,7 @@ component output="false" accessors="true" extends="HibachiController" {
 				var skus = skuSmartList.getRecords();
 				
 				for  (var sku in skus){
-		    		ArrayAppend(arguments.rc.apiResponse.content.resizedImagePaths, sku.getResizedImagePath(width=imageWidth, height=imageHeight));         
+		    		ArrayAppend(arguments.rc.apiResponse.content['resizedImagePaths'], sku.getResizedImagePath(width=imageWidth, height=imageHeight));
 				}
 			}
  	}
@@ -182,7 +196,17 @@ component output="false" accessors="true" extends="HibachiController" {
 	
 	public any function getFilterPropertiesByBaseEntityName( required struct rc){
 		var entityName = rereplace(rc.entityName,'_','');
-		arguments.rc.apiResponse.content['data'] = getHibachiService().getPropertiesWithAttributesByEntityName(entityName);
+		arguments.rc.apiResponse.content['data'] = [];
+
+		var filterProperties = getHibachiService().getPropertiesWithAttributesByEntityName(entityName);
+		for(var filterProperty in filterProperties){
+			if(
+				getHibachiScope().authenticateEntityProperty('read', entityName, filterProperty.name)
+				|| (structKeyExists(filterProperty,'fieldtype') && filterProperty.fieldtype == 'id')
+			){
+				arrayAppend(arguments.rc.apiResponse.content['data'],filterProperty);
+			}
+		}
 		arguments.rc.apiResponse.content['entityName'] = rc.entityName;
 	}
 	
@@ -315,7 +339,6 @@ component output="false" accessors="true" extends="HibachiController" {
 			create a base default properties function that can be overridden at the entity level via function
 			handle accessing collections by id
 		*/
-		
 		param name="arguments.rc.propertyIdentifiers" default="";
 		//first check if we have an entityName value
 		if(!structKeyExists(arguments.rc, "entityName")) {
