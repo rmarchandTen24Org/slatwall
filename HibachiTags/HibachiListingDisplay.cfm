@@ -9,6 +9,7 @@
 
 	<!--- Optional --->
 	<cfparam name="attributes.title" type="string" default="" />
+	<cfparam name="attributes.hideControls" type="boolean" default="false" />
 
 	<!--- Admin Actions --->
 	<cfparam name="attributes.recordEditAction" type="string" default="" />
@@ -300,67 +301,68 @@
 	</cfsilent>
 
 	<cfoutput>
+		<cfif !attributes.hideControls>
+			<div class="s-table-header-nav s-listing-head-margin">
+				<div class="col-xs-6 s-no-padding-left">
+					<ul class="list-inline list-unstyled">
+						<li>
+							<h4>
+								<cfif len(attributes.title)>
+									<span style="font-size:14px;color:##666666;">#attributes.title#</span>
+								</cfif>
+							</h4>
+						</li>
+					</ul>
+				</div>
 
-		<div class="s-table-header-nav s-listing-head-margin">
-			<div class="col-xs-6 s-no-padding-left">
-				<ul class="list-inline list-unstyled">
-					<li>
-						<h4>
-							<cfif len(attributes.title)>
-								<span style="font-size:14px;color:##666666;">#attributes.title#</span>
+				<div class="col-xs-6 s-table-view-options s-no-padding-right">
+					<ul class="list-inline list-unstyled">
+						<li class="s-table-header-search">
+							<cfif not thistag.expandable>
+								<input type="text" name="search" class="form-control input-sm general-listing-search" placeholder="#attributes.hibachiScope.rbKey('define.search')#" value="" tableid="LD#replace(attributes.smartList.getSavedStateID(),'-','','all')#" >
 							</cfif>
-						</h4>
-					</li>
-				</ul>
-			</div>
+						</li>
+						<li>
+							<div class="btn-group navbar-left dropdown">
 
-			<div class="col-xs-6 s-table-view-options s-no-padding-right">
-				<ul class="list-inline list-unstyled">
-					<li class="s-table-header-search">
-						<cfif not thistag.expandable>
-							<input type="text" name="search" class="form-control input-sm general-listing-search" placeholder="#attributes.hibachiScope.rbKey('define.search')#" value="" tableid="LD#replace(attributes.smartList.getSavedStateID(),'-','','all')#" >
-						</cfif>
-					</li>
-					<li>
-						<div class="btn-group navbar-left dropdown">
+								<button type="button" class="btn btn-sm s-btn-dgrey dropdown-toggle"><i class="fa fa-cog"></i></button>
 
-							<button type="button" class="btn btn-sm s-btn-dgrey dropdown-toggle"><i class="fa fa-cog"></i></button>
-
-								<ul class="dropdown-menu pull-right" role="menu">
-									<hb:HibachiActionCaller action="#attributes.exportAction#" text="#attributes.hibachiScope.rbKey('define.exportlist')#" type="list">
-								</ul>
-								<!--- Listing: Button Groups --->
-								<cfif structKeyExists(thistag, "buttonGroup") && arrayLen(thistag.buttonGroup)>
-									<cfloop array="#thisTag.buttonGroup#" index="buttonGroup">
-										<cfif structKeyExists(buttonGroup, "generatedContent") && len(buttonGroup.generatedContent)>
-											<cfif findNoCase('dropdown', #buttonGroup.generatedContent#)>
-													#buttonGroup.generatedContent#
-											<cfelse>
-												<div class="btn-group">
-													#buttonGroup.generatedContent#
-												</div>
+									<ul class="dropdown-menu pull-right" role="menu">
+										<hb:HibachiActionCaller action="#attributes.exportAction#" text="#attributes.hibachiScope.rbKey('define.exportlist')#" type="list">
+									</ul>
+									<!--- Listing: Button Groups --->
+									<cfif structKeyExists(thistag, "buttonGroup") && arrayLen(thistag.buttonGroup)>
+										<cfloop array="#thisTag.buttonGroup#" index="buttonGroup">
+											<cfif structKeyExists(buttonGroup, "generatedContent") && len(buttonGroup.generatedContent)>
+												<cfif findNoCase('dropdown', #buttonGroup.generatedContent#)>
+														#buttonGroup.generatedContent#
+												<cfelse>
+													<div class="btn-group">
+														#buttonGroup.generatedContent#
+													</div>
+												</cfif>
 											</cfif>
-										</cfif>
-									</cfloop>
-								</cfif>
+										</cfloop>
+									</cfif>
 
-								<!--- Listing: Create --->
-								<cfif len(attributes.createAction)>
-									<div class="btn-group">
-										<cfif attributes.createModal>
-											<hb:HibachiActionCaller action="#attributes.createAction#" queryString="#attributes.createQueryString#" class="btn btn-primary" icon="plus icon-white" modal="true">
-										<cfelse>
-											<hb:HibachiActionCaller action="#attributes.createAction#" queryString="#attributes.createQueryString#" class="btn btn-primary" icon="plus icon-white">
-										</cfif>
-									</div>
-								</cfif>
+									<!--- Listing: Create --->
+									<cfif len(attributes.createAction)>
+										<div class="btn-group">
+											<cfif attributes.createModal>
+												<hb:HibachiActionCaller action="#attributes.createAction#" queryString="#attributes.createQueryString#" class="btn btn-primary" icon="plus icon-white" modal="true">
+											<cfelse>
+												<hb:HibachiActionCaller action="#attributes.createAction#" queryString="#attributes.createQueryString#" class="btn btn-primary" icon="plus icon-white">
+											</cfif>
+										</div>
+									</cfif>
 
-						</div>
-					</li>
-				</ul>
+							</div>
+						</li>
+					</ul>
 
-			</div>
-		</div><!--- reyjay's class --->
+				</div>
+			</div><!--- reyjay's class --->
+		</cfif>
 
 		<div class="table-responsive">
 			<table id="LD#replace(attributes.smartList.getSavedStateID(),'-','','all')#" class="#attributes.tableclass#" data-norecordstext="#attributes.hibachiScope.rbKey("entity.#thistag.exampleEntity.getClassName()#.norecords", {entityNamePlural=attributes.hibachiScope.rbKey('entity.#thistag.exampleEntity.getClassName()#_plural')})#" data-savedstateid="#attributes.smartList.getSavedStateID()#" data-entityname="#attributes.smartList.getBaseEntityName()#" data-idproperty="#thistag.exampleEntity.getPrimaryIDPropertyName()#" data-processobjectproperties="#thistag.allprocessobjectproperties#" data-propertyidentifiers="#thistag.exampleEntity.getPrimaryIDPropertyName()#,#thistag.allpropertyidentifiers#" #attributes.tableattributes#>
