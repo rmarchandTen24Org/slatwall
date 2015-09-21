@@ -49,6 +49,7 @@ component output="false" accessors="true" extends="HibachiController" {
 
 	public void function before( required any rc ) {
 
+
 		// Setup a Private structure in the RC that can't be overridden by the form scope
 		arguments.rc.entityActionDetails = {};
 		arguments.rc.entityActionDetails.thisAction = arguments.rc[ getFW().getAction() ];
@@ -616,7 +617,7 @@ component output="false" accessors="true" extends="HibachiController" {
 		try{
 			for(var key in arguments.rc) {
 				if(!find('.',key) && right(key, 2) == "ID" && len(arguments.rc[key]) == "32") {
-					var entityName = left(key, len(key)-2);
+					var entityName = arguments.rc.entityActionDetails.itemEntityName;
 					if( getHibachiService().getEntityNameIsValidFlag(entityName) && ( !structKeyExists(arguments.rc, entityName) || !isObject(arguments.rc[entityName]) ) ) {
 						var entityService = getHibachiService().getServiceByEntityName( entityName=entityName );
 						var entity = entityService.invokeMethod("get#entityName#", {1=arguments.rc[key]});
