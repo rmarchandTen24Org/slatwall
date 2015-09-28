@@ -49,7 +49,6 @@ component output="false" accessors="true" extends="HibachiController" {
 
 	public void function before( required any rc ) {
 
-
 		// Setup a Private structure in the RC that can't be overridden by the form scope
 		arguments.rc.entityActionDetails = {};
 		arguments.rc.entityActionDetails.thisAction = arguments.rc[ getFW().getAction() ];
