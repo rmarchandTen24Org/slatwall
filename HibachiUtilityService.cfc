@@ -56,11 +56,10 @@
 		}
 		
 		public any function formatValue_currency( required string value, struct formatDetails={} ) {
-			if(structKeyExists(arguments.formatDetails, "currencyCode") && len(arguments.formatDetails.currencyCode) == 3 ) {
-				return LSCurrencyFormat(arguments.value, arguments.formatDetails.currencyCode, getHibachiScope().getRBLocale());	
+			if(structKeyExists(arguments.formatDetails, "currencyCode") ) {
+				return LSCurrencyFormat(arguments.value, getHibachiScope().setting('globalCurrencyType'), arguments.formatDetails.currencyCode);
 			}
-			// If no currency code was passed in then we can default to USD
-			return LSCurrencyFormat(arguments.value, "USD", getHibachiScope().getRBLocale());
+			return LSCurrencyFormat(arguments.value, getHibachiScope().setting('globalCurrencyType'), getHibachiScope().setting('globalCurrencyLocale'));
 		}
 		
 		public any function formatValue_datetime( required string value, struct formatDetails={} ) {
