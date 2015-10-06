@@ -27,6 +27,14 @@
 	<cfparam name="attributes.recordProcessEntity" type="any" default="" />
 	<cfparam name="attributes.recordProcessUpdateTableID" type="any" default="" />
 	<cfparam name="attributes.recordProcessButtonDisplayFlag" type="any" default="true" />
+	<cfparam name="attributes.recordCompleteAction" type="string" default="" />
+	<cfparam name="attributes.recordCompleteQueryString" type="string" default="" />
+	<cfparam name="attributes.pinProperty" type="string" default="" />
+	<cfparam name="attributes.recordPinAction" type="string" default="" />
+	<cfparam name="attributes.recordPinQueryString" type="string" default="" />
+	<cfparam name="attributes.recordcaseaction" type="string" default="" />
+	<cfparam name="attributes.recordcasequerystring" type="string" default="" />
+	<cfparam name="attributes.recordCaseProperty" type="string" default="" />
 
 	<!--- Hierarchy Expandable --->
 	<cfparam name="attributes.parentPropertyName" type="string" default="" />  <!--- Setting this value will turn on Expandable --->
@@ -50,6 +58,12 @@
 	<cfparam name="attributes.tableattributes" type="string" default="" />  <!--- Pass in additional html attributes for the table --->
 	<cfparam name="attributes.tableclass" type="string" default="" />  <!--- Pass in additional classes for the table --->
 	<cfparam name="attributes.adminattributes" type="string" default="" />
+	<cfparam name="attributes.recordFileProperty" type="string" default="" />
+	<cfparam name="attributes.backgroundColorProperty" type="string" default="" />
+
+	<!--- Form Action --->
+	<cfparam name="attributes.formAction" type="string" default="" /> <!--- Pass in a form action for processing form fields --->
+	<cfparam name="attributes.formIdentifier" type="string" default="" />
 
 	<!--- Settings --->
 	<cfparam name="attributes.showheader" type="boolean" default="true" /> <!--- Setting to false will hide the table header with search and filters --->
@@ -86,7 +100,7 @@
 		</cfif>
 
 		<!--- Setup the default table class --->
-		<cfset attributes.tableclass = listPrepend(attributes.tableclass, 'table table-bordered table-hover', ' ') />
+		<cfset attributes.tableclass = listPrepend(attributes.tableclass, 'table table-striped table-bordered table-condensed', ' ') />
 
 		<!--- Setup Select --->
 		<cfif len(attributes.selectFieldName)>
@@ -195,6 +209,12 @@
 			<cfset attributes.adminattributes = listAppend(attributes.adminattributes, 'data-processupdatetableid="#attributes.recordProcessUpdateTableID#"', " ") />
 		</cfif>
 
+		<!--- File --->
+		<cfif len(attributes.recordFileProperty)>
+			<cfset attributes.administativeCount++ />
+
+			<cfset attributes.adminattributes = listAppend(attributes.adminattributes, 'data-recordFileProperty="#attributes.recordFileProperty#"', " ") />
+		</cfif>
 
 		<!--- Setup the primary representation column if no columns were passed in --->
 		<cfif not arrayLen(thistag.columns)>
@@ -546,6 +566,45 @@
 										<cfset thisID = "#replace(replace(lcase(attributes.recordProcessAction), ':', ''), '.', '')#_#record.getPrimaryIDValue()#" />
 										<hb:HibachiProcessCaller action="#attributes.recordProcessAction#" entity="#attributes.recordProcessEntity#" processContext="#attributes.recordProcessContext#" queryString="#listPrepend(attributes.recordProcessQueryString, '#record.getPrimaryIDPropertyName()#=#record.getPrimaryIDValue()#', '&')#" class="btn btn-default hibachi-ajax-submit" id="#thisID#" />
 									</cfif>
+
+								<!--- File --->
+
+								<cfif len(attributes.recordFileProperty)>
+									<a class="admincaseviewAttachement btn btn-mini" href="#record.getValueByPropertyIdentifier(attributes.recordFileProperty)#" title="View" target="_new">
+										<i class="icon-folder-open"></i>
+									</a>
+								</cfif>
+
+								<!--- Complete --->
+								<cfif len(attributes.recordCompleteAction)>
+									<a class="admincaseviewComplete btn btn-mini" href="#attributes.hibachiScope.buildURL(action=attributes.recordCompleteAction,querystring=listPrepend(attributes.recordCompletequerystring, '#record.getPrimaryIDPropertyName()#=#record.getPrimaryIDValue()#', '&'))#" title="Mark Complete">
+										<i class="icon-ok"></i>
+									</a>
+								</cfif>
+
+								<!--- pin --->
+
+								<cfif len(attributes.recordPinAction)>
+									<cfif record.getValueByPropertyIdentifier( propertyIdentifier=attributes.pinProperty, formatValue=true ) eq 'yes'>
+										<cfset title="Un Pin" />
+										<cfset icon="upload" />
+									<cfelse>
+										<cfset title="Pin" />
+										<cfset icon="download" />
+									</cfif>
+									<a class="admincaseviewPin btn btn-mini" href="#attributes.hibachiScope.buildURL(action=attributes.recordPinAction,querystring=listPrepend(attributes.recordPinquerystring, '#record.getPrimaryIDPropertyName()#=#record.getPrimaryIDValue()#', '&'))#" title="#title#">
+										<i class="icon-#icon#"></i>
+									</a>
+								</cfif>
+
+								<!--- cases by attorney --->
+
+								<cfif len(attributes.recordcaseaction)>
+									<a class="admincaseviewcases btn btn-mini" href="#attributes.hibachiScope.buildURL(action=attributes.recordcaseaction,querystring=listPrepend(attributes.recordcasequerystring,'#attributes.recordCaseProperty#=#record.getValueByPropertyIdentifier(attributes.recordCaseProperty)#', '&'))#" title="Cases">
+										<i class="icon-book"></i>
+									</a>
+								</cfif>
+
 								</td>
 							</cfif>
 						</tr>
