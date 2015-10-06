@@ -1,5 +1,6 @@
 'use strict';
-angular.module('slatwalladmin').directive('swContentList', [
+angular.module('slatwalladmin')
+    .directive('swContentList', [
     '$log',
     '$timeout',
     '$slatwall',
@@ -16,6 +17,12 @@ angular.module('slatwalladmin').directive('swContentList', [
                 if (scope.pageShow !== 'Auto') {
                     pageShow = scope.pageShow;
                 }
+                scope.pageShowOptions = [
+                    { display: 10, value: 10 },
+                    { display: 20, value: 20 },
+                    { display: 50, value: 50 },
+                    { display: 250, value: 250 }
+                ];
                 scope.loadingCollection = false;
                 scope.selectedSite;
                 scope.orderBy;
@@ -34,6 +41,14 @@ angular.module('slatwalladmin').directive('swContentList', [
                             ormtype: 'id',
                             isSearchable: false
                         },
+                        //                        {
+                        //                            propertyIdentifier:'_content.contentTemplateFile',
+                        //                            persistent:false,
+                        //                            setting:true,
+                        //                            isVisible:true,
+                        //                            isSearchable:false
+                        //                        },
+                        //need to get template via settings
                         {
                             propertyIdentifier: '_content.allowPurchaseFlag',
                             isVisible: true,
@@ -54,8 +69,8 @@ angular.module('slatwalladmin').directive('swContentList', [
                         }
                     ];
                     var options = {
-                        currentPage: scope.currentPage,
-                        pageShow: paginationService.getPageShow(),
+                        currentPage: '1',
+                        pageShow: '1',
                         keywords: scope.keywords
                     };
                     var column = {};
@@ -146,7 +161,6 @@ angular.module('slatwalladmin').directive('swContentList', [
                         $log.debug(scope.keywords);
                         $('.childNode').remove();
                         //Set current page here so that the pagination does not break when getting collection
-                        paginationService.setCurrentPage(1);
                         scope.loadingCollection = true;
                         scope.getCollection(true);
                     }, 500);
@@ -171,7 +185,6 @@ angular.module('slatwalladmin').directive('swContentList', [
                 });
             }
         };
-    }
-]);
+    }]);
 
-//# sourceMappingURL=../../directives/content/swcontentlist.js.map
+//# sourceMappingURL=swcontentlist.js.map

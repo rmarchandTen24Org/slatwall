@@ -874,7 +874,6 @@ component output="false" accessors="true" persistent="false" extends="HibachiTra
 					arrayAppend(defaultProperties,properties[p]);	
 				}
 			}
-			
 		}
 		return defaultProperties;
 	}
