@@ -25,6 +25,7 @@ angular.module('slatwalladmin')
                 /**
                  * Sets workflowTasks on the scope by populating with $$getWorkflowTasks()
                  */
+                console.log(scope.workflow);
                 scope.getWorkflowTasks = function () {
                     logger("getWorkflowTasks", "Retrieving items");
                     logger("getWorkflowTasks", "Workflow Tasks");
@@ -173,4 +174,4 @@ angular.module('slatwalladmin')
     }
 ]);
 
-//# sourceMappingURL=../../directives/workflow/swworkflowtasks.js.map
+//# sourceMappingURL=swworkflowtasks.js.map

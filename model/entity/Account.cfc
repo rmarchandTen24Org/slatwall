@@ -127,7 +127,7 @@ component displayname="Account" entityname="SlatwallAccount" table="SwAccount" p
 	property name="termAccountBalance" persistent="false" hb_formatType="currency";
 	property name="unenrolledAccountLoyaltyOptions" persistent="false";
 	property name="termOrderPaymentsByDueDateSmartList" persistent="false";
-
+	property name="jwtToken" persistent="false";
 
 	public boolean function isPriceGroupAssigned(required string  priceGroupId) {
 		return structKeyExists(this.getPriceGroupsStruct(), arguments.priceGroupID);
@@ -222,6 +222,14 @@ component displayname="Account" entityname="SlatwallAccount" table="SwAccount" p
 
 	public boolean function getGuestAccountFlag() {
 		return !arrayLen(getAccountAuthentications());
+	}
+
+	public any function getGiftCardSmartList(){
+		var giftCardSmartList = getService("GiftCardService").getGiftCardSmartList();
+		giftCardSmartList.joinRelatedProperty("SlatwallGiftCard", "ownerAccount");
+		giftCardSmartList.addFilter("ownerAccount.AccountID", this.getAccountID());
+
+		return giftCardSmartList;
 	}
 
 	public any function getOrdersPlacedSmartList() {
@@ -696,4 +704,5 @@ component displayname="Account" entityname="SlatwallAccount" table="SwAccount" p
 	}
 
 	// ==================  END:  Deprecated Methods ========================
+
 }

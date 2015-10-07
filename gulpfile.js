@@ -60,14 +60,11 @@ gulp.task('watch', function() {
 	//gulp.watch([config.ngSlatwallcfm],['flattenNgslatwall']);
     gulp.watch([config.allTypeScript], 
     [
-    	'compile-ts'
-		,'gen-ts-refs'
+    	'compile-ts-to5',
+    	//'compile-ts',
+		'gen-ts-refs'
 		
 		//,'compress'
-	]);
-	gulp.watch([config.es6Path],
-	[
-		'compile-ts-to5'
 	]);
 	gulp.watch([config.entityPath,config.processPath],
 	[
@@ -124,7 +121,8 @@ gulp.task('compile-ts-to5', function () {
                        .pipe(tsc({
                            target: 'ES5',
                            declarationFiles: false,
-                           noExternalResolve: true
+                           noExternalResolve: true,
+                           module:'amd'
                        }));
 
         tsResult.dts.pipe(gulp.dest(config.tsOutputPathto5));
@@ -198,7 +196,7 @@ gulp.task('flattenNgSlatwallModel',function(){
 	    return text;
 	}
 	
-	request('http://cf10.localhost/?slatAction=api:js.ngslatwallmodel&reload=true&instantiationKey='+makeid(), function (error, response, body) {
+	request('http://cf10.slatwall/?slatAction=api:js.ngslatwallmodel&reload=true&instantiationKey='+makeid(), function (error, response, body) {
 	  if (!error && response.statusCode == 200) {
   		console.log('It\'s saved!');
 	  }else{
@@ -219,7 +217,7 @@ gulp.task('flattenNgslatwall',function(){
 	    return text;
 	}
 	
-	request('http://cf10.localhost/?slatAction=api:js.ngslatwallmodel&reload=true&instantiationKey='+makeid(), function (error, response, body) {
+	request('http://cf10.slatwall/?slatAction=api:js.ngslatwallmodel&reload=true&instantiationKey='+makeid(), function (error, response, body) {
 	  if (!error && response.statusCode == 200) {
 		  var dir = 'admin/client/ts/modules/';
 		  var newFile = dir+'ngslatwallmodel.ts';
@@ -260,6 +258,7 @@ gulp.task('compress',function(){
 	  config.compilePath + 'es5/modules/ngslatwallmodel.js',
 	  config.compilePath + 'es5/modules/loggingmodule.js',
       config.compilePath + 'es5/modules/slatwalladmin.js',
+      config.compilePath + 'es5/filters/*.js',
       config.compilePath + 'es5/services/*.js',
       config.compilePath + 'es5/controllers/**/*.js',
       config.compilePath + 'es5/directives/**/*.js'
@@ -278,9 +277,9 @@ gulp.task('compress',function(){
 gulp.task('default', function(){
 	runSequence(
 		'flattenNgSlatwallModel'
+		,'compile-ts-to5'
 		,'compile-ts'
 		,'gen-ts-refs'
-		,'compile-ts-to5'
 		,'compress'
 		,'watch'
 	);

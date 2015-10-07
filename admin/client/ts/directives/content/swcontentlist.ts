@@ -53,6 +53,16 @@ angular.module('slatwalladmin')
                             ormtype:'id',
                             isSearchable:false
                         },
+                        {
+                                propertyIdentifier: '_content.site.domainNames',
+                                isVisible: false,
+                                isSearchable: true
+                        },
+                        {
+                                propertyIdentifier: '_content.urlTitlePath',
+                                isVisible: false,
+                                isSearchable: true
+                        },
 //                        {
 //                            propertyIdentifier:'_content.contentTemplateFile',
 //                            persistent:false,
@@ -82,8 +92,8 @@ angular.module('slatwalladmin')
                     ];
                     
 	        		var options = {
-                        currentPage:scope.currentPage, 
-                        pageShow:paginationService.getPageShow(), 
+                        currentPage:'1', 
+                        pageShow:'1', 
                         keywords:scope.keywords
                     };
                     var column = {};
@@ -160,6 +170,9 @@ angular.module('slatwalladmin')
                         options
                     );
 	        		collectionListingPromise.then(function(value){
+                        angular.forEach(value.pageRecords, function(node){
+                            node.site_domainNames = node.site_domainNames.split(",")[0];
+                        });
 	        			scope.collection = value;
 	        			scope.collectionConfig = angular.fromJson(scope.collection.collectionConfig);
 	        			scope.collectionConfig.columns = columnsConfig;
@@ -184,7 +197,6 @@ angular.module('slatwalladmin')
                         $log.debug(scope.keywords);
                         $('.childNode').remove();
                         //Set current page here so that the pagination does not break when getting collection
-                        paginationService.setCurrentPage(1);
                         scope.loadingCollection = true;
                         scope.getCollection(true);
                     }, 500);
