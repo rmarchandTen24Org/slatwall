@@ -86,7 +86,7 @@
 							<td class="title<cfif len(attributes.titleClass)> #attributes.titleClass#</cfif>"><a role="button" data-toggle="collapse" data-target=".#attributes.PROPERTY#" aria-expanded="false" aria-controls="collapseExample">#attributes.title# <span class="totalCount">3</span></a><cfif len(attributes.hint)> <a href="##" tabindex="-1" rel="tooltip" class="hint" title="#attributes.hint#"><i class="icon-question-sign"></i></a></cfif></td>
 							<td class="value<cfif len(attributes.valueClass)> #attributes.valueClass#</cfif>">#attributes.value#</td>
 						</tr>
-						<tr class="collapse s-table-listing-group #attributes.PROPERTY#">
+						<tr class="collapse in s-table-listing-group #attributes.PROPERTY#">
 							<td>
 								<div>	
 								
@@ -115,7 +115,7 @@
 								</span>
 							</td>
 						</tr>
-						<tr class="collapse s-table-listing-group #attributes.PROPERTY#">
+						<tr class="collapse in s-table-listing-group #attributes.PROPERTY#">
 							<td>
 								<div>	
 								
@@ -144,7 +144,7 @@
 								</span>
 							</td>
 						</tr>
-						<tr class="collapse s-table-listing-group #attributes.PROPERTY#">
+						<tr class="collapse in s-table-listing-group #attributes.PROPERTY#">
 							<td>
 								<div>	
 								

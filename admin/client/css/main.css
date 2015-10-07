@@ -413,6 +413,10 @@ a:hover {
   color: #fff;
   border-radius: 3px;
 }
+.s-table-listing-group .title > span,
+.s-table-listing-group .title > a {
+  display: inline-block;
+}
 button::-moz-focus-inner {
   border: 0;
 }
