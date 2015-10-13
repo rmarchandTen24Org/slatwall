@@ -322,7 +322,8 @@ component extends="FW1.framework" {
 		// Setup a $ in the request context, and the hibachiScope shortcut
 		request.context.fw = getHibachiScope().getApplicationValue("application");
 		request.context.$ = {};
-		request.context.$[ variables.framework.applicationKey ] = getHibachiScope();
+		request.context.$.Hibachi = getHibachiScope();
+		request.context.$[ variables.framework.applicationKey ] = request.context.$.Hibachi;
 		request.context.pagetitle = request.context.$[ variables.framework.applicationKey ].rbKey( request.context[ getAction() ] );
 		request.context.edit = false;
 		
