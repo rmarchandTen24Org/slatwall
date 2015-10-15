@@ -385,7 +385,10 @@
 		</cfif>
 
 		<div class="table-responsive">
-			<table id="LD#replace(attributes.smartList.getSavedStateID(),'-','','all')#" class="#attributes.tableclass#" data-norecordstext="#attributes.hibachiScope.rbKey("entity.#thistag.exampleEntity.getClassName()#.norecords", {entityNamePlural=attributes.hibachiScope.rbKey('entity.#thistag.exampleEntity.getClassName()#_plural')})#" data-savedstateid="#attributes.smartList.getSavedStateID()#" data-entityname="#attributes.smartList.getBaseEntityName()#" data-idproperty="#thistag.exampleEntity.getPrimaryIDPropertyName()#" data-processobjectproperties="#thistag.allprocessobjectproperties#" data-propertyidentifiers="#thistag.exampleEntity.getPrimaryIDPropertyName()#,#thistag.allpropertyidentifiers#" #attributes.tableattributes#>
+        <cfif len(attributes.formAction)>
+            <form method="post" action="/?PhiaAction=#attributes.formAction#" id="#attributes.formIdentifier#" class="form-horizontal" enctype="application/x-www-form-urlencoded">
+        </cfif>
+            <table id="LD#replace(attributes.smartList.getSavedStateID(),'-','','all')#" class="#attributes.tableclass#" data-norecordstext="#attributes.hibachiScope.rbKey("entity.#thistag.exampleEntity.getClassName()#.norecords", {entityNamePlural=attributes.hibachiScope.rbKey('entity.#thistag.exampleEntity.getClassName()#_plural')})#" data-savedstateid="#attributes.smartList.getSavedStateID()#" data-entityname="#attributes.smartList.getBaseEntityName()#" data-idproperty="#thistag.exampleEntity.getPrimaryIDPropertyName()#" data-processobjectproperties="#thistag.allprocessobjectproperties#" data-propertyidentifiers="#thistag.exampleEntity.getPrimaryIDPropertyName()#,#thistag.allpropertyidentifiers#" #attributes.tableattributes#>
 				<thead>
 
 					<tr>
@@ -410,6 +413,7 @@
 									<div class="dropdown">
 										<a href="##" class="dropdown-toggle" data-toggle="dropdown">&nbsp;<i class="glyphicon glyphicon-check"></i> </a>
 										<ul class="dropdown-menu nav">
+                                            <li><a href="##"  id="select-all"><i class="hibachi-ui-checkbox"></i> Select All</a></li>
 											<li><a href="##" class="multiselect-checked-filter"><i class="hibachi-ui-checkbox#IIF(attributes.edit, DE(''), DE('-checked'))#"></i> Show Selected</a></li>
 										</ul>
 									</div>
@@ -429,7 +433,7 @@
 									<cfset column.title = thistag.exampleEntity.getTitleByPropertyIdentifier(column.propertyIdentifier) />
 								</cfif>
 							</cfsilent>
-							<th class="data #column.tdClass#" <cfif len(column.propertyIdentifier)>data-propertyIdentifier="#column.propertyIdentifier#"<cfelseif len(column.processObjectProperty)>data-processobjectproperty="#column.processObjectProperty#"<cfif structKeyExists(column, "fieldClass")> data-fieldclass="#column.fieldClass#"</cfif></cfif>>
+                                <th class="data #column.tdClass#" <cfif len(column.propertyIdentifier)>data-propertyIdentifier="#column.propertyIdentifier#"<cfelseif len(column.processObjectProperty)>data-processobjectproperty="#column.processObjectProperty#"<cfif structKeyExists(column, "fieldClass")> data-fieldclass="#column.fieldClass#"</cfif></cfif><cfif StructKeyExists(column,'actionCallerAttributes') AND !structIsEmpty(column.actionCallerAttributes) and attributes.hibachiScope.authenticateAction(column.actionCallerAttributes.action)> data-actionCallerAttributes='#serializeJSON(column.actionCallerAttributes)#'</cfif>>
 								<cfif (not column.sort or thistag.expandable) and (not column.search or thistag.expandable) and (not column.filter or thistag.expandable) and (not column.range or thistag.expandable)>
 									#column.title#
 								<cfelse>
@@ -464,10 +468,12 @@
 												<cfif column.filter and not thistag.expandable>
 													<li class="dropdown-header">#attributes.hibachiScope.rbKey('define.filter')#</li>
 													<cfset filterOptions = attributes.smartList.getFilterOptions(valuePropertyIdentifier=column.propertyIdentifier, namePropertyIdentifier=column.propertyIdentifier) />
-													<input type="hidden" name="F:#column.propertyIdentifier#" value="#attributes.smartList.getFilters(column.propertyIdentifier)#" />
-													<cfloop array="#filterOptions#" index="filter">
-														<li><a href="##" class="listing-filter" data-filtervalue="#filter['value']#"><i class="hibachi-ui-checkbox"></i> #filter['name']#</a></li>
-													</cfloop>
+                                                    <div class="filter-scroll">
+                                                        <input type="hidden" name="F:#column.propertyIdentifier#" value="#attributes.smartList.getFilters(column.propertyIdentifier)#" />
+													    <cfloop array="#filterOptions#" index="filter">
+														    <li><a href="##" class="listing-filter" data-filtervalue="#filter['value']#"><i class="hibachi-ui-checkbox"></i> #filter['name']#</a></li>
+													    </cfloop>
+                                                    </div>
 												</cfif>
 											</hb:HibachiDividerHider>
 										</ul>
@@ -519,19 +525,53 @@
 									<td class="#column.tdclass#"><a href="##" class="table-action-expand depth0" data-depth="0"><i class="glyphicon glyphicon-plus"></i></a> #record.getValueByPropertyIdentifier( propertyIdentifier=column.propertyIdentifier, formatValue=true )#</td>
 								<cfelse>
 									<td class="#column.tdclass#">
-										<cfif len(column.propertyIdentifier)>
-											#record.getValueByPropertyIdentifier( propertyIdentifier=column.propertyIdentifier, formatValue=true )#
-										<cfelseif len(column.processObjectProperty)>
-											<cfset attData = duplicate(column) />
-											<cfset attData.object = thisRecordProcessObject />
-											<cfset attData.property = column.processObjectProperty />
-											<cfset attData.edit = attributes.edit />
-											<cfset attData.displayType = "plain" />
-											<cfif structKeyExists(attData, "recordFieldNamePrefix") and len(attData.recordFieldNamePrefix)>
-												<cfset attData.fieldName = "#attData.recordFieldNamePrefix#[#thistag.loopIndex#].#attData.fieldName#" />
-											</cfif>
-											<hb:HibachiPropertyDisplay attributeCollection="#attData#" />
-										</cfif>
+										<!---<cfif len(column.propertyIdentifier)>--->
+											<!---#record.getValueByPropertyIdentifier( propertyIdentifier=column.propertyIdentifier, formatValue=true )#--->
+										<!---<cfelseif len(column.processObjectProperty)>--->
+											<!---<cfset attData = duplicate(column) />--->
+											<!---<cfset attData.object = thisRecordProcessObject />--->
+											<!---<cfset attData.property = column.processObjectProperty />--->
+											<!---<cfset attData.edit = attributes.edit />--->
+											<!---<cfset attData.displayType = "plain" />--->
+											<!---<cfif structKeyExists(attData, "recordFieldNamePrefix") and len(attData.recordFieldNamePrefix)>--->
+												<!---<cfset attData.fieldName = "#attData.recordFieldNamePrefix#[#thistag.loopIndex#].#attData.fieldName#" />--->
+											<!---</cfif>--->
+											<!---<hb:HibachiPropertyDisplay attributeCollection="#attData#" />--->
+										<!---</cfif>--->
+                                        <cfif structKeyExists(column,'valueLink') AND len(column.valueLink)>
+                                            <cfset column.object = record />
+                                            <cfset column.property = column.propertyIdentifier />
+                                            <cfif column.valueLinkIdentifier NEQ "">
+                                                <cfset column.valuelink = record.invokeMethod('get#column.valueLinkIdentifier#') />
+                                                <cfset column.value = record.invokeMethod('get#column.property#') />
+                                            </cfif>
+                                            <cfset column.displayType = "plain" />
+                                            <hb:HibachiPropertyDisplay attributeCollection="#column#" />
+                                        <cfelseif structKeyExists(column,'recordLinkIdentifier') AND len(column.recordLinkIdentifier)>
+                                            <cfset linkEntityShortName = record.getValueByPropertyIdentifier( propertyIdentifier=column.propertyIdentifier, formatValue=true ) />
+                                            <hb:HibachiActionCaller action="entity.detail#linkEntityShortName#" queryString="#record.invokeMethod('get#column.recordLinkIdentifier#').getPrimaryIDPropertyName()#=#record.invokeMethod('get#column.recordLinkIdentifier#').getPrimaryIDValue()#" text="#linkEntityShortName#" />
+                                        <cfelseif len(column.propertyIdentifier)>
+                                            <cfif StructKeyExists(column,'actionCallerAttributes') AND !structIsEmpty(column.actionCallerAttributes) and attributes.hibachiScope.authenticateAction(column.actionCallerAttributes.action)>
+                                                <cfset attData = duplicate(column.actionCallerAttributes) />
+                                                <cfset attData.queryString = isNull(column.actionCallerAttributes.queryString)?"":record.stringReplace(column.actionCallerAttributes.queryString) />
+                                                <cfset attData.text = isNull(column.actionCallerAttributes.text)?record.getValueByPropertyIdentifier( propertyIdentifier=column.propertyIdentifier, formatValue=true ):column.actionCallerAttributes.text />
+                                                <cfif attData.text NEQ "">
+                                                    <hb:HibachiActionCaller attributeCollection="#attData#" />
+                                                </cfif>
+                                            <cfelse>
+                                                #record.getValueByPropertyIdentifier( propertyIdentifier=column.propertyIdentifier, formatValue=true )#
+                                            </cfif>
+                                        <cfelseif len(column.processObjectProperty)>
+                                            <cfset attData = duplicate(column) />
+                                            <cfset attData.object = thisRecordProcessObject />
+                                            <cfset attData.property = column.processObjectProperty />
+                                            <cfset attData.edit = attributes.edit />
+                                            <cfset attData.displayType = "plain" />
+                                            <cfif structKeyExists(attData, "recordFieldNamePrefix") and len(attData.recordFieldNamePrefix)>
+                                                <cfset attData.fieldName = "#attData.recordFieldNamePrefix#[#thistag.loopIndex#].#attData.fieldName#" />
+                                            </cfif>
+                                            <hb:HibachiPropertyDisplay attributeCollection="#attData#" />
+                                        </cfif>
 									</td>
 								</cfif>
 							</cfloop>
@@ -604,20 +644,20 @@
 										<i class="icon-book"></i>
 									</a>
 								</cfif>
-
-								</td>
-							</cfif>
-						</tr>
-					</cfloop>
-					<cfif !arrayLen(attributes.smartList.getPageRecords())>
-						<tr><td colspan="#thistag.columnCount#" style="text-align:center;"><em>#attributes.hibachiScope.rbKey("entity.#thistag.exampleEntity.getClassName()#.norecords", {entityNamePlural=attributes.hibachiScope.rbKey('entity.#thistag.exampleEntity.getClassName()#_plural')})#</em></td></tr>
-					</cfif>
-				</tbody>
-			</table>
-
-			</div><!--- table-responsive --->
-
-
+							</td>
+						</cfif>
+					</tr>
+				</cfloop>
+				<cfif !arrayLen(attributes.smartList.getPageRecords())>
+					<tr><td colspan="#thistag.columnCount#" style="text-align:center;"><em>#attributes.hibachiScope.rbKey("entity.#thistag.exampleEntity.getClassName()#.norecords", {entityNamePlural=attributes.hibachiScope.rbKey('entity.#thistag.exampleEntity.getClassName()#_plural')})#</em></td></tr>
+				</cfif>
+			</tbody>
+		</table>
+		<cfif len(attributes.formAction)>
+			<input type="hidden" name="displayType" id="displayType" value="" />
+		</form>
+		</cfif>
+        </div><!--- table-responsive --->
 		<!--- Pager --->
 		<cfsilent>
 			<cfset local.pageStart = 1 />
@@ -638,39 +678,40 @@
 
 			<cfset local.pageEnd = local.pageStart + local.pageCount />
 		</cfsilent>
+		<cfif attributes.smartList.getTotalPages() gt 1>
+            <div class="j-pagination" data-tableid="LD#replace(attributes.smartList.getSavedStateID(),'-','','all')#">
+                <ul class="pagination paginationpages#attributes.smartList.getTotalPages()#">
+                    <li><a href="##" class="paging-show-toggle">#attributes.hibachiScope.rbKey('define.show')# <span class="details">(#attributes.smartList.getPageRecordsStart()# - #attributes.smartList.getPageRecordsEnd()# #lcase(attributes.hibachiScope.rbKey('define.of'))# #attributes.smartList.getRecordsCount()#)</span></a></li>
+                    <li><a href="##" class="show-option" data-show="10">10</a></li>
+                    <li><a href="##" class="show-option" data-show="25">25</a></li>
+                    <li><a href="##" class="show-option" data-show="50">50</a></li>
+                    <li><a href="##" class="show-option" data-show="100">100</a></li>
+                    <li><a href="##" class="show-option" data-show="500">500</a></li>
+                    <li><a href="##" class="show-option" data-show="ALL">ALL</a></li>
 
-		<div class="j-pagination" data-tableid="LD#replace(attributes.smartList.getSavedStateID(),'-','','all')#">
-			<ul class="pagination paginationpages#attributes.smartList.getTotalPages()#">
-				<li><a href="##" class="paging-show-toggle">#attributes.hibachiScope.rbKey('define.show')# <span class="details">(#attributes.smartList.getPageRecordsStart()# - #attributes.smartList.getPageRecordsEnd()# #lcase(attributes.hibachiScope.rbKey('define.of'))# #attributes.smartList.getRecordsCount()#)</span></a></li>
-				<li><a href="##" class="show-option" data-show="10">10</a></li>
-				<li><a href="##" class="show-option" data-show="25">25</a></li>
-				<li><a href="##" class="show-option" data-show="50">50</a></li>
-				<li><a href="##" class="show-option" data-show="100">100</a></li>
-				<li><a href="##" class="show-option" data-show="500">500</a></li>
-				<li><a href="##" class="show-option" data-show="ALL">ALL</a></li>
-
-				<cfif attributes.smartList.getCurrentPage() gt 1>
-					<li><a href="##" class="listing-pager page-option prev" data-page="#attributes.smartList.getCurrentPage() - 1#">&laquo;</a></li>
-				<cfelse>
-					<li class="disabled"><a href="##" class="page-option prev">&laquo;</a></li>
-				</cfif>
-				<cfif attributes.smartList.getTotalPages() gt 6 and attributes.smartList.getCurrentPage() gt 3>
-					<li><a href="##" class="listing-pager page-option" data-page="1">1</a></li>
-					<li><a href="##" class="listing-pager page-option" data-page="#attributes.smartList.getCurrentPage()-3#">...</a></li>
-				</cfif>
-				<cfloop from="#local.pageStart#" to="#local.pageEnd#" index="i" step="1">
-					<li <cfif attributes.smartList.getCurrentPage() eq i>class="active"</cfif>><a href="##" class="listing-pager page-option" data-page="#i#">#i#</a></li>
-				</cfloop>
-				<cfif attributes.smartList.getTotalPages() gt 6 and attributes.smartList.getCurrentPage() lt attributes.smartList.getTotalPages() - 3>
-					<li><a href="##" class="listing-pager page-option" data-page="#attributes.smartList.getCurrentPage()+3#">...</a></li>
-					<li><a href="##" class="listing-pager page-option" data-page="#attributes.smartList.getTotalPages()#">#attributes.smartList.getTotalPages()#</a></li>
-				</cfif>
-				<cfif attributes.smartList.getCurrentPage() lt attributes.smartList.getTotalPages()>
-					<li><a href="##" class="listing-pager page-option next" data-page="#attributes.smartList.getCurrentPage() + 1#">&raquo;</a></li>
-				<cfelse>
-					<li class="disabled"><a href="##" class="page-option next">&raquo;</a></li>
-				</cfif>
-			</ul>
-		</div>
+                    <cfif attributes.smartList.getCurrentPage() gt 1>
+                        <li><a href="##" class="listing-pager page-option prev" data-page="#attributes.smartList.getCurrentPage() - 1#">&laquo;</a></li>
+                    <cfelse>
+                        <li class="disabled"><a href="##" class="page-option prev">&laquo;</a></li>
+                    </cfif>
+                    <cfif attributes.smartList.getTotalPages() gt 6 and attributes.smartList.getCurrentPage() gt 3>
+                        <li><a href="##" class="listing-pager page-option" data-page="1">1</a></li>
+                        <li><a href="##" class="listing-pager page-option" data-page="#attributes.smartList.getCurrentPage()-3#">...</a></li>
+                    </cfif>
+                    <cfloop from="#local.pageStart#" to="#local.pageEnd#" index="i" step="1">
+                        <li <cfif attributes.smartList.getCurrentPage() eq i>class="active"</cfif>><a href="##" class="listing-pager page-option" data-page="#i#">#i#</a></li>
+                    </cfloop>
+                    <cfif attributes.smartList.getTotalPages() gt 6 and attributes.smartList.getCurrentPage() lt attributes.smartList.getTotalPages() - 3>
+                        <li><a href="##" class="listing-pager page-option" data-page="#attributes.smartList.getCurrentPage()+3#">...</a></li>
+                        <li><a href="##" class="listing-pager page-option" data-page="#attributes.smartList.getTotalPages()#">#attributes.smartList.getTotalPages()#</a></li>
+                    </cfif>
+                    <cfif attributes.smartList.getCurrentPage() lt attributes.smartList.getTotalPages()>
+                        <li><a href="##" class="listing-pager page-option next" data-page="#attributes.smartList.getCurrentPage() + 1#">&raquo;</a></li>
+                    <cfelse>
+                        <li class="disabled"><a href="##" class="page-option next">&raquo;</a></li>
+                    </cfif>
+                </ul>
+            </div>
+		</cfif>
 	</cfoutput>
 </cfif>
