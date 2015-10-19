@@ -1,4 +1,3 @@
-//checking web hooks
 component extends="FW1.framework" {
 	
 	// ======= START: ENVIORNMENT CONFIGURATION =======
