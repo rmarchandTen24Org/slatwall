@@ -506,7 +506,7 @@
 							<cfset attributes.recordProcessEntity.clearProcessObject( attributes.recordProcessContext ) />
 							<cfset thisRecordProcessObject = attributes.recordProcessEntity.getProcessObject( attributes.recordProcessContext, injectValues ) />
 						</cfif>
-						<tr id="#record.getPrimaryIDValue()#" <cfif thistag.expandable>idPath="#record.getValueByPropertyIdentifier( propertyIdentifier="#thistag.exampleEntity.getPrimaryIDPropertyName()#Path" )#"</cfif>>
+                        <tr id="#record.getPrimaryIDValue()#" <cfif thistag.expandable>idPath="#record.getValueByPropertyIdentifier( propertyIdentifier="#thistag.exampleEntity.getPrimaryIDPropertyName()#Path" )#"</cfif> <cfif Len(attributes.backgroundColorProperty)>style="background-color:#record.getValueByPropertyIdentifier(attributes.backgroundColorProperty)#"</cfif>>
 							<!--- Selectable --->
 							<cfif thistag.selectable>
 								<td class="s-table-select"><a href="##" class="table-action-select#IIF(attributes.edit, DE(""), DE(" disabled"))#" data-idvalue="#record.getPrimaryIDValue()#"><i class="hibachi-ui-radio"></i></a></td>
@@ -618,7 +618,7 @@
 								<!--- Complete --->
 								<cfif len(attributes.recordCompleteAction)>
 									<a class="admincaseviewComplete btn btn-mini" href="#attributes.hibachiScope.buildURL(action=attributes.recordCompleteAction,querystring=listPrepend(attributes.recordCompletequerystring, '#record.getPrimaryIDPropertyName()#=#record.getPrimaryIDValue()#', '&'))#" title="Mark Complete">
-										<i class="icon-ok"></i>
+										<i class="glyphicon glyphicon-ok"></i>
 									</a>
 								</cfif>
 
