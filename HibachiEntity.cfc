@@ -54,8 +54,8 @@ component output="false" accessors="true" persistent="false" extends="HibachiTra
 	property name="auditSmartList" type="any" persistent="false";
 
 	// Audit Properties
-	property name="createdByAccount" persistent="false";
-	property name="modifiedByAccount" persistent="false";
+	property name="createdByAccount" hb_cfc="Account" persistent="false";
+	property name="modifiedByAccount" hb_cfc="Account" persistent="false";
 
 	// @hint global constructor arguments.  All Extended entities should call super.init() so that this gets called
 	public any function init() {

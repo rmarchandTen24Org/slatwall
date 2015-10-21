@@ -838,6 +838,9 @@
 		public string function getLastEntityNameInPropertyIdentifier( required string entityName, required string propertyIdentifier ) {
 			if(listLen(arguments.propertyIdentifier, ".") gt 1) {
 				var propertiesSruct = getPropertiesStructByEntityName( arguments.entityName );
+				if(structKeyExists(propertiesSruct[listFirst(arguments.propertyIdentifier, ".")], "hb_cfc")){
+					propertiesSruct[listFirst(arguments.propertyIdentifier, ".")].cfc = propertiesSruct[listFirst(arguments.propertyIdentifier, ".")].hb_cfc;
+				}
 				if( !structKeyExists(propertiesSruct, listFirst(arguments.propertyIdentifier, ".")) || !structKeyExists(propertiesSruct[listFirst(arguments.propertyIdentifier, ".")], "cfc") ) {
 					throw("The Property Identifier #arguments.propertyIdentifier# is invalid for the entity #arguments.entityName#");
 				}
