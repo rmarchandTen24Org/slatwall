@@ -78,16 +78,17 @@ component output="false" accessors="true" persistent="false" extends="HibachiTra
 		return super.init();
 	}
 
-	public void function updateCalculatedProperties() {
-		if(!structKeyExists(variables, "calculatedUpdateRunFlag")) {
-			// Set calculated to true so that this only runs 1 time per request
+	/** runs a update calculated properties only once per request unless explicitly set to false before calling. */
+	public void function updateCalculatedProperties(any runAgain=false) {
+        if(!structKeyExists(variables, "calculatedUpdateRunFlag") || runAgain) {
+            // Set calculated to true so that this only runs 1 time per request unless explicitly told to run again.
 			variables.calculatedUpdateRunFlag = true;
 
 			// Loop over all properties
 			for(var property in getProperties()) {
 
 				// Look for any that start with the calculatedXXX naming convention
-				if(left(property.name, 10) == "calculated") {
+                if(left(property.name, 10) == "calculated" && (!structKeyExists(property, "persistent") || property.persistent == "true")) {
 
 					var value = this.invokeMethod("get#right(property.name, len(property.name)-10)#");
 					if(!isNull(value)) {
@@ -100,9 +101,9 @@ component output="false" accessors="true" persistent="false" extends="HibachiTra
 
 				}
 			}
+
 		}
 	}
-
 	// @hint return a simple representation of this entity
 	public string function getSimpleRepresentation() {
 

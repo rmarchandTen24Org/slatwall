@@ -90,6 +90,20 @@
 			return '<a href="#arguments.value#" target="_blank">' & arguments.value & '</a>';
 		}
 		
+  		public string function generateRandomID( numeric numCharacters = 8){
+
+  			var chars="abcdefghijklmnopqrstuvwxyz1234567890";
+  			var random = createObject("java", "java.util.Random" ).init();
+  			var result = createObject("java", "java.lang.StringBuffer").init (javaCast("int",arguments.numCharacters));
+  			var index = 0;
+
+  			for(var i=0; i<numCharacters; i++){
+  				result.append(chars.charAt(random.nextInt(chars.length())));
+  			}
+
+			return result.toString().toUppercase();
+  		}
+
 		public any function buildPropertyIdentifierListDataStruct(required any object, required string propertyIdentifierList, required string availablePropertyIdentifierList) {
 			var responseData = {};
 			
@@ -274,6 +288,15 @@
 			return arguments.filename;
 		}
 	
+		public string function createSEOString(required string toFormat, string delimiter="-"){
+
+			//take out all special characters except -
+			arguments.toFormat = reReplace(lcase(trim(arguments.toFormat)), "[^a-z0-9 \-]", "", "all");
+
+			//replate spaces with -
+			return reReplace(arguments.toFormat, "[-\s]+", delimiter, "all");
+		}
+
 		public void function duplicateDirectory(required string source, required string destination, boolean overwrite=false, boolean recurse=true, string copyContentExclusionList='', boolean deleteDestinationContent=false, string deleteDestinationContentExclusionList="" ){
 			arguments.source = replace(arguments.source,"\","/","all");
 			arguments.destination = replace(arguments.destination,"\","/","all");
@@ -992,6 +1015,12 @@
 	 
 	    <!--- Return the CSV value. --->
 	    <cfreturn LOCAL.Buffer.ToString() />
+	</cffunction>
+
+	<cffunction name="getCurrentUtcTime" returntype="Numeric" >
+        <cfset local.currentDate = Now()>
+        <cfset local.utcDate = dateConvert( "local2utc", local.currentDate )>
+        <cfreturn round( local.utcDate.getTime() / 1000 )>
 	</cffunction>
 	
 	
