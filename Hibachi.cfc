@@ -828,8 +828,11 @@ component extends="FW1.framework" {
 	}
 	
 	public void function onError(any exception, string event){
+		//Temp fix to show error stack in api calls
+		if(variables.framework.hibachi.debugFlag){
+			writeDump(var=exception, top=2); abort;
+		}
 		//if something fails for any reason then we want to set the response status so our javascript can handle rest errors
-		//writeDump(var=exception, top=2); abort;
 		var context = getPageContext();
 		var response = context.getResponse();
 		response.setStatus(500);
