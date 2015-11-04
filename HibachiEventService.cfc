@@ -24,7 +24,7 @@
 // before{EntityName}Delete
 // after{EntityName}Delete
 // after{EntityName}DeleteSuccess
-// after{EntityName}DeleteFailure
+// after{EntityName}DeleteFailcolumnsure
 
 // before{EntityName}Process
 // after{EntityName}Process
