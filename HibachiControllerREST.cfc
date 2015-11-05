@@ -220,10 +220,10 @@ component output="false" accessors="true" extends="HibachiController" {
 						comparisonOperator = "=",
 						value=rc.entityName
 					},{
-						logicalOperator: "AND",
-						propertyIdentifier: "_collection.collectionHidden",
-						comparisonOperator: "is",
-						value: "null"
+						logicalOperator = "AND",
+						propertyIdentifier = "_collection.collectionHidden",
+						comparisonOperator = "is",
+						value = "null"
 					}
 				]
 			}
