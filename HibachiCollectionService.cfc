@@ -546,8 +546,6 @@ component output="false" accessors="true" extends="HibachiService" {
 		
 		collectionEntity.getCollectionConfigStruct().isDistinct = arguments.collectionOptions.isDistinct;
 
-		
-		var response = {};
 		var defaultPropertyIdentifiers = getPropertyIdentifierArray('collection');
 
 		for(var p=1; p<=arrayLen(defaultPropertyIdentifiers); p++) {
