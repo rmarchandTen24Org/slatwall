@@ -25,7 +25,7 @@ angular.module('slatwalladmin')
 				onChange:"=",
 				fieldType:"@",
 				noValidate:"="
-					
+
 			},
 			templateUrl:partialsPath+"propertydisplay.html",
 			link: function(scope, element,attrs,formController){
@@ -66,7 +66,7 @@ angular.module('slatwalladmin')
 				if(angular.isUndefined(scope.editing)){
 					scope.propertyDisplay.editing = false;
 				}
-				
+
 				if(angular.isUndefined(scope.propertyDisplay.isHidden)){
 					scope.propertyDisplay.isHidden = false;
 				}
@@ -80,17 +80,16 @@ angular.module('slatwalladmin')
 				};
 
 				scope.$id = 'propertyDisplay:'+scope.property;
-				
+
 				/* register form that the propertyDisplay belongs to*/
 				scope.propertyDisplay.form = formController;
-				
+
 				$log.debug(scope.propertyDisplay);
-							
-				
+
+
 				$log.debug('propertyDisplay');
 				$log.debug(scope.propertyDisplay);
 			}
 		};
 	}
 ]);
-	
