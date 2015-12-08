@@ -1,6 +1,5 @@
 /// <reference path="../../typings/tsd.d.ts" />
 /// <reference path="../../typings/slatwallTypeScript.d.ts" />
-
 //modules
 import {coremodule} from '../hibachi/core/core.module';
 import {ngslatwallmodule} from "../ngslatwall/ngslatwall.module";
@@ -15,7 +14,7 @@ import {SWFPromo} from "./components/swfpromo";
 
 //need to inject the public service into the rootscope for use in the directives.
 var frontendmodule = angular.module('frontend', [coremodule.name, ngslatwallmodule.name])
-.run([function($rootScope, publicService) {
+.run(['$rootScope', 'publicService', function($rootScope, publicService) {
 	$rootScope.hibachiScope = publicService;
 	$rootScope.hibachiScope.getAccount();
 	$rootScope.hibachiScope.getCart();
