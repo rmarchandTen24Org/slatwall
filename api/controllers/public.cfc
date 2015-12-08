@@ -1,4 +1,4 @@
-component output="false" accessors="true" extends="Slatwall.org.Hibachi.HibachiController"{
+component accessors="true" extends="Slatwall.org.Hibachi.HibachiController"{
     
     property name="fw" type="any";
     property name="hibachiService" type="any";
