@@ -497,7 +497,7 @@ component accessors="true" persistent="false" output="false" extends="HibachiObj
 		}
 	}
 
-	public void function addKeywordProperty(required string propertyIdentifier, required numeric weight) {
+	public void function addKeywordProperty(required string propertyIdentifier, required numeric weight, string searchType="") {
 		var entityName = getBaseEntityName();
 		var propertyIsAttribute = getService("hibachiService").getHasAttributeByEntityNameAndPropertyIdentifier(entityName=entityName, propertyIdentifier=arguments.propertyIdentifier);
 
