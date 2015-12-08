@@ -97,7 +97,7 @@
 									    <div class="col-sm-6 col-md-6 col-lg-3 s-detail-module s-md-content-block s-click">
 											
 											<!--Small content block-->
-									        <div class="s-sm-content-block s-status s-active">
+									        <div class="s-sm-content-block s-status s-green">
 									            <div class="col-xs-1 col-sm-1 col-md-2 col-lg-3 s-icon">
 									                <i class="fa fa-circle"></i>
 									            </div>
@@ -155,7 +155,7 @@
 													</div>
 												</div>
 
-												<div class="responsive-table">
+												<div class="table-responsive">
 												    <table class="table table-bordered s-detail-content-table">
 												        <thead>
 												            <tr>
@@ -286,7 +286,7 @@
 					    <div class="col-sm-6 col-md-6 col-lg-3 s-detail-module s-md-content-block s-click">
 							
 							<!--Small content block-->
-					        <div class="s-sm-content-block s-status s-active">
+					        <div class="s-sm-content-block s-status s-green">
 					            <div class="col-xs-1 col-sm-1 col-md-2 col-lg-3 s-icon">
 					                <i class="fa fa-circle"></i>
 					            </div>
@@ -344,7 +344,7 @@
 									</div>
 								</div>
 
-								<div class="responsive-table">
+								<div class="table-responsive">
 								    <table class="table table-bordered s-detail-content-table">
 								        <thead>
 								            <tr>
@@ -492,9 +492,9 @@
 										            <div class="modal-content">
 										                <div class="modal-header">
 										                    <a class="close" data-dismiss="modal">×</a>
-										                    <h3>Create Batch</h3>
+										                    <h3>Create Batch <span class="s-title-detail">(154 items selected)</span></h3>
 										                </div>
-										                <div class="modal-body">
+										                <div class="modal-body s-visable">
 										                    
 									                        <div class="row">
 									                            <div class="col-md-12">
@@ -508,18 +508,76 @@
 									                                    </div>
 									                                    
 									                                    <div class="form-group ">
+									                                        <label for="orderFulfillmentID" class="control-label col-sm-4">Batch Location</label>
+									                                        <div class="col-sm-8">
+																				
+																				<div class="s-select-list-wrapper s-search">
+																				    <div class="form-group">
+																				        <!-- Option select field wrapper -->
+																				        <div class="input-group">
+																				            <div class="s-input-btn">
+																				                <input id="searchinput" type="search" class="form-control" placeholder="All Locations">
+																				                <!-- <span class="glyphicon glyphicon-remove"></span> -->
+																								<i class="fa fa-search"></i><!--- Search function --->
+																				                <!--<i class="fa fa-refresh fa-spin"></i>--><!-- Loading Icon -->
+																				            </div>
+																				            <div class="input-group-btn">
+																				                <button class="btn btn-sm btn-default" type="submit"><i class="fa fa-caret-down"></i></button>
+																				            </div>
+																				        </div>
+																				    </div>
+																				    <!-- Dropdown wrapper -->
+																				    <div class="dropdown s-search-results-wrapper" style="display: none;">
+																				        <ul class="dropdown-menu">
+																							<li class="s-index-0" data-group="las-angeles"><a href="##">Las Angeles</a></li>
+																				            <li class="s-index-1" data-group="las-angeles"><a href="##">Hollywood</a></li>
+																							<li class="s-index-1" data-group="las-angeles"><a href="##">Venice</a></li>
+																				            <li class="s-index-0" data-group="san-diego"><a href="##">San Diego</a></li>
+																				            <li class="s-index-1" data-group="san-diego"><a href="##">Encinitas Warehouse</a></li>
+																							<li class="s-index-2" data-group="san-diego"><a href="##">843 Moonlight</a></li>
+																							<li class="s-index-3" data-group="san-diego"><a href="##">Room 23</a></li>
+																							<li class="s-index-3" data-group="san-diego"><a href="##">Room 45</a></li>
+																							<li class="s-index-4" data-group="san-diego"><a href="##">Row 3 with really long title to show what it would do </a></li>
+																				            <li class="s-index-1" data-group="san-diego"><a href="##">Del Mar Warehouse</a></li>
+																				            <li class="s-index-1" data-group="san-diego"><a href="##">Carlsbad Warehouse</a></li>
+																							<li class="s-index-0" data-group="boston"><a href="##">Boston</a></li>
+																				        </ul>
+																				    </div>
+																				</div>
+																				
+									                                        </div>
+									                                    </div>
+																		
+																		<div class="form-group ">
 									                                        <label for="orderFulfillmentID" class="control-label col-sm-4">Assign Batch</label>
 									                                        <div class="col-sm-8">
-																				<div class="autoselect-container">
-																					<input type="text" name="accountaccountID-autocompletesearch" autocomplete="off" class="textautocomplete  form-control valid" data-acfieldname="account.accountID" data-sugessionsid="accountaccountID-suggestions" data-acpropertyidentifiers="adminIcon,fullName,company,emailAddress,phoneNumber,address.simpleRepresentation" data-entityname="Account" data-acvalueproperty="accountID" data-acnameproperty="simpleRepresentation" disabled="disabled">
-																					<div class="autocomplete-selected" style="display: block;"><a href="#" class="textautocompleteremove"><i class="glyphicon glyphicon-remove"></i></a> <span class="value" id="selected-accountaccountID-suggestions">reinaldo solares</span></div>
-																					<div class="autocomplete-options" style="display: none; position: fixed; top: 231px; left: 261.828px;">
-																					<ul class="accountid" id="accountaccountID-suggestions">
-																						<li><a href="#" id="suggestionoption8a80808450b059580150b0dfde08008f" class="textautocompleteadd" data-acvalue="8a80808450b059580150b0dfde08008f" data-acname="reinaldo solares"><span class="adminIcon"><img src="http://www.gravatar.com/avatar/18180027be65cf8412875e7b147769d0?s=55" style="width:55px;"></span><span class="fullName first">reinaldo solares</span><span class="company"></span><span class="emailAddress">reinaldosolares@gamil.com</span><span class="phoneNumber">7604738055</span><span class="simpleRepresentation"></span></a></li>
-																					</ul>
+																				
+																				<div class="s-select-list-wrapper s-search">
+																				    <div class="form-group">
+																				        <!-- Option select field wrapper -->
+																				        <div class="input-group">
+																				            <div class="s-input-btn">
+																				                <input id="searchinput" type="search" class="form-control" placeholder="Search User">
+																				                <!-- <span class="glyphicon glyphicon-remove"></span> -->
+																								<i class="fa fa-search"></i><!--- Search function --->
+																				                <!--<i class="fa fa-refresh fa-spin"></i>--><!-- Loading Icon -->
+																				            </div>
+																				            <div class="input-group-btn">
+																				                <button class="btn btn-sm btn-default" type="submit"><i class="fa fa-caret-down"></i></button>
+																				            </div>
+																				        </div>
+																				    </div>
+																					
+																				    <!-- Dropdown wrapper -->
+																				    <div class="dropdown s-search-results-wrapper" style="display: none;">
+																				        <ul class="dropdown-menu">
+																							<li data-group="las-angeles"><a href="##">Reyjay solares</a></li>
+																							<li data-group="las-angeles"><a href="##">Reyjay solares</a></li>
+																							
+																				        </ul>
+																				    </div>
 																				</div>
-
-																				</div>
+																				
 									                                        </div>
 									                                    </div>
 									                                    
@@ -530,7 +588,7 @@
 										                </div>
 										                <div class="modal-footer">
 										                    <a href="#" class="btn btn-default s-remove" data-dismiss="modal"><span class="glyphicon glyphicon-remove icon-white"></span> Cancel</a>
-										                    <button class="# btn btn-success" title="Add">Create Batch</button> 
+										                    <button class="# btn btn-success" title="Add">Add Batch</button> 
 										                </div>
 										            </div>
 										        </div>
@@ -552,98 +610,13 @@
 
 					
 					
-					<div class="alert alert-danger alert-dismissible" role="alert">
+					<!-- <div class="alert alert-danger alert-dismissible" role="alert">
 						<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
 						<strong>Error!</strong> There was an error with the info you entered 
-					</div>
+					</div> -->
 					<div class="row s-detail-modules-wrapper">
-						<label class="col-sm-6 col-md-6 col-lg-3 s-detail-module s-click" for="j-all-items">
-					        
-							<!--Small content block-->
-					        <div class="s-sm-content-block">
-					            <div class="col-xs-1 col-sm-1 col-md-2 col-lg-3 s-icon">
-					                <i class="fa fa-dropbox"></i>
-					            </div>
-					            <div class="col-xs-11 col-sm-11 col-md-10 col-lg-9 s-content">
-					                <div class="s-title">
-					                    Fulfillments
-					                </div>
-					                <div class="s-body">
-					                    <span title="">245</span>
-					                </div>
-									<a href="##" class="s-link">Item View</a>
-					            </div>
-					        </div>
-					        
-					    </label>
-					    <label class="col-sm-6 col-md-6 col-lg-2 s-detail-module s-md-content-block s-click" for="j-available">
-							
-							<!--Small content block-->
-					        <div class="s-sm-content-block s-status s-active">
-					            <div class="col-xs-1 col-sm-1 col-md-2 col-lg-3 s-icon">
-					                <i class="fa fa-circle"></i>
-					            </div>
-					            <div class="col-xs-11 col-sm-11 col-md-10 col-lg-9 s-content">
-					                <div class="s-title">
-					                    Available
-					                </div>
-					                <div class="s-body">
-					                    <span>14</span>
-					                </div>
-									<div class="s-checkbox">
-										<input type="checkbox" id="j-available">
-										<label for="j-available"></label>
-									</div>
-									
-					            </div>
-					        </div>
-							
-					    </label>
-					    <label class="col-sm-6 col-md-6 col-lg-2 s-detail-module s-md-content-block s-click" for="j-partial">
-							
-							<!--Small content block-->
-					        <div class="s-sm-content-block s-status s-paused">
-					            <div class="col-xs-1 col-sm-1 col-md-2 col-lg-3 s-icon">
-					                <i class="fa fa-circle"></i>
-					            </div>
-					            <div class="col-xs-11 col-sm-11 col-md-10 col-lg-9 s-content">
-					                <div class="s-title">
-					                    Partial
-					                </div>
-					                <div class="s-body">
-					                    <span title="">32</span>
-					                </div>
-									<div class="s-checkbox">
-										<input type="checkbox" id="j-partial">
-										<label for="j-partial"></label>
-									</div>
-					            </div>
-					        </div>
-							
-					    </label>
-					    <label class="col-sm-6 col-md-6 col-lg-2 s-detail-module s-md-content-block s-click s-clear-right" for="j-unavailable">
-							
-							<!--Small content block-->
-					        <div class="s-sm-content-block s-status s-closed">
-					            <div class="col-xs-1 col-sm-1 col-md-2 col-lg-3 s-icon">
-					                <i class="fa fa-circle"></i>
-					            </div>
-					            <div class="col-xs-11 col-sm-11 col-md-10 col-lg-9 s-content">
-					                <div class="s-title">
-					                    Unavailable
-					                </div>
-					                <div class="s-body">
-					                    <span title="">43</span>
-					                </div>
-									<div class="s-checkbox">
-										<input type="checkbox" id="j-unavailable">
-										<label for="j-unavailable"></label>
-									</div>
-					            </div>
-					        </div>
-							
-					    </label>
-						<div class="col-sm-12 col-md-12 col-lg-3 s-detail-module s-clear-both">
+						
+						<div class="col-sm-6 col-md-6 col-lg-4 s-detail-module">
 					        
 							<!--Small content block-->
 					        <div class="s-sm-content-block">
@@ -657,200 +630,183 @@
 										<option value="">Boston Warehouse</option>
 									</select> -->
 									
-									<style>
-										.s-dropdown-search-wrapper {
-											position: relative;
-										}
-										.s-dropdown-search-wrapper > button {
-											width: 100%;
-											position: relative;
-										}
-										.s-dropdown-search-wrapper > button .caret {
-											position: absolute;
-											top: 14px;
-											right: 13px;
-										}
-										.s-dropdown-search-wrapper .s-search {
-											padding: 10px;
-										}
-										.s-dropdown-search-wrapper .s-dropdown-search {
-											position: absolute;
-											z-index: 300;
-											background: #fff;
-											border: 1px solid #eee;
-											width: 100%;
-											display: none;
-										}
-										.s-dropdown-search-wrapper .s-dropdown-search ul.s-options {
-											margin: 0px;
-											max-height: 300px;
-											max-height: 40vh;
-											overflow: auto;
-										}
-										.s-dropdown-search-wrapper .s-dropdown-search ul li:first-child {
-											border-top: 1px solid #eee;	
-										}
-										.s-dropdown-search-wrapper .s-dropdown-search ul li {
-											border-bottom: 1px solid #eee;
-    										padding: 4px 10px;
-											cursor: pointer;
-										}
-										.s-dropdown-search-wrapper .s-dropdown-search ul li:hover {
-											background-color: #eee;
-										}
-										.s-dropdown-search-wrapper .s-dropdown-search ul li.s-selected {
-											background-color: #428bca;
-											color: #fff;
-											opacity: .5;
-											cursor: default;
-										}
-										.s-dropdown-search-wrapper .s-dropdown-search ul li.s-selected:after {
-											content: "\f00c";
-										    font-family: fontAwesome;
-										    float: right;
-										}
-									</style>
 									
-									<div class="s-dropdown-search-wrapper">
-										<button type="button" class="btn btn-default" data-toggle="dropdown" aria-expanded="false">
-											<span class="filter-option pull-left">All Locations</span>
-											<span class="caret"></span>
-										</button>
-										
-										<div class="s-dropdown-search">
-											<div class="s-search">
-												<input type="text" class="form-control" placeholder="search" autocomplete="off">
-											</div>
-											<ul class="list-unstyled s-options" role="menu">
-												<li>
-													California Wearhouse
-												</li>
-												<li>
-													Boston Wearhouse
-												</li>
-												<li class="s-selected">
-													Texas Wearhouse
-												</li>
-												<li>
-													Arizona Wearhouse
-												</li>
-												<li>
-													California Wearhouse
-												</li>
-												<li>
-													Boston Wearhouse
-												</li>
-												<li>
-													Texas Wearhouse
-												</li>
-												<li>
-													Arizona Wearhouse
-												</li>
-												<li>
-													California Wearhouse
-												</li>
-												<li>
-													Boston Wearhouse
-												</li>
-												<li>
-													Texas Wearhouse
-												</li>
-												<li>
-													Arizona Wearhouse
-												</li>
-												<li>
-													California Wearhouse
-												</li>
-												<li>
-													Boston Wearhouse
-												</li>
-												<li>
-													Texas Wearhouse
-												</li>
-												<li>
-													Arizona Wearhouse
-												</li>
-												<li>
-													California Wearhouse
-												</li>
-												<li>
-													Boston Wearhouse
-												</li>
-												<li>
-													Texas Wearhouse
-												</li>
-												<li>
-													Arizona Wearhouse
-												</li>
-												<li>
-													California Wearhouse
-												</li>
-												<li>
-													Boston Wearhouse
-												</li>
-												<li>
-													Texas Wearhouse
-												</li>
-												<li>
-													Arizona Wearhouse
-												</li>
-												<li>
-													California Wearhouse
-												</li>
-												<li>
-													Boston Wearhouse
-												</li>
-												<li>
-													Texas Wearhouse
-												</li>
-												<li>
-													Arizona Wearhouse
-												</li>
-												<li>
-													California Wearhouse
-												</li>
-												<li>
-													Boston Wearhouse
-												</li>
-												<li>
-													Texas Wearhouse
-												</li>
-												<li>
-													Arizona Wearhouse
-												</li>
-												<li>
-													California Wearhouse
-												</li>
-												<li>
-													Boston Wearhouse
-												</li>
-												<li>
-													Texas Wearhouse
-												</li>
-												<li>
-													Arizona Wearhouse
-												</li>
-											</ul>
-										</div>
+									
+									<div class="s-select-list-wrapper s-search">
+									    <div class="form-group">
+									        <!-- Option select field wrapper -->
+									        <div class="input-group">
+									            <div class="s-input-btn">
+									                <input id="searchinput" type="search" class="form-control" placeholder="All Locations">
+									                <!-- <span class="glyphicon glyphicon-remove"></span> -->
+													<i class="fa fa-search"></i><!--- Search function --->
+									                <!--<i class="fa fa-refresh fa-spin"></i>--><!-- Loading Icon -->
+									            </div>
+									            <div class="input-group-btn">
+									                <button class="btn btn-sm btn-default" type="submit"><i class="fa fa-caret-down"></i></button>
+									            </div>
+									        </div>
+									    </div>
+									    <!-- Dropdown wrapper -->
+									    <div class="dropdown s-search-results-wrapper" style="display: none;">
+									        <ul class="dropdown-menu">
+												<li class="s-index-0" data-group="las-angeles"><a href="##">Las Angeles</a></li>
+									            <li class="s-index-1" data-group="las-angeles"><a href="##">Hollywood</a></li>
+												<li class="s-index-1" data-group="las-angeles"><a href="##">Venice</a></li>
+									            <li class="s-index-0" data-group="san-diego"><a href="##">San Diego</a></li>
+									            <li class="s-index-1" data-group="san-diego"><a href="##">Encinitas Warehouse</a></li>
+												<li class="s-index-2" data-group="san-diego"><a href="##">843 Moonlight</a></li>
+												<li class="s-index-3" data-group="san-diego"><a href="##">Room 23</a></li>
+												<li class="s-index-3" data-group="san-diego"><a href="##">Room 45</a></li>
+												<li class="s-index-4" data-group="san-diego"><a href="##">Row 3 with really long title to show what it would do </a></li>
+									            <li class="s-index-1" data-group="san-diego"><a href="##">Del Mar Warehouse</a></li>
+									            <li class="s-index-1" data-group="san-diego"><a href="##">Carlsbad Warehouse</a></li>
+												<li class="s-index-0" data-group="boston"><a href="##">Boston</a></li>
+									        </ul>
+									    </div>
 										
 									</div>
-									
+									<div class="content-search">
+										sdfas
+									</div>
+									<style>
+										.s-search-results-wrapper .dropdown-menu li {
+											position: relative;
+										}
+										.s-search-results-wrapper .dropdown-menu .s-index-0 a {
+											color: #000;
+										}
+										.s-search-results-wrapper .dropdown-menu .s-index-1 a {
+											padding-left: 27px;
+										}
+										.s-search-results-wrapper .dropdown-menu .s-index-1:before {
+											content: "-";
+											position: absolute;
+											top: 2px;
+											color: #ccc;
+											left: 15px;
+											font-size: 18px;
+											letter-spacing: 2px;
+										}
+										.s-search-results-wrapper .dropdown-menu .s-index-2 a {
+											padding-left: 34px;
+										}
+										.s-search-results-wrapper .dropdown-menu .s-index-2:before {
+											content: "--";
+											position: absolute;
+											top: 2px;
+											color: #ccc;
+											left: 15px;
+											font-size: 18px;
+											letter-spacing: 2px;
+										}
+										.s-search-results-wrapper .dropdown-menu .s-index-3 a {
+											padding-left: 41px;
+										}
+										.s-search-results-wrapper .dropdown-menu .s-index-3:before {
+											content: "---";
+											position: absolute;
+											top: 2px;
+											color: #ccc;
+											left: 15px;
+											font-size: 18px;
+											letter-spacing: 2px;
+										}
+										.s-search-results-wrapper .dropdown-menu .s-index-4 a {
+											padding-left: 48px;
+										}
+										.s-search-results-wrapper .dropdown-menu .s-index-4:before {
+											content: "----";
+											position: absolute;
+											top: 2px;
+											color: #ccc;
+											left: 15px;
+											font-size: 18px;
+											letter-spacing: 2px;
+										}
+									</style>
 					            </div>
 					        </div>
 					        
 					    </div>
+						
+						<!--- ITEMS MODULE --->
+						<div class="col-sm-6 col-md-6 col-lg-2 s-detail-module">
+					        
+							<!--Small content block-->
+					        <div class="s-sm-content-block">
+					            <div class="col-xs-1 col-sm-1 col-md-2 col-lg-3 s-icon">
+					                <i class="fa fa-dropbox"></i>
+					            </div>
+					            <div class="col-xs-11 col-sm-11 col-md-10 col-lg-9 s-content s-single-line">
+					                <div class="s-title">
+					                    Items <span class="s-number">(245)</span>
+					                </div>
+									<a href="##" class="s-link">Fulfillments View</a>
+					            </div>
+					        </div>
+					        
+					    </div>
+						
+						<!--- AVAILBALE MODULE --->
+					    <div class="col-sm-6 col-md-6 col-lg-2 s-detail-module s-md-content-block s-click">
+							
+							<!--Small content block-->
+					        <div class="s-sm-content-block s-status s-green s-selected">
+					            <div class="col-xs-1 col-sm-1 col-md-2 col-lg-3 s-icon">
+					                <i class="fa fa-circle"></i>
+					            </div>
+					            <div class="col-xs-11 col-sm-11 col-md-10 col-lg-9 s-content s-single-line">
+					                <div class="s-title">
+					                    Available <span class="s-number">(162)</span>
+					                </div>
+					            </div>
+					        </div>
+							
+					    </div>
+						
+						<!--- PARTIAL MODULE --->
+					    <div class="col-sm-6 col-md-6 col-lg-2 s-detail-module s-md-content-block s-click s-clear-right">
+							
+							<!--Small content block-->
+					        <div class="s-sm-content-block s-status s-yellow s-selected">
+					            <div class="col-xs-1 col-sm-1 col-md-2 col-lg-3 s-icon">
+					                <i class="fa fa-circle"></i>
+					            </div>
+					            <div class="col-xs-11 col-sm-11 col-md-10 col-lg-9 s-content s-single-line">
+					                <div class="s-title">
+					                    Partial <span class="s-number">(12)</span>
+					                </div>
+					            </div>
+					        </div>
+							
+					    </div>
+						
+						<!--- UNAVAILABLE MODULE --->
+					    <div class="col-sm-6 col-md-6 col-lg-2 s-detail-module s-md-content-block s-click s-clear-left">
+							
+							<!--Small content block-->
+					        <div class="s-sm-content-block s-status s-red s-selected">
+					            <div class="col-xs-1 col-sm-1 col-md-2 col-lg-3 s-icon">
+					                <i class="fa fa-circle"></i>
+					            </div>
+					            <div class="col-xs-11 col-sm-11 col-md-10 col-lg-9 s-content s-single-line">
+					                <div class="s-title">
+					                    Unavailable <span class="s-number">(68)</span>
+					                </div>
+					            </div>
+					        </div>
+							
+					    </div>
+						
 					</div>
-					<script>
-						$('.s-dropdown-search-wrapper > button').click(function(){
-							$('.s-dropdown-search').toggle();
-						});
-					</script>
+					
 					<div class="row s-detail-content-wrapper">
 						
 						<div class="col-xs-12">
 							<div class="s-detail-body">
 								<div class="s-content-header">
-									<h2>Items <span> (2) selected items</span></h2>
+									<h2>Items</h2>
 									<div class="form-group s-default-search">
 										<input type="text" name="search" class="form-control" placeholder="Search">
 										<!-- <a href="##" class="s-search-action"><i class="fa fa-times"></i></a> -->
@@ -858,8 +814,12 @@
 										<!-- <span class="s-search-action"><i class="fa fa-spinner fa-spin"></i></span> -->
 									</div>
 								</div>
-
-								<div class="responsive-table">
+								<div class="s-detail-notifications">
+									<span>All <b>50</b> items on this page are selected.</span> 
+									<a href="##">Select all <b>5,720</b> items</span></a>
+								</div>
+								
+								<div class="table-responsive">
 								    <table class="table table-bordered s-detail-content-table">
 								        <thead>
 								            <tr>
@@ -871,11 +831,10 @@
 														<div class="dropdown">
 															<span id="j-select-options" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true"><i class="fa fa-caret-down"></i></span>	
 															<ul class="dropdown-menu" aria-labelledby="j-select-options">
-																<li><a href="#">Select All (230)</a></li>
-																<li><a href="#">Select 10</a></li>
-																<li><a href="#">Select 20</a></li>
-																<li><a href="#">Select 50</a></li>
-																<li><a href="#">Select 100</a></li>
+																<li><a href="#">All</a></li>
+																<li><a href="#">Available</a></li>
+																<li><a href="#">Partial</a></li>
+																<li><a href="#">Unavailable</a></li>
 															</ul>
 														</div>
 														
@@ -1015,10 +974,38 @@
 								</div>
 						
 							</div>
+							
+							<div class="s-pagination-wrapper">
+								<ul class="pagination">
+									<li><a href="#" class="paging-show-toggle">Show <span class="details">(1 - 10 of 2411)</span></a></li>
+									<li><a href="#" class="show-option" data-show="10" style="display: none;">10</a></li>
+									<li><a href="#" class="show-option" data-show="25" style="display: none;">25</a></li>
+									<li><a href="#" class="show-option" data-show="50" style="display: none;">50</a></li>
+									<li><a href="#" class="show-option" data-show="100" style="display: none;">100</a></li>
+									<li><a href="#" class="show-option" data-show="500" style="display: none;">500</a></li>
+									<li><a href="#" class="show-option" data-show="ALL" style="display: none;">ALL</a></li>
+									<li class="disabled"><a href="#" class="page-option prev">«</a></li>
+									<li class="active"><a href="#" class="listing-pager page-option" data-page="1">1</a></li>
+									<li><a href="#" class="listing-pager page-option" data-page="2">2</a></li>
+									<li><a href="#" class="listing-pager page-option" data-page="3">3</a></li>
+									<li><a href="#" class="listing-pager page-option" data-page="4">4</a></li>
+									<li><a href="#" class="listing-pager page-option" data-page="5">5</a></li>
+									<li><a href="#" class="listing-pager page-option" data-page="4">...</a></li>
+									<li><a href="#" class="listing-pager page-option" data-page="242">242</a></li>
+									<li><a href="#" class="listing-pager page-option next" data-page="2">»</a></li>
+								</ul>
+							</div>
+							
 						</div>
 					</div>
 					<br/>
 					<br/><br/><br/><br/><!--- remove these --->
+					
+					<script>
+						$('.s-detail-modules-wrapper .s-click').click(function(){
+							$(this).find('.s-sm-content-block').toggleClass('s-selected');
+						});
+					</script>
 				</div>				
 <!---////******End gift card detail******--->
 				

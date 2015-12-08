@@ -330,15 +330,28 @@ a:hover {
 }
 .table-responsive {
   overflow: auto;
-  display: inline-block;
+  display: block;
   width: 100%;
+  margin-bottom: 0px !important;
 }
 .table-responsive table th {
   font-weight: 600;
 }
 .table-responsive .s-table-checkbox {
   width: 40px;
+  padding-right: 20px !important;
+  text-align: left;
+  position: relative;
+}
+.table-responsive .s-table-checkbox .s-checkbox .dropdown > span {
+  position: absolute;
+  right: -20px;
+  top: -20px;
+  height: 24px;
+  width: 20px;
   text-align: center;
+  padding-top: 6px;
+  cursor: pointer;
 }
 .table-responsive .multiselect {
   text-align: center;
@@ -974,20 +987,6 @@ select.error {
   background-color: #ffffff;
   margin-bottom: 5px;
 }
-.table .s-table-checkbox {
-  width: 50px;
-  position: relative;
-}
-.table .s-table-checkbox .s-checkbox .dropdown > span {
-  position: absolute;
-  right: -6px;
-  top: -20px;
-  height: 24px;
-  width: 20px;
-  text-align: center;
-  padding-top: 6px;
-  cursor: pointer;
-}
 .table .s-contents-page-title {
   color: #666;
 }
@@ -1296,6 +1295,14 @@ select:focus {
   margin: 0px;
   line-height: 20px;
 }
+.modal-header h3 .s-title-detail {
+  color: #428bca;
+  font-size: 16px;
+}
+.modal-body.s-visable {
+  overflow-y: visible;
+  overflow-x: visible;
+}
 .modal-header .close {
   font-size: 26px;
   margin-top: -1px;
@@ -1389,6 +1396,9 @@ select:focus {
   color: #a94442;
   display: inline-block;
   width: 100%;
+}
+.s-pagination-wrapper {
+  float: right;
 }
 .pagination-sm > li:last-child > a,
 .pagination-sm > li:last-child > span {
@@ -4712,8 +4722,8 @@ a.disabled > i.hibachi-ui-radio-checked {
   top: -4px;
 }
 .s-search-results-wrapper .dropdown-menu {
-  width: 100%;
-  border-color: #cccccc;
+  top: 3px;
+  border-color: #CCC;
   -webkit-border-radius: 0;
   -moz-border-radius: 0;
   border-radius: 0;
@@ -4723,8 +4733,11 @@ a.disabled > i.hibachi-ui-radio-checked {
   display: block;
   margin: 0px;
   padding: 0px;
-  overflow: auto;
   max-height: 120px;
+  max-height: 50vh;
+  overflow-x: visible;
+  overflow-y: scroll;
+  min-width: 100%;
 }
 .s-search-results-wrapper .dropdown-menu a {
   color: #666666;
@@ -4988,9 +5001,15 @@ a.disabled > i.hibachi-ui-radio-checked {
   .s-detail-modules-wrapper .s-detail-module.s-clear-right {
     padding-right: 15px;
   }
+  .s-detail-modules-wrapper .s-detail-module.s-clear-left {
+    padding-left: 15px;
+  }
   .s-detail-modules-wrapper .s-detail-module.s-clear-both {
     padding-right: 15px;
     padding-left: 15px;
+  }
+  .s-detail-modules-wrapper .s-detail-module:last-child {
+    padding-right: 0px;
   }
 }
 .s-detail-modules-wrapper .s-detail-module:last-child {
@@ -5000,7 +5019,7 @@ a.disabled > i.hibachi-ui-radio-checked {
   padding-left: 15px;
 }
 .s-detail-modules-wrapper .s-detail-module.s-click:hover .s-sm-content-block {
-  border-color: #ccc;
+  border-color: #428bca;
   cursor: pointer;
 }
 .s-detail-modules-wrapper .s-sm-content-block {
@@ -5015,6 +5034,18 @@ a.disabled > i.hibachi-ui-radio-checked {
   margin-bottom: 0px;
   vertical-align: top;
 }
+.s-detail-modules-wrapper .s-sm-content-block.s-selected {
+  border-color: #428bca;
+}
+.s-detail-modules-wrapper .s-sm-content-block.s-selected:after {
+  content: "\f00c";
+  font-family: fontAwesome;
+  position: absolute;
+  right: 6px;
+  top: 3px;
+  color: #428bca;
+  font-size: 14px;
+}
 .s-detail-modules-wrapper .s-sm-content-block .s-icon {
   padding: 0px;
   font-size: 33px;
@@ -5025,28 +5056,25 @@ a.disabled > i.hibachi-ui-radio-checked {
 .s-detail-modules-wrapper .s-sm-content-block.s-status .s-icon {
   font-size: 28px;
 }
-.s-detail-modules-wrapper .s-sm-content-block.s-status.s-active .s-icon {
+.s-detail-modules-wrapper .s-sm-content-block.s-status.s-green .s-icon {
   color: #a3e0a0;
 }
-.s-detail-modules-wrapper .s-sm-content-block.s-status.s-paused .s-icon {
+.s-detail-modules-wrapper .s-sm-content-block.s-status.s-yellow .s-icon {
   color: #F1DF4E;
 }
-.s-detail-modules-wrapper .s-sm-content-block.s-status.s-closed .s-icon {
+.s-detail-modules-wrapper .s-sm-content-block.s-status.s-red .s-icon {
   color: #de7272;
 }
 .s-detail-modules-wrapper .s-sm-content-block .s-content {
   padding-left: 0px;
 }
-.s-detail-modules-wrapper .s-sm-content-block .s-content .s-checkbox {
-  position: absolute;
-  top: 7px;
-  right: 10px;
-  cursor: pointer;
+.s-detail-modules-wrapper .s-sm-content-block .s-content .s-search {
+  margin-top: 2px;
 }
 .s-detail-modules-wrapper .s-sm-content-block .s-content .s-link {
   position: absolute;
   right: 7px;
-  bottom: -7px;
+  bottom: -14px;
   font-size: 11px;
 }
 .s-detail-modules-wrapper .s-sm-content-block .s-content .s-title {
@@ -5180,6 +5208,13 @@ a.disabled > i.hibachi-ui-radio-checked {
 .s-detail-content-wrapper .s-detail-body {
   background: #fff;
   border: 2px solid #e9e9e9;
+}
+.s-detail-content-wrapper .s-detail-notifications {
+  background-color: #ECF6FF;
+  padding: 10px 15px;
+}
+.s-detail-content-wrapper .s-detail-notifications a {
+  text-decoration: underline;
 }
 .s-detail-content-wrapper .s-detail-body tbody.s-status-table {
   border-left: 4px solid #e9e9e9;
