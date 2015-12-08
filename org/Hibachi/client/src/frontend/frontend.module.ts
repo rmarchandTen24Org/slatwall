@@ -14,6 +14,7 @@ import {SWFLogout} 			from "./components/swflogout";
 import {SWFPromo} 			from "./components/swfpromo";
 
 //need to inject the public service into the rootscope for use in the directives.
+//Also, we set the initial value for account and cart.
 var frontendmodule = angular.module('frontend', [coremodule.name, ngslatwallmodule.name])
 .run(['$rootScope', 'publicService', function($rootScope, publicService) {
 	$rootScope.hibachiScope = publicService;

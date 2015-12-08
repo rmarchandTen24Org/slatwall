@@ -33,7 +33,7 @@ class SWFCart implements ng.IDirective{
         object: "@?"
     };
     public controller=SWFCartController
-    public controllerAs="SWFCart";
+    public controllerAs="SwfCart";
     public templateUrl;
     //@ngInject
     constructor(private frontendPartialsPath:any, pathBuilderConfig){

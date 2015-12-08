@@ -12,8 +12,8 @@ class SWFCreateAccount implements ng.IDirective {
     public restrict:string = 'E';
     public scope = {};
     public bindToController={};
-    public controller=SWFCreateAccountController
-    public controllerAs="SWFCreateAccount";
+    public controller=SWFCreateAccountController;
+    public controllerAs="SwfCreateAccount";
     public templateUrl;
     public static Factory():ng.IDirectiveFactory{
     var directive:ng.IDirectiveFactory = (

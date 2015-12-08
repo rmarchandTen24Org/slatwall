@@ -1,7 +1,7 @@
 /// <reference path='../../../../../../client/typings/slatwallTypescript.d.ts' />
 /// <reference path='../../../../../../client/typings/tsd.d.ts' />
 
-export class SWFLoginController{
+class SWFLoginController{
     public pObject:string;
     // @ngInject
     constructor(private $route,private $log:ng.ILogService, private $window:ng.IWindowService, private $slatwall:any, private dialogService:any){
@@ -10,13 +10,13 @@ export class SWFLoginController{
     }
 }
 
-export class SWFLogin implements ng.IDirective{
+class SWFLogin implements ng.IDirective{
     
     public restrict:string = 'E';
     public scope = {};
     public bindToController={};
     public controller=SWFLoginController
-    public controllerAs="SWFLogin";
+    public controllerAs="SwfLogin";
     public templateUrl;
     
     // @ngInject

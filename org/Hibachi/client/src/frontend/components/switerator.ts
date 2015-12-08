@@ -1,4 +1,4 @@
-class Iterator<T> {
+class SWIterator<T> {
 
         private count: number = 0;
         
@@ -30,5 +30,5 @@ class Iterator<T> {
         
     }
 export {
-  Iterator  
+  SWIterator  
 };
