@@ -2,7 +2,7 @@
 /// <reference path='../../../../../../client/typings/tsd.d.ts' />
 class SWFCreateAccountController{
     //@ngInject
-    constructor(private $route,private $log:ng.ILogService, private $window:ng.IWindowService, private frontendPartialsPath, private $slatwall:any, private dialogService:any){
+    constructor(private $slatwall:any){
         this.$slatwall = $slatwall; 
     }
 }
@@ -15,6 +15,7 @@ class SWFCreateAccount implements ng.IDirective {
     public controller=SWFCreateAccountController;
     public controllerAs="SwfCreateAccount";
     public templateUrl;
+    
     public static Factory():ng.IDirectiveFactory{
     var directive:ng.IDirectiveFactory = (
         frontendPartialsPath,
@@ -29,7 +30,7 @@ class SWFCreateAccount implements ng.IDirective {
         'pathBuilderConfig'
     ];
     return directive;
-}
+    }
     //@ngInject
     constructor(private pathBuilderConfig, private frontendPartialsPath:any){
         this.templateUrl = this.templateUrl = pathBuilderConfig.buildPartialsPath(frontendPartialsPath)+'createaccountpartial.html';
@@ -39,5 +40,6 @@ class SWFCreateAccount implements ng.IDirective {
 
 }
 export {
-  SWFCreateAccount, SWFCreateAccountController  
+  SWFCreateAccount,
+  SWFCreateAccountController  
 };

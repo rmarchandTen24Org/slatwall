@@ -26,12 +26,12 @@ var frontendmodule = angular.module('frontend', [coremodule.name, ngslatwallmodu
 //controllers
 .controller('frontendController',FrontendController)
 //directives
-.directive('swfDirective', 		SWFDirective.Factory())
-.directive('swCart', 			SWFCart.Factory())
-.directive('swCreateAccount', 	SWFCreateAccount.Factory())
-.directive('swLogin', 			SWFLogin.Factory())
-.directive('swLogout', 			SWFLogout.Factory())
-.directive('swPromo', 			SWFPromo.Factory());
+.directive('swfDirective', SWFDirective.Factory())
+.directive('swfCart', SWFCart.Factory())
+.directive('swfCreateAccount', SWFCreateAccount.Factory())
+.directive('swfLogin', SWFLogin.Factory())
+.directive('swfLogout', SWFLogout.Factory())
+.directive('swfPromo', 	SWFPromo.Factory());
 
 export{
 	frontendmodule
