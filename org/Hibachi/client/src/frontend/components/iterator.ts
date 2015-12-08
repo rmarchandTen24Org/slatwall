@@ -1,5 +1,4 @@
-module slatwalladmin {
-export class Iterator<T> {
+class Iterator<T> {
 
         private count: number = 0;
         
@@ -30,4 +29,6 @@ export class Iterator<T> {
         }
         
     }
-}
+export {
+  Iterator  
+};
