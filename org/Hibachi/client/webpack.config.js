@@ -34,8 +34,7 @@ module.exports = {
       //,'ng-ckeditor':'../lib/ng-ckeditor/ng-ckeditor.min.js'
   	}
   },
-  
-  
+
   module: {
     noParse: [ /bower_components/ ],
     loaders: [
