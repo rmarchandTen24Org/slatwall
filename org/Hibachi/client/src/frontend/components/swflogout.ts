@@ -1,12 +1,10 @@
-/// <reference path='../../../../../../client/typings/slatwallTypescript.d.ts' />
-/// <reference path='../../../../../../client/typings/tsd.d.ts' />
-
+/// <reference path='../../../typings/slatwallTypescript.d.ts' />
+/// <reference path='../../../typings/tsd.d.ts' />
 class SWFLogoutController{
     constructor(private $route,private $log:ng.ILogService, private $window:ng.IWindowService, private $slatwall:any){
         this.$slatwall = $slatwall; 
     }
 }
-
 class SWFLogout implements ng.IDirective{
     
     public restrict:string = 'E';
