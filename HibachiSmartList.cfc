@@ -18,6 +18,7 @@ component accessors="true" persistent="false" output="false" extends="HibachiObj
 	property name="keywords" type="array" hint="This array holds all of the keywords that were searched for";
 	property name="keywordPhrases" type="array";
 	property name="keywordProperties" type="struct" hint="This struct holds the properties that searches reference and their relative weight";
+	property name="keywordSearchType" type="struct";
 
 	property name="attributeKeywordProperties" type="struct" hint="This struct holds the custom attributes that searches reference and their relative weight";
 
@@ -30,6 +31,8 @@ component accessors="true" persistent="false" output="false" extends="HibachiObj
 	property name="records" type="array";
 	property name="pageRecords" type="array";
 
+	property name="dirtyReadFlag" type="boolean";
+
 // Delimiter Settings
 	variables.subEntityDelimiters = ".";
 	variables.valueDelimiter = ",";
@@ -37,6 +40,9 @@ component accessors="true" persistent="false" output="false" extends="HibachiObj
 	variables.orderPropertyDelimiter = ",";
 	variables.rangeDelimiter = "^";
 	variables.dataKeyDelimiter = ":";
+
+// ORM Connection Settings
+	variables.connection = ormGetSession().connection();
 
 	public any function setup(required string entityName, struct data={}, numeric pageRecordsStart=1, numeric pageRecordsShow=10, string currentURL="") {
 // Make sure that the containers for smart list saved states are in place
@@ -54,12 +60,14 @@ component accessors="true" persistent="false" output="false" extends="HibachiObj
 		setAttributeKeywordProperties({});
 		setKeywords([]);
 		setKeywordPhrases([]);
+		setKeywordSearchType({});
 		setHQLParams({});
 		setCurrentURL("");
 		setCurrentPageDeclaration(1);
 		setCacheable(false);
 		setCacheName("");
 		setSelectDistinctFlag(0);
+		setDirtyReadFlag(false);
 
 // Set currentURL from the arguments
 		setCurrentURL(arguments.currentURL);
@@ -125,13 +133,13 @@ component accessors="true" persistent="false" output="false" extends="HibachiObj
 					}
 				} else if(i == "P#variables.dataKeyDelimiter#Show") {
 					if(arguments.data[i] == "ALL") {
-						setPageRecordsShow(1000000000);
-					} else if ( isNumeric(arguments.data[i]) && arguments.data[i] <= 1000000000 && arguments.data[i] > 0 ) {
+						setPageRecordsShow(100);
+					} else if ( isNumeric(arguments.data[i]) && arguments.data[i] <= 100 && arguments.data[i] > 0 ) {
 						setPageRecordsShow(arguments.data[i]);
 					}
-				} else if(i == "P#variables.dataKeyDelimiter#Start" && isNumeric(arguments.data[i]) && arguments.data[i] <= 1000000000 && arguments.data[i] > 0) {
+				} else if(i == "P#variables.dataKeyDelimiter#Start" && isNumeric(arguments.data[i]) && arguments.data[i] <= 100 && arguments.data[i] > 0) {
 					setPageRecordsStart(arguments.data[i]);
-				} else if(i == "P#variables.dataKeyDelimiter#Current" && isNumeric(arguments.data[i]) && arguments.data[i] <= 1000000000 && arguments.data[i] > 0) {
+				} else if(i == "P#variables.dataKeyDelimiter#Current" && isNumeric(arguments.data[i]) && arguments.data[i] <= 100 && arguments.data[i] > 0) {
 					variables.currentPageDeclaration = arguments.data[i];
 				}
 			}
@@ -506,6 +514,7 @@ component accessors="true" persistent="false" output="false" extends="HibachiObj
 			var aliasedProperty = getAliasedProperty(propertyIdentifier=propertyIdentifier);
 			if(len(aliasedProperty)) {
 				variables.keywordProperties[aliasedProperty] = arguments.weight;
+				variables.keywordSearchType[aliasedProperty] = arguments.searchType;
 			}
 		}
 	}
@@ -704,19 +713,23 @@ component accessors="true" persistent="false" output="false" extends="HibachiObj
 			}
 
 			for(var ii=1; ii<=arrayLen(variables.Keywords); ii++) {
-				var paramID = "keyword#ii#";
-				addHQLParam(paramID, "%#lcase(variables.Keywords[ii])#%");
+
+
 				hqlWhere &= " (";
 				for(var keywordProperty in variables.keywordProperties) {
 
-					hqlWhere &= " LOWER(#keywordProperty#) LIKE :#paramID# OR";
-				}
+					if( structKeyExists(variables.keyWordSearchType, keywordProperty) && variables.keyWordSearchType[keywordProperty] == "left" ) {
+						var paramID = "keywordLeft#ii#";
 
-//Loop over all attributes and find any matches
-				for(var attributeProperty in variables.attributeKeywordProperties) {
-					var idProperty = listLast(listFirst(attributeProperty,':'), '.');
-					var fullIDMap = left(idProperty, len(idProperty)-2) & '.' & idProperty;
-					hqlWhere &= " EXISTS(SELECT sav.attributeValue FROM #getDao('HibachiDao').getApplicationKey()#AttributeValue as sav WHERE sav.#fullIDMap# = #listFirst(attributeProperty, ":")# AND sav.attribute.attributeCode = '#listLast(attributeProperty,':')#' AND sav.attributeValue LIKE :#paramID# ) OR";
+						addHQLParam(paramID, "#lcase(variables.Keywords[ii])#%");
+						hqlWhere &= " #keywordProperty# LIKE :#paramID# OR";
+
+					} else {
+						var paramID = "keywordMid#ii#";
+
+						addHQLParam(paramID, "%#lcase(variables.Keywords[ii])#%");
+						hqlWhere &= " #keywordProperty# LIKE :#paramID# OR";
+					}
 				}
 
 				hqlWhere = left(hqlWhere, len(hqlWhere)-3 );
@@ -783,7 +796,16 @@ component accessors="true" persistent="false" output="false" extends="HibachiObj
 
 	public array function getRecords(boolean refresh=false) {
 		if( !structKeyExists(variables, "records") || arguments.refresh == true) {
+			if( getDirtyReadFlag() ) {
+				var currentTransactionIsolation = variables.connection.getTransactionIsolation();
+				variables.connection.setTransactionIsolation(Connection.TRANSACTION_READ_UNCOMMITTED);
+			}
+
 			variables.records = ormExecuteQuery(getHQL(), getHQLParams(), false, {ignoreCase="true", cacheable=getCacheable(), cachename="records-#getCacheName()#"});
+
+			if( getDirtyReadFlag() ) {
+				variables.connection.setTransactionIsolation(currentTransactionIsolation);
+			}
 		}
 		return variables.records;
 	}
@@ -808,7 +830,18 @@ component accessors="true" persistent="false" output="false" extends="HibachiObj
 			} else {
 				if(!structKeyExists(variables,"records")) {
 					var HQL = "#getHQLSelect(countOnly=true)##getHQLFrom(allowFetch=false)##getHQLWhere()#";
+
+					if( getDirtyReadFlag() ) {
+						var currentTransactionIsolation = variables.connection.getTransactionIsolation();
+						variables.connection.setTransactionIsolation(Connection.TRANSACTION_READ_UNCOMMITTED);
+					}
+
 					var recordCount = ormExecuteQuery(HQL, getHQLParams(), true, {ignoreCase="true"});
+
+					if( getDirtyReadFlag() ) {
+						variables.connection.setTransactionIsolation(currentTransactionIsolation);
+					}
+
 					variables.recordsCount = recordCount;
 					if(getCacheable()) {
 						application.entitySmartList[ getCacheName() ] = {};
@@ -980,6 +1013,11 @@ component accessors="true" persistent="false" output="false" extends="HibachiObj
 			}
 		}
 
+		if( getDirtyReadFlag() ) {
+			var currentTransactionIsolation = variables.connection.getTransactionIsolation();
+			variables.connection.setTransactionIsolation(Connection.TRANSACTION_READ_UNCOMMITTED);
+		}
+
 		var results = ormExecuteQuery("SELECT NEW MAP(
 			#nameProperty# as name,
 			#valueProperty# as value,
@@ -995,6 +1033,10 @@ component accessors="true" persistent="false" output="false" extends="HibachiObj
 			#valueProperty#
 		ORDER BY
 			#nameProperty# ASC", getHQLParams());
+
+		if( getDirtyReadFlag() ) {
+			variables.connection.setTransactionIsolation(currentTransactionIsolation);
+		}
 
 		variables.whereGroups = originalWhereGroup;
 
@@ -1014,12 +1056,21 @@ component accessors="true" persistent="false" output="false" extends="HibachiObj
 			}
 		}
 
+		if( getDirtyReadFlag() ) {
+			var currentTransactionIsolation = variables.connection.getTransactionIsolation();
+			variables.connection.setTransactionIsolation(Connection.TRANSACTION_READ_UNCOMMITTED);
+		}
+
 		var results = ormExecuteQuery("SELECT NEW MAP(
 			min(#rangeProperty#) as min,
 			max(#rangeProperty#) as max
 			)
 		#getHQLFrom(allowFetch=false)#
 		#getHQLWhere()#", getHQLParams(), true);
+
+		if( getDirtyReadFlag() ) {
+			variables.connection.setTransactionIsolation(currentTransactionIsolation);
+		}
 
 		variables.whereGroups = originalWhereGroup;
 
@@ -1104,10 +1155,11 @@ component accessors="true" persistent="false" output="false" extends="HibachiObj
 		stateStruct.orders = duplicate(variables.orders);
 		stateStruct.keywords = duplicate(variables.keywords);
 		stateStruct.keywordProperties = duplicate(variables.keywordProperties);
-		stateStruct.attributeKeywordProperties = duplicate(variables.attributeKeywordProperties);
+		stateStruct.keywordSearchType = duplicate(variables.keywordSearchType);
 		stateStruct.pageRecordsShow = duplicate(variables.pageRecordsShow);
 		stateStruct.entityJoinOrder = duplicate(variables.entityJoinOrder);
 		stateStruct.selectDistinctFlag = duplicate(variables.selectDistinctFlag);
+		stateStruct.dirtyReadFlag = duplicate(variables.dirtyReadFlag);
 
 		return stateStruct;
 	}
