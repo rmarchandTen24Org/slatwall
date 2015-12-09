@@ -1,6 +1,7 @@
 /// <reference path='../../../typings/slatwallTypescript.d.ts' />
 /// <reference path='../../../typings/tsd.d.ts' />
 class SWFLogoutController{
+    //@ngInject
     constructor(private $route,private $log:ng.ILogService, private $window:ng.IWindowService, private $slatwall:any){
         this.$slatwall = $slatwall; 
     }
@@ -23,15 +24,15 @@ class SWFLogout implements ng.IDirective{
     
     public static Factory():ng.IDirectiveFactory{
         var directive:ng.IDirectiveFactory = (
-		    frontendPartialsPath,
-			pathBuilderConfig
+			pathBuilderConfig,
+            frontendPartialsPath
         ) => new SWFLogout(
-			frontendPartialsPath,
-			pathBuilderConfig
+			pathBuilderConfig,
+            frontendPartialsPath
         );
         directive.$inject = [
-            'frontendPartialsPath',
-			'pathBuilderConfig'
+            'pathBuilderConfig',
+            'frontendPartialsPath'
         ];
         return directive;
     }

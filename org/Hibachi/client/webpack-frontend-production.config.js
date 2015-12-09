@@ -1,8 +1,8 @@
 //webpack --config webpack-production.config.js -p
 
 var WebpackStrip = require('strip-loader');
-var devConfig = require('./webpack.config');
-devConfig.entry.app = "./frontend/bootstrap.ts";
+var devConfig = require('./webpack-frontend-develop.config');
+
 var ngAnnotatePlugin = require('ng-annotate-webpack-plugin');
 
 var stripConsolelogs = {
@@ -26,6 +26,6 @@ devConfig.plugins= [
     })
   ];
 //change output filename
-devConfig.output.filename = "slatwall_frontend_production.min.js";
+
 module.exports = devConfig; 
 

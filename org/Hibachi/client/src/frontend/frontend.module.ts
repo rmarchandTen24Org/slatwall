@@ -12,14 +12,22 @@ import {SWFLogin} 			from "./components/swflogin";
 import {SWFLogout} 			from "./components/swflogout";
 import {SWFPromo} 			from "./components/swfpromo";
 
+declare var slatwallAngular:any;
 //need to inject the public service into the rootscope for use in the directives.
 //Also, we set the initial value for account and cart.
-var frontendmodule = angular.module('frontend', [ngslatwallmodelmodule.name])
+var frontendmodule = angular.module('frontend', ['ngRoute',ngslatwallmodelmodule.name])
+.config(['$routeProvider','pathBuilderConfig',($routeProvider,pathBuilderConfig)=>{
+	 //configure partials path properties
+     pathBuilderConfig.setBaseURL('/'); 
+     pathBuilderConfig.setBasePartialsPath('org/Hibachi/client/src/');
+	 
+}])
 .run(['$rootScope', 'publicService', function($rootScope, publicService) {
 	$rootScope.hibachiScope = publicService;
-	$rootScope.hibachiScope.getAccount();
+	$rootScope.hibachiScope.getAccount(); 
 	$rootScope.hibachiScope.getCart();
 }])
+
 //constants
 .constant('frontendPartialsPath','frontend/components/')
 //controllers

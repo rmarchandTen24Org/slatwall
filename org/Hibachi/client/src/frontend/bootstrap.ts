@@ -3,6 +3,7 @@
 
 require('../vendor.ts')();
 import{frontendmodule} from "./frontend.module";
+//import {slatwalladminmodule} from "../slatwall/slatwalladmin.module";
 
 declare var slatwallAngular:any;
 
@@ -21,7 +22,7 @@ class bootstrapper{
         var $q = initInjector.get<ng.IQService>("$q");
    
         var deferred = $q.defer();
-        var urlString = '/index.cfm/?slatAction=api:main.getModel';//use the admin address here.
+        var urlString = '/?slatAction=api:main.getModel';//use the admin address here.
         var params = {};
       
         $http.get(urlString,{

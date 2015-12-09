@@ -790,5 +790,5 @@ component extends="HibachiService"  accessors="true" output="false"
             arguments.data.ajaxResponse["errors"] = {};
         }
         arguments.data.ajaxResponse["errors"] = errors;
-    }   
+    } 
 }

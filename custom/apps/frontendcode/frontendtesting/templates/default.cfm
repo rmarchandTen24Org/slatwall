@@ -10,9 +10,7 @@
                     <h3>These are examples of using frontend directives</h3>
                 </div>
                 <p class="directives">
-                    
                     <dl>
-                        
                         <hr>
                         <dt> login/logout</dt>            
                         <dd>  Accepts a emailaddress and password and logs in the user.
@@ -29,43 +27,7 @@
     </section>
     <section>
         <div>           
-            <!---<div class="container" >
-                <div class="s-ds-header">
-                    <h2>Building Forms</h2>
-                    <h3>Using regular html or a combination of swf-form and swf-form-field</h3>
-                    <h4>There are a couple restrictions on valid form naming characters. A field can't start with a '$'</h4>
-                </div>
-               <section>
             
-               
-                <section>
-                    <div>           
-                        <div class="container" > 
-                        	<dl>
-                            <h4>Cart</h4>
-                            <hr>
-                            <dt>Using the cart object to display cart data</dt>             
-                            <dd>
-                                <pre><small>{{hibachiScope.cart | json}}</small></pre>
-                            </dd>
-                        </div>
-                    </div>
-                </section>
-                
-                <section>
-                    <div>           
-                        <div class="container" > 
-                            <dl>
-                            <h4>Account</h4>
-                            <hr>
-                            <dt>Using the account object to display cart data</dt>            
-                            <dd>
-                                <pre><small>{{hibachiScope.account | json}}</small></pre>
-                            </dd>
-                        </div>
-                    </div>
-                </section>--->
-            </div>
         </div>
     </section>
   </div>

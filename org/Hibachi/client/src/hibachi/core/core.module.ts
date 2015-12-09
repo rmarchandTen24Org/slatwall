@@ -103,10 +103,10 @@ class PathBuilderConfig{
 var coremodule = angular.module('hibachi.core',[]).config(()=>{
 
 }).constant('pathBuilderConfig',new PathBuilderConfig())
-.constant('corePartialsPath','core/components/')
-.constant('coreEntityPartialsPath','core/entity/')
-.constant('coreFormPartialsPath','core/form/')
-.constant('coreValidationPartialsPath','core/validation/')
+.constant('corePartialsPath','hibachi/core/components/')
+.constant('coreEntityPartialsPath','hibachi/core/entity/')
+.constant('coreFormPartialsPath','hibachi/core/form/')
+.constant('coreValidationPartialsPath','hibachi/core/validation/')
 //services
 .service('publicService',PublicService)
 .service('utilityService',UtilityService)
