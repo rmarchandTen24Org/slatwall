@@ -18,21 +18,14 @@
                         </dd>
                         <dd>  logout the user.
                                <br><swf-logout></swf-logout>
-                        </dd>                        
+                        </dd>                     
                     </dl>
                     <hr>
                 </p>
             </div>
         </div>
     </section>
-    <section>
-        <div>           
-            
-        </div>
-    </section>
   </div>
- 
-  
 </div>
 </cfoutput>
 <cfinclude template="footer.cfm" >
