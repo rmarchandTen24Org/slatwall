@@ -21,7 +21,7 @@ class bootstrapper{
         var $q = initInjector.get<ng.IQService>("$q");
    
         var deferred = $q.defer();
-        var urlString = '/index.cfm/?slatAction=api:main.getModel';
+        var urlString = '/index.cfm/?slatAction=api:main.getModel';//use the admin address here.
         var params = {};
       
         $http.get(urlString,{

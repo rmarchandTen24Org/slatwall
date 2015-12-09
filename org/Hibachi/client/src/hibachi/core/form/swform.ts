@@ -36,7 +36,8 @@ interface ViewModel {
         formType:Object,
         formData:Object,
         processEntity:Object,
-        hibachiScope:Object,
+        hibachiScope:{hasErrors:boolean, doAction:Function},
+        events:{events:Object},
         //************************** Events
         identity: Function,
         hide:Function,
@@ -69,7 +70,7 @@ class SWFormController {
     /**
      * This controller handles most of the logic for the swFormDirective when more complicated self inspection is needed.
      */
-    //@ngInject
+    // @ngInject
     constructor(public $scope, public $element, public $slatwall, public $http, public $timeout, public observerService, public $rootScope){
         /** only use if the developer has specified these features with isProcessForm */           
         this.isProcessForm = this.isProcessForm || "false";
@@ -365,6 +366,7 @@ class SWForm implements ng.IDirective {
         directive.$inject = ['coreFormPartialsPath','pathBuilderConfig'];
         return directive;
     }
+    // @ngInject
     constructor( public coreFormPartialsPath, public pathBuilderConfig) {
         this.templateUrl = pathBuilderConfig.buildPartialsPath(this.coreFormPartialsPath) + "formPartial.html";
     }
