@@ -1,8 +1,8 @@
 /*jshint browser:true */
 'use strict';
 
-require('./vendor.ts')();
-import{frontendmodule} from "./frontend/frontend.module";
+require('../vendor.ts')();
+import{frontendmodule} from "./frontend.module";
 
 declare var slatwallAngular:any;
 

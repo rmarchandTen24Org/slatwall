@@ -3,7 +3,6 @@
 var WebpackStrip = require('strip-loader');
 var devConfig = require('./webpack.config');
 var ngAnnotatePlugin = require('ng-annotate-webpack-plugin');
-
 var stripConsolelogs = {
 	exlude: /node_modules/,
 	loader: WebpackStrip.loader('console.log')

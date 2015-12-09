@@ -12,7 +12,7 @@ class SWFDirectiveController{
 class SWFDirective implements ng.IDirective{
     
     public restrict:string = 'E';
-    public scope = {};
+    public scope : {directive:any, variables:any};
     public bindToController={
 		variables:"=",
 		directive:"="
@@ -30,9 +30,10 @@ class SWFDirective implements ng.IDirective{
     /** allows you to build a directive without using another controller and directive config. */
     // @ngInject
 	public link:ng.IDirectiveLinkFn = (scope:ng.IScope, element: ng.IAugmentedJQuery, attrs:ng.IAttributes) =>{
-		var template = '<span ' + scope.directive + ' ';
-		if(angular.isDefined(scope.variables)){
-			angular.forEach(scope.variables, function(value,key){
+        
+		var template = '<span ' + this.scope.directive + ' ';
+		if(angular.isDefined(this.scope.variables)){
+			angular.forEach(this.scope.variables, function(value,key){
 				template += ' ' + key + '=' + value + ' ';
 			});
 		}

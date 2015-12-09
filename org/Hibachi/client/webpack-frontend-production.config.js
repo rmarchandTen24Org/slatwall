@@ -1,10 +1,8 @@
 //webpack --config webpack-production.config.js -p
 
 var WebpackStrip = require('strip-loader');
-var productionConfig = require('./webpack.config');
-
-//points to the bootstrap located in the frontend modules directory.
-productionConfig.app.entry = "./src/frontend/bootstrap.ts";
+var devConfig = require('./webpack.config');
+devConfig.entry.app = "./frontend/bootstrap.ts";
 var ngAnnotatePlugin = require('ng-annotate-webpack-plugin');
 
 var stripConsolelogs = {
@@ -12,22 +10,22 @@ var stripConsolelogs = {
 	loader: WebpackStrip.loader('console.log')
 }
 //extend and override the devconfig
-productionConfig.module.loaders.push(stripConsolelogs);
+devConfig.module.loaders.push(stripConsolelogs);
 
 var stripLogDebugs = {
 	exlude: /node_modules/,
 	loader: WebpackStrip.loader('$log.debug')
 }
 //extend and override the devconfig
-productionConfig.module.loaders.push(stripLogDebugs);
+devConfig.module.loaders.push(stripLogDebugs);
 
-
-productionConfig.plugins= [
+devConfig.plugins= [
   	new ngAnnotatePlugin({
         add: true,
         // other ng-annotate options here 
     })
   ];
 //change output filename
-productionConfig.output.filename = "slatwall_frontend_pro.min.js";
-module.exports = productionConfig;
+devConfig.output.filename = "slatwall_frontend_production.min.js";
+module.exports = devConfig; 
+
