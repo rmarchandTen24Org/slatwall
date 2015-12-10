@@ -16200,7 +16200,7 @@
 	            // Render the template.
 	            element.html('').append(_this.$compile(template)(scope));
 	        };
-	        this.templateUrl = pathBuilderConfig.buildPartialsPath(frontendPartialsPath) + 'swfcartpartial.html';
+	        this.templateUrl = pathBuilderConfig.buildPartialsPath(frontendPartialsPath) + 'swfdirectivepartial.html';
 	        this.$compile = $compile;
 	    }
 	    SWFDirective.Factory = function () {

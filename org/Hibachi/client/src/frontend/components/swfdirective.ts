@@ -24,7 +24,7 @@ class SWFDirective implements ng.IDirective{
 	
 	// @ngInject
     constructor(private frontendPartialsPath:any, pathBuilderConfig, $compile){
-        this.templateUrl = pathBuilderConfig.buildPartialsPath(frontendPartialsPath)+'swfcartpartial.html';
+        this.templateUrl = pathBuilderConfig.buildPartialsPath(frontendPartialsPath)+'swfdirectivepartial.html';
 		this.$compile = $compile;
     }
     /** allows you to build a directive without using another controller and directive config. */

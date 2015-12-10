@@ -14,10 +14,16 @@
                         <hr>
                         <dt> login/logout</dt>            
                         <dd>  Accepts a emailaddress and password and logs in the user.
-                               <br><swf-login></swf-login>
+                               <br><swf-login ng-if="hibachiScope.account.accountID"></swf-login>
                         </dd>
                         <dd>  logout the user.
                                <br><swf-logout></swf-logout>
+                        </dd>
+                        <dd>  logout the user.
+                               <br><swf-create-account></swf-create-account>
+                        </dd>
+                        <dd>  logout the user.
+                               <br><swf-directive></swf-directive>
                         </dd>                     
                     </dl>
                     <hr>
