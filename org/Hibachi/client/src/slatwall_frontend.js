@@ -1867,6 +1867,7 @@
 	//directives
 	//  components
 	var swactioncaller_1 = __webpack_require__(30);
+	var swanchor_1 = __webpack_require__(153);
 	var swtypeaheadsearch_1 = __webpack_require__(31);
 	var swactioncallerdropdown_1 = __webpack_require__(32);
 	var swcolumnsorter_1 = __webpack_require__(33);
@@ -1962,7 +1963,7 @@
 	    .controller('routerController', routercontroller_1.RouterController)
 	    .filter('percentage', [percentage_1.PercentageFilter.Factory])
 	    .directive('swTypeahedSearch', swtypeaheadsearch_1.SWTypeaheadSearch.Factory())
-	    .directive('swAnchor', swactioncaller_1.SWActionCaller.Factory())
+	    .directive('swAnchor', swanchor_1.SWAnchor.Factory())
 	    .directive('swActionCaller', swactioncaller_1.SWActionCaller.Factory())
 	    .directive('swActionCallerDropdown', swactioncallerdropdown_1.SWActionCallerDropdown.Factory())
 	    .directive('swColumnSorter', swcolumnsorter_1.SWColumnSorter.Factory())
@@ -16461,6 +16462,29 @@
 	    return SWFPromo;
 	})();
 	exports.SWFPromo = SWFPromo;
+
+
+/***/ },
+/* 153 */
+/***/ function(module, exports) {
+
+	/// <reference path='../../../../typings/slatwallTypescript.d.ts' />
+	/// <reference path='../../../../typings/tsd.d.ts' />
+	/** provides an anchor for a parent directive n elements from child */
+	var SWAnchor = (function () {
+	    // @ngInject
+	    function SWAnchor() {
+	        this.link = function (scope) {
+	            scope.$emit('anchor', { anchorType: "form", scope: scope });
+	        };
+	    }
+	    SWAnchor.Factory = function () {
+	        var directive = function () { return new SWAnchor(); };
+	        return directive;
+	    };
+	    return SWAnchor;
+	})();
+	exports.SWAnchor = SWAnchor;
 
 
 /***/ }
