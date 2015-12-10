@@ -14,9 +14,9 @@
                         <hr>
                         <dt> login/logout</dt>            
                         <dd>  Accepts a emailaddress and password and logs in the user.
-                               <br><swf-login ng-if="hibachiScope.account.accountID"></swf-login>
+                               <br><swf-login ng-if="hibachiScope.account.accountID == ''"></swf-login>
                         </dd>
-                        <dd>  logout the user.
+                        <dd>  logout {{hibachiScope.account.firstName}}
                                <br><swf-logout></swf-logout>
                         </dd>
                         
