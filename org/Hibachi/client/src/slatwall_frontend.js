@@ -16176,40 +16176,60 @@
 	exports.SWFDirectiveController = SWFDirectiveController;
 	var SWFDirective = (function () {
 	    // @ngInject
-	    function SWFDirective(frontendPartialsPath, pathBuilderConfig, $compile) {
+	    function SWFDirective(pathBuilderConfig, frontendPartialsPath, $compile) {
 	        var _this = this;
 	        this.frontendPartialsPath = frontendPartialsPath;
 	        this.restrict = 'E';
 	        this.bindToController = {
 	            variables: "=",
-	            directive: "="
+	            directive: "=",
+	            type: "@"
 	        };
 	        this.controller = SWFDirectiveController;
 	        this.controllerAs = "SWFDirective";
 	        /** allows you to build a directive without using another controller and directive config. */
 	        // @ngInject
 	        this.link = function (scope, element, attrs) {
-	            var template = '<span ' + _this.scope.directive + ' ';
-	            if (angular.isDefined(_this.scope.variables)) {
-	                angular.forEach(_this.scope.variables, function (value, key) {
-	                    template += ' ' + key + '=' + value + ' ';
-	                });
+	            _this.scope = scope;
+	            if (!attrs.type) {
+	                attrs.type = "A";
 	            }
-	            template += +'>';
-	            template += '</span>';
+	            if (attrs.type == "A" || !attrs.type) {
+	                var template = '<span ' + attrs.directive + ' ';
+	                if (angular.isDefined(_this.scope.variables)) {
+	                    angular.forEach(_this.scope.variables, function (value, key) {
+	                        template += ' ' + key + '=' + value + ' ';
+	                    });
+	                }
+	                template += +'>';
+	                template += '</span>';
+	            }
+	            else {
+	                var template = '<' + attrs.directive + ' ';
+	                if (_this.scope.variables) {
+	                    angular.forEach(_this.scope.variables, function (value, key) {
+	                        template += ' ' + key + '=' + value + ' ';
+	                    });
+	                }
+	                template += +'>';
+	                template += '</' + attrs.directive + '>';
+	            }
 	            // Render the template.
 	            element.html('').append(_this.$compile(template)(scope));
 	        };
+	        console.log("Config", pathBuilderConfig);
+	        console.log("front", frontendPartialsPath);
 	        this.templateUrl = pathBuilderConfig.buildPartialsPath(frontendPartialsPath) + 'swfdirectivepartial.html';
 	        this.$compile = $compile;
 	    }
 	    SWFDirective.Factory = function () {
-	        var directive = function (frontendPartialsPath, pathBuilderConfig, $compile) {
-	            return new SWFDirective(frontendPartialsPath, pathBuilderConfig, $compile);
+	        var directive = function (pathBuilderConfig, frontendPartialsPath, $compile) {
+	            return new SWFDirective(pathBuilderConfig, frontendPartialsPath, $compile);
 	        };
 	        directive.$inject = [
+	            'pathBuilderConfig',
 	            'frontendPartialsPath',
-	            'pathBuilderConfig'
+	            '$compile'
 	        ];
 	        return directive;
 	    };

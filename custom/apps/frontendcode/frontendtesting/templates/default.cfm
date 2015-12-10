@@ -19,11 +19,9 @@
                         <dd>  logout the user.
                                <br><swf-logout></swf-logout>
                         </dd>
-                        <dd>  logout the user.
-                               <br><swf-create-account></swf-create-account>
-                        </dd>
-                        <dd>  logout the user.
-                               <br><swf-directive></swf-directive>
+                        
+                        <dd>  generic example for create account
+                               <br><swf-directive directive="swf-create-account" type="E"></swf-directive>
                         </dd>                     
                     </dl>
                     <hr>
