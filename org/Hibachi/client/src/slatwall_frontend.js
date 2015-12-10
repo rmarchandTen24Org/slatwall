@@ -1962,6 +1962,7 @@
 	    .controller('routerController', routercontroller_1.RouterController)
 	    .filter('percentage', [percentage_1.PercentageFilter.Factory])
 	    .directive('swTypeahedSearch', swtypeaheadsearch_1.SWTypeaheadSearch.Factory())
+	    .directive('swAnchor', swactioncaller_1.SWActionCaller.Factory())
 	    .directive('swActionCaller', swactioncaller_1.SWActionCaller.Factory())
 	    .directive('swActionCallerDropdown', swactioncallerdropdown_1.SWActionCallerDropdown.Factory())
 	    .directive('swColumnSorter', swcolumnsorter_1.SWColumnSorter.Factory())
