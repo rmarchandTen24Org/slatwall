@@ -36,8 +36,7 @@ interface ViewModel {
         formType:Object,
         formData:Object,
         processEntity:Object,
-        hibachiScope:{hasErrors:boolean, doAction:Function},
-        events:{events:Object},
+        hibachiScope:Object,
         //************************** Events
         identity: Function,
         hide:Function,
@@ -49,35 +48,31 @@ interface ViewModel {
         eventsHandler:Function
 }
 
-/**
+   /**
     * Form Controller handles the logic for this directive.
     */
-class SWFormController {
+    class SWFormController {
 
-    //************************** Fields
-    public isProcessForm:boolean|string;
-    public hiddenFields:string;
-    public entityName:string;
-    public action:string;
-    public actions:string;
-    public processObject:string;
-    public postOnly:boolean;
-    public object:any;
-    public onError:any;
-    public onSuccess:any;
-    //***************************
-    
-    /**
-     * This controller handles most of the logic for the swFormDirective when more complicated self inspection is needed.
-     */
-    // @ngInject
-    constructor(public $scope, public $element, public $slatwall, public $http, public $timeout, public observerService, public $rootScope){
-        /** only use if the developer has specified these features with isProcessForm */           
-        this.isProcessForm = this.isProcessForm || "false";
-        if (this.isProcessForm == "true") {
-            this.handleSelfInspection( this );    
+        //************************** Fields
+        public isProcessForm:boolean|string;
+        public hiddenFields:string;
+        public entityName:string;
+        public action:string;
+        public actions:string;
+        public processObject:string;
+        public postOnly:boolean;
+        public object:any;
+        /**
+         * This controller handles most of the logic for the swFormDirective when more complicated self inspection is needed.
+         */
+        // @ngInject
+        constructor(public $scope, public $element, public $slatwall, public $http, public $timeout, public observerService, public $rootScope){
+            /** only use if the developer has specified these features with isProcessForm */
+            this.isProcessForm = this.isProcessForm || "false";
+            if (this.isProcessForm == "true") {
+                this.handleSelfInspection( this );
+            }
         }
-    }
     
    /**
     * Iterates through the form elements and checks if the names of any of them match
@@ -86,7 +81,7 @@ class SWFormController {
     * this class will attach any errors to the correspnding form element.
     */
     handleSelfInspection ( context ) {
-        /** local variables */
+    /** local variables */
         this.processObject = this.object || "";
         let vm: ViewModel       = context;
             vm.hiddenFields     = this.hiddenFields;
@@ -97,47 +92,47 @@ class SWFormController {
             vm.$timeout         = this.$timeout;
             vm.postOnly         = false;
             vm.hibachiScope     = this.$rootScope.hibachiScope;
-            
+
             let observerService = this.observerService;
             /** parse the name */
             vm.entityName      = this.processObject.split("_")[0];
             let processObject   = this.processObject.split("_")[1];
-            
+
             /** try to grab the meta data from the process entity in slatwall in a process exists
              *  otherwise, just use the service method to access it.
              */
-             
+
             /** Cart is an alias for an Order */
-            if (vm.entityName == "Order") { 
-                vm.entityName = "Cart" 
+            if (vm.entityName == "Order") {
+                vm.entityName = "Cart"
             };
-            
+
             /** find the form scope */
-            this.$scope.$on('anchor', (event, data) => 
+            this.$scope.$on('anchor', (event, data) =>
             {
 
                 if (data.anchorType == "form" && data.scope !== undefined) {
                     vm["formCtrl"] = data.scope;
                 }
-                
+
             });
-            
+
             /** make sure we have our data using new logic and $slatwall*/
             if (this.processObject == undefined || vm.entityName == undefined) {
                 throw ("ProcessObject Undefined Exception");
             }
-            
+
             try {
                 vm.actionFn = this.$slatwall.newEntity(vm.processObject);
             }catch (e){
                 vm.postOnly = true;
             }
-            
+
             /** We use these for our models */
             vm.formData = {};
-            
+
             /** returns all the data from the form by iterating the form elements */
-            vm.getFormData = function() 
+            vm.getFormData = function()
             {
                 angular.forEach(vm["formCtrl"][vm.processObject], (val, key) => {
                     /** Check for form elements that have a name that doesn't start with $ */
@@ -153,7 +148,7 @@ class SWFormController {
               * Handle parsing through the server errors and injecting the error text for that field
               * If the form only has a submit, then simply call that function and set errors.
               ***/
-            vm.parseErrors = function(result) 
+            vm.parseErrors = function(result)
             {
                 if (angular.isDefined(result.errors) && result.errors.length != 0) {
                     angular.forEach(result.errors, (val, key) => {
@@ -168,16 +163,16 @@ class SWFormController {
                     }, this);
                 }
             };
-            
+
             vm.eventsObj = [];
             /** looks at the onSuccess, onError, and onLoading and parses the string into useful subcategories */
-            vm.parseEventString = function(evntStr, evntType) 
+            vm.parseEventString = function(evntStr, evntType)
             {
                 vm.events = vm.parseEvents(evntStr, evntType); //onSuccess : [hide:this, show:someOtherForm, refresh:Account]
             }
-            
+
             vm.eventsHandler = (params) => {
-                
+
                 for (var e in params.events){
                     if ( angular.isDefined(params.events[e].value) && params.events[e].value == vm.processObject.toLowerCase()){
                         if (params.events[e].name == "hide")    {vm.hide(params.events[e].value)}
@@ -185,19 +180,19 @@ class SWFormController {
                         if (params.events[e].name == "update")  {vm.update(params.events[e].value)}
                         if (params.events[e].name == "refresh") {vm.refresh(params.events[e].value)};
                     }
-                    
-                } 
+
+                }
             }
             /** hides this directive on event */
             vm.hide = (param) => {
                 if (vm.processObject.toLowerCase() == param){
-                    this.$element.hide();    
+                    this.$element.hide();
                 }
             }
             /** shows this directive on event */
             vm.show = (param) =>{
                 if (vm.processObject.toLowerCase() == param){
-                    this.$element.show();    
+                    this.$element.show();
                 }
             }
             /** refreshes this directive on event */
@@ -208,9 +203,9 @@ class SWFormController {
             vm.update  = (params) =>{
                //stub
             }
-            
+
             vm.parseEvents = function(str, evntType) {
-                
+
                 if (str == undefined) return;
                 let strTokens = str.split(","); //this gives the format [hide:this, show:Account_Logout, update:Account or Cart]
                 let eventsObj = {
@@ -228,39 +223,43 @@ class SWFormController {
                 if (eventsObj.events.length){
                     observerService.attach(vm.eventsHandler, "onSuccess");
                 }
-                
+
                 return eventsObj;
             }
-            
+
             /** find and clear all errors on form */
-            vm.clearErrors = () => 
+            vm.clearErrors = () =>
             {
                /** clear all form errors on submit. */
                 this.$timeout(()=>{
                      let errorElements = this.$element.find("[error-for]");
+                     console.log("Error elements: ", errorElements);
                      errorElements.empty();
+                     console.log("VM formctrl", vm);
+                     console.log("PO", vm["formCtrl"][vm.processObject]);
                      vm["formCtrl"][vm.processObject].$setPristine(true);
                 },0);
-                
+
                 console.log("form", vm["formCtrl"][vm.processObject]);
-               
-                
+
             }
 
             /** iterates through the factory submitting data */
-            vm.iterateFactory = (submitFunction) => 
+            vm.iterateFactory = (submitFunction) =>
             {
                 if (!submitFunction) {throw "Action not defined on form";}
-                
+                    console.log("Calling doAction in hibachiScope", vm.hibachiScope);
                     let submitFn = vm.hibachiScope.doAction;
                     vm.formData = vm.formData || {};
                     submitFn(submitFunction, vm.formData).then( (result) =>{
                         console.log("Result of doAction being returned", result);
                         if (vm.hibachiScope.hasErrors) {
                             vm.parseErrors(result.data);
+                            console.log("Errors");
                              //trigger an onError event
                             observerService.notify("onError", {"caller" : this.processObject, "events": vm.events.events||""});
                         } else {
+                            console.log("Success");
                             //trigger a on success event
                             observerService.notify("onSuccess", {"caller":this.processObject, "events":vm.events.events||""});
                         }
@@ -268,7 +267,7 @@ class SWFormController {
             }
 
             /** does either a single or multiple actions */
-            vm.doAction = (actionObject) => 
+            vm.doAction = (actionObject) =>
             {
                 if (angular.isArray(actionObject)) {
                     for (var submitFunction of actionObject) {
@@ -282,33 +281,28 @@ class SWFormController {
             }
 
             /** create the generic submit function */
-            vm.submit = (Action) => 
+            vm.submit = (Action) =>
             {
-                console.log("Action called:",Action);
-                console.log("This is", this);
-                console.log("VM is", vm);
                 let action = Action;//vm.action || vm.actions;
                 vm.clearErrors();
                 vm.formData = vm.getFormData() || "";
-                console.log("Form data: ", vm.formData);
-                console.log(vm.doAction);
                 vm.doAction(action);
             }
-            
-            /* give children access to the process  
+
+            /* give children access to the process
             */
-            vm.getProcessObject = () => 
+            vm.getProcessObject = () =>
             {
                 return vm.processEntity;
-            } 
-            
+            }
+
             /* handle events
             */
             if (this.onSuccess){
                 console.log("OnSuccess: ", this.onSuccess);
                 vm.parseEventString(this.onSuccess, "onSuccess");
                 observerService.attach(vm.eventsHandler, "onSuccess");
-                
+
             }else if(this.onError){
                 vm.parseEventString(this.onError, "onError");
                 //observerService.attach(vm.eventsHandler, "onError");//stub

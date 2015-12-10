@@ -16,6 +16,7 @@ class SWActionCallerController{
     public actionItemEntityName:string;
     public pathBuilderConfig:any;
     public formCtrl:any;
+    
     //@ngInject
     constructor(
         private $scope,
@@ -55,9 +56,8 @@ class SWActionCallerController{
                 var unbindWatcher = this.$scope.$watch(() => { return this.$scope.frmController; }, (newValue, oldValue) => {
                     if (newValue !== undefined){
                         this.formCtrl = newValue;
-                        console.log("Found ", this.formCtrl);
+                        console.log("Found formCtrl");
                     }
-                    console.log("unbinding the watch");
                     unbindWatcher();
                 });
 
@@ -87,12 +87,11 @@ class SWActionCallerController{
     }
 
     public submit = () => {
-            console.log("formCtrl:", this.action);
-            this.formCtrl.submit(this.action);
-        }
+        console.log(this.formCtrl);
+        this.formCtrl.submit(this.action);
+    }
 
     public getAction = ():string =>{
-
         return this.action || '';
     }
 
@@ -237,15 +236,16 @@ class SWActionCallerController{
 
 class SWActionCaller implements ng.IDirective{
     public restrict:string = 'EA';
-    public require:string = "^?swForm"
-    public scope:any={};
-    public bindToController:any={
+    public require = "?^swForm"
+    public transclude = true;
+    public scope={};
+    public bindToController={
         action:"@",
         text:"@",
         type:"@",
         queryString:"@",
         title:"@",
-        'class':"@",
+        class:"@",
         icon:"@",
         iconOnly:"=",
         name:"@",
@@ -285,9 +285,8 @@ class SWActionCaller implements ng.IDirective{
         ){
     }
 
-    public link:ng.IDirectiveLinkFn = (scope: any, element: ng.IAugmentedJQuery, attrs:ng.IAttributes, formController:any) =>{
-        scope.frmController = formController;
-        console.log("Form Controller: ", scope.frmController);
+    public link:ng.IDirectiveLinkFn = (scope: ng.IScope, element: ng.IAugmentedJQuery, attrs:ng.IAttributes, formController:any) =>{
+          scope.frmController = formController;
     }
 
 }
