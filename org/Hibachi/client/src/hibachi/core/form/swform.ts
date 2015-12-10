@@ -36,7 +36,8 @@ interface ViewModel {
         formType:Object,
         formData:Object,
         processEntity:Object,
-        hibachiScope:Object,
+        hibachiScope:{doAction:any, hasErrors:boolean},
+        events:any,
         //************************** Events
         identity: Function,
         hide:Function,
@@ -62,6 +63,9 @@ interface ViewModel {
         public processObject:string;
         public postOnly:boolean;
         public object:any;
+        public events: any;
+        public onSuccess:string;
+        public onError:string;
         /**
          * This controller handles most of the logic for the swFormDirective when more complicated self inspection is needed.
          */
@@ -233,14 +237,9 @@ interface ViewModel {
                /** clear all form errors on submit. */
                 this.$timeout(()=>{
                      let errorElements = this.$element.find("[error-for]");
-                     console.log("Error elements: ", errorElements);
                      errorElements.empty();
-                     console.log("VM formctrl", vm);
-                     console.log("PO", vm["formCtrl"][vm.processObject]);
                      vm["formCtrl"][vm.processObject].$setPristine(true);
                 },0);
-
-                console.log("form", vm["formCtrl"][vm.processObject]);
 
             }
 
@@ -248,18 +247,15 @@ interface ViewModel {
             vm.iterateFactory = (submitFunction) =>
             {
                 if (!submitFunction) {throw "Action not defined on form";}
-                    console.log("Calling doAction in hibachiScope", vm.hibachiScope);
+                    
                     let submitFn = vm.hibachiScope.doAction;
                     vm.formData = vm.formData || {};
                     submitFn(submitFunction, vm.formData).then( (result) =>{
-                        console.log("Result of doAction being returned", result);
                         if (vm.hibachiScope.hasErrors) {
                             vm.parseErrors(result.data);
-                            console.log("Errors");
                              //trigger an onError event
                             observerService.notify("onError", {"caller" : this.processObject, "events": vm.events.events||""});
                         } else {
-                            console.log("Success");
                             //trigger a on success event
                             observerService.notify("onSuccess", {"caller":this.processObject, "events":vm.events.events||""});
                         }
@@ -305,7 +301,7 @@ interface ViewModel {
 
             }else if(this.onError){
                 vm.parseEventString(this.onError, "onError");
-                //observerService.attach(vm.eventsHandler, "onError");//stub
+                observerService.attach(vm.eventsHandler, "onError");//stub
             }
         }
     }

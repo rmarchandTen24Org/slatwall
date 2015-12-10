@@ -2963,7 +2963,6 @@
 	                var unbindWatcher = _this.$scope.$watch(function () { return _this.$scope.frmController; }, function (newValue, oldValue) {
 	                    if (newValue !== undefined) {
 	                        _this.formCtrl = newValue;
-	                        console.log("Found formCtrl");
 	                    }
 	                    unbindWatcher();
 	                });
@@ -2991,7 +2990,6 @@
 	            */
 	        };
 	        this.submit = function () {
-	            console.log(_this.formCtrl);
 	            _this.formCtrl.submit(_this.action);
 	        };
 	        this.getAction = function () {
@@ -5679,32 +5677,24 @@
 	            /** clear all form errors on submit. */
 	            _this.$timeout(function () {
 	                var errorElements = _this.$element.find("[error-for]");
-	                console.log("Error elements: ", errorElements);
 	                errorElements.empty();
-	                console.log("VM formctrl", vm);
-	                console.log("PO", vm["formCtrl"][vm.processObject]);
 	                vm["formCtrl"][vm.processObject].$setPristine(true);
 	            }, 0);
-	            console.log("form", vm["formCtrl"][vm.processObject]);
 	        };
 	        /** iterates through the factory submitting data */
 	        vm.iterateFactory = function (submitFunction) {
 	            if (!submitFunction) {
 	                throw "Action not defined on form";
 	            }
-	            console.log("Calling doAction in hibachiScope", vm.hibachiScope);
 	            var submitFn = vm.hibachiScope.doAction;
 	            vm.formData = vm.formData || {};
 	            submitFn(submitFunction, vm.formData).then(function (result) {
-	                console.log("Result of doAction being returned", result);
 	                if (vm.hibachiScope.hasErrors) {
 	                    vm.parseErrors(result.data);
-	                    console.log("Errors");
 	                    //trigger an onError event
 	                    observerService.notify("onError", { "caller": _this.processObject, "events": vm.events.events || "" });
 	                }
 	                else {
-	                    console.log("Success");
 	                    //trigger a on success event
 	                    observerService.notify("onSuccess", { "caller": _this.processObject, "events": vm.events.events || "" });
 	                }
@@ -5746,6 +5736,7 @@
 	        }
 	        else if (this.onError) {
 	            vm.parseEventString(this.onError, "onError");
+	            observerService.attach(vm.eventsHandler, "onError"); //stub
 	        }
 	    };
 	    return SWFormController;

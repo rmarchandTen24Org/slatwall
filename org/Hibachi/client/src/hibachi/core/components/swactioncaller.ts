@@ -56,7 +56,6 @@ class SWActionCallerController{
                 var unbindWatcher = this.$scope.$watch(() => { return this.$scope.frmController; }, (newValue, oldValue) => {
                     if (newValue !== undefined){
                         this.formCtrl = newValue;
-                        console.log("Found formCtrl");
                     }
                     unbindWatcher();
                 });
@@ -87,7 +86,6 @@ class SWActionCallerController{
     }
 
     public submit = () => {
-        console.log(this.formCtrl);
         this.formCtrl.submit(this.action);
     }
 
