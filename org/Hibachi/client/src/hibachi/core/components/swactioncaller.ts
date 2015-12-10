@@ -48,16 +48,15 @@ class SWActionCallerController{
     public init = ():void =>{
 //			this.class = this.utilityService.replaceAll(this.utilityService.replaceAll(this.getAction(),':',''),'.','') + ' ' + this.class;
         this.type = this.type || 'link';
-
+            
             if (this.type == "button"){
                 //handle submit.
                 /** in order to attach the correct controller to local vm, we need a watch to bind */
                 var unbindWatcher = this.$scope.$watch(() => { return this.$scope.frmController; }, (newValue, oldValue) => {
                     if (newValue !== undefined){
                         this.formCtrl = newValue;
-
                     }
-
+                    console.log("unbinding the watch");
                     unbindWatcher();
                 });
 
@@ -87,7 +86,7 @@ class SWActionCallerController{
     }
 
     public submit = () => {
-
+            console.log("formCtrl", this.action);
             this.formCtrl.submit(this.action);
         }
 
@@ -237,6 +236,7 @@ class SWActionCallerController{
 
 class SWActionCaller implements ng.IDirective{
     public restrict:string = 'EA';
+    public require:string = "^?form"
     public scope:any={};
     public bindToController:any={
         action:"@",
@@ -284,13 +284,14 @@ class SWActionCaller implements ng.IDirective{
         ){
     }
 
-    public link:ng.IDirectiveLinkFn = (scope: ng.IScope, element: ng.IAugmentedJQuery, attrs:ng.IAttributes) =>{
+    public link:ng.IDirectiveLinkFn = (scope: any, element: ng.IAugmentedJQuery, attrs:ng.IAttributes, formController:any) =>{
+        scope.frmController = formController;
     }
+
 }
 export{
     SWActionCaller,
     SWActionCallerController
 }
-	//angular.module('slatwalladmin').directive('swActionCaller',[() => new SWActionCaller()]);
 
 

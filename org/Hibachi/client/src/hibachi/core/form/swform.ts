@@ -284,9 +284,12 @@ class SWFormController {
             /** create the generic submit function */
             vm.submit = (Action) => 
             {
+                console.log("Action called:",Action);
                 let action = Action;//vm.action || vm.actions;
                 vm.clearErrors();
                 vm.formData = vm.getFormData() || "";
+                console.log("Form data: ", vm.formData);
+                console.log(vm.doAction);
                 vm.doAction(action);
             }
             
