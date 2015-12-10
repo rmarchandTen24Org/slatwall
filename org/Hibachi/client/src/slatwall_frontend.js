@@ -16321,12 +16321,12 @@
 	        this.templateUrl = this.templateUrl = pathBuilderConfig.buildPartialsPath(frontendPartialsPath) + 'createaccountpartial.html';
 	    }
 	    SWFCreateAccount.Factory = function () {
-	        var directive = function (frontendPartialsPath, pathBuilderConfig) {
-	            return new SWFCreateAccount(frontendPartialsPath, pathBuilderConfig);
+	        var directive = function (pathBuilderConfig, frontendPartialsPath) {
+	            return new SWFCreateAccount(pathBuilderConfig, frontendPartialsPath);
 	        };
 	        directive.$inject = [
-	            'frontendPartialsPath',
-	            'pathBuilderConfig'
+	            'pathBuilderConfig',
+	            'frontendPartialsPath'
 	        ];
 	        return directive;
 	    };
