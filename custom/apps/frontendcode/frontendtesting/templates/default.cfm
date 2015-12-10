@@ -22,7 +22,8 @@
                         
                         <dd>  generic example for create account
                                <br><swf-directive directive="swf-create-account" type="E"></swf-directive>
-                        </dd>                     
+                        </dd>
+                                            
                     </dl>
                     <hr>
                 </p>
@@ -30,6 +31,21 @@
         </div>
     </section>
   </div>
+  <!--- 
+  
+  <dd> example custom
+                               <br>
+                               <sw-form data-is-process-form="true"
+                                        data-object="Account_Login"
+                                        data-on-success="hide:Account_Login,show:Account_Logout"
+                                        data-form-class="cssform"
+                                        data-error-class="error">
+                                   Email: <input name="email" type="email"></input>
+                                   Password: <input name="password" type="password"></input>
+                                   <input type="submit" action="login" ng-click="swFormController.submit()" value="login"></input>  
+                               </sw-form>
+                        </dd> 
+  --->
 </div>
 </cfoutput>
 <cfinclude template="footer.cfm" >
