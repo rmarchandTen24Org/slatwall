@@ -285,6 +285,8 @@ class SWFormController {
             vm.submit = (Action) => 
             {
                 console.log("Action called:",Action);
+                console.log("This is", this);
+                console.log("VM is", vm);
                 let action = Action;//vm.action || vm.actions;
                 vm.clearErrors();
                 vm.formData = vm.getFormData() || "";

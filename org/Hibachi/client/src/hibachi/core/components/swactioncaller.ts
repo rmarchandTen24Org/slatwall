@@ -55,6 +55,7 @@ class SWActionCallerController{
                 var unbindWatcher = this.$scope.$watch(() => { return this.$scope.frmController; }, (newValue, oldValue) => {
                     if (newValue !== undefined){
                         this.formCtrl = newValue;
+                        console.log("Found ", this.formCtrl);
                     }
                     console.log("unbinding the watch");
                     unbindWatcher();
@@ -86,7 +87,7 @@ class SWActionCallerController{
     }
 
     public submit = () => {
-            console.log("formCtrl", this.action);
+            console.log("formCtrl:", this.action);
             this.formCtrl.submit(this.action);
         }
 
@@ -236,7 +237,7 @@ class SWActionCallerController{
 
 class SWActionCaller implements ng.IDirective{
     public restrict:string = 'EA';
-    public require:string = "^?form"
+    public require:string = "^?swForm"
     public scope:any={};
     public bindToController:any={
         action:"@",
@@ -286,6 +287,7 @@ class SWActionCaller implements ng.IDirective{
 
     public link:ng.IDirectiveLinkFn = (scope: any, element: ng.IAugmentedJQuery, attrs:ng.IAttributes, formController:any) =>{
         scope.frmController = formController;
+        console.log("Form Controller: ", scope.frmController);
     }
 
 }
