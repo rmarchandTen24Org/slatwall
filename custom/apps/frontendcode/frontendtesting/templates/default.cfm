@@ -21,20 +21,33 @@
                     <b>login/logout</b>     <br>       
                      Accepts a email and password and logs in the user.
                            <br><swf-login ng-if="hibachiScope.account.accountID == ''"></swf-login>
+                    
                     <br><br>
                       <b>logout</b> {{hibachiScope.account.firstName}}
-                           <br><swf-logout></swf-logout>
-                    <br><br>
-                      <b>generic example for create account</b>
-                           <br><swf-directive directive="swf-create-account" type="E"></swf-directive>
+                           <br><swf-logout ng-if="hibachiScope.account.accountID != ''"></swf-logout>
+                    
                     <br><br>
                      Cart is accessed the same way as Account. hibachiScope.cart.subtotal or hibachiScope.cart.discounttotal
                      or hibachiScope.cart.calculatedtotal yeild totals on the order while hibachiScope.cart.orderitems is
                      an array of objects that contain the items on the order.
                      <br><br>
                      <b>Add promotion to order: {{hibachiScope.cart.promotionCodeList}}</b>
-                           <br><swf-promo></swf-promo>
+                     <br><swf-promo></swf-promo>
                     <br>
+                    
+                    <br><br>
+                      <b>swf-directive</b> example for specifying the directive path to use.
+                      This directive allows you to use one directive to wrap any partial custom or built in.
+                    <br>
+                         path is /org/Hibachi/src/frontend/components/
+                         partial-name is createaccountpartial
+                         
+                         *Note you do not need to provide an .html ext on the partial-name attribute.
+                         **Note the type attribute for the swf-directive is C for custom. Other types include
+                           A for creating an attribute based directive and E for elemental directive.
+                      <br>
+                    
+                    <br><swf-directive path="/org/Hibachi/client/src/frontend/components/" partial-name="createaccountpartial" type="C"></swf-directive>
                 </p>
             </div>
         </div>

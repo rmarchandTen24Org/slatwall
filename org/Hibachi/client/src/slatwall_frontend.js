@@ -16206,43 +16206,59 @@
 	        this.bindToController = {
 	            variables: "=",
 	            directive: "=",
-	            type: "@"
+	            type: "@",
+	            templateUrl: "@"
 	        };
 	        this.controller = SWFDirectiveController;
 	        this.controllerAs = "SWFDirective";
+	        this.templatePath = "";
+	        this.url = "";
 	        /** allows you to build a directive without using another controller and directive config. */
 	        // @ngInject
 	        this.link = function (scope, element, attrs) {
 	            _this.scope = scope;
-	            if (!attrs.type) {
-	                attrs.type = "A";
-	            }
-	            if (attrs.type == "A" || !attrs.type) {
-	                var template = '<span ' + attrs.directive + ' ';
-	                if (angular.isDefined(_this.scope.variables)) {
-	                    angular.forEach(_this.scope.variables, function (value, key) {
-	                        template += ' ' + key + '=' + value + ' ';
-	                    });
-	                }
-	                template += +'>';
-	                template += '</span>';
+	            _this.path = attrs.path || _this.templatePath;
+	            console.log("Dynamic Path", _this.path);
+	            //Developer specifies the path and name of a partial for creating a custom directive.
+	            if (attrs.partialName && attrs.type == 'C') {
+	                //returns the attrs.path or the default if not configured.
+	                _this.scope.getRelativePath = function () {
+	                    return _this.path + attrs.partialName + '.html';
+	                };
 	            }
 	            else {
-	                var template = '<' + attrs.directive + ' ';
-	                if (_this.scope.variables) {
-	                    angular.forEach(_this.scope.variables, function (value, key) {
-	                        template += ' ' + key + '=' + value + ' ';
-	                    });
+	                _this.templateUrl = _this.url;
+	                if (!attrs.type) {
+	                    attrs.type = "A";
 	                }
-	                template += +'>';
-	                template += '</' + attrs.directive + '>';
+	                if (attrs.type == "A" || !attrs.type) {
+	                    var template = '<span ' + attrs.directive + ' ';
+	                    if (angular.isDefined(_this.scope.variables)) {
+	                        angular.forEach(_this.scope.variables, function (value, key) {
+	                            template += ' ' + key + '=' + value + ' ';
+	                        });
+	                    }
+	                    template += +'>';
+	                    template += '</span>';
+	                }
+	                else {
+	                    var template = '<' + attrs.directive + ' ';
+	                    if (_this.scope.variables) {
+	                        angular.forEach(_this.scope.variables, function (value, key) {
+	                            template += ' ' + key + '=' + value + ' ';
+	                        });
+	                    }
+	                    template += +'>';
+	                    template += '</' + attrs.directive + '>';
+	                }
+	                // Render the template.
+	                element.html('').append(_this.$compile(template)(scope));
 	            }
-	            // Render the template.
-	            element.html('').append(_this.$compile(template)(scope));
 	        };
-	        console.log("Config", pathBuilderConfig);
-	        console.log("front", frontendPartialsPath);
-	        this.templateUrl = pathBuilderConfig.buildPartialsPath(frontendPartialsPath) + 'swfdirectivepartial.html';
+	        this.template = '<div ng-include="getRelativePath()"></div>';
+	        this.templatePath = pathBuilderConfig.buildPartialsPath(frontendPartialsPath);
+	        console.log("Template Path", this.templatePath);
+	        this.url = pathBuilderConfig.buildPartialsPath(frontendPartialsPath) + 'swfdirectivepartial.html';
 	        this.$compile = $compile;
 	    }
 	    SWFDirective.Factory = function () {
