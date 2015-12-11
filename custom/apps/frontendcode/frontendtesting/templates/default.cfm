@@ -7,37 +7,35 @@
             <div class="container" >
                 <div class="s-ds-header">
                     <h2>Examples:</h2>
-                    <h3>These are examples of using frontend directives</h3>
+                    <h3>These are basic examples of using frontend directives</h3>
                 </div>
+                
                 <p class="directives">
                 	<b>Account</b> can be accessed from anywhere within the frontend app
                 	by referencing hibachiScope.account|cart.
                 	For example: hibachiScope.account.firstName, hibachiScope.account.lastName
                 	will reference those values if the user is logged in. <br>
-                	{{hibachiScope.account.firstName}} {{hibachiScope.account.lastName}}<br>
+                	<b>{{hibachiScope.account.firstName}} {{hibachiScope.account.lastName}}</b><br>
                 	
-                     login/logout     <br>       
+                	<br><br>
+                    <b>login/logout</b>     <br>       
                      Accepts a email and password and logs in the user.
                            <br><swf-login ng-if="hibachiScope.account.accountID == ''"></swf-login>
-                    <br>
-                      logout {{hibachiScope.account.firstName}}
+                    <br><br>
+                      <b>logout</b> {{hibachiScope.account.firstName}}
                            <br><swf-logout></swf-logout>
-                    <br>
-                    
-                      generic example for create account
+                    <br><br>
+                      <b>generic example for create account</b>
                            <br><swf-directive directive="swf-create-account" type="E"></swf-directive>
-                     <br>
-                     
+                    <br><br>
                      Cart is accessed the same way as Account. hibachiScope.cart.subtotal or hibachiScope.cart.discounttotal
                      or hibachiScope.cart.calculatedtotal yeild totals on the order while hibachiScope.cart.orderitems is
                      an array of objects that contain the items on the order.
                      <br><br>
-                      Add promotion to order: <b>{{hibachiScope.cart.promotionCodeList}}</b>
+                     <b>Add promotion to order: {{hibachiScope.cart.promotionCodeList}}</b>
                            <br><swf-promo></swf-promo>
                     <br>
-                     
                 </p>
-               
             </div>
         </div>
     </section>
