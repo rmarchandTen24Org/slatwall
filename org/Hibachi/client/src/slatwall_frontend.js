@@ -16459,6 +16459,7 @@
 	/// <reference path='../../../typings/slatwallTypescript.d.ts' />
 	/// <reference path='../../../typings/tsd.d.ts' />   
 	var SWFPromoController = (function () {
+	    // @ngInject
 	    function SWFPromoController($route, $log, $window, $slatwall, dialogService) {
 	        this.$route = $route;
 	        this.$log = $log;
@@ -16480,6 +16481,7 @@
 	        this.bindToController = {};
 	        this.controller = SWFPromoController;
 	        this.controllerAs = "SWFPromo";
+	        // @ngInject
 	        this.link = function (scope, element, attrs) { };
 	        this.templateUrl = pathBuilderConfig.buildPartialsPath(frontendPartialsPath) + 'promopartial.html';
 	    }
@@ -16488,7 +16490,6 @@
 	            return new SWFPromo(pathBuilderConfig, frontendPartialsPath);
 	        };
 	        directive.$inject = [
-	            ,
 	            'pathBuilderConfig',
 	            'frontendPartialsPath'
 	        ];

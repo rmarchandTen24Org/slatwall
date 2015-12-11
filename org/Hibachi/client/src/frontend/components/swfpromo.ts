@@ -1,6 +1,7 @@
 /// <reference path='../../../typings/slatwallTypescript.d.ts' />
 /// <reference path='../../../typings/tsd.d.ts' />   
 class SWFPromoController{
+    // @ngInject
     constructor(private $route,private $log:ng.ILogService, private $window:ng.IWindowService, private $slatwall, private dialogService:any){
         this.$slatwall = $slatwall; 
     }
@@ -19,7 +20,7 @@ class SWFPromo implements ng.IDirective{
     constructor(private pathBuilderConfig, private frontendPartialsPath ){
         this.templateUrl = pathBuilderConfig.buildPartialsPath(frontendPartialsPath)+'promopartial.html';
     }
-    
+    // @ngInject
     public link:ng.IDirectiveLinkFn = (scope: ng.IScope, element: ng.IAugmentedJQuery, attrs:ng.IAttributes) =>{}
     
     public static Factory():ng.IDirectiveFactory{
@@ -31,7 +32,6 @@ class SWFPromo implements ng.IDirective{
 			frontendPartialsPath
         );
         directive.$inject = [
-            ,
 			'pathBuilderConfig',
             'frontendPartialsPath'
         ];

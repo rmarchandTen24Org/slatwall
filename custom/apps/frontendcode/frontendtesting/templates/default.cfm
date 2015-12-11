@@ -15,7 +15,7 @@
                 	For example: hibachiScope.account.firstName, hibachiScope.account.lastName
                 	will reference those values if the user is logged in. <br>
                 	{{hibachiScope.account.firstName}} {{hibachiScope.account.lastName}}<br>
-                	<hr>
+                	
                      login/logout     <br>       
                      Accepts a email and password and logs in the user.
                            <br><swf-login ng-if="hibachiScope.account.accountID == ''"></swf-login>
@@ -32,7 +32,7 @@
                      or hibachiScope.cart.calculatedtotal yeild totals on the order while hibachiScope.cart.orderitems is
                      an array of objects that contain the items on the order.
                      <br><br>
-                      Add promotion to order: <b></b>
+                      Add promotion to order: <b>{{hibachiScope.cart.promotionCodeList}}</b>
                            <br><swf-promo></swf-promo>
                     <br>
                      
