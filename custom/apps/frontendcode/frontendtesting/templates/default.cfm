@@ -33,6 +33,7 @@
                      <br><br>
                      <b>Add promotion to order: {{hibachiScope.cart.promotionCodeList}}</b>
                      <br><swf-promo></swf-promo>
+                     
                     <br>
                     
                     <br><br>
@@ -45,7 +46,7 @@
                          *Note you do not need to provide an .html ext on the partial-name attribute.
                          **Note the type attribute for the swf-directive is C for custom. Other types include
                            A for creating an attribute based directive and E for elemental directive.
-                      <br>
+                    <br>
                     
                     <br><swf-directive path="/org/Hibachi/client/src/frontend/components/" partial-name="createaccountpartial" type="C"></swf-directive>
                 </p>
