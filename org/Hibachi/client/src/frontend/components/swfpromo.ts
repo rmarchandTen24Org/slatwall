@@ -24,15 +24,16 @@ class SWFPromo implements ng.IDirective{
     
     public static Factory():ng.IDirectiveFactory{
         var directive:ng.IDirectiveFactory = (
-		    frontendPartialsPath,
-			pathBuilderConfig
+			pathBuilderConfig,
+			frontendPartialsPath
         ) => new SWFPromo(
-			frontendPartialsPath,
-			pathBuilderConfig
+			pathBuilderConfig,
+			frontendPartialsPath
         );
         directive.$inject = [
-            'frontendPartialsPath',
-			'pathBuilderConfig'
+            ,
+			'pathBuilderConfig',
+            'frontendPartialsPath'
         ];
         return directive;
     }

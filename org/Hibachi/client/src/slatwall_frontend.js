@@ -5745,9 +5745,6 @@
 	            vm.formData = vm.getFormData() || "";
 	            vm.doAction(action);
 	        };
-	        this.sub = function () {
-	            console.log("This is a test");
-	        };
 	        /* give children access to the process
 	        */
 	        vm.getProcessObject = function () {
@@ -16487,12 +16484,13 @@
 	        this.templateUrl = pathBuilderConfig.buildPartialsPath(frontendPartialsPath) + 'promopartial.html';
 	    }
 	    SWFPromo.Factory = function () {
-	        var directive = function (frontendPartialsPath, pathBuilderConfig) {
-	            return new SWFPromo(frontendPartialsPath, pathBuilderConfig);
+	        var directive = function (pathBuilderConfig, frontendPartialsPath) {
+	            return new SWFPromo(pathBuilderConfig, frontendPartialsPath);
 	        };
 	        directive.$inject = [
-	            'frontendPartialsPath',
-	            'pathBuilderConfig'
+	            ,
+	            'pathBuilderConfig',
+	            'frontendPartialsPath'
 	        ];
 	        return directive;
 	    };

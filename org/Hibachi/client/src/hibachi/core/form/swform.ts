@@ -284,10 +284,7 @@ interface ViewModel {
                 vm.formData = vm.getFormData() || "";
                 vm.doAction(action);
             }
-            this.sub = () =>
-            {
-               console.log("This is a test"); 
-            }
+
             /* give children access to the process
             */
             vm.getProcessObject = () =>

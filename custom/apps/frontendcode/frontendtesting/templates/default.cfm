@@ -10,23 +10,34 @@
                     <h3>These are examples of using frontend directives</h3>
                 </div>
                 <p class="directives">
-                    <dl>
-                        <hr>
-                        <dt> login/logout</dt>            
-                        <dd>  Accepts a emailaddress and password and logs in the user.
-                               <br><swf-login ng-if="hibachiScope.account.accountID == ''"></swf-login>
-                        </dd>
-                        <dd>  logout {{hibachiScope.account.firstName}}
-                               <br><swf-logout></swf-logout>
-                        </dd>
-                        
-                        <dd>  generic example for create account
-                               <br><swf-directive directive="swf-create-account" type="E"></swf-directive>
-                        </dd>
-                                            
-                    </dl>
-                    <hr>
+                	<b>Account</b> can be accessed from anywhere within the frontend app
+                	by referencing hibachiScope.account|cart.
+                	For example: hibachiScope.account.firstName, hibachiScope.account.lastName
+                	will reference those values if the user is logged in. <br>
+                	{{hibachiScope.account.firstName}} {{hibachiScope.account.lastName}}<br>
+                	<hr>
+                     login/logout     <br>       
+                     Accepts a email and password and logs in the user.
+                           <br><swf-login ng-if="hibachiScope.account.accountID == ''"></swf-login>
+                    <br>
+                      logout {{hibachiScope.account.firstName}}
+                           <br><swf-logout></swf-logout>
+                    <br>
+                    
+                      generic example for create account
+                           <br><swf-directive directive="swf-create-account" type="E"></swf-directive>
+                     <br>
+                     
+                     Cart is accessed the same way as Account. hibachiScope.cart.subtotal or hibachiScope.cart.discounttotal
+                     or hibachiScope.cart.calculatedtotal yeild totals on the order while hibachiScope.cart.orderitems is
+                     an array of objects that contain the items on the order.
+                     <br><br>
+                      Add promotion to order: <b></b>
+                           <br><swf-promo></swf-promo>
+                    <br>
+                     
                 </p>
+               
             </div>
         </div>
     </section>
@@ -34,7 +45,7 @@
   <!--- 
   
   <dd> example custom
-                               <br>
+                               <br>Test using a custom html for submission.
                                <sw-form data-is-process-form="true"
                                         data-object="Account_Login"
                                         data-on-success="hide:Account_Login,show:Account_Logout"
