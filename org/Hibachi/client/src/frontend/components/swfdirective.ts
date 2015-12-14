@@ -28,7 +28,6 @@ class SWFDirective implements ng.IDirective{
 	// @ngInject
     constructor(pathBuilderConfig, private frontendPartialsPath:any, $compile){
         this.templatePath = pathBuilderConfig.buildPartialsPath(frontendPartialsPath);
-        console.log("Template Path", this.templatePath);
         this.url = pathBuilderConfig.buildPartialsPath(frontendPartialsPath)+'swfdirectivepartial.html';
 		this.$compile = $compile;
     }
@@ -37,7 +36,7 @@ class SWFDirective implements ng.IDirective{
 	public link:ng.IDirectiveLinkFn = (scope:ng.IScope, element: ng.IAugmentedJQuery, attrs:any) =>{
         this.scope = scope;
         this.path  = attrs.path || this.templatePath;
-        console.log("Dynamic Path", this.path);
+        console.log("Dynamic Path", this.path + attrs.partialName);
         //Developer specifies the path and name of a partial for creating a custom directive.
         if (attrs.partialName && attrs.type == 'C'){
             //returns the attrs.path or the default if not configured.

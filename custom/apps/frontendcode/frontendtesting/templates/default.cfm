@@ -15,27 +15,24 @@
                 	by referencing hibachiScope.account|cart.
                 	For example: hibachiScope.account.firstName, hibachiScope.account.lastName
                 	will reference those values if the user is logged in. <br>
-                	<b>{{hibachiScope.account.firstName}} {{hibachiScope.account.lastName}}</b><br>
+                	<b>{{slatwall.account.firstName}} {{slatwall.account.lastName}}</b><br>
                 	
                 	<br><br>
                     <b>login/logout</b>     <br>       
-                     Accepts a email and password and logs in the user.
-                           <br><swf-login ng-if="hibachiScope.account.accountID == ''"></swf-login>
+                     Accepts a email and password and logs in the user. {{slatwall.userIsLoggedIn()}}
+                           <br><swf-login ng-if="!slatwall.userIsLoggedIn()"></swf-login>
                     
                     <br><br>
-                      <b>logout</b> {{hibachiScope.account.firstName}}
-                           <br><swf-logout ng-if="hibachiScope.account.accountID != ''"></swf-logout>
-                    
+                      {{hibachiScope.account.firstName}}
+                           <br><swf-logout ng-if="slatwall.userIsLoggedIn()"></swf-logout>
                     <br><br>
                      Cart is accessed the same way as Account. hibachiScope.cart.subtotal or hibachiScope.cart.discounttotal
                      or hibachiScope.cart.calculatedtotal yeild totals on the order while hibachiScope.cart.orderitems is
                      an array of objects that contain the items on the order.
                      <br><br>
-                     <b>Add promotion to order: {{hibachiScope.cart.promotionCodeList}}</b>
+                     <b>Add promotion to order: {{slatwall.getPromotionCodeList()}}</b>
                      <br><swf-promo></swf-promo>
-                     
                     <br>
-                    
                     <br><br>
                       <b>swf-directive</b> example for specifying the directive path to use.
                       This directive allows you to use one directive to wrap any partial custom or built in.

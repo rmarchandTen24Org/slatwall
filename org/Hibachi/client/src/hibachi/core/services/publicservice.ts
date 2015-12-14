@@ -26,7 +26,7 @@ class PublicService {
         var deferred = this.$q.defer();
         this.$http.get(urlBase).success((result:any)=>{
             this.account = result;
-            console.log("Result Account:", this.account);
+            console.log("Account:", this.account);
             deferred.resolve(result);
         }).error((reason)=>{
             deferred.reject(reason);  
@@ -39,7 +39,7 @@ class PublicService {
         var deferred = this.$q.defer();
         this.$http.get(urlBase).success((result:any)=>{
             this.cart = result;
-            console.log("Result Cart:", this.cart);
+            console.log("Cart:", this.cart);
             deferred.resolve(result);
         }).error((reason)=>{
             deferred.reject(reason);  
@@ -52,7 +52,6 @@ class PublicService {
         *  @return a deferred promise that resolves server response or error. also includes updated account and cart.
         */
     public doAction=(action:string, data:any) => {
-        console.log("Do Action called:",data);
         this.hasErrors = false;
         this.success = false;
         this.errors = undefined;
@@ -84,6 +83,60 @@ class PublicService {
     /** used to turn data into a correct format for the post */
     public toFormParams= (data):string => {
         return data = $.param(data) || "";
+    }
+    
+    /**
+     * Helper methods so that everything in account and cart can be accessed using getters.
+     */
+    public userIsLoggedIn = ():boolean =>{
+        if (this.account !== undefined && this.account.accountID !== ''){
+            return true;
+        }
+        return false;
+    }
+    /**
+     * Helper methods for getting errors from the cart
+     */
+    public getErrors = ():{} =>{
+        if (this.errors !== undefined){
+            return this.errors;
+        }
+        return {};
+    }
+    
+    /**
+     * Helper method to get orderitems
+     */
+    public getOrderItems = ():any =>{
+        let orderItems = [];
+        if (this.cart.orderitems !== undefined && this.cart.orderitems.length){
+            for (var item in this.cart.orderitems){
+                orderItems.push(item);
+            }
+        }
+        return orderItems;
+    }
+    
+    /**
+     * Helper method to get order fulfillments
+     */
+    public getOrderFulfillments = ():any =>{
+        let orderFulfillments = [];
+        if (this.cart.orderfulfillments !== undefined && this.cart.orderfulfillments.length){
+            for (var item in this.cart.orderfulfillments){
+                orderFulfillments.push(item);
+            }
+        }
+        return orderFulfillments;
+    }
+    
+    /**
+     * Helper method to get promotion codes
+     */
+    public getPromotionCodeList = ():any =>{
+        if (this.cart && this.cart.promotionCodeList !== undefined){
+            return this.cart.promotionCodeList;
+        }  
     }
 }
 export {PublicService};

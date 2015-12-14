@@ -26,6 +26,8 @@ var frontendmodule = angular.module('frontend', ['ngRoute',ngslatwallmodelmodule
 	$rootScope.hibachiScope = publicService;
 	$rootScope.hibachiScope.getAccount(); 
 	$rootScope.hibachiScope.getCart();
+	$rootScope.slatwall = $rootScope.hibachiScope;
+	
 }])
 
 //constants

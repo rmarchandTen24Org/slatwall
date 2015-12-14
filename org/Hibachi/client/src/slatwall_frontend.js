@@ -674,6 +674,7 @@
 	        $rootScope.hibachiScope = publicService;
 	        $rootScope.hibachiScope.getAccount();
 	        $rootScope.hibachiScope.getCart();
+	        $rootScope.slatwall = $rootScope.hibachiScope;
 	    }])
 	    .constant('frontendPartialsPath', 'frontend/components/')
 	    .controller('frontendController', frontend_1.FrontendController)
@@ -2043,7 +2044,7 @@
 	            var deferred = _this.$q.defer();
 	            _this.$http.get(urlBase).success(function (result) {
 	                _this.account = result;
-	                console.log("Result Account:", _this.account);
+	                console.log("Account:", _this.account);
 	                deferred.resolve(result);
 	            }).error(function (reason) {
 	                deferred.reject(reason);
@@ -2056,7 +2057,7 @@
 	            var deferred = _this.$q.defer();
 	            _this.$http.get(urlBase).success(function (result) {
 	                _this.cart = result;
-	                console.log("Result Cart:", _this.cart);
+	                console.log("Cart:", _this.cart);
 	                deferred.resolve(result);
 	            }).error(function (reason) {
 	                deferred.reject(reason);
@@ -2069,7 +2070,6 @@
 	            *  @return a deferred promise that resolves server response or error. also includes updated account and cart.
 	            */
 	        this.doAction = function (action, data) {
-	            console.log("Do Action called:", data);
 	            _this.hasErrors = false;
 	            _this.success = false;
 	            _this.errors = undefined;
@@ -2106,6 +2106,56 @@
 	        /** used to turn data into a correct format for the post */
 	        this.toFormParams = function (data) {
 	            return data = $.param(data) || "";
+	        };
+	        /**
+	         * Helper methods so that everything in account and cart can be accessed using getters.
+	         */
+	        this.userIsLoggedIn = function () {
+	            if (_this.account !== undefined && _this.account.accountID !== '') {
+	                return true;
+	            }
+	            return false;
+	        };
+	        /**
+	         * Helper methods for getting errors from the cart
+	         */
+	        this.getErrors = function () {
+	            if (_this.errors !== undefined) {
+	                return _this.errors;
+	            }
+	            return {};
+	        };
+	        /**
+	         * Helper method to get orderitems
+	         */
+	        this.getOrderItems = function () {
+	            var orderItems = [];
+	            if (_this.cart.orderitems !== undefined && _this.cart.orderitems.length) {
+	                for (var item in _this.cart.orderitems) {
+	                    orderItems.push(item);
+	                }
+	            }
+	            return orderItems;
+	        };
+	        /**
+	         * Helper method to get order fulfillments
+	         */
+	        this.getOrderFulfillments = function () {
+	            var orderFulfillments = [];
+	            if (_this.cart.orderfulfillments !== undefined && _this.cart.orderfulfillments.length) {
+	                for (var item in _this.cart.orderfulfillments) {
+	                    orderFulfillments.push(item);
+	                }
+	            }
+	            return orderFulfillments;
+	        };
+	        /**
+	         * Helper method to get promotion codes
+	         */
+	        this.getPromotionCodeList = function () {
+	            if (_this.cart && _this.cart.promotionCodeList !== undefined) {
+	                return _this.cart.promotionCodeList;
+	            }
 	        };
 	        this.baseUrl = "/index.cfm/api/scope/";
 	        this.$http = $http;
@@ -16218,7 +16268,7 @@
 	        this.link = function (scope, element, attrs) {
 	            _this.scope = scope;
 	            _this.path = attrs.path || _this.templatePath;
-	            console.log("Dynamic Path", _this.path);
+	            console.log("Dynamic Path", _this.path + attrs.partialName);
 	            //Developer specifies the path and name of a partial for creating a custom directive.
 	            if (attrs.partialName && attrs.type == 'C') {
 	                //returns the attrs.path or the default if not configured.
@@ -16257,7 +16307,6 @@
 	        };
 	        this.template = '<div ng-include="getRelativePath()"></div>';
 	        this.templatePath = pathBuilderConfig.buildPartialsPath(frontendPartialsPath);
-	        console.log("Template Path", this.templatePath);
 	        this.url = pathBuilderConfig.buildPartialsPath(frontendPartialsPath) + 'swfdirectivepartial.html';
 	        this.$compile = $compile;
 	    }
