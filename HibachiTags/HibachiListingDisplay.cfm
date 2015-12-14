@@ -611,7 +611,7 @@
 
 								<cfif len(attributes.recordFileProperty)>
 									<a class="admincaseviewAttachement btn btn-mini" href="#record.getValueByPropertyIdentifier(attributes.recordFileProperty)#" title="View" target="_new">
-										<i class="icon-folder-open"></i>
+										<i class="glyphicon glyphicon-folder-open"></i>
 									</a>
 								</cfif>
 
