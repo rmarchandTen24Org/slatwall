@@ -295,6 +295,17 @@ body.s-login-screen .form-group {
     padding: 0px /*Remove for responsive*/;
   }
 }
+.no-records-found {
+  font-style: italic;
+  text-align: center;
+  background: #F4F9FB;
+  color: #31708f;
+  font-size: 12px;
+  text-transform: capitalize;
+}
+.no-records-found:hover > td {
+  background-color: #F4F9FB !important;
+}
 .s-strong {
   font-weight: 600;
 }
@@ -2437,6 +2448,7 @@ tabel .s-table-header {
 }
 .s-table-header-nav .s-select-list-wrapper {
   max-width: 200px;
+  position: relative;
 }
 .s-filter-options .selectboxit {
   min-width: 120px;
@@ -3386,7 +3398,6 @@ tabel .s-table-header {
 .s-bundle-group-dropdown-content .s-options .radio {
   display: inline-block;
   margin-right: 10px;
-  padding-left: 22px;
 }
 .s-workflow-objs .s-order-item-options .s-bundle-add-obj .s-item-type {
   width: 32px;
@@ -4000,36 +4011,36 @@ tabel .s-table-header {
 .s-search-filter {
   display: block;
 }
-.s-search .s-add-new {
+.s-search-filter .s-add-new {
   background-color: #f2f2f2;
 }
-.s-search .divider {
+.s-search-filter .divider {
   margin-top: 0px;
   margin-bottom: 4px;
 }
-.s-search .s-search-input > input {
+.s-search-filter .s-search-input > input {
   padding-left: 26px;
   border: 1px solid #cccccc !important;
 }
-.s-search .btn-default {
+.s-search-filter .btn-default {
   background-color: #f2f2f2;
   border: 1px solid #cccccc;
   margin-left: -2px !important;
   right: -1px;
 }
-.s-search .s-btn-dgrey {
+.s-search-filter .s-btn-dgrey {
   width: 100%;
   text-align: left;
   border-radius: 0px;
   border: 0px;
 }
-.s-search .btn-primary {
+.s-search-filter .s-results > .btn-primary {
   width: 100%;
   text-align: left;
   border-radius: 0px;
   border: 0px;
 }
-.s-search > .s-search-input:before {
+.s-search-filter > .s-search-input:before {
   display: block;
   width: 14px;
   height: 14px;
@@ -4042,7 +4053,7 @@ tabel .s-table-header {
   opacity: .5;
   z-index: 1000;
 }
-.s-search .dropdown-menu {
+.s-search-filter .dropdown-menu {
   width: 100%;
   -webkit-border-radius: 0;
   -moz-border-radius: 0;
@@ -4067,19 +4078,19 @@ tabel .s-table-header {
   padding-bottom: 0px;
   top: 0px;
 }
-.s-search .dropdown-menu li {
+.s-search-filter .dropdown-menu li {
   border-bottom: 1px solid #eee;
   cursor: pointer;
   display: block;
 }
-.s-search .dropdown-menu li:last-child {
+.s-search-filter .dropdown-menu li:last-child {
   border: none;
 }
-.s-search .dropdown-menu hr {
+.s-search-filter .dropdown-menu hr {
   margin-top: 5px;
   margin-bottom: 5px;
 }
-.s-search .s-top-square {
+.s-search-filter .s-top-square {
   -webkit-border-bottom-right-radius: 0px;
   -webkit-border-bottom-left-radius: 0px;
   -moz-border-radius-bottomright: 0px;
@@ -4087,50 +4098,47 @@ tabel .s-table-header {
   border-bottom-right-radius: 0px;
   border-bottom-left-radius: 0px;
 }
-.s-search input:focus {
+.s-search-filter input:focus {
   -webkit-box-shadow: none;
   -moz-box-shadow: none;
   box-shadow: none;
 }
-.s-search .s-add-content {
+.s-search-filter .s-add-content {
   border: 1px solid #cccccc;
-  padding: 15px 0px 15px 0px;
+  padding: 15px;
   border-top: 0px;
   margin-top: -2px;
   background: #ffffff;
   border-bottom-left-radius: 4px;
   border-bottom-right-radius: 4px;
 }
-.s-search .s-add-content label {
+.s-search-filter .s-add-content label {
   width: 100%;
 }
-.s-search .s-add-content .s-form-input {
+.s-search-filter .s-add-content .s-form-input {
   width: 100%;
 }
-.s-search .s-add-content hr {
+.s-search-filter .s-add-content hr {
   border-color: #cccccc;
 }
-.s-search .s-add-content .btn {
-  margin: 15px;
-}
-.s-search .dropdown-menu {
+.s-search-filter .dropdown-menu {
   left: 0px;
 }
-.s-search .dropdown-menu .s-photo {
+.s-search-filter .dropdown-menu .s-photo {
   max-width: 60px;
   padding-right: 0px;
 }
-.s-search .dropdown-menu .s-photo img {
+.s-search-filter .dropdown-menu .s-photo img {
   width: 100%;
 }
-.s-search .dropdown-menu .s-info {
+.s-search-filter .dropdown-menu .s-info {
   font-size: 11px;
 }
-.s-search .dropdown-menu .s-info .s-name {
+.s-search-filter .dropdown-menu .s-info .s-name {
   font-weight: 600;
 }
-.s-search .s-add-info-dropdown form,
-.s-search .s-add-info-dropdown .s-add-info-dropdown-inner {
+.s-search-filter .s-add-info-dropdown form,
+.s-search-filter .s-add-info-dropdown .s-add-info-dropdown-inner {
   background-color: #FFF;
   border: 1px solid #DDD;
   padding: 15px;
@@ -4139,19 +4147,23 @@ tabel .s-table-header {
   display: inline-block;
   width: 100%;
 }
-.s-search .s-add-info-dropdown h5 {
+.s-search-filter .s-add-info-dropdown .s-add-info-dropdown-inner .form-group {
+  margin-right: 0px;
+  margin-left: 0px;
+}
+.s-search-filter .s-add-info-dropdown h5 {
   border-bottom: 1px solid #ddd;
   margin-top: 0px;
 }
-.s-search .s-add-info-dropdown button {
+.s-search-filter .s-add-info-dropdown button {
   width: auto;
 }
-.s-search .s-character-count {
+.s-search-filter .s-character-count {
   color: #999;
   text-align: right;
   margin-top: 5px;
 }
-.s-search .s-current-selection-item {
+.s-search-filter .s-current-selection-item {
   position: absolute;
   top: 2px;
   left: 2px;
@@ -4159,10 +4171,10 @@ tabel .s-table-header {
   background-color: #FFF;
   padding: 5px 0px 5px 9px;
 }
-.s-search .s-current-selection-item .s-edit-options {
+.s-search-filter .s-current-selection-item .s-edit-options {
   padding: 6px 2px;
 }
-.s-search .s-current-selection-item .s-edit-options.s-remove:hover {
+.s-search-filter .s-current-selection-item .s-edit-options.s-remove:hover {
   color: #DA5757 !important;
   background: none !important;
   border: none !important;
@@ -4826,9 +4838,8 @@ a.disabled > i.hibachi-ui-radio-checked {
 .s-select-list-wrapper .s-input-btn span,
 .s-select-list-wrapper .s-input-btn i {
   position: absolute;
-  right: 10px;
-  top: 29px;
-  bottom: 0;
+  top: 8px;
+  right: 8px;
   height: 14px;
   margin: auto;
   font-size: 14px;
