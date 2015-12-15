@@ -53,6 +53,13 @@
 			
 			<div class="row">
 				
+				
+				
+				
+				
+				
+				
+				
 				<!---******Start gift card detail******--->
 				<br/><br/>
 								<div class="col-md-12">
@@ -67,7 +74,219 @@
 									        <div class="col-md-6">
 									            <div class="btn-toolbar">
 													<div class="btn-group btn-group-sm">
-									                    <a href="##" title="Create Batch" class="btn btn-primary" target="_self">Create Batch</a> 
+									                    <a href="##" title="Create Batch" class="btn btn-primary" data-toggle="modal" data-target="#j-pick-list-modal-fulfillments">Create Batch</a> 
+														<!-- Button trigger modal -->
+
+														<div id="j-pick-list-modal-fulfillments" class="modal fade in" aria-hidden="false">
+														    
+														        <div class="modal-dialog">
+														            <div class="modal-content">
+														                <div class="modal-header">
+														                    <a class="close" data-dismiss="modal">×</a>
+														                    <h3>Create Batch <span class="s-title-detail">(10 fulfillments selected)</span></h3>
+														                </div>
+														                <div class="modal-body s-visable">
+														                    
+													                        <div class="row">
+													                            <div class="col-md-12">
+													                                <div class="s-property form-horizontal">
+													                                    
+													                                    <div class="form-group">
+													                                        <label for="orderFulfillmentID" class="control-label col-sm-4">Batch Location <span class="s-label-desc">(optinal)</span></label>
+													                                        <div class="col-sm-8">
+																								
+																								<!--- Single Location Picker  --->
+																								<div class="s-select-list-wrapper s-search" id="j-single-location-view">
+																								    <div class="form-group">
+																								        <!-- Option select field wrapper -->
+																								        <div class="input-group">
+																								            <div class="s-input-btn">
+																												
+																												<!--- VIEW CHANGE: Location selected --->
+																								                <input id="searchinput" type="search" class="form-control" placeholder="All Locations" value="San Diego... Room 23" disabled title="San Diego > Encinitas Warehouse > 843 Moonlight > Room 23">
+																												<span class="glyphicon glyphicon-remove"></span>
+																												
+																												<!--- VIEW CHANGE: No location selected --->
+																												<!-- <input id="searchinput" type="search" class="form-control" placeholder="All Locations" value="" title="">
+																												<i class="fa fa-search"></i> -->
+																												
+																												<!--- Loading Icon if ajax request is required --->
+																								                <!--<i class="fa fa-refresh fa-spin"></i>-->
+																								            </div>
+																								            <div class="input-group-btn">
+																								                <button class="btn btn-sm btn-default" type="submit"><i class="fa fa-caret-down"></i></button>
+																								            </div>
+																								        </div>
+																								    </div>
+																									
+																								    <!-- Dropdown wrapper -->
+																								    <div class="dropdown s-search-results-wrapper" style="display: none;">
+																								        <ul class="dropdown-menu">
+																											<li class="s-index-0" data-group="las-angeles"><a href="##">Las Angeles</a></li>
+																								            <li class="s-index-1" data-group="las-angeles"><a href="##">Hollywood</a></li>
+																											<li class="s-index-1" data-group="las-angeles"><a href="##">Venice</a></li>
+																								            <li class="s-index-0" data-group="san-diego"><a href="##">San Diego</a></li>
+																								            <li class="s-index-1" data-group="san-diego"><a href="##">Encinitas Warehouse</a></li>
+																											<li class="s-index-2" data-group="san-diego"><a href="##">843 Moonlight</a></li>
+																											<li class="s-index-3" data-group="san-diego"><a href="##">Room 23</a></li>
+																											<li class="s-index-3" data-group="san-diego"><a href="##">Room 45</a></li>
+																											<li class="s-index-4" data-group="san-diego"><a href="##">Row 3 with really long title to show what it would do </a></li>
+																								            <li class="s-index-1" data-group="san-diego"><a href="##">Del Mar Warehouse</a></li>
+																								            <li class="s-index-1" data-group="san-diego"><a href="##">Carlsbad Warehouse</a></li>
+																											<li class="s-index-0" data-group="boston"><a href="##">Boston</a></li>
+																								        </ul>
+																								    </div>
+																									
+																								</div>
+																								
+																								<!--- Multi Location Picker  --->
+																								<div class="s-select-list-wrapper s-search ng-hide" id="j-multi-locaction-view">
+																								    <div class="form-group">
+																								        <!-- Option select field wrapper -->
+																								        <div class="input-group">
+																								            <div class="s-input-btn">
+																								                <input id="searchinput" type="search" class="form-control" placeholder="Add Location...">
+																								                <!-- <span class="glyphicon glyphicon-remove"></span> -->
+																												<i class="fa fa-search"></i>
+																								                <!--<i class="fa fa-refresh fa-spin"></i>--><!-- Loading Icon -->
+																								            </div>
+																								            <div class="input-group-btn">
+																								                <button class="btn btn-sm btn-default" type="submit"><i class="fa fa-caret-down"></i></button>
+																								            </div>
+																								        </div>
+																								    </div>
+																									
+																								    <!-- Dropdown wrapper -->
+																								    <div class="dropdown s-search-results-wrapper" style="display: none;">
+																								        <ul class="dropdown-menu">
+																											<li class="s-index-0" data-group="las-angeles"><a href="##">Las Angeles</a></li>
+																								            <li class="s-index-1" data-group="las-angeles"><a href="##">Hollywood</a></li>
+																											<li class="s-index-1" data-group="las-angeles"><a href="##">Venice</a></li>
+																								            <li class="s-index-0" data-group="san-diego"><a href="##">San Diego</a></li>
+																								            <li class="s-index-1" data-group="san-diego"><a href="##">Encinitas Warehouse</a></li>
+																											<li class="s-index-2" data-group="san-diego"><a href="##">843 Moonlight</a></li>
+																											<li class="s-index-3" data-group="san-diego"><a href="##">Room 23</a></li>
+																											<li class="s-index-3" data-group="san-diego"><a href="##">Room 45</a></li>
+																											<li class="s-index-4" data-group="san-diego"><a href="##">Row 3 with really long title to show what it would do </a></li>
+																								            <li class="s-index-1" data-group="san-diego"><a href="##">Del Mar Warehouse</a></li>
+																								            <li class="s-index-1" data-group="san-diego"><a href="##">Carlsbad Warehouse</a></li>
+																											<li class="s-index-0" data-group="boston"><a href="##">Boston</a></li>
+																								        </ul>
+																								    </div>
+																									
+																									<div class="s-selected-list">
+																								        <!-- Selected options wrapper -->
+																								        <div class="alert s-selected-item">
+																								            <!-- Example Item 2 -->
+																								            <button type="button" class="close"><span aria-hidden="true">×</span><span class="sr-only">Close</span></button>
+																								            Search Result Title 1
+																								        </div>
+																								        <div class="alert s-selected-item">
+																								            <!-- Example Item 2 -->
+																								            <button type="button" class="close"><span aria-hidden="true">×</span><span class="sr-only">Close</span></button>
+																								            Search Result Title 2
+																								        </div>
+																								    </div>
+																									
+																								</div>
+																								
+																									
+													                                        </div>
+																							
+													                                    </div>
+																						
+																						<div class="form-group ">
+													                                        <label for="orderFulfillmentID" class="control-label col-sm-4">Assign Batch <span class="s-label-desc">(optinal)</span></label>
+													                                        <div class="col-sm-8">
+																								
+																								<!--- Single Location Picker  --->
+																								<div class="s-select-list-wrapper s-search" id="j-single-location-view">
+																								    <div class="form-group">
+																								        <!-- Option select field wrapper -->
+																								        <div class="input-group">
+																								            <div class="s-input-btn">
+																												
+																												<!--- VIEW CHANGE: Location selected --->
+																								                <!-- <input id="searchinput" type="search" class="form-control" placeholder="Search..." value="James Bradshaw" disabled title="James Bradshaw - james.bradshaw@gmail.com">
+																												<span class="glyphicon glyphicon-remove"></span> -->
+																												
+																												<!--- VIEW CHANGE: No location selected --->
+																												<input id="searchinput" type="search" class="form-control" placeholder="Search..." value="" title="">
+																												<i class="fa fa-search"></i>
+																												
+																												<!--- Loading Icon if ajax request is required --->
+																								                <!--<i class="fa fa-refresh fa-spin"></i>-->
+																								            </div>
+																								            <div class="input-group-btn">
+																								                <button class="btn btn-sm btn-default" type="submit"><i class="fa fa-caret-down"></i></button>
+																								            </div>
+																								        </div>
+																								    </div>
+																									
+																								    <!-- Dropdown wrapper -->
+																								    <div class="dropdown s-search-results-wrapper" style="display: none;">
+																										<ul class="dropdown-menu" style="display: block;">
+								                                
+																											<!-- Item-->
+																											<li>
+																												<a>
+																													<div class="row">
+																														<div class="col-xs-2 s-photo">
+																															<img src="http://placehold.it/350x350">	
+																														</div>
+																														<div class="col-xs-10 s-info">
+																															<div class="s-name">Reyjay Solares</div>
+																															<div class="s-email">reinaldosolares@gmail.com</div>
+																														</div>
+																													</div>
+																												</a>
+																											</li>
+																											<!-- //Item-->
+																											<!-- Item-->
+																											<li>
+																												<a>
+																													<div class="row">
+																														<div class="col-xs-2 s-photo">
+																															<img src="http://placehold.it/350x350">	
+																														</div>
+																														<div class="col-xs-10 s-info">
+																															<div class="s-name">Reyjay Solares</div>
+																															<div class="s-email">reinaldosolares@gmail.com</div>
+																														</div>
+																													</div>
+																												</a>
+																											</li>
+																											<!-- //Item-->
+																											
+																			                            </ul>
+																								    </div>
+																									
+																								</div>
+																								
+													                                        </div>
+													                                    </div>
+																						
+																						<div class="form-group">
+													                                        <label class="control-label col-sm-4">Batch Description <span class="s-label-desc">(optinal)</span></label>
+													                                        <div class="col-sm-8">
+													                                            <textarea name="batchName" value="" placeholder="" class="form-control"></textarea>
+													                                        </div>
+													                                    </div>
+													                                    
+													                                </div>
+													                            </div>
+													                        </div>
+														                    
+														                </div>
+														                <div class="modal-footer">
+														                    <a href="#" class="btn btn-default s-remove" data-dismiss="modal"><span class="glyphicon glyphicon-remove icon-white"></span> Cancel</a>
+														                    <button class="# btn btn-success" title="Add">Add Batch</button> 
+														                </div>
+														            </div>
+														        </div>
+														    
+														</div>
+
 									                </div>
 									            </div>
 									        </div>
@@ -76,73 +295,217 @@
 
 									
 									
-									<div class="alert alert-danger alert-dismissible" role="alert">
+									<!-- <div class="alert alert-danger alert-dismissible" role="alert">
 										<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
 										<strong>Error!</strong> There was an error with the info you entered 
-									</div>
+									</div> -->
 									<div class="row s-detail-modules-wrapper">
-									    <div class="col-sm-6 col-md-6 col-lg-3 s-detail-module s-click">
+										
+										<div class="col-sm-6 col-md-6 col-lg-4 s-detail-module">
 									        
 											<!--Small content block-->
 									        <div class="s-sm-content-block">
-									            <div class="col-xs-1 col-sm-1 col-md-2 col-lg-3 s-icon">
-									                <i class="fa fa-dropbox"></i>
+												
+												<div class="dropdown s-action">
+													<a href="##" class="dropdown-toggle" id="changeThisLabel1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+														<i class="fa fa-ellipsis-h" title="actions"></i>
+													</a>
+													<ul class="dropdown-menu pull-right" aria-labelledby="changeThisLabel1">
+														<li>
+															<a href="##" id="j-toggle-location-1">Multi Location View</a>
+														</li>
+													</ul>
+												</div>
+												
+									            <div class="col-xs-1 col-sm-1 col-md-2 col-lg-2 s-icon">
+									                <i class="fa fa-building-o"></i>
 									            </div>
-												<div class="col-xs-11 col-sm-11 col-md-10 col-lg-9 s-content s-single-line">
-									                <div class="s-title">
-									                    Fulfillments <span class="s-number">(245)</span>
-									                </div>
-													<a href="##" class="s-link">Item View</a>
+									            <div class="col-xs-11 col-sm-11 col-md-10 col-lg-10 s-content">
+
+
+													<!--- Single Location Picker  --->
+													<div class="s-select-list-wrapper s-search" id="j-single-location-view-1">
+													    <div class="form-group">
+													        <!-- Option select field wrapper -->
+													        <div class="input-group">
+													            <div class="s-input-btn">
+																	
+																	<!--- VIEW CHANGE: Location selected --->
+													                <input id="searchinput" type="search" class="form-control" placeholder="All Locations" value="San Diego... Room 23" disabled title="San Diego > Encinitas Warehouse > 843 Moonlight > Room 23">
+																	<span class="glyphicon glyphicon-remove"></span>
+																	
+																	<!--- VIEW CHANGE: No location selected --->
+																	<!-- <input id="searchinput" type="search" class="form-control" placeholder="All Locations" value="" title="">
+																	<i class="fa fa-search"></i> -->
+																	
+																	<!--- Loading Icon if ajax request is required --->
+													                <!--<i class="fa fa-refresh fa-spin"></i>-->
+													            </div>
+													            <div class="input-group-btn">
+													                <button class="btn btn-sm btn-default" type="submit"><i class="fa fa-caret-down"></i></button>
+													            </div>
+													        </div>
+													    </div>
+														
+													    <!-- Dropdown wrapper -->
+													    <div class="dropdown s-search-results-wrapper" style="display: none;">
+													        <ul class="dropdown-menu">
+																<li class="s-index-0" data-group="las-angeles"><a href="##">Las Angeles</a></li>
+													            <li class="s-index-1" data-group="las-angeles"><a href="##">Hollywood</a></li>
+																<li class="s-index-1" data-group="las-angeles"><a href="##">Venice</a></li>
+													            <li class="s-index-0" data-group="san-diego"><a href="##">San Diego</a></li>
+													            <li class="s-index-1" data-group="san-diego"><a href="##">Encinitas Warehouse</a></li>
+																<li class="s-index-2" data-group="san-diego"><a href="##">843 Moonlight</a></li>
+																<li class="s-index-3" data-group="san-diego"><a href="##">Room 23</a></li>
+																<li class="s-index-3" data-group="san-diego"><a href="##">Room 45</a></li>
+																<li class="s-index-4" data-group="san-diego"><a href="##">Row 3 with really long title to show what it would do </a></li>
+													            <li class="s-index-1" data-group="san-diego"><a href="##">Del Mar Warehouse</a></li>
+													            <li class="s-index-1" data-group="san-diego"><a href="##">Carlsbad Warehouse</a></li>
+																<li class="s-index-0" data-group="boston"><a href="##">Boston</a></li>
+													        </ul>
+													    </div>
+														
+													</div>
+													
+													<!--- Multi Location Picker  --->
+													<div class="s-select-list-wrapper s-search ng-hide" id="j-multi-locaction-view-1">
+													    <div class="form-group">
+													        <!-- Option select field wrapper -->
+													        <div class="input-group">
+													            <div class="s-input-btn">
+													                <input id="searchinput" type="search" class="form-control" placeholder="Add Location...">
+													                <!-- <span class="glyphicon glyphicon-remove"></span> -->
+																	<i class="fa fa-search"></i>
+													                <!--<i class="fa fa-refresh fa-spin"></i>--><!-- Loading Icon -->
+													            </div>
+													            <div class="input-group-btn">
+													                <button class="btn btn-sm btn-default" type="submit"><i class="fa fa-caret-down"></i></button>
+													            </div>
+													        </div>
+													    </div>
+														
+													    <!-- Dropdown wrapper -->
+													    <div class="dropdown s-search-results-wrapper" style="display: none;">
+													        <ul class="dropdown-menu">
+																<li class="s-index-0" data-group="las-angeles"><a href="##">Las Angeles</a></li>
+													            <li class="s-index-1" data-group="las-angeles"><a href="##">Hollywood</a></li>
+																<li class="s-index-1" data-group="las-angeles"><a href="##">Venice</a></li>
+													            <li class="s-index-0" data-group="san-diego"><a href="##">San Diego</a></li>
+													            <li class="s-index-1" data-group="san-diego"><a href="##">Encinitas Warehouse</a></li>
+																<li class="s-index-2" data-group="san-diego"><a href="##">843 Moonlight</a></li>
+																<li class="s-index-3" data-group="san-diego"><a href="##">Room 23</a></li>
+																<li class="s-index-3" data-group="san-diego"><a href="##">Room 45</a></li>
+																<li class="s-index-4" data-group="san-diego"><a href="##">Row 3 with really long title to show what it would do </a></li>
+													            <li class="s-index-1" data-group="san-diego"><a href="##">Del Mar Warehouse</a></li>
+													            <li class="s-index-1" data-group="san-diego"><a href="##">Carlsbad Warehouse</a></li>
+																<li class="s-index-0" data-group="boston"><a href="##">Boston</a></li>
+													        </ul>
+													    </div>
+														
+														<div class="s-selected-list">
+													        <!-- Selected options wrapper -->
+													        <div class="alert s-selected-item" title="San Diego > Encinitas Warehouse > 843 Moonlight > Room 23">
+													            <!-- Example Item 2 -->
+													            <button type="button" class="close"><span aria-hidden="true">×</span><span class="sr-only">Close</span></button>
+													            San Diego... <strong>Room 23</strong>
+													        </div>
+															<div class="alert s-selected-item" title="San Diego > Encinitas Warehouse > 843 Moonlight > Room 48">
+													            <!-- Example Item 2 -->
+													            <button type="button" class="close"><span aria-hidden="true">×</span><span class="sr-only">Close</span></button>
+													            San Diego... <strong>Room 48</strong>
+													        </div>
+													    </div>
+														
+													</div>
+													
 									            </div>
 												
 									        </div>
+
+									    </div>
+										
+										<!--- ITEMS MODULE --->
+										<div class="col-sm-6 col-md-6 col-lg-2 s-detail-module">
+									        
+											<!--Small content block-->
+									        <div class="s-sm-content-block">
+												
+												<div class="dropdown s-action">
+													<a href="##" class="dropdown-toggle" id="changeThisLabel1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+														<i class="fa fa-ellipsis-h" title="actions"></i>
+													</a>
+													<ul class="dropdown-menu pull-right" aria-labelledby="changeThisLabel1">
+														<li>
+															<a href="##">Fulfillments View</a>
+														</li>
+													</ul>
+												</div>
+												
+									            <div class="col-xs-1 col-sm-1 col-md-2 col-lg-3 s-icon">
+									                <i class="fa fa-dropbox"></i>
+									            </div>
+									            <div class="col-xs-11 col-sm-11 col-md-10 col-lg-9 s-content s-single-line">
+									                <div class="s-title">
+									                    Fulfillments <span class="s-number">(16)</span>
+									                </div>
+									            </div>
+					
+									        </div>
 									        
 									    </div>
-									    <div class="col-sm-6 col-md-6 col-lg-3 s-detail-module s-md-content-block s-click">
+										
+										<!--- AVAILBALE MODULE --->
+									    <div class="col-sm-6 col-md-4 col-lg-2 s-detail-module s-md-content-block s-click">
 											
 											<!--Small content block-->
-									        <div class="s-sm-content-block s-status s-green">
-									            <div class="col-xs-1 col-sm-1 col-md-2 col-lg-3 s-icon">
-									                <i class="fa fa-circle"></i>
-									            </div>
-												<div class="col-xs-11 col-sm-11 col-md-10 col-lg-9 s-content s-single-line">
-									                <div class="s-title">
-									                    Available Fulfillments <span class="s-number">(143)</span>
-									                </div>
-									            </div>
-									        </div>
-											
-									    </div>
-									    <div class="col-sm-6 col-md-6 col-lg-3 s-detail-module s-md-content-block s-click">
-											
-											<!--Small content block-->
-									        <div class="s-sm-content-block s-status s-paused">
-									            <div class="col-xs-1 col-sm-1 col-md-2 col-lg-3 s-icon">
-									                <i class="fa fa-circle"></i>
-									            </div>
-												<div class="col-xs-11 col-sm-11 col-md-10 col-lg-9 s-content s-single-line">
-									                <div class="s-title">
-									                    Partial Fulfillments <span class="s-number">(32)</span>
-									                </div>
-									            </div>
-									        </div>
-											
-									    </div>
-									    <div class="col-sm-6 col-md-6 col-lg-3 s-detail-module s-md-content-block s-click">
-											
-											<!--Small content block-->
-									        <div class="s-sm-content-block s-status s-closed">
+									        <div class="s-sm-content-block s-status s-green s-selected">
+												
 									            <div class="col-xs-1 col-sm-1 col-md-2 col-lg-3 s-icon">
 									                <i class="fa fa-circle"></i>
 									            </div>
 									            <div class="col-xs-11 col-sm-11 col-md-10 col-lg-9 s-content s-single-line">
 									                <div class="s-title">
-									                    Unavailable Fulfillments <span class="s-number">(14)</span>
+									                    Available <span class="s-number">(10)</span>
 									                </div>
 									            </div>
 									        </div>
 											
 									    </div>
+										
+										<!--- PARTIAL MODULE --->
+									    <div class="col-sm-6 col-md-4 col-lg-2 s-detail-module s-md-content-block s-click">
+											
+											<!--Small content block-->
+									        <div class="s-sm-content-block s-status s-yellow s-selected">
+									            <div class="col-xs-1 col-sm-1 col-md-2 col-lg-3 s-icon">
+									                <i class="fa fa-circle"></i>
+									            </div>
+									            <div class="col-xs-11 col-sm-11 col-md-10 col-lg-9 s-content s-single-line">
+									                <div class="s-title">
+									                    Partial <span class="s-number">(3)</span>
+									                </div>
+									            </div>
+									        </div>
+											
+									    </div>
+										
+										<!--- UNAVAILABLE MODULE --->
+									    <div class="col-sm-6 col-md-4 col-lg-2 s-detail-module s-md-content-block s-click">
+											
+											<!--Small content block-->
+									        <div class="s-sm-content-block s-status s-red s-selected">
+									            <div class="col-xs-1 col-sm-1 col-md-2 col-lg-3 s-icon">
+									                <i class="fa fa-circle"></i>
+									            </div>
+									            <div class="col-xs-11 col-sm-11 col-md-10 col-lg-9 s-content s-single-line">
+									                <div class="s-title">
+									                    Unavailable <span class="s-number">(3)</span>
+									                </div>
+									            </div>
+									        </div>
+											
+									    </div>
+										
 									</div>
 									
 									<div class="row s-detail-content-wrapper">
@@ -150,33 +513,96 @@
 										<div class="col-xs-12">
 											<div class="s-detail-body">
 												<div class="s-content-header">
-													<h2>Fulfillments <span> (2) selected fulfillments</span></h2>
-													<div class="form-group s-default-search">
-														<input type="text" name="search" class="form-control" placeholder="Search">
-														<!-- <a href="##" class="s-search-action"><i class="fa fa-times"></i></a> -->
-														<span class="s-search-action"><i class="fa fa-search"></i></span>
-														<!-- <span class="s-search-action"><i class="fa fa-spinner fa-spin"></i></span> -->
-													</div>
+													<h2>Fulfillments</h2>
+													<span class="pull-right">
+														<a href="##" class="s-icon" title="Filters" data-toggle="collapse" data-target=".collapseFilters" aria-expanded="false" aria-controls="collapseFilters">
+															<i class="fa fa-filter"></i>
+															<!-- <span class="s-count">2</span> -->
+														</a>
+														<div class="form-group s-default-search">
+															<input type="text" name="search" class="form-control" placeholder="Search">
+															<span class="s-search-action"><i class="fa fa-search"></i></span>
+															<!-- <span class="s-search-action"><i class="fa fa-spinner fa-spin"></i></span> -->
+														</div>
+													</span>
 												</div>
-
-												<div class="table-responsive">
+												
+												<!-- <div class="collapse" id="collapseExample">
+														
+													<div class="s-content-header-dropdown">
+														<div class="s-header">
+															<h2>Add Filters</h2>
+															<span>Create custom filters for fulfillments</span>
+														</div>
+														
+													</div>
+									
+												</div> -->
+												
+												<div class="s-detail-notifications">
+													<span>All <b>4</b> fulfillments on this page are selected.</span> 
+													<a href="##">Select all <b>16</b> fulfillments</span></a>
+												</div>
+												
+												<div class="table-responsive"><!--- Add .s-loading class on table while data is loading --->
 												    <table class="table table-bordered s-detail-content-table">
 												        <thead>
 												            <tr>
 												                <th class="s-table-checkbox">
 																	<div class="s-checkbox">
-																		<input type="checkbox" id="exampleID" name="" value="" style="">
+																		<input type="checkbox" id="exampleID">
 																		<label for="exampleID"></label>
 																	</div>
 												                </th>
-												                <th>Order <i class="fa fa-sort"></i></th>
-												                <th>Date <i class="fa fa-sort"></i></th>
-																<th>Shipping <i class="fa fa-sort"></i></th>
-																<th>State <i class="fa fa-sort"></i></th>
-																<th>Inventory Status</th>
+												                <th>
+																	Order <i class="fa fa-sort"></i>
+																	<div class="form-group collapseFilters collapse">
+																		<input type="text" class="form-control input-sm" placeholder="Order Number...">
+																	</div>
+																</th>
+												                <th>
+																	Date <i class="fa fa-sort"></i>
+																	<div class="form-group collapseFilters collapse">
+																		<input type="text" class="form-control input-sm" placeholder="from">
+																	</div>
+																	<div class="form-group collapseFilters collapse">
+																		<input type="text" class="form-control input-sm" placeholder="to">
+																	</div>
+																</th>
+																<th class="s-number">Item Count</th>
+																<th>
+																	Shipping <i class="fa fa-sort"></i>
+																	<div class="form-group collapseFilters collapse">
+																		<select class="form-control input-sm" >
+																			<option value="" disabled="" selected="">-select-</option>
+																			<option value="option">Standard</option>
+																			<option value="option">One Day</option>
+																			<option value="option">Free Shipping</option>
+																			<option value="option">Over Night</option>
+																		</select>
+																	</div>
+																</th>
+																<th>
+																	State <i class="fa fa-sort"></i>
+																	<div class="form-group collapseFilters collapse">
+																		<input type="text" class="form-control input-sm" placeholder="State...">
+																	</div>
+																</th>
+																<th>
+																	Inventory Status
+																	<div class="form-group collapseFilters collapse">
+																		<select class="form-control input-sm" >
+																			<option value="" disabled="" selected="">-select-</option>
+																			<option value="option">Available</option>
+																			<option value="option">Partial</option>
+																			<option value="option">Unavailable</option>
+																		</select>
+																	</div>
+																</th>
 												            </tr>
 												        </thead>
 												        <tbody>
+															
 												            <tr>
 																<td class="s-table-checkbox">
 																	<div class="s-checkbox">
@@ -184,8 +610,9 @@
 																		<label for="exampleID"></label>
 																	</div>
 																</td>
-												                <td><a href="##">383745</a> </td>
+												                <td><a href="##">383750</a> </td>
 												                <td>11/2/15</td>
+																<td class="s-number">5</td>
 																<td>Overnight</td>
 																<td>California</td>
 																<td>
@@ -203,6 +630,7 @@
 																</td>
 												                <td><a href="##">383749</a> </td>
 												                <td>11/2/15</td>
+																<td class="s-number">2</td>
 																<td>Standard</td>
 																<td>Portland</td>
 																<td>
@@ -221,6 +649,25 @@
 																</td>
 												                <td><a href="##">383746</a> </td>
 												                <td>11/5/15</td>
+																<td class="s-number">3</td>
+																<td>Overnight</td>
+																<td>California</td>
+																<td>
+																	<span class="s-success">
+																		Available
+																	</span>
+																</td>
+												            </tr>
+															<tr>
+																<td class="s-table-checkbox">
+																	<div class="s-checkbox">
+																		<input type="checkbox" id="exampleID" name="" value="" style="">
+																		<label for="exampleID"></label>
+																	</div>
+																</td>
+												                <td><a href="##">383741</a> </td>
+												                <td>11/5/15</td>
+																<td class="s-number">6</td>
 																<td>Overnight</td>
 																<td>California</td>
 																<td>
@@ -234,241 +681,46 @@
 												</div>
 										
 											</div>
+											
+											<div class="s-pagination-wrapper">
+												<ul class="pagination">
+													<li><a href="#" class="paging-show-toggle">Show <span class="details">(1 - 10 of 2411)</span></a></li>
+													<li><a href="#" class="show-option" data-show="10" style="display: none;">10</a></li>
+													<li><a href="#" class="show-option" data-show="25" style="display: none;">25</a></li>
+													<li><a href="#" class="show-option" data-show="50" style="display: none;">50</a></li>
+													<li><a href="#" class="show-option" data-show="100" style="display: none;">100</a></li>
+													<li><a href="#" class="show-option" data-show="500" style="display: none;">500</a></li>
+													<li><a href="#" class="show-option" data-show="ALL" style="display: none;">ALL</a></li>
+													<li class="disabled"><a href="#" class="page-option prev">«</a></li>
+													<li class="active"><a href="#" class="listing-pager page-option" data-page="1">1</a></li>
+													<li><a href="#" class="listing-pager page-option" data-page="2">2</a></li>
+													<li><a href="#" class="listing-pager page-option" data-page="3">3</a></li>
+													<li><a href="#" class="listing-pager page-option" data-page="4">4</a></li>
+													<li><a href="#" class="listing-pager page-option" data-page="5">5</a></li>
+													<li><a href="#" class="listing-pager page-option" data-page="4">...</a></li>
+													<li><a href="#" class="listing-pager page-option" data-page="242">242</a></li>
+													<li><a href="#" class="listing-pager page-option next" data-page="2">»</a></li>
+												</ul>
+											</div>
+											
 										</div>
 									</div>
 									<br/>
 									<br/><br/><br/><br/><!--- remove these --->
+									
+									
 								</div>				
 				<!---////******End gift card detail******--->
 				
 				
-<!---******Start gift card detail******--->
-<br/><br/>
-				<div class="col-md-12">
-					
-					<div class="row s-body-nav">
-					    <nav class="navbar navbar-default" role="navigation">
-					        <div class="col-md-6 s-header-info">
-					            <ul class="list-unstyled list-inline">
-					            </ul>
-					            <h1 class="actionbar-title">Fulfillments Listing </h1>
-					        </div>
-					        <div class="col-md-6">
-					            <div class="btn-toolbar">									
-									<div class="btn-group btn-group-sm">
-					                    <a href="##" title="Create Batch" class="btn btn-primary" target="_self">Create Batch</a> 
-					                </div>
-					            </div>
-					        </div>
-					    </nav>
-					</div>
-
-					
-					
-					<!-- <div class="alert alert-success alert-dismissible" role="alert">
-						<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-						<strong>Success!</strong> Your file has been saved
-					</div> -->
-					<div class="row s-detail-modules-wrapper">
-					    <div class="col-sm-6 col-md-6 col-lg-3 s-detail-module s-click">
-					        
-							<!--Small content block-->
-					        <div class="s-sm-content-block">
-					            <div class="col-xs-1 col-sm-1 col-md-2 col-lg-3 s-icon">
-					                <i class="fa fa-dropbox"></i>
-					            </div>
-								<div class="col-xs-11 col-sm-11 col-md-10 col-lg-9 s-content s-single-line">
-					                <div class="s-title">
-					                    Fulfillments <span class="s-number">(245)</span>
-					                </div>
-									<a href="##" class="s-link">Item View</a>
-					            </div>
-								
-					        </div>
-					        
-					    </div>
-					    <div class="col-sm-6 col-md-6 col-lg-3 s-detail-module s-md-content-block s-click">
-							
-							<!--Small content block-->
-					        <div class="s-sm-content-block s-status s-green">
-					            <div class="col-xs-1 col-sm-1 col-md-2 col-lg-3 s-icon">
-					                <i class="fa fa-circle"></i>
-					            </div>
-								<div class="col-xs-11 col-sm-11 col-md-10 col-lg-9 s-content s-single-line">
-					                <div class="s-title">
-					                    Available Fulfillments <span class="s-number">(143)</span>
-					                </div>
-					            </div>
-					        </div>
-							
-					    </div>
-					    <div class="col-sm-6 col-md-6 col-lg-3 s-detail-module s-md-content-block s-click">
-							
-							<!--Small content block-->
-					        <div class="s-sm-content-block s-status s-paused">
-					            <div class="col-xs-1 col-sm-1 col-md-2 col-lg-3 s-icon">
-					                <i class="fa fa-circle"></i>
-					            </div>
-								<div class="col-xs-11 col-sm-11 col-md-10 col-lg-9 s-content s-single-line">
-					                <div class="s-title">
-					                    Partial Fulfillments <span class="s-number">(32)</span>
-					                </div>
-					            </div>
-					        </div>
-							
-					    </div>
-					    <div class="col-sm-6 col-md-6 col-lg-3 s-detail-module s-md-content-block s-click">
-							
-							<!--Small content block-->
-					        <div class="s-sm-content-block s-status s-closed">
-					            <div class="col-xs-1 col-sm-1 col-md-2 col-lg-3 s-icon">
-					                <i class="fa fa-circle"></i>
-					            </div>
-					            <div class="col-xs-11 col-sm-11 col-md-10 col-lg-9 s-content s-single-line">
-					                <div class="s-title">
-					                    Unavailable Fulfillments <span class="s-number">(14)</span>
-					                </div>
-					            </div>
-					        </div>
-							
-					    </div>
-					</div>
-					
-					<div class="row s-detail-content-wrapper">
-						
-						<div class="col-xs-12">
-							<div class="s-detail-body">
-								<div class="s-content-header">
-									<h2>Fulfillments <span> (2) selected fulfillments</span></h2>
-									<div class="form-group s-default-search">
-										<input type="text" name="search" class="form-control" placeholder="Search">
-										<!-- <a href="##" class="s-search-action"><i class="fa fa-times"></i></a> -->
-										<span class="s-search-action"><i class="fa fa-search"></i></span>
-										<!-- <span class="s-search-action"><i class="fa fa-spinner fa-spin"></i></span> -->
-									</div>
-								</div>
-
-								<div class="table-responsive">
-								    <table class="table table-bordered s-detail-content-table">
-								        <thead>
-								            <tr>
-								                <th class="s-table-checkbox">
-													<div class="s-checkbox">
-														<input type="checkbox" id="exampleID" name="" value="" style="">
-														<label for="exampleID"></label>
-													</div>
-								                </th>
-								                <th>Order <i class="fa fa-sort"></i></th>
-								                <th>Date <i class="fa fa-sort"></i></th>
-								                <th>Products</th>
-												<th>Shipping <i class="fa fa-sort"></i></th>
-												<th>State <i class="fa fa-sort"></i></th>
-												<th>Inventory Status</th>
-								            </tr>
-								        </thead>
-								        <tbody>
-								            <tr>
-												<td class="s-table-checkbox">
-													<div class="s-checkbox">
-														<input type="checkbox" id="exampleID" name="" value="" style="">
-														<label for="exampleID"></label>
-													</div>
-												</td>
-								                <td><a href="##">383745</a> </td>
-								                <td>11/2/15</td>
-								                <td class="s-inner-table">														
-													<table class="table">
-														<tr class="s-unavailable">
-															<td class="s-title">
-																<a href="##">Skateboard Deck</a>
-															</td>
-														</tr>
-														<tr class="s-complete">
-															<td class="s-title">
-																<a href="##">Skateboard Trucks</a>
-															</td>
-														</tr>
-													</table>
-								                </td>
-												<td>Overnight</td>
-												<td>California</td>
-												<td>
-													<span class="s-warning">
-														Partial
-													</span>
-												</td>
-								            </tr>
-											<tr>
-												<td class="s-table-checkbox">
-													<div class="s-checkbox">
-														<input type="checkbox" id="exampleID" name="" value="" style="">
-														<label for="exampleID"></label>
-													</div>
-												</td>
-								                <td><a href="##">383749</a> </td>
-								                <td>11/2/15</td>
-												<td class="s-inner-table">														
-													<table class="table">
-														<tr class="s-unavailable">
-															<td class="s-title">
-																<a href="##">Skateboard Deck</a>
-															</td>
-														</tr>
-													</table>
-								                </td>
-												<td>Standard</td>
-												<td>Portland</td>
-												<td>
-													<span class="s-danger">
-														Unavailable
-													</span>
-												</td>
-								            </tr>
-											
-											<tr>
-												<td class="s-table-checkbox">
-													<div class="s-checkbox">
-														<input type="checkbox" id="exampleID" name="" value="" style="">
-														<label for="exampleID"></label>
-													</div>
-												</td>
-								                <td><a href="##">383746</a> </td>
-								                <td>11/5/15</td>
-												<td class="s-inner-table">														
-													<table class="table">
-														<tr>
-															<td class="s-title">
-																<a href="##">Skateboard Trucks</a>
-															</td>
-														</tr>
-														<tr>
-															<td class="s-title">
-																<a href="##">Skateboard wheels</a>
-															</td>
-														</tr>
-													</table>
-								                </td>
-												<td>Overnight</td>
-												<td>California</td>
-												<td>
-													<span class="s-success">
-														Available
-													</span>
-												</td>
-								            </tr>
-								        </tbody>
-								    </table>
-								</div>
-						
-							</div>
-						</div>
-					</div>
-					<br/>
-					<br/><br/><br/><br/><!--- remove these --->
-				</div>				
-<!---////******End gift card detail******--->
-
-
+				
+				
+				
+				
+				
+				
+				
+				
 <!---******Start gift card detail******--->
 <br/><br/>
 				<div class="col-md-12">
@@ -505,31 +757,33 @@
 									                                <div class="s-property form-horizontal">
 									                                    
 									                                    <div class="form-group">
-									                                        <label class="control-label col-sm-4">Batch Name</label>
-									                                        <div class="col-sm-8">
-									                                            <input type="text" name="batchName" value="November 22 Batch" class="form-control">
-									                                        </div>
-									                                    </div>
-									                                    
-									                                    <div class="form-group ">
-									                                        <label for="orderFulfillmentID" class="control-label col-sm-4">Batch Location</label>
+									                                        <label for="orderFulfillmentID" class="control-label col-sm-4">Batch Location <span class="s-label-desc">(optinal)</span></label>
 									                                        <div class="col-sm-8">
 																				
-																				<div class="s-select-list-wrapper s-search">
+																				<!--- Single Location Picker  --->
+																				<div class="s-select-list-wrapper s-search" id="j-single-location-view">
 																				    <div class="form-group">
 																				        <!-- Option select field wrapper -->
 																				        <div class="input-group">
 																				            <div class="s-input-btn">
-																				                <input id="searchinput" type="search" class="form-control" placeholder="All Locations">
-																				                <!-- <span class="glyphicon glyphicon-remove"></span> -->
-																								<i class="fa fa-search"></i><!--- Search function --->
-																				                <!--<i class="fa fa-refresh fa-spin"></i>--><!-- Loading Icon -->
+																								
+																								<!--- VIEW CHANGE: Location selected --->
+																				                <input id="searchinput" type="search" class="form-control" placeholder="All Locations" value="San Diego... Room 23" disabled title="San Diego > Encinitas Warehouse > 843 Moonlight > Room 23">
+																								<span class="glyphicon glyphicon-remove"></span>
+																								
+																								<!--- VIEW CHANGE: No location selected --->
+																								<!-- <input id="searchinput" type="search" class="form-control" placeholder="All Locations" value="" title="">
+																								<i class="fa fa-search"></i> -->
+																								
+																								<!--- Loading Icon if ajax request is required --->
+																				                <!--<i class="fa fa-refresh fa-spin"></i>-->
 																				            </div>
 																				            <div class="input-group-btn">
 																				                <button class="btn btn-sm btn-default" type="submit"><i class="fa fa-caret-down"></i></button>
 																				            </div>
 																				        </div>
 																				    </div>
+																					
 																				    <!-- Dropdown wrapper -->
 																				    <div class="dropdown s-search-results-wrapper" style="display: none;">
 																				        <ul class="dropdown-menu">
@@ -547,23 +801,18 @@
 																							<li class="s-index-0" data-group="boston"><a href="##">Boston</a></li>
 																				        </ul>
 																				    </div>
+																					
 																				</div>
 																				
-									                                        </div>
-									                                    </div>
-																		
-																		<div class="form-group ">
-									                                        <label for="orderFulfillmentID" class="control-label col-sm-4">Assign Batch</label>
-									                                        <div class="col-sm-8">
-																				
-																				<div class="s-select-list-wrapper s-search">
+																				<!--- Multi Location Picker  --->
+																				<div class="s-select-list-wrapper s-search ng-hide" id="j-multi-locaction-view">
 																				    <div class="form-group">
 																				        <!-- Option select field wrapper -->
 																				        <div class="input-group">
 																				            <div class="s-input-btn">
-																				                <input id="searchinput" type="search" class="form-control" placeholder="Search User">
+																				                <input id="searchinput" type="search" class="form-control" placeholder="Add Location...">
 																				                <!-- <span class="glyphicon glyphicon-remove"></span> -->
-																								<i class="fa fa-search"></i><!--- Search function --->
+																								<i class="fa fa-search"></i>
 																				                <!--<i class="fa fa-refresh fa-spin"></i>--><!-- Loading Icon -->
 																				            </div>
 																				            <div class="input-group-btn">
@@ -575,13 +824,117 @@
 																				    <!-- Dropdown wrapper -->
 																				    <div class="dropdown s-search-results-wrapper" style="display: none;">
 																				        <ul class="dropdown-menu">
-																							<li data-group="las-angeles"><a href="##">Reyjay solares</a></li>
-																							<li data-group="las-angeles"><a href="##">Reyjay solares</a></li>
-																							
+																							<li class="s-index-0" data-group="las-angeles"><a href="##">Las Angeles</a></li>
+																				            <li class="s-index-1" data-group="las-angeles"><a href="##">Hollywood</a></li>
+																							<li class="s-index-1" data-group="las-angeles"><a href="##">Venice</a></li>
+																				            <li class="s-index-0" data-group="san-diego"><a href="##">San Diego</a></li>
+																				            <li class="s-index-1" data-group="san-diego"><a href="##">Encinitas Warehouse</a></li>
+																							<li class="s-index-2" data-group="san-diego"><a href="##">843 Moonlight</a></li>
+																							<li class="s-index-3" data-group="san-diego"><a href="##">Room 23</a></li>
+																							<li class="s-index-3" data-group="san-diego"><a href="##">Room 45</a></li>
+																							<li class="s-index-4" data-group="san-diego"><a href="##">Row 3 with really long title to show what it would do </a></li>
+																				            <li class="s-index-1" data-group="san-diego"><a href="##">Del Mar Warehouse</a></li>
+																				            <li class="s-index-1" data-group="san-diego"><a href="##">Carlsbad Warehouse</a></li>
+																							<li class="s-index-0" data-group="boston"><a href="##">Boston</a></li>
 																				        </ul>
 																				    </div>
+																					
+																					<div class="s-selected-list">
+																				        <!-- Selected options wrapper -->
+																				        <div class="alert s-selected-item">
+																				            <!-- Example Item 2 -->
+																				            <button type="button" class="close"><span aria-hidden="true">×</span><span class="sr-only">Close</span></button>
+																				            Search Result Title 1
+																				        </div>
+																				        <div class="alert s-selected-item">
+																				            <!-- Example Item 2 -->
+																				            <button type="button" class="close"><span aria-hidden="true">×</span><span class="sr-only">Close</span></button>
+																				            Search Result Title 2
+																				        </div>
+																				    </div>
+																					
 																				</div>
 																				
+																					
+									                                        </div>
+																			
+									                                    </div>
+																		
+																		<div class="form-group ">
+									                                        <label for="orderFulfillmentID" class="control-label col-sm-4">Assign Batch <span class="s-label-desc">(optinal)</span></label>
+									                                        <div class="col-sm-8">
+																				
+																				<!--- Single Location Picker  --->
+																				<div class="s-select-list-wrapper s-search" id="j-single-location-view">
+																				    <div class="form-group">
+																				        <!-- Option select field wrapper -->
+																				        <div class="input-group">
+																				            <div class="s-input-btn">
+																								
+																								<!--- VIEW CHANGE: Location selected --->
+																				                <!-- <input id="searchinput" type="search" class="form-control" placeholder="Search..." value="James Bradshaw" disabled title="James Bradshaw - james.bradshaw@gmail.com">
+																								<span class="glyphicon glyphicon-remove"></span> -->
+																								
+																								<!--- VIEW CHANGE: No location selected --->
+																								<input id="searchinput" type="search" class="form-control" placeholder="Search..." value="" title="">
+																								<i class="fa fa-search"></i>
+																								
+																								<!--- Loading Icon if ajax request is required --->
+																				                <!--<i class="fa fa-refresh fa-spin"></i>-->
+																				            </div>
+																				            <div class="input-group-btn">
+																				                <button class="btn btn-sm btn-default" type="submit"><i class="fa fa-caret-down"></i></button>
+																				            </div>
+																				        </div>
+																				    </div>
+																					
+																				    <!-- Dropdown wrapper -->
+																				    <div class="dropdown s-search-results-wrapper" style="display: none;">
+																						<ul class="dropdown-menu" style="display: block;">
+				                                
+																							<!-- Item-->
+																							<li>
+																								<a>
+																									<div class="row">
+																										<div class="col-xs-2 s-photo">
+																											<img src="http://placehold.it/350x350">	
+																										</div>
+																										<div class="col-xs-10 s-info">
+																											<div class="s-name">Reyjay Solares</div>
+																											<div class="s-email">reinaldosolares@gmail.com</div>
+																										</div>
+																									</div>
+																								</a>
+																							</li>
+																							<!-- //Item-->
+																							<!-- Item-->
+																							<li>
+																								<a>
+																									<div class="row">
+																										<div class="col-xs-2 s-photo">
+																											<img src="http://placehold.it/350x350">	
+																										</div>
+																										<div class="col-xs-10 s-info">
+																											<div class="s-name">Reyjay Solares</div>
+																											<div class="s-email">reinaldosolares@gmail.com</div>
+																										</div>
+																									</div>
+																								</a>
+																							</li>
+																							<!-- //Item-->
+																							
+															                            </ul>
+																				    </div>
+																					
+																				</div>
+																				
+									                                        </div>
+									                                    </div>
+																		
+																		<div class="form-group">
+									                                        <label class="control-label col-sm-4">Batch Description <span class="s-label-desc">(optinal)</span></label>
+									                                        <div class="col-sm-8">
+									                                            <textarea name="batchName" value="" placeholder="" class="form-control"></textarea>
 									                                        </div>
 									                                    </div>
 									                                    
@@ -598,13 +951,6 @@
 										        </div>
 										    
 										</div>
-
-
-
-
-
-
-
 
 					                </div>
 					            </div>
@@ -624,33 +970,48 @@
 					        
 							<!--Small content block-->
 					        <div class="s-sm-content-block">
-					            <div class="col-xs-1 col-sm-1 col-md-2 col-lg-3 s-icon">
+								
+								<div class="dropdown s-action">
+									<a href="##" class="dropdown-toggle" id="changeThisLabel1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+										<i class="fa fa-ellipsis-h" title="actions"></i>
+									</a>
+									<ul class="dropdown-menu pull-right" aria-labelledby="changeThisLabel1">
+										<li>
+											<a href="##" id="j-toggle-location-1">Multi Location View</a>
+										</li>
+									</ul>
+								</div>
+								
+					            <div class="col-xs-1 col-sm-1 col-md-2 col-lg-2 s-icon">
 					                <i class="fa fa-building-o"></i>
 					            </div>
-					            <div class="col-xs-11 col-sm-11 col-md-10 col-lg-9 s-content">
-									<!-- <select name="" class="form-group">
-										<option value="">All Locations</option>
-										<option value="">California Warehouse</option>
-										<option value="">Boston Warehouse</option>
-									</select> -->
-									
-									
-									
-									<div class="s-select-list-wrapper s-search">
+					            <div class="col-xs-11 col-sm-11 col-md-10 col-lg-10 s-content">
+
+
+									<!--- Single Location Picker  --->
+									<div class="s-select-list-wrapper s-search" id="j-single-location-view-1">
 									    <div class="form-group">
 									        <!-- Option select field wrapper -->
 									        <div class="input-group">
 									            <div class="s-input-btn">
-									                <input id="searchinput" type="search" class="form-control" placeholder="All Locations">
-									                <!-- <span class="glyphicon glyphicon-remove"></span> -->
-													<i class="fa fa-search"></i><!--- Search function --->
-									                <!--<i class="fa fa-refresh fa-spin"></i>--><!-- Loading Icon -->
+													
+													<!--- VIEW CHANGE: Location selected --->
+									                <input id="searchinput" type="search" class="form-control" placeholder="All Locations" value="San Diego... Room 23" disabled title="San Diego > Encinitas Warehouse > 843 Moonlight > Room 23">
+													<span class="glyphicon glyphicon-remove"></span>
+													
+													<!--- VIEW CHANGE: No location selected --->
+													<!-- <input id="searchinput" type="search" class="form-control" placeholder="All Locations" value="" title="">
+													<i class="fa fa-search"></i> -->
+													
+													<!--- Loading Icon if ajax request is required --->
+									                <!--<i class="fa fa-refresh fa-spin"></i>-->
 									            </div>
 									            <div class="input-group-btn">
 									                <button class="btn btn-sm btn-default" type="submit"><i class="fa fa-caret-down"></i></button>
 									            </div>
 									        </div>
 									    </div>
+										
 									    <!-- Dropdown wrapper -->
 									    <div class="dropdown s-search-results-wrapper" style="display: none;">
 									        <ul class="dropdown-menu">
@@ -671,63 +1032,70 @@
 										
 									</div>
 									
-									<style>
-										.s-search-results-wrapper .dropdown-menu li {
-											position: relative;
-										}
-										.s-search-results-wrapper .dropdown-menu .s-index-0 a {
-											color: #000;
-										}
-										.s-search-results-wrapper .dropdown-menu .s-index-1 a {
-											padding-left: 27px;
-										}
-										.s-search-results-wrapper .dropdown-menu .s-index-1:before {
-											content: "-";
-											position: absolute;
-											top: 2px;
-											color: #ccc;
-											left: 15px;
-											font-size: 18px;
-											letter-spacing: 2px;
-										}
-										.s-search-results-wrapper .dropdown-menu .s-index-2 a {
-											padding-left: 34px;
-										}
-										.s-search-results-wrapper .dropdown-menu .s-index-2:before {
-											content: "--";
-											position: absolute;
-											top: 2px;
-											color: #ccc;
-											left: 15px;
-											font-size: 18px;
-											letter-spacing: 2px;
-										}
-										.s-search-results-wrapper .dropdown-menu .s-index-3 a {
-											padding-left: 41px;
-										}
-										.s-search-results-wrapper .dropdown-menu .s-index-3:before {
-											content: "---";
-											position: absolute;
-											top: 2px;
-											color: #ccc;
-											left: 15px;
-											font-size: 18px;
-											letter-spacing: 2px;
-										}
-										.s-search-results-wrapper .dropdown-menu .s-index-4 a {
-											padding-left: 48px;
-										}
-										.s-search-results-wrapper .dropdown-menu .s-index-4:before {
-											content: "----";
-											position: absolute;
-											top: 2px;
-											color: #ccc;
-											left: 15px;
-											font-size: 18px;
-											letter-spacing: 2px;
-										}
-									</style>
+									<!--- Multi Location Picker  --->
+									<div class="s-select-list-wrapper s-search ng-hide" id="j-multi-locaction-view-1">
+									    <div class="form-group">
+									        <!-- Option select field wrapper -->
+									        <div class="input-group">
+									            <div class="s-input-btn">
+									                <input id="searchinput" type="search" class="form-control" placeholder="Add Location...">
+									                <!-- <span class="glyphicon glyphicon-remove"></span> -->
+													<i class="fa fa-search"></i>
+									                <!--<i class="fa fa-refresh fa-spin"></i>--><!-- Loading Icon -->
+									            </div>
+									            <div class="input-group-btn">
+									                <button class="btn btn-sm btn-default" type="submit"><i class="fa fa-caret-down"></i></button>
+									            </div>
+									        </div>
+									    </div>
+										
+									    <!-- Dropdown wrapper -->
+									    <div class="dropdown s-search-results-wrapper" style="display: none;">
+									        <ul class="dropdown-menu">
+												<li class="s-index-0" data-group="las-angeles"><a href="##">Las Angeles</a></li>
+									            <li class="s-index-1" data-group="las-angeles"><a href="##">Hollywood</a></li>
+												<li class="s-index-1" data-group="las-angeles"><a href="##">Venice</a></li>
+									            <li class="s-index-0" data-group="san-diego"><a href="##">San Diego</a></li>
+									            <li class="s-index-1" data-group="san-diego"><a href="##">Encinitas Warehouse</a></li>
+												<li class="s-index-2" data-group="san-diego"><a href="##">843 Moonlight</a></li>
+												<li class="s-index-3" data-group="san-diego"><a href="##">Room 23</a></li>
+												<li class="s-index-3" data-group="san-diego"><a href="##">Room 45</a></li>
+												<li class="s-index-4" data-group="san-diego"><a href="##">Row 3 with really long title to show what it would do </a></li>
+									            <li class="s-index-1" data-group="san-diego"><a href="##">Del Mar Warehouse</a></li>
+									            <li class="s-index-1" data-group="san-diego"><a href="##">Carlsbad Warehouse</a></li>
+												<li class="s-index-0" data-group="boston"><a href="##">Boston</a></li>
+									        </ul>
+									    </div>
+										
+										<div class="s-selected-list">
+									        <!-- Selected options wrapper -->
+									        <div class="alert s-selected-item" title="San Diego > Encinitas Warehouse > 843 Moonlight > Room 23">
+									            <!-- Example Item 2 -->
+									            <button type="button" class="close"><span aria-hidden="true">×</span><span class="sr-only">Close</span></button>
+									            San Diego... <strong>Room 23</strong>
+									        </div>
+											<div class="alert s-selected-item" title="San Diego > Encinitas Warehouse > 843 Moonlight > Room 48">
+									            <!-- Example Item 2 -->
+									            <button type="button" class="close"><span aria-hidden="true">×</span><span class="sr-only">Close</span></button>
+									            San Diego... <strong>Room 48</strong>
+									        </div>
+									    </div>
+										
+									</div>
+									
+									<!--- !!!This script is only used for temp use and should be removed in production site --->
+									<script>
+										(function(){
+											$('#j-toggle-location-1').click(function(){
+												$('#j-single-location-view-1').toggleClass('ng-hide');
+												$('#j-multi-locaction-view-1').toggleClass('ng-hide');
+											});
+										}())
+									</script>
+									
+
 					            </div>
+								
 					        </div>
 
 					    </div>
@@ -737,6 +1105,18 @@
 					        
 							<!--Small content block-->
 					        <div class="s-sm-content-block">
+								
+								<div class="dropdown s-action">
+									<a href="##" class="dropdown-toggle" id="changeThisLabel1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+										<i class="fa fa-ellipsis-h" title="actions"></i>
+									</a>
+									<ul class="dropdown-menu pull-right" aria-labelledby="changeThisLabel1">
+										<li>
+											<a href="##">Fulfillments View</a>
+										</li>
+									</ul>
+								</div>
+								
 					            <div class="col-xs-1 col-sm-1 col-md-2 col-lg-3 s-icon">
 					                <i class="fa fa-dropbox"></i>
 					            </div>
@@ -744,17 +1124,18 @@
 					                <div class="s-title">
 					                    Items <span class="s-number">(245)</span>
 					                </div>
-									<a href="##" class="s-link">Fulfillments View</a>
 					            </div>
+	
 					        </div>
 					        
 					    </div>
 						
 						<!--- AVAILBALE MODULE --->
-					    <div class="col-sm-6 col-md-6 col-lg-2 s-detail-module s-md-content-block s-click">
+					    <div class="col-sm-6 col-md-4 col-lg-2 s-detail-module s-md-content-block s-click">
 							
 							<!--Small content block-->
 					        <div class="s-sm-content-block s-status s-green s-selected">
+								
 					            <div class="col-xs-1 col-sm-1 col-md-2 col-lg-3 s-icon">
 					                <i class="fa fa-circle"></i>
 					            </div>
@@ -768,7 +1149,7 @@
 					    </div>
 						
 						<!--- PARTIAL MODULE --->
-					    <div class="col-sm-6 col-md-6 col-lg-2 s-detail-module s-md-content-block s-click s-clear-right">
+					    <div class="col-sm-6 col-md-4 col-lg-2 s-detail-module s-md-content-block s-click">
 							
 							<!--Small content block-->
 					        <div class="s-sm-content-block s-status s-yellow s-selected">
@@ -785,7 +1166,7 @@
 					    </div>
 						
 						<!--- UNAVAILABLE MODULE --->
-					    <div class="col-sm-6 col-md-6 col-lg-2 s-detail-module s-md-content-block s-click s-clear-left">
+					    <div class="col-sm-6 col-md-4 col-lg-2 s-detail-module s-md-content-block s-click">
 							
 							<!--Small content block-->
 					        <div class="s-sm-content-block s-status s-red s-selected">
@@ -809,13 +1190,31 @@
 							<div class="s-detail-body">
 								<div class="s-content-header">
 									<h2>Items</h2>
-									<div class="form-group s-default-search">
-										<input type="text" name="search" class="form-control" placeholder="Search">
-										<!-- <a href="##" class="s-search-action"><i class="fa fa-times"></i></a> -->
-										<span class="s-search-action"><i class="fa fa-search"></i></span>
-										<!-- <span class="s-search-action"><i class="fa fa-spinner fa-spin"></i></span> -->
-									</div>
+									<span class="pull-right">
+										<a href="##" class="s-icon" title="Filters" data-toggle="collapse" data-target=".collapseFilters" aria-expanded="false" aria-controls="collapseFilters">
+											<i class="fa fa-filter"></i>
+											<!-- <span class="s-count">2</span> -->
+										</a>
+										<div class="form-group s-default-search">
+											<input type="text" name="search" class="form-control" placeholder="Search">
+											<span class="s-search-action"><i class="fa fa-search"></i></span>
+											<!-- <span class="s-search-action"><i class="fa fa-spinner fa-spin"></i></span> -->
+										</div>
+									</span>
 								</div>
+								
+								<!-- <div class="collapse" id="collapseExample">
+										
+									<div class="s-content-header-dropdown">
+										<div class="s-header">
+											<h2>Add Filters</h2>
+											<span>Create custom filters for fulfillments</span>
+										</div>
+										
+									</div>
+					
+								</div> -->
+								
 								<div class="s-detail-notifications">
 									<span>All <b>50</b> items on this page are selected.</span> 
 									<a href="##">Select all <b>5,720</b> items</span></a>
@@ -831,18 +1230,66 @@
 														<label for="exampleID"></label>
 													</div>
 								                </th>
-								                <th>Order <i class="fa fa-sort"></i></th>
-								                <th>Date <i class="fa fa-sort"></i></th>
-								                <th>Products</th>
+								                <th>
+													Order <i class="fa fa-sort"></i>
+													<div class="form-group collapseFilters collapse">
+														<input type="text" class="form-control input-sm" placeholder="Order Number...">
+													</div>
+												</th>
+								                <th>
+													Date <i class="fa fa-sort"></i>
+													<div class="form-group collapseFilters collapse">
+														<input type="text" class="form-control input-sm" placeholder="from">
+													</div>
+													<div class="form-group collapseFilters collapse">
+														<input type="text" class="form-control input-sm" placeholder="to">
+													</div>
+												</th>
+								                <th>
+													Products
+													<div class="form-group collapseFilters collapse">
+														<input type="text" class="form-control input-sm" placeholder="Product Name...">
+													</div>
+												</th>
 												<th>Qty</th>
 												<th>Qty UNFUL</th>
 												<th>Qty AVL</th>
-												<th>Shipping <i class="fa fa-sort"></i></th>
-												<th>State <i class="fa fa-sort"></i></th>
-												<th>Inventory Status</th>
+												<th>
+													Shipping <i class="fa fa-sort"></i>
+													<div class="form-group collapseFilters collapse">
+														<select class="form-control input-sm" >
+															<option value="" disabled="" selected="">-select-</option>
+															<option value="option">Standard</option>
+															<option value="option">One Day</option>
+															<option value="option">Free Shipping</option>
+															<option value="option">Over Night</option>
+														</select>
+													</div>
+												</th>
+												<th>
+													State <i class="fa fa-sort"></i>
+													<div class="form-group collapseFilters collapse">
+														<input type="text" class="form-control input-sm" placeholder="State...">
+													</div>
+												</th>
+												<th>
+													Inventory Status
+													<div class="form-group collapseFilters collapse">
+														<select class="form-control input-sm" >
+															<option value="" disabled="" selected="">-select-</option>
+															<option value="option">Available</option>
+															<option value="option">Partial</option>
+															<option value="option">Unavailable</option>
+														</select>
+													</div>
+												</th>
 								            </tr>
 								        </thead>
+										
+								            
+								        
 								        <tbody>
+											
 								            <tr>
 												<td class="s-table-checkbox">
 													<div class="s-checkbox">
@@ -861,14 +1308,14 @@
 														</tr>
 													</table>
 								                </td>
-												<td class="s-align-right">2</td>
-												<td class="s-align-right">1</td>
-												<td class="s-align-right">0</td>
+												<td class="s-number">2</td>
+												<td class="s-number">1</td>
+												<td class="s-number">0</td>
 												<td>Overnight</td>
 												<td>California</td>
 												<td>
-													<span class="s-warning">
-														Partial
+													<span class="s-danger">
+														Unavailable
 													</span>
 												</td>
 								            </tr>
@@ -890,9 +1337,9 @@
 														</tr>
 													</table>
 								                </td>
-												<td class="s-align-right">5</td>
-												<td class="s-align-right">5</td>
-												<td class="s-align-right">0</td>
+												<td class="s-number">5</td>
+												<td class="s-number">5</td>
+												<td class="s-number">0</td>
 												<td>Standard</td>
 												<td>Portland</td>
 												<td>
@@ -920,9 +1367,9 @@
 														</tr>
 													</table>
 								                </td>
-												<td class="s-align-right">1</td>
-												<td class="s-align-right">1</td>
-												<td class="s-align-right">2345</td>
+												<td class="s-number">1</td>
+												<td class="s-number">1</td>
+												<td class="s-number">2345</td>
 												<td>Overnight</td>
 												<td>California</td>
 												<td>
@@ -949,9 +1396,9 @@
 														</tr>
 													</table>
 								                </td>
-												<td class="s-align-right">1</td>
-												<td class="s-align-right">1</td>
-												<td class="s-align-right">345</td>
+												<td class="s-number">1</td>
+												<td class="s-number">1</td>
+												<td class="s-number">345</td>
 												<td>Overnight</td>
 												<td>California</td>
 												<td>
@@ -1342,12 +1789,12 @@
 									        <div class="alert s-selected-item">
 									            <!-- Example Item 2 -->
 									            <button type="button" class="close"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-									            <strong>Search Result Title 1</strong>
+									            Search Result Title 1
 									        </div>
 									        <div class="alert s-selected-item">
 									            <!-- Example Item 2 -->
 									            <button type="button" class="close"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-									            <strong>Search Result Title 2</strong>
+									            Search Result Title 2
 									        </div>
 									    </div>
 									</div>
@@ -1390,12 +1837,12 @@
 									        <div class="alert s-selected-item">
 									            <!-- Example Item 2 -->
 									            <button type="button" class="close"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-									            <strong>Search Result Title 1</strong>
+									            Search Result Title 1
 									        </div>
 									        <div class="alert s-selected-item">
 									            <!-- Example Item 2 -->
 									            <button type="button" class="close"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-									            <strong>Search Result Title 2</strong>
+									            Search Result Title 2
 									        </div>
 									    </div>
 									</div>
@@ -1421,9 +1868,9 @@
 									<button class="btn btn-default" id="addDropdown-remove-all">Hide All</button><br/><br/>
 									
 									<!-- Start -->            
-				                    <div class="s-search-filter">
+				                    <div class="s-search">
 				                        <div class="input-group" >
-				                            <input type="text" placeholder="Search" class="form-control input-sm">
+				                            <input type="text" placeholder="Search" class="form-control">
 											<a href="##" class="s-current-selection-item addDropdown <!---Remove addDropdown---> addDropdown-filledName-input <!--- Remove addDropdown-filledName-input --->" title="remove"><i class="fa fa-times"></i> Reyjay Solares</a>
 				                            <ul class="dropdown-menu addDropdown <!---Remove addDropdown---> addDropdown-dropdown <!--- Remove addDropdown-dropdown --->"><!-- display block should be replaced with js(angular) -->
 				                                
@@ -1837,7 +2284,7 @@
 										<div class="s-search-filter s-gift-card">
 					                        <div class="input-group">
 												<div class="s-search">
-					                            	<input type="text" placeholder="search or add recipient..." class="form-control input-sm">
+					                            	<input type="text" placeholder="search or add recipient..." class="form-control">
 													<i class="fa fa-search"></i>
 												</div>
 												<span href="##" class="s-current-selection-item addDropdown <!---Remove addDropdown---> addDropdown-filledName-input <!--- Remove addDropdown-filledName-input --->"> Reyjay Solares (reinaldosolares@gmail.com) <a href="##" title="edit"><i class="fa fa-pencil"></i></a></span>
@@ -1981,7 +2428,7 @@
 										<div class="s-search-filter s-gift-card">
 					                        <div class="input-group">
 												<div class="s-search">
-					                            	<input type="text" placeholder="search or add recipient..." class="form-control input-sm">
+					                            	<input type="text" placeholder="search or add recipient..." class="form-control">
 													<i class="fa fa-search"></i>
 												</div>
 												<span href="##" class="s-current-selection-item addDropdown <!---Remove addDropdown---> addDropdown-filledName-input <!--- Remove addDropdown-filledName-input --->"> Reyjay Solares (reinaldosolares@gmail.com) <a href="##" title="edit"><i class="fa fa-pencil"></i></a></span>
