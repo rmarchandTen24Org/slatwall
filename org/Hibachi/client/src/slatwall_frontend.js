@@ -16256,7 +16256,6 @@
 	        this.bindToController = {
 	            variables: "=",
 	            directive: "=",
-	            type: "@",
 	            templateUrl: "@"
 	        };
 	        this.controller = SWFDirectiveController;
@@ -16269,7 +16268,7 @@
 	            _this.scope = scope;
 	            _this.path = attrs.path || _this.templatePath;
 	            //Developer specifies the path and name of a partial for creating a custom directive.
-	            if (attrs.partialName && attrs.type == 'C') {
+	            if (attrs.partialName) {
 	                //returns the attrs.path or the default if not configured.
 	                var template = "<span ng-include = " + "'\"" + _this.path + attrs.partialName + ".html\"'" + "></span>";
 	                element.html('').append(_this.$compile(template)(scope));
@@ -16343,7 +16342,6 @@
 	        this.account = this.hibachiScope.account;
 	        this.objectFound = false;
 	        this.listItem = this.hibachiScope.cart[this.object];
-	        console.log("ListItem", this.listItem);
 	    }
 	    return SWFCartController;
 	})();

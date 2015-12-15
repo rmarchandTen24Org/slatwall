@@ -21,7 +21,6 @@ class SWFCartController{
         this.account            = this.hibachiScope.account;
         this.objectFound        = false;
         this.listItem = this.hibachiScope.cart[this.object];
-        console.log("ListItem", this.listItem); 
     } 
 }
 

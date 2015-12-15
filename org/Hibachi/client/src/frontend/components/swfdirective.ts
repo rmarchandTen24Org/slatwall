@@ -16,7 +16,6 @@ class SWFDirective implements ng.IDirective{
     public bindToController={
 		variables:"=",
 		directive:"=",
-        type:"@",
         templateUrl:"@"
     };
     public controller=SWFDirectiveController
@@ -39,7 +38,7 @@ class SWFDirective implements ng.IDirective{
         this.scope = scope;
         this.path  = attrs.path || this.templatePath;
         //Developer specifies the path and name of a partial for creating a custom directive.
-        if (attrs.partialName && attrs.type == 'C'){
+        if (attrs.partialName){
             //returns the attrs.path or the default if not configured.
             var template = "<span ng-include = " + "'\"" + this.path + attrs.partialName +  ".html\"'" + "></span>";
             element.html('').append(this.$compile(template)(scope));
