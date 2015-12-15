@@ -59,7 +59,7 @@
 		<cfelseif attributes.type eq "list">
 			<cfoutput>
                 <li>
-					<a href="#attributes.hibachiScope.buildURL(action=attributes.action)#" ><i class="icon-#attributes.icon#"></i> #attributes.title# </a>
+					<a href="#attributes.hibachiScope.buildURL(action=attributes.action)#" ><i class="glyphicon glyphicon-#attributes.icon#"></i> #attributes.title# </a>
             	</li>
 			</cfoutput>
 		<cfelseif attributes.type EQ "subnav">

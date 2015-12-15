@@ -443,13 +443,13 @@
 											<hb:HibachiDividerHider>
 												<cfif column.sort and not thistag.expandable>
 													<li class="dropdown-header">#attributes.hibachiScope.rbKey('define.sort')#</li>
-													<li><a href="##" class="listing-sort" data-sortdirection="ASC"><i class="icon-arrow-down"></i> Sort Ascending</a></li>
-													<li><a href="##" class="listing-sort" data-sortdirection="DESC"><i class="icon-arrow-up"></i> Sort Descending</a></li>
+													<li><a href="##" class="listing-sort" data-sortdirection="ASC"><i class="glyphicon glyphicon-arrow-down"></i> Sort Ascending</a></li>
+													<li><a href="##" class="listing-sort" data-sortdirection="DESC"><i class="glyphicon glyphicon-arrow-up"></i> Sort Descending</a></li>
 													<li class="divider"></li>
 												</cfif>
 												<cfif column.search and not thistag.expandable>
 													<li class="dropdown-header">#attributes.hibachiScope.rbKey('define.search')#</li>
-													<li class="search-filter"><input type="text" class="listing-search form-control" name="FK:#column.propertyIdentifier#" value="" /> <i class="icon-search"></i></li>
+													<li class="search-filter"><input type="text" class="listing-search form-control" name="FK:#column.propertyIdentifier#" value="" /> <i class="glyphicon glyphicon-search"></i></li>
 													<li class="divider"></li>
 												</cfif>
 												<cfif column.range and not thistag.expandable>
@@ -633,7 +633,7 @@
 										<cfset icon="download" />
 									</cfif>
 									<a class="admincaseviewPin btn btn-mini" href="#attributes.hibachiScope.buildURL(action=attributes.recordPinAction,querystring=listPrepend(attributes.recordPinquerystring, '#record.getPrimaryIDPropertyName()#=#record.getPrimaryIDValue()#', '&'))#" title="#title#">
-										<i class="icon-#icon#"></i>
+										<i class="glyphicon glyphicon-#icon#"></i>
 									</a>
 								</cfif>
 
@@ -641,7 +641,7 @@
 
 								<cfif len(attributes.recordcaseaction)>
 									<a class="admincaseviewcases btn btn-mini" href="#attributes.hibachiScope.buildURL(action=attributes.recordcaseaction,querystring=listPrepend(attributes.recordcasequerystring,'#attributes.recordCaseProperty#=#record.getValueByPropertyIdentifier(attributes.recordCaseProperty)#', '&'))#" title="Cases">
-										<i class="icon-book"></i>
+										<i class="glyphicon glyphicon-book"></i>
 									</a>
 								</cfif>
 							</td>
