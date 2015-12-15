@@ -16268,16 +16268,14 @@
 	        this.link = function (scope, element, attrs) {
 	            _this.scope = scope;
 	            _this.path = attrs.path || _this.templatePath;
-	            console.log("Dynamic Path", _this.path + attrs.partialName);
 	            //Developer specifies the path and name of a partial for creating a custom directive.
 	            if (attrs.partialName && attrs.type == 'C') {
 	                //returns the attrs.path or the default if not configured.
-	                _this.scope.getRelativePath = function () {
-	                    return _this.path + attrs.partialName + '.html';
-	                };
+	                var template = "<span ng-include = " + "'\"" + _this.path + attrs.partialName + ".html\"'" + "></span>";
+	                element.html('').append(_this.$compile(template)(scope));
 	            }
 	            else {
-	                _this.templateUrl = _this.url;
+	                //this.templateUrl = this.url;
 	                if (!attrs.type) {
 	                    attrs.type = "A";
 	                }
@@ -16305,7 +16303,6 @@
 	                element.html('').append(_this.$compile(template)(scope));
 	            }
 	        };
-	        this.template = '<div ng-include="getRelativePath()"></div>';
 	        this.templatePath = pathBuilderConfig.buildPartialsPath(frontendPartialsPath);
 	        this.url = pathBuilderConfig.buildPartialsPath(frontendPartialsPath) + 'swfdirectivepartial.html';
 	        this.$compile = $compile;

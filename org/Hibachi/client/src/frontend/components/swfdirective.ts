@@ -25,27 +25,27 @@ class SWFDirective implements ng.IDirective{
     public url:string = "";
     public $compile;
 	public path:string;
-	// @ngInject
+	
+    // @ngInject
     constructor(pathBuilderConfig, private frontendPartialsPath:any, $compile){
         this.templatePath = pathBuilderConfig.buildPartialsPath(frontendPartialsPath);
         this.url = pathBuilderConfig.buildPartialsPath(frontendPartialsPath)+'swfdirectivepartial.html';
 		this.$compile = $compile;
     }
+    
     /** allows you to build a directive without using another controller and directive config. */
     // @ngInject
 	public link:ng.IDirectiveLinkFn = (scope:ng.IScope, element: ng.IAugmentedJQuery, attrs:any) =>{
         this.scope = scope;
         this.path  = attrs.path || this.templatePath;
-        console.log("Dynamic Path", this.path + attrs.partialName);
         //Developer specifies the path and name of a partial for creating a custom directive.
         if (attrs.partialName && attrs.type == 'C'){
             //returns the attrs.path or the default if not configured.
-            this.scope.getRelativePath = () =>{
-                return this.path + attrs.partialName + '.html';
-            }
+            var template = "<span ng-include = " + "'\"" + this.path + attrs.partialName +  ".html\"'" + "></span>";
+            element.html('').append(this.$compile(template)(scope));
         //Recompile a directive either as attribute or element directive
         }else{
-            this.templateUrl = this.url;
+            //this.templateUrl = this.url;
             if (!attrs.type) { attrs.type = "A"}
             if (attrs.type == "A" || !attrs.type){
                 var template = '<span ' + attrs.directive + ' ';
@@ -72,7 +72,7 @@ class SWFDirective implements ng.IDirective{
         }
 	}
     
-    template:string =  '<div ng-include="getRelativePath()"></div>';
+    
     public static Factory():ng.IDirectiveFactory{
         var directive:ng.IDirectiveFactory = (
 		    pathBuilderConfig,

@@ -19,19 +19,20 @@
                 	
                 	<br><br>
                     <b>login/logout</b>     <br>       
-                     Accepts a email and password and logs in the user. {{slatwall.userIsLoggedIn()}}
-                           <br><swf-login ng-if="!slatwall.userIsLoggedIn()"></swf-login>
+                     Accepts a email and password and logs in the user.
+                    <br><swf-directive path="/org/Hibachi/client/src/frontend/components/" partial-name="logindirectivepartial" type="C" ng-if="!slatwall.userIsLoggedIn()"></swf-directive><!---<swf-login ng-if="!slatwall.userIsLoggedIn()"></swf-login>--->
                     
                     <br><br>
                       {{hibachiScope.account.firstName}}
-                           <br><swf-logout ng-if="slatwall.userIsLoggedIn()"></swf-logout>
+                           <br><br><swf-directive path="/org/Hibachi/client/src/frontend/components/" partial-name="logoutdirectivepartial" type="C" ng-if="slatwall.userIsLoggedIn()"></swf-directive><!---<swf-logout ng-if="slatwall.userIsLoggedIn()"></swf-logout>--->
                     <br><br>
                      Cart is accessed the same way as Account. hibachiScope.cart.subtotal or hibachiScope.cart.discounttotal
                      or hibachiScope.cart.calculatedtotal yeild totals on the order while hibachiScope.cart.orderitems is
                      an array of objects that contain the items on the order.
                      <br><br>
                      <b>Add promotion to order: {{slatwall.getPromotionCodeList()}}</b>
-                     <br><swf-promo></swf-promo>
+                     <br><br><swf-directive path="/org/Hibachi/client/src/frontend/components/" partial-name="promopartial" type="C"></swf-directive>
+                     <!---<swf-promo></swf-promo>--->
                     <br>
                     <br><br>
                       <b>swf-directive</b> example for specifying the directive path to use.
@@ -46,6 +47,7 @@
                     <br>
                     
                     <br><swf-directive path="/org/Hibachi/client/src/frontend/components/" partial-name="createaccountpartial" type="C"></swf-directive>
+                    
                 </p>
             </div>
         </div>
