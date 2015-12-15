@@ -19,7 +19,9 @@ var frontendmodule = angular.module('frontend', ['ngRoute',ngslatwallmodelmodule
 .config(['$routeProvider','pathBuilderConfig',($routeProvider,pathBuilderConfig)=>{
 	 //configure partials path properties
      pathBuilderConfig.setBaseURL('/'); 
-     pathBuilderConfig.setBasePartialsPath('org/Hibachi/client/src/');
+     pathBuilderConfig.setBasePartialsPath('org/Hibachi/client/src/');//<--move to custom assets
+	 
+	 //change to partialPath.
 	 
 }])
 .run(['$rootScope', 'publicService', function($rootScope, publicService) {

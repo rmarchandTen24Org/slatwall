@@ -668,7 +668,8 @@
 	    .config(['$routeProvider', 'pathBuilderConfig', function ($routeProvider, pathBuilderConfig) {
 	        //configure partials path properties
 	        pathBuilderConfig.setBaseURL('/');
-	        pathBuilderConfig.setBasePartialsPath('org/Hibachi/client/src/');
+	        pathBuilderConfig.setBasePartialsPath('org/Hibachi/client/src/'); //<--move to custom assets
+	        //change to partialPath.
 	    }])
 	    .run(['$rootScope', 'publicService', function ($rootScope, publicService) {
 	        $rootScope.hibachiScope = publicService;
@@ -2070,6 +2071,7 @@
 	            *  @return a deferred promise that resolves server response or error. also includes updated account and cart.
 	            */
 	        this.doAction = function (action, data) {
+	            console.log("Post Data:", data);
 	            _this.hasErrors = false;
 	            _this.success = false;
 	            _this.errors = undefined;
@@ -2155,6 +2157,19 @@
 	        this.getPromotionCodeList = function () {
 	            if (_this.cart && _this.cart.promotionCodeList !== undefined) {
 	                return _this.cart.promotionCodeList;
+	            }
+	        };
+	        /**
+	         * Helper method to get promotion codes
+	         */
+	        this.getPromotionCodes = function () {
+	            var promoCodes = [];
+	            if (_this.cart && _this.cart.promotionCodes.length) {
+	                for (var p in _this.cart.promotionCodes) {
+	                    promoCodes.push(_this.cart.promotionCodes[p].promotionCode);
+	                    console.log("Promo Code: ", p, _this.cart.promotionCodes[p].promotionCode);
+	                }
+	                return promoCodes;
 	            }
 	        };
 	        this.baseUrl = "/index.cfm/api/scope/";
@@ -16266,7 +16281,7 @@
 	        // @ngInject
 	        this.link = function (scope, element, attrs) {
 	            _this.scope = scope;
-	            _this.path = attrs.path || _this.templatePath;
+	            _this.path = attrs.partialPath || _this.templatePath;
 	            //Developer specifies the path and name of a partial for creating a custom directive.
 	            if (attrs.partialName) {
 	                //returns the attrs.path or the default if not configured.

@@ -11,63 +11,71 @@
                 </div>
                 
                 <p class="directives">
-                	<b>Account</b> can be accessed from anywhere within the frontend app
-                	by referencing hibachiScope.account|cart.
-                	For example: hibachiScope.account.firstName, hibachiScope.account.lastName
-                	will reference those values if the user is logged in. <br>
-                	<b>{{slatwall.account.firstName}} {{slatwall.account.lastName}}</b><br>
                 	
-                    <b>login/logout</b>     <br>       
-                     Accepts a email and password and logs in the user.
+                	<b>Account</b>  
+                	can be accessed from anywhere within the frontend app
+                	by referencing hibachiScope.account|cart.
+                	For example: slatwall.account.firstName, slatwall.account.lastName or slatwall.userIsLoggedIn()
+                	will reference those values.
+                	<br>
+                	
+                    <b>login/logout</b><br>       
+                    Accepts a email and password and logs in the user.
                     <br><swf-directive partial-name="logindirectivepartial"  ng-if="!slatwall.userIsLoggedIn()"></swf-directive>
                     
-                    <br><br>
-                      {{hibachiScope.account.firstName}}
-                    <br><br><swf-directive partial-name="logoutdirectivepartial"  ng-if="slatwall.userIsLoggedIn()"></swf-directive>
-                    <br><br>
+                    <br>
+                    {{slatwall.account.firstName}} {{slatwall.account.lastName}} <br>
+                    <br><swf-directive partial-name="logoutdirectivepartial"  ng-if="slatwall.userIsLoggedIn()"></swf-directive>
+                    <br>
                      Cart is accessed the same way as Account. hibachiScope.cart.subtotal or hibachiScope.cart.discounttotal
                      or hibachiScope.cart.calculatedtotal yeild totals on the order while hibachiScope.cart.orderitems is
                      an array of objects that contain the items on the order.
                      <br>
-                     <b>Add promotion to order: {{slatwall.getPromotionCodeList()}}</b>
+                     <hr/>
+                     <b>
+                        Listing the promotion codes:
+                        {{slatwall.getPromotionCodeList()}}</b>
                      <br>
                      <swf-directive partial-name="promopartial"></swf-directive>
-                      
+                     <span ng-repeat="promoCode in slatwall.getPromotionCodes()">
+                        <span ng-bind="('PromotionCode: ' + promoCode)"></span><span ng-click="slatwall.doAction('removePromotionCode', {'promotionCode': promoCode })">X</span>
+                     </span>
+                    <hr/>
                       <b>swf-directive</b> example for specifying the directive path to use.
-                      This directive allows you to use one directive to wrap any partial custom or built in.
-                    <br>
+                        This directive allows you to use one directive to wrap any partial custom or built in.
+                      <br>
                          path is /org/Hibachi/src/frontend/components/
                          partial-name is createaccountpartial
                          
                          *Note you do not need to provide an .html ext on the partial-name attribute.
-                         **Note the type attribute for the swf-directive is C for custom. Other types include
-                           A for creating an attribute based directive and E for elemental directive.
+                         Also, there is no need to provide the path attribute if using the default partial directory.
+                         
+                         Cart lists should be able to provide an image as well as a delete button for the items.
                     <br>
                     
-                    <br><swf-directive partial-name="createaccountpartial"></swf-directive> 
+                    <br><swf-directive partial-name="createaccountpartial"></swf-directive><br>
+                    
+                    
                 </p>
-                
-                Cart Testing. Displaying and deleting list of items in the cart.
-                
             </div>
         </div>
     </section>
   </div>
-  <!--- 
+
   
   <dd> example custom
-                               <br>Test using a custom html for submission.
-                               <sw-form data-is-process-form="true"
-                                        data-object="Account_Login"
-                                        data-on-success="hide:Account_Login,show:Account_Logout"
-                                        data-form-class="cssform"
-                                        data-error-class="error">
-                                   Email: <input name="email" type="email"></input>
-                                   Password: <input name="password" type="password"></input>
-                                   <input type="submit" action="login" ng-click="swFormController.submit()" value="login"></input>  
-                               </sw-form>
-                        </dd> 
-  --->
+  <br>Test using a custom html for submission.
+  <!---<sw-form data-is-process-form="true"
+            data-object="Account_Login"
+            data-on-success="hide:Account_Login,show:Account_Logout"
+            data-form-class="cssform"
+            data-error-class="error">
+       Email: <input name="email" type="Account_Login.email"></input>
+       Password: <input name="password" type="Account_Login.password"></input>
+       <input type="submit" action="login" ng-click="swFormController.submit()" value="login"></input>  
+   </sw-form>--->
+   </dd> 
+
 </div>
 </cfoutput>
 <cfinclude template="footer.cfm" >

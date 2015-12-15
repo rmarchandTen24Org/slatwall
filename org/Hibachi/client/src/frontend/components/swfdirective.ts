@@ -36,7 +36,7 @@ class SWFDirective implements ng.IDirective{
     // @ngInject
 	public link:ng.IDirectiveLinkFn = (scope:ng.IScope, element: ng.IAugmentedJQuery, attrs:any) =>{
         this.scope = scope;
-        this.path  = attrs.path || this.templatePath;
+        this.path  = attrs.partialPath || this.templatePath;
         //Developer specifies the path and name of a partial for creating a custom directive.
         if (attrs.partialName){
             //returns the attrs.path or the default if not configured.

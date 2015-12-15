@@ -52,6 +52,8 @@ class PublicService {
         *  @return a deferred promise that resolves server response or error. also includes updated account and cart.
         */
     public doAction=(action:string, data:any) => {
+        console.log("Post Data:", data);
+        
         this.hasErrors = false;
         this.success = false;
         this.errors = undefined;
@@ -136,6 +138,20 @@ class PublicService {
     public getPromotionCodeList = ():any =>{
         if (this.cart && this.cart.promotionCodeList !== undefined){
             return this.cart.promotionCodeList;
+        }  
+    }
+    
+    /**
+     * Helper method to get promotion codes
+     */
+    public getPromotionCodes = ():any =>{
+        let promoCodes = [];
+        if (this.cart && this.cart.promotionCodes.length){
+            for (var p in this.cart.promotionCodes){
+                promoCodes.push(this.cart.promotionCodes[p].promotionCode);
+                console.log("Promo Code: ", p, this.cart.promotionCodes[p].promotionCode);
+            }
+            return promoCodes;
         }  
     }
 }
