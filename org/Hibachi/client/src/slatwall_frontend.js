@@ -5538,15 +5538,28 @@
 	    * Property Display Controller handles the logic for this directive.
 	    */
 	var SWFFormFieldController = (function () {
-	    function SWFFormFieldController($scope) {
+	    function SWFFormFieldController($scope, $element, $attrs) {
 	        this.$scope = $scope;
+	        this.$element = $element;
+	        this.$attrs = $attrs;
 	        var vm = this;
 	        vm.propertyDisplay = this.propertyDisplay;
+	        if (!this.propertyDisplay) {
+	            this.propertyDisplay = {
+	                type: $attrs.type || "text",
+	                object: $attrs.object || {},
+	                class: $attrs.class || "",
+	                name: $attrs.name || "",
+	                value: $attrs.value || "",
+	                optionValues: $attrs.optionValues || []
+	            };
+	            console.log("Default Property Display", this.propertyDisplay);
+	        }
 	    }
 	    /**
 	        * Handles the logic for the frontend version of the property display.
 	        */
-	    SWFFormFieldController.$inject = ['$scope'];
+	    SWFFormFieldController.$inject = ['$scope', '$element', '$attrs'];
 	    return SWFFormFieldController;
 	})();
 	/**

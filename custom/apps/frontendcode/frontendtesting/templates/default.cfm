@@ -65,7 +65,7 @@
                         <br><swf-directive partial-name="createaccountpartial"></swf-directive><br>
                      </p>
                      
-                     
+                     Example using a decoupled swForm to use your own HTML instead of property displays etc.
                  	  <sw-form data-is-process-form="true" 
                  	         data-object="Account_Login" 
                  	         data-on-success="show:Account_Logout" 
@@ -81,7 +81,7 @@
                             <span error-for="password" class="error"></span>
                             <input type="submit" ng-click="$parent.submit()"></input>
                        </div>
-                   </sw-form>
+                      </sw-form>
                      
                 </div>
             </div>

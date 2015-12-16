@@ -50,11 +50,24 @@ class SWFFormFieldController {
 	/**
 		* Handles the logic for the frontend version of the property display.
 		*/
-	public static $inject = ['$scope'];
-	constructor ( public $scope:ng.IScope ) {
+	public static $inject = ['$scope', '$element', '$attrs'];
+	constructor ( public $scope:ng.IScope, public $element:any, public $attrs:any ) {
 
 		let vm:IFormFieldControllerVM = this;
 		vm.propertyDisplay = this.propertyDisplay;
+		
+		if (!this.propertyDisplay){
+			this.propertyDisplay = {
+				type : $attrs.type || "text",
+				object : $attrs.object || {},
+				class : $attrs.class || "",
+				name : $attrs.name || "",
+				value : $attrs.value || "",
+				optionValues : $attrs.optionValues || []
+			}
+			console.log("Default Property Display", this.propertyDisplay);
+		}
+		
 	}
 }
 

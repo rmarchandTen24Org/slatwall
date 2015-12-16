@@ -159,7 +159,6 @@ interface ViewModel {
                     angular.forEach(result.errors, (val, key) => {
                         if (angular.isDefined(vm["formCtrl"][vm.processObject][key])) {
                             let primaryElement = this.$element.find("[error-for='" + key + "']");
-                            
                             vm.$timeout(function() {
                                 primaryElement.append("<span name='" + key + "Error'>" + result.errors[key] + "</span>");
                             }, 0);
