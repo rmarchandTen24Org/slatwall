@@ -11,48 +11,59 @@
                 </div>
                 
                 <p class="directives">
-                	
-                	<b>Account</b>  
-                	can be accessed from anywhere within the frontend app
-                	by referencing hibachiScope.account|cart.
-                	For example: slatwall.account.firstName, slatwall.account.lastName or slatwall.userIsLoggedIn()
-                	will reference those values.
-                	<br>
-                	
-                    <b>login/logout</b><br>       
-                    Accepts a email and password and logs in the user.
-                    <br><swf-directive partial-name="logindirectivepartial"  ng-if="!slatwall.userIsLoggedIn()"></swf-directive>
-                    
-                    <br>
-                    {{slatwall.account.firstName}} {{slatwall.account.lastName}} <br>
-                    <br><swf-directive partial-name="logoutdirectivepartial"  ng-if="slatwall.userIsLoggedIn()"></swf-directive>
-                    <br>
-                     Cart is accessed the same way as Account. hibachiScope.cart.subtotal or hibachiScope.cart.discounttotal
-                     or hibachiScope.cart.calculatedtotal yeild totals on the order while hibachiScope.cart.orderitems is
-                     an array of objects that contain the items on the order.
-                     <br>
-                     <hr/>
-                     <b>
-                        Listing the promotion codes with delete button:
-                        {{slatwall.getPromotionCodeList()}}</b>
-                     <br>
-                     <swf-directive partial-name="promopartial"></swf-directive>
-                     <span ng-repeat="promoCode in slatwall.getPromotionCodes()">
-                        <span ng-bind="('PromotionCode: ' + promoCode)"></span><button ng-click="slatwall.doAction('removePromotionCode', {'promotionCode': promoCode })">Delete</button>
-                     </span>
-                    <hr/>
-                      <b>swf-directive</b> example for specifying the directive path to use.
-                        This directive allows you to use one directive to wrap any partial custom or built in.
-                      <br>
-                         path is /org/Hibachi/src/frontend/components/
-                         partial-name is createaccountpartial
+                	<p>
+                    	<b>Example: Basic Account Info </b>  
+                    	can be accessed from anywhere within the frontend app
+                    	by referencing hibachiScope.account|cart.
+                    	For example: slatwall.account.firstName, slatwall.account.lastName or slatwall.userIsLoggedIn()
+                    	will reference those values.
+                    	<br>
+                	</p>
+                	<p>
+                        <b>Example login/logout using custom partial</b><br>       
+                        Accepts a email and password and logs in the user.
+                        <br><swf-directive partial-path="custom/assets/frontend/components/custom/" partial-name="customlogindirective"  ng-if="!slatwall.userIsLoggedIn()"></swf-directive>
+                     
+                        <span ng-bind="(slatwall.account.firstName + ' ' + slatwall.account.lastName)"></span><br>
+                        <br><swf-directive partial-name="logoutdirectivepartial"  ng-if="slatwall.userIsLoggedIn()"></swf-directive>
+                    </p>
+                    <p>
+                    	Example: List, Add, and Remove Promo Codes
+                        <br>
+                         Cart is accessed the same way as Account. hibachiScope.cart.subtotal or hibachiScope.cart.discounttotal
+                         or hibachiScope.cart.calculatedtotal yeild totals on the order while hibachiScope.cart.orderitems is
+                         an array of objects that contain the items on the order.
+                         <br><br>
+                         <b>
+                            Listing the promotion codes with delete button:
+                            {{slatwall.getPromotionCodeList()}}</b>
+                         <br><br>
                          
-                         *Note you do not need to provide an .html ext on the partial-name attribute.
-                         Also, there is no need to provide the path attribute if using the default partial directory.
-                         
-                         Cart lists should be able to provide an image as well as a delete button for the items.
-                    <br>
-                    <br><swf-directive partial-name="createaccountpartial"></swf-directive><br>
+                         <swf-directive partial-name="promopartial"></swf-directive>
+                         <span ng-repeat="promoCode in slatwall.getPromotionCodes()">
+                            <span ng-bind="('PromotionCode: ' + promoCode)"></span><button ng-click="slatwall.doAction('removePromotionCode', {'promotionCode': promoCode })">Delete</button>
+                         </span>
+                     </p>
+                     <br><br>
+                     <p>
+                          <b>swf-directive</b> example for specifying the directive path to use.
+                            This directive allows you to use one directive to wrap any partial custom or built in.
+                          <br>
+                             path is /org/Hibachi/src/frontend/components/
+                             partial-name is createaccountpartial
+                             
+                             *Note you do not need to provide an .html ext on the partial-name attribute.
+                             Also, there is no need to provide the path attribute if using the default partial directory.
+                             
+                             Cart lists should be able to provide an image as well as a delete button for the items.
+                        <br>
+                        <br><swf-directive partial-name="createaccountpartial"></swf-directive><br>
+                     </p>
+                     
+                     
+                     
+                     
+                     
                 </p>
             </div>
         </div>
