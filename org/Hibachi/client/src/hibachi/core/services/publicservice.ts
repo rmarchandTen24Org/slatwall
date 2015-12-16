@@ -149,7 +149,7 @@ class PublicService {
         if (this.cart && this.cart.promotionCodes.length){
             for (var p in this.cart.promotionCodes){
                 promoCodes.push(this.cart.promotionCodes[p].promotionCode);
-                console.log("Promo Code: ", p, this.cart.promotionCodes[p].promotionCode);
+                
             }
             return promoCodes;
         }  

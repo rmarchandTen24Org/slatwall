@@ -33,12 +33,12 @@
                      <br>
                      <hr/>
                      <b>
-                        Listing the promotion codes:
+                        Listing the promotion codes with delete button:
                         {{slatwall.getPromotionCodeList()}}</b>
                      <br>
                      <swf-directive partial-name="promopartial"></swf-directive>
                      <span ng-repeat="promoCode in slatwall.getPromotionCodes()">
-                        <span ng-bind="('PromotionCode: ' + promoCode)"></span><span ng-click="slatwall.doAction('removePromotionCode', {'promotionCode': promoCode })">X</span>
+                        <span ng-bind="('PromotionCode: ' + promoCode)"></span><button ng-click="slatwall.doAction('removePromotionCode', {'promotionCode': promoCode })">Delete</button>
                      </span>
                     <hr/>
                       <b>swf-directive</b> example for specifying the directive path to use.
@@ -52,10 +52,7 @@
                          
                          Cart lists should be able to provide an image as well as a delete button for the items.
                     <br>
-                    
                     <br><swf-directive partial-name="createaccountpartial"></swf-directive><br>
-                    
-                    
                 </p>
             </div>
         </div>
@@ -63,16 +60,15 @@
   </div>
 
   
-  <dd> example custom
-  <br>Test using a custom html for submission.
+  
   <!---<sw-form data-is-process-form="true"
             data-object="Account_Login"
             data-on-success="hide:Account_Login,show:Account_Logout"
             data-form-class="cssform"
             data-error-class="error">
-       Email: <input name="email" type="Account_Login.email"></input>
-       Password: <input name="password" type="Account_Login.password"></input>
-       <input type="submit" action="login" ng-click="swFormController.submit()" value="login"></input>  
+       Email: <input name="emailAddress" type="email" ng-model="Account_Login.emailAddress"></input>
+       Password: <input name="password"  type="password" ng-model="Account_Login.password"></input>
+       <input type="submit" action="login" ng-click="swFormController.vm.submit('login')"></input>  
    </sw-form>--->
    </dd> 
 

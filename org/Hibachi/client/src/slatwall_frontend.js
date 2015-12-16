@@ -2167,7 +2167,6 @@
 	            if (_this.cart && _this.cart.promotionCodes.length) {
 	                for (var p in _this.cart.promotionCodes) {
 	                    promoCodes.push(_this.cart.promotionCodes[p].promotionCode);
-	                    console.log("Promo Code: ", p, _this.cart.promotionCodes[p].promotionCode);
 	                }
 	                return promoCodes;
 	            }
