@@ -73,11 +73,9 @@
                      	         data-error-class="error" 
                      	         data-action="login">
                               
-                           Email:
-                           <input name="emailAddress" type="email" ng-model="Account_Login.emailAddress"/>
+                           <label>Email: <input name="emailAddress" type="email" ng-model="Account_Login.emailAddress"/></label>
                            <span error-for="emailAddress" class="error"></span>
-                           Password:
-                           <input name="password"  type="password" ng-model="Account_Login.password"/>
+                           <label>Password:<input name="password"  type="password" ng-model="Account_Login.password"/></label>
                            <span error-for="password" class="error"></span>
                            <input type="submit" ng-click="$parent.submit()"></input>
                        </sw-form>
