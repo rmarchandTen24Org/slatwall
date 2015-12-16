@@ -74,12 +74,12 @@
                      	         data-action="login">
                               
                            Email:
-                           <input name="emailAddress" type="email" ng-model="Account_Login.emailAddress"></input>
-                                  <span error-for="emailAddress" class="error"></span>
+                           <input name="emailAddress" type="email" ng-model="Account_Login.emailAddress"/>
+                           <span error-for="emailAddress" class="error"></span>
                            Password:
-                           <input name="password"  type="password" ng-model="Account_Login.password"></input>
-                                  <span error-for="password" class="error"></span>
-                                  <input type="submit" ng-click="$parent.submit()"></input>
+                           <input name="password"  type="password" ng-model="Account_Login.password"/>
+                           <span error-for="password" class="error"></span>
+                           <input type="submit" ng-click="$parent.submit()"></input>
                        </sw-form>
                      </p>
                 </div>
@@ -87,18 +87,6 @@
         </div>
     </section>
   </div>
-
-  
-  
-  <!---<sw-form data-is-process-form="true"
-            data-object="Account_Login"
-            data-on-success="hide:Account_Login,show:Account_Logout"
-            data-form-class="cssform"
-            data-error-class="error">
-       Email: <input name="emailAddress" type="email" ng-model="Account_Login.emailAddress"></input>
-       Password: <input name="password"  type="password" ng-model="Account_Login.password"></input>
-       <input type="submit" action="login" ng-click="swFormController.vm.submit('login')"></input>  
-   </sw-form>--->
    </dd> 
 
 </div>
