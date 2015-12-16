@@ -5,12 +5,12 @@
     <section>
         <div>           
             <div class="container" >
-                <div class="s-ds-header">
+                <div>
                     <h2>Examples:</h2>
                     <h3>These are basic examples of using frontend directives</h3>
                 </div>
                 
-                <p class="directives">
+                <div class="directives">
                 	<p>
                     	<b>Example: Basic Account Info </b>  
                     	can be accessed from anywhere within the frontend app
@@ -18,6 +18,7 @@
                     	For example: slatwall.account.firstName, slatwall.account.lastName or slatwall.userIsLoggedIn()
                     	will reference those values.
                     	<br>
+                    	<span ng-bind="(slatwall.account.firstName + ' ' + slatwall.account.lastName)"></span><br>
                 	</p>
                 	<p>
                         <b>Example login/logout using custom partial</b><br>       
@@ -28,7 +29,7 @@
                         <br><swf-directive partial-name="logoutdirectivepartial"  ng-if="slatwall.userIsLoggedIn()"></swf-directive>
                     </p>
                     <p>
-                    	Example: List, Add, and Remove Promo Codes
+                    	<b>Example: List, Add, and Remove Promo Codes</b>
                         <br>
                          Cart is accessed the same way as Account. hibachiScope.cart.subtotal or hibachiScope.cart.discounttotal
                          or hibachiScope.cart.calculatedtotal yeild totals on the order while hibachiScope.cart.orderitems is
@@ -39,10 +40,14 @@
                             {{slatwall.getPromotionCodeList()}}</b>
                          <br><br>
                          
+                         
                          <swf-directive partial-name="promopartial"></swf-directive>
+                         
+                         
                          <span ng-repeat="promoCode in slatwall.getPromotionCodes()">
                             <span ng-bind="('PromotionCode: ' + promoCode)"></span><button ng-click="slatwall.doAction('removePromotionCode', {'promotionCode': promoCode })">Delete</button>
                          </span>
+                         
                      </p>
                      <br><br>
                      <p>
@@ -56,15 +61,10 @@
                              Also, there is no need to provide the path attribute if using the default partial directory.
                              
                              Cart lists should be able to provide an image as well as a delete button for the items.
-                        <br>
+                          <br>
                         <br><swf-directive partial-name="createaccountpartial"></swf-directive><br>
                      </p>
-                     
-                     
-                     
-                     
-                     
-                </p>
+                </div>
             </div>
         </div>
     </section>
