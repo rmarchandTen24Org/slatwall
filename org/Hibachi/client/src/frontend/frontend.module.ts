@@ -20,9 +20,6 @@ var frontendmodule = angular.module('frontend', ['ngRoute',ngslatwallmodelmodule
 	 //configure partials path properties
      pathBuilderConfig.setBaseURL('/'); 
      pathBuilderConfig.setBasePartialsPath('org/Hibachi/client/src/');//<--move to custom assets
-	 
-	 //change to partialPath.
-	 
 }])
 .run(['$rootScope', 'publicService', function($rootScope, publicService) {
 	$rootScope.hibachiScope = publicService;
