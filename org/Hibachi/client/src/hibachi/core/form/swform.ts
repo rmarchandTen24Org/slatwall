@@ -159,6 +159,7 @@ interface ViewModel {
                     angular.forEach(result.errors, (val, key) => {
                         if (angular.isDefined(vm["formCtrl"][vm.processObject][key])) {
                             let primaryElement = this.$element.find("[error-for='" + key + "']");
+                            
                             vm.$timeout(function() {
                                 primaryElement.append("<span name='" + key + "Error'>" + result.errors[key] + "</span>");
                             }, 0);
@@ -345,7 +346,7 @@ class SWForm implements ng.IDirective {
         * Sets the context of this form
         */
     public link:ng.IDirectiveLinkFn = (scope, element: ng.IAugmentedJQuery,
-        attrs:ng.IAttributes, controller, transclude) =>
+        attrs:ng.IAttributes, controller) =>
     {
         scope.context = scope.context || 'save';
     }

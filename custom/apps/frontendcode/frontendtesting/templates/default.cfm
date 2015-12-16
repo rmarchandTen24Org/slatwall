@@ -65,21 +65,24 @@
                         <br><swf-directive partial-name="createaccountpartial"></swf-directive><br>
                      </p>
                      
-                     <p>
-                     	<sw-form data-is-process-form="true" 
-                     	         data-object="Account_Login" 
-                     	         data-on-success="show:Account_Logout" 
-                     	         data-form-class="cssform" 
-                     	         data-error-class="error" 
-                     	         data-action="login">
-                              
-                           <label>Email: <input name="emailAddress" type="email" ng-model="Account_Login.emailAddress"/></label>
-                           <span error-for="emailAddress" class="error"></span>
-                           <label>Password:<input name="password"  type="password" ng-model="Account_Login.password"/></label>
-                           <span error-for="password" class="error"></span>
-                           <input type="submit" ng-click="$parent.submit()"></input>
-                       </sw-form>
-                     </p>
+                     
+                 	  <sw-form data-is-process-form="true" 
+                 	         data-object="Account_Login" 
+                 	         data-on-success="show:Account_Logout" 
+                 	         data-form-class="cssform" 
+                 	         data-error-class="error" 
+                 	         data-action="login">
+                       <div>   
+                            <label>Email: <input name="emailAddress" type="email" ng-model="Account_Login.emailAddress"/></label>
+                            <span error-for="emailAddress" class="error"></span>
+                       </div>
+                       <div>
+                            <label>Password:<input name="password"  type="password" ng-model="Account_Login.password"/></label>
+                            <span error-for="password" class="error"></span>
+                            <input type="submit" ng-click="$parent.submit()"></input>
+                       </div>
+                   </sw-form>
+                     
                 </div>
             </div>
         </div>
