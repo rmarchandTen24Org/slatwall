@@ -1,5 +1,4 @@
-<div>
-    <!-- Figure out which type of element we have and display it .-->
+
     <ng-switch on="swfFormField.propertyDisplay.type">
     	<input type="text" ng-switch-when="text" ng-model="swfFormField.propertyDisplay.object" class="{{swfFormField.propertyDisplay.class}}" name="{{swfFormField.propertyDisplay.name}}"></input>
     	<input type="email" ng-switch-when="email" ng-model="swfFormField.propertyDisplay.object" class="{{swfFormField.propertyDisplay.class}}" name="{{swfFormField.propertyDisplay.name}}"></input>
@@ -19,14 +18,12 @@
         
         <div ng-switch-when="radiogroup" name="{{swfFormField.propertyDisplay.name}}">
         	<div ng-repeat="option in optionValues" class="{{swfFormField.propertyDisplay.class}}">
-        	  <label ng-bind="option.name" ng-if="option.name" class="control-label"></label>
               <input type="radio" id="{{option.name}}_{{option.value}}" name="{{swfFormField.propertyDisplay.name}}" class="radio"/>
             </div>
         </div>
         
         <div ng-switch-when="checkboxgroup" name="{{swfFormField.propertyDisplay.name}}">
             <div ng-repeat="option in optionValues" class="{{swfFormField.propertyDisplay.class}}">
-              <label ng-bind="option.name" ng-if="option.name" class="{{swfFormField.propertyDisplay.class}}"></label>
               <input type="checkbox" id="{{option.name}}_{{option.value}}" name="{{swfFormField.propertyDisplay.name}}"/>
             </div>
         </div>
@@ -36,10 +33,6 @@
             <label class="radio-inline"><input type="radio" name="{{swfFormField.propertyDisplay.name}}" value="1" text="Yes"/>Yes</label>
             <label class="radio-inline"><input type="radio" name="{{swfFormField.propertyDisplay.name}}" value="0" text="No" checked="true"/>No</label>
         </div>
-        <!--- needs to be replaced with an action caller --->
-        <div ng-switch-when="submit" name="submit">
-            <input type="submit" class="btn" name="submit" text="{{swfFormField.propertyDisplay.name}}" value="{{swfFormField.propertyDisplay.name}}" ng-click="swfPropertyDisplayController.submit();"></input>
-        </div>
+        
     </ng-switch>
-    
-</div>
+

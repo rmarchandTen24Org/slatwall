@@ -22,7 +22,6 @@
                 baseUrl:'/'
             }
         };
-        
         /** Overwrite the partialPath and baseUrl for this application */
         angular.module('frontend')
             .config(['pathBuilderConfig', '$sceDelegateProvider', function(pathBuilderConfig, $sceDelegateProvider){
@@ -33,7 +32,6 @@
             }]).constant('frontendPartialsPath','frontend/');
             
     </script>
-      
 </head>
 <body role="document">
 
