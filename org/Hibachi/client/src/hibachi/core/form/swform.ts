@@ -76,6 +76,7 @@ interface ViewModel {
             if (this.isProcessForm == "true") {
                 this.handleSelfInspection( this );
             }
+            
         }
     
    /**
@@ -96,7 +97,7 @@ interface ViewModel {
             vm.$timeout         = this.$timeout;
             vm.postOnly         = false;
             vm.hibachiScope     = this.$rootScope.hibachiScope;
-
+            
             let observerService = this.observerService;
             /** parse the name */
             vm.entityName      = this.processObject.split("_")[0];
@@ -279,12 +280,14 @@ interface ViewModel {
             /** create the generic submit function */
             vm.submit = (Action) =>
             {
-                let action = Action;//vm.action || vm.actions;
+                
+                let action = Action || this.action;
                 vm.clearErrors();
                 vm.formData = vm.getFormData() || "";
                 vm.doAction(action);
             }
-
+            
+            this.$scope.submit =  vm.submit;
             /* give children access to the process
             */
             vm.getProcessObject = () =>

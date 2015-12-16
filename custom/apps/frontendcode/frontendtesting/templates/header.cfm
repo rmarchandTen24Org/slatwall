@@ -17,6 +17,7 @@
     <script src="/org/hibachi/client/src/slatwall_frontend.js"></script>
     <cfoutput>
         <script>
+        	/** this is a temp holdover until solution is found to remove slatwallAngular altogether */
             var slatwallAngular = {
                 slatwallConfig:{
                     baseUrl:'/'

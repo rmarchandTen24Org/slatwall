@@ -64,6 +64,24 @@
                           <br>
                         <br><swf-directive partial-name="createaccountpartial"></swf-directive><br>
                      </p>
+                     
+                     <p>
+                     	<sw-form data-is-process-form="true" 
+                     	         data-object="Account_Login" 
+                     	         data-on-success="show:Account_Logout" 
+                     	         data-form-class="cssform" 
+                     	         data-error-class="error" 
+                     	         data-action="login">
+                              
+                           Email:
+                           <input name="emailAddress" type="email" ng-model="Account_Login.emailAddress"></input>
+                                  <span error-for="emailAddress" class="error"></span>
+                           Password:
+                           <input name="password"  type="password" ng-model="Account_Login.password"></input>
+                                  <span error-for="password" class="error"></span>
+                                  <input type="submit" ng-click="$parent.submit()"></input>
+                       </sw-form>
+                     </p>
                 </div>
             </div>
         </div>

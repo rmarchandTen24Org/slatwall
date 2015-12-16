@@ -5803,11 +5803,12 @@
 	        };
 	        /** create the generic submit function */
 	        vm.submit = function (Action) {
-	            var action = Action; //vm.action || vm.actions;
+	            var action = Action || _this.action;
 	            vm.clearErrors();
 	            vm.formData = vm.getFormData() || "";
 	            vm.doAction(action);
 	        };
+	        this.$scope.submit = vm.submit;
 	        /* give children access to the process
 	        */
 	        vm.getProcessObject = function () {
