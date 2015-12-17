@@ -5,6 +5,7 @@
 <cfparam name="attributes.section" type="string" default="#request.context.fw.getSection( request.context[ request.context.fw.getAction() ])#">
 <cfparam name="attributes.tabLocation" type="string" default="left" />
 <cfparam name="attributes.createOrModalFlag" type="boolean" default="false" />
+<cfparam name="attributes.findSubSystemSectionFlag" type="boolean" default="false" />
 
 <cfif (isObject(attributes.object) && attributes.object.isNew())|| (structKeyExists(request.context, "modal") and request.context.modal)>
 	<cfset attributes.createOrModalFlag = true />
@@ -122,7 +123,7 @@
 												</cfif>
 											</hb:HibachiPropertyList>
 
-											<hb:HibachiTimeline object="#attributes.object#" />
+											<hb:HibachiTimeline object="#attributes.object#" findSubSystemSectionFlag="#attributes.findSubSystemSectionFlag#"/>
 
 									</div>
 								</cfoutput>
