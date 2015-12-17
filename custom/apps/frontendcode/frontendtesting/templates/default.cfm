@@ -14,7 +14,8 @@
                 	<p>
                     	<b>Example: Basic Account Info </b>  
                     	can be accessed from anywhere within the frontend app
-                    	by referencing hibachiScope.account|cart.
+                    	by referencing slatwall.account or cart . fieldname
+                    	<br>
                     	For example: slatwall.account.firstName, slatwall.account.lastName or slatwall.userIsLoggedIn()
                     	will reference those values.
                     	<br>
