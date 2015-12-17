@@ -298,7 +298,6 @@ interface ViewModel {
             /* handle events
             */
             if (this.onSuccess){
-                console.log("OnSuccess: ", this.onSuccess);
                 vm.parseEventString(this.onSuccess, "onSuccess");
                 observerService.attach(vm.eventsHandler, "onSuccess");
 
@@ -314,19 +313,17 @@ class SWForm implements ng.IDirective {
     public templateUrl      = "";
     public transclude       = true;
     public restrict         = "E";
-    public replace          = true;
+    //public replace          = true;
     public controller       = SWFormController;
-    public controllerAs     = "swFormController";
-    public scope            = {
-        object:"=",
-        context:"@",
-        name:"@"
-    };
+    public controllerAs     = "swForm";
+    public scope            = {};
 
    /**
     * Binds all of our variables to the controller so we can access using this
     */
     public bindToController = {
+            name:"@?",
+            context:"@?",
             entityName: "@?",
             processObject: "@?",
             hiddenFields: "=?",
@@ -334,11 +331,11 @@ class SWForm implements ng.IDirective {
             actions: "@?",
             formClass: "@?",
             formData: "=?",
-            object: "@?",
+            object: "=?",
             onSuccess: "@?",
             onError: "@?",
             hideUntil: "@?",
-            isProcessForm: "@"
+            isProcessForm: "@?"
     };
 
     /**

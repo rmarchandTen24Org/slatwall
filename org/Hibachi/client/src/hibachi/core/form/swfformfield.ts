@@ -65,7 +65,7 @@ class SWFFormFieldController {
 				value : $attrs.value || "",
 				optionValues : $attrs.optionValues || []
 			}
-			console.log("Default Property Display", this.propertyDisplay);
+			
 		}
 		
 	}

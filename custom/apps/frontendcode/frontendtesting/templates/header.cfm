@@ -15,6 +15,7 @@
 	<link href='http://fonts.googleapis.com/css?family=Open+Sans:400,300italic,300,400italic,600,600italic,700,700italic,800,800italic' rel='stylesheet' type='text/css'>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script> 
     <script src="/org/hibachi/client/src/slatwall_frontend.js"></script>
+    
     <cfoutput>
         <script>
         	/** this is a temp holdover until solution is found to remove slatwallAngular altogether */
@@ -25,13 +26,11 @@
             };
             /********************************************************************************************************************************/
             /** Overwrite the partialPath and baseUrl for this application */
-            angular.module('frontend')
-                .config(['pathBuilderConfig', '$sceDelegateProvider', function(pathBuilderConfig, $sceDelegateProvider){
-                    //configure partials path properties
+            /*angular.module('customfrontend',['frontend'])
+                .config(['pathBuilderConfig', function(pathBuilderConfig){
                     pathBuilderConfig.setBaseURL('http://#cgi.server_name#/'); 
                     pathBuilderConfig.setBasePartialsPath('custom/assets/');
-                    $sceDelegateProvider.resourceUrlWhitelist(['self','http://#cgi.server_name#/**']);
-                }]).constant('frontendPartialsPath','frontend/');
+                }]).constant('frontendPartialsPath','frontend/');*/
             /********************************************************************************************************************************/    
         </script>
     </cfoutput>

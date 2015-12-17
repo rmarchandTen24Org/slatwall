@@ -47,7 +47,6 @@
                          <span ng-repeat="promoCode in slatwall.getPromotionCodes()">
                             <span ng-bind="('PromotionCode: ' + promoCode)"></span><button ng-click="slatwall.doAction('removePromotionCode', {'promotionCode': promoCode })">Delete</button>
                          </span>
-                         
                      </p>
                      <br><br>
                      <p>
@@ -72,17 +71,18 @@
                  	         data-form-class="cssform" 
                  	         data-error-class="error" 
                  	         data-action="login">
-                       <div>   
+                 	         
+                       <div> 
+                       	  
                             <label>Email: <input name="emailAddress" type="email" ng-model="Account_Login.emailAddress"/></label>
                             <span error-for="emailAddress" class="error"></span>
                        </div>
                        <div>
                             <label>Password:<input name="password"  type="password" ng-model="Account_Login.password"/></label>
                             <span error-for="password" class="error"></span>
-                            <input type="submit" ng-click="$parent.submit()"></input>
+                            <input type="submit" ng-click="$parent.swForm.submit()" />
                        </div>
                       </sw-form>
-                     
                 </div>
             </div>
         </div>

@@ -665,12 +665,18 @@
 	//need to inject the public service into the rootscope for use in the directives.
 	//Also, we set the initial value for account and cart.
 	var frontendmodule = angular.module('frontend', ['ngRoute', ngslatwallmodel_module_1.ngslatwallmodelmodule.name])
-	    .config(['$routeProvider', 'pathBuilderConfig', function ($routeProvider, pathBuilderConfig) {
-	        //configure partials path properties
+	    .config(['$routeProvider', 'pathBuilderConfig', '$sceDelegateProvider', function ($routeProvider, pathBuilderConfig, $sceDelegateProvider) {
 	        pathBuilderConfig.setBaseURL('/');
-	        pathBuilderConfig.setBasePartialsPath('org/Hibachi/client/src/'); //<--move to custom assets
+	        pathBuilderConfig.setBasePartialsPath('custom/assets/');
 	    }])
-	    .run(['$rootScope', 'publicService', function ($rootScope, publicService) {
+	    .run(['$rootScope', 'publicService', 'pathBuilderConfig', function ($rootScope, publicService, pathBuilderConfig) {
+	        console.log(window.location);
+	        if (window.location.protocol !== undefined && window.location.protocol == 'http') {
+	            pathBuilderConfig.setBaseURL('http://' + window.location.hostname);
+	        }
+	        else if (window.location.protocol !== undefined && window.location.protocol == 'https') {
+	            pathBuilderConfig.setBaseURL('https://' + window.location.hostname);
+	        }
 	        $rootScope.hibachiScope = publicService;
 	        $rootScope.hibachiScope.getAccount();
 	        $rootScope.hibachiScope.getCart();
@@ -5553,7 +5559,6 @@
 	                value: $attrs.value || "",
 	                optionValues: $attrs.optionValues || []
 	            };
-	            console.log("Default Property Display", this.propertyDisplay);
 	        }
 	    }
 	    /**
@@ -5830,7 +5835,6 @@
 	        /* handle events
 	        */
 	        if (this.onSuccess) {
-	            console.log("OnSuccess: ", this.onSuccess);
 	            vm.parseEventString(this.onSuccess, "onSuccess");
 	            observerService.attach(vm.eventsHandler, "onSuccess");
 	        }
@@ -5849,18 +5853,16 @@
 	        this.templateUrl = "";
 	        this.transclude = true;
 	        this.restrict = "E";
-	        this.replace = true;
+	        //public replace          = true;
 	        this.controller = SWFormController;
-	        this.controllerAs = "swFormController";
-	        this.scope = {
-	            object: "=",
-	            context: "@",
-	            name: "@"
-	        };
+	        this.controllerAs = "swForm";
+	        this.scope = {};
 	        /**
 	         * Binds all of our variables to the controller so we can access using this
 	         */
 	        this.bindToController = {
+	            name: "@?",
+	            context: "@?",
 	            entityName: "@?",
 	            processObject: "@?",
 	            hiddenFields: "=?",
@@ -5868,11 +5870,11 @@
 	            actions: "@?",
 	            formClass: "@?",
 	            formData: "=?",
-	            object: "@?",
+	            object: "=?",
 	            onSuccess: "@?",
 	            onError: "@?",
 	            hideUntil: "@?",
-	            isProcessForm: "@"
+	            isProcessForm: "@?"
 	        };
 	        /**
 	            * Sets the context of this form
