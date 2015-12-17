@@ -52,8 +52,6 @@ class PublicService {
         *  @return a deferred promise that resolves server response or error. also includes updated account and cart.
         */
     public doAction=(action:string, data:any) => {
-        console.log("Post Data:", data);
-        
         this.hasErrors = false;
         this.success = false;
         this.errors = undefined;

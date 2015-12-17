@@ -17,16 +17,12 @@ declare var slatwallAngular:any;
 //Also, we set the initial value for account and cart.
 var frontendmodule = angular.module('frontend', ['ngRoute',ngslatwallmodelmodule.name])
 .config(['$routeProvider','pathBuilderConfig', '$sceDelegateProvider',($routeProvider, pathBuilderConfig, $sceDelegateProvider)=>{
-                    pathBuilderConfig.setBaseURL('/'); 
+                    /** set the baseURL */
+					pathBuilderConfig.setBaseURL('/');	
                     pathBuilderConfig.setBasePartialsPath('custom/assets/');
 }])
-.run(['$rootScope', 'publicService', 'pathBuilderConfig', function($rootScope, publicService, pathBuilderConfig) {
-	console.log(window.location);
-	if (window.location.protocol !== undefined && window.location.protocol == 'http'){
-		pathBuilderConfig.setBaseURL('http://' + window.location.hostname);	
-	}else if (window.location.protocol !== undefined && window.location.protocol == 'https'){
-		pathBuilderConfig.setBaseURL('https://' + window.location.hostname);
-	}
+.run(['$rootScope', 'publicService','pathBuilderConfig', function($rootScope, publicService,pathBuilderConfig) {
+	
 	$rootScope.hibachiScope = publicService;
 	$rootScope.hibachiScope.getAccount(); 
 	$rootScope.hibachiScope.getCart();

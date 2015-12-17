@@ -287,7 +287,7 @@ interface ViewModel {
                 vm.doAction(action);
             }
             
-            this.$scope.submit =  vm.submit;
+            this.submit =  vm.submit;
             /* give children access to the process
             */
             vm.getProcessObject = () =>
@@ -313,7 +313,6 @@ class SWForm implements ng.IDirective {
     public templateUrl      = "";
     public transclude       = true;
     public restrict         = "E";
-    //public replace          = true;
     public controller       = SWFormController;
     public controllerAs     = "swForm";
     public scope            = {};

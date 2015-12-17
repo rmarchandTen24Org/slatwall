@@ -36,7 +36,7 @@
 /// <reference path='../../../../typings/tsd.d.ts' />
 
 /** declare an interface so we don't get errors using vm */
-interface IFormFieldControllerVM{
+interface IInterface{
 	propertyDisplay:Object
 }
 
@@ -45,27 +45,41 @@ interface IFormFieldControllerVM{
 	*/
 class SWFFormFieldController {
 	/** declare our fields so we don't get errors using this */
-	public propertyDisplay;
+	public propertyDisplay:{
+		type:string,
+		object:Object,
+		class:string,
+		name:string,
+		value:string,
+		optionValues:Array<string>
+	};
+	public type;
+	public object;
+	public class;
+	public value;
+	public name;
+	public optionValues;
 
 	/**
 		* Handles the logic for the frontend version of the property display.
 		*/
 	public static $inject = ['$scope', '$element', '$attrs'];
 	constructor ( public $scope:ng.IScope, public $element:any, public $attrs:any ) {
-
-		let vm:IFormFieldControllerVM = this;
+		
+		let vm:any = this;
 		vm.propertyDisplay = this.propertyDisplay;
 		
-		if (!this.propertyDisplay){
-			this.propertyDisplay = {
-				type : $attrs.type || "text",
-				object : $attrs.object || {},
-				class : $attrs.class || "",
-				name : $attrs.name || "",
-				value : $attrs.value || "",
-				optionValues : $attrs.optionValues || []
-			}
+		if (this.propertyDisplay == undefined){
 			
+			this.propertyDisplay = {
+				type : vm.type || "text",
+				object : this.object || $scope[name],
+				class : this.class || "",
+				name : this.name || "",
+				value : this.value || "",
+				optionValues : this.optionValues || []
+			}
+			console.log("Property", this.propertyDisplay);
 		}
 		
 	}
@@ -76,13 +90,19 @@ class SWFFormFieldController {
 	*/
 class SWFFormField {
 	public restrict = "E";
-	public require = "^swfPropertyDisplay";
+	public require = "^?swfPropertyDisplay";
 	public controller = SWFFormFieldController;
 	public templateUrl;
 	public controllerAs = "swfFormField";
 	public scope = true;
 	public bindToController = {
-			propertyDisplay : "=?"
+			propertyDisplay : "=?",
+			type : "@?",
+			object : "=?",
+			class : "@?",
+			name : "@?",
+			value : "@?",
+			valueOptions : "=?"
 	};
 	public link:ng.IDirectiveLinkFn = (scope: ng.IScope, element: ng.IAugmentedJQuery, attrs:ng.IAttributes, formController:any, transcludeFn:ng.ITranscludeFunction) =>{
 

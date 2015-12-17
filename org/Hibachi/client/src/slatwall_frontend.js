@@ -666,17 +666,11 @@
 	//Also, we set the initial value for account and cart.
 	var frontendmodule = angular.module('frontend', ['ngRoute', ngslatwallmodel_module_1.ngslatwallmodelmodule.name])
 	    .config(['$routeProvider', 'pathBuilderConfig', '$sceDelegateProvider', function ($routeProvider, pathBuilderConfig, $sceDelegateProvider) {
+	        /** set the baseURL */
 	        pathBuilderConfig.setBaseURL('/');
 	        pathBuilderConfig.setBasePartialsPath('custom/assets/');
 	    }])
 	    .run(['$rootScope', 'publicService', 'pathBuilderConfig', function ($rootScope, publicService, pathBuilderConfig) {
-	        console.log(window.location);
-	        if (window.location.protocol !== undefined && window.location.protocol == 'http') {
-	            pathBuilderConfig.setBaseURL('http://' + window.location.hostname);
-	        }
-	        else if (window.location.protocol !== undefined && window.location.protocol == 'https') {
-	            pathBuilderConfig.setBaseURL('https://' + window.location.hostname);
-	        }
 	        $rootScope.hibachiScope = publicService;
 	        $rootScope.hibachiScope.getAccount();
 	        $rootScope.hibachiScope.getCart();
@@ -2076,7 +2070,6 @@
 	            *  @return a deferred promise that resolves server response or error. also includes updated account and cart.
 	            */
 	        this.doAction = function (action, data) {
-	            console.log("Post Data:", data);
 	            _this.hasErrors = false;
 	            _this.success = false;
 	            _this.errors = undefined;
@@ -5550,15 +5543,16 @@
 	        this.$attrs = $attrs;
 	        var vm = this;
 	        vm.propertyDisplay = this.propertyDisplay;
-	        if (!this.propertyDisplay) {
+	        if (this.propertyDisplay == undefined) {
 	            this.propertyDisplay = {
-	                type: $attrs.type || "text",
-	                object: $attrs.object || {},
-	                class: $attrs.class || "",
-	                name: $attrs.name || "",
-	                value: $attrs.value || "",
-	                optionValues: $attrs.optionValues || []
+	                type: vm.type || "text",
+	                object: this.object || $scope[name],
+	                class: this.class || "",
+	                name: this.name || "",
+	                value: this.value || "",
+	                optionValues: this.optionValues || []
 	            };
+	            console.log("Property", this.propertyDisplay);
 	        }
 	    }
 	    /**
@@ -5573,12 +5567,18 @@
 	var SWFFormField = (function () {
 	    function SWFFormField(coreFormPartialsPath, pathBuilderConfig) {
 	        this.restrict = "E";
-	        this.require = "^swfPropertyDisplay";
+	        this.require = "^?swfPropertyDisplay";
 	        this.controller = SWFFormFieldController;
 	        this.controllerAs = "swfFormField";
 	        this.scope = true;
 	        this.bindToController = {
-	            propertyDisplay: "=?"
+	            propertyDisplay: "=?",
+	            type: "@?",
+	            object: "=?",
+	            class: "@?",
+	            name: "@?",
+	            value: "@?",
+	            valueOptions: "=?"
 	        };
 	        this.link = function (scope, element, attrs, formController, transcludeFn) {
 	        };
@@ -5826,7 +5826,7 @@
 	            vm.formData = vm.getFormData() || "";
 	            vm.doAction(action);
 	        };
-	        this.$scope.submit = vm.submit;
+	        this.submit = vm.submit;
 	        /* give children access to the process
 	        */
 	        vm.getProcessObject = function () {
@@ -5853,7 +5853,6 @@
 	        this.templateUrl = "";
 	        this.transclude = true;
 	        this.restrict = "E";
-	        //public replace          = true;
 	        this.controller = SWFormController;
 	        this.controllerAs = "swForm";
 	        this.scope = {};

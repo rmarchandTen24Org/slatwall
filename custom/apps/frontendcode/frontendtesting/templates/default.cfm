@@ -20,6 +20,7 @@
                     	<br>
                     	<span ng-bind="(slatwall.account.firstName + ' ' + slatwall.account.lastName)"></span><br>
                 	</p>
+                	
                 	<p>
                         <b>Example login/logout using custom partial</b><br>       
                         Accepts a email and password and logs in the user.
@@ -64,25 +65,43 @@
                         <br><swf-directive partial-name="createaccountpartial"></swf-directive><br>
                      </p>
                      
-                      Example using a decoupled swForm to use your own HTML instead of property displays etc.
-                 	  <sw-form data-is-process-form="true" 
+                      <!--- Example just using HTML --->
+                      <b>Example login using HTML</b><br>
+                 	   <sw-form data-is-process-form="true" 
                  	         data-object="Account_Login" 
                  	         data-on-success="show:Account_Logout" 
                  	         data-form-class="cssform" 
                  	         data-error-class="error" 
                  	         data-action="login">
-                 	         
                        <div> 
-                       	  
                             <label>Email: <input name="emailAddress" type="email" ng-model="Account_Login.emailAddress"/></label>
                             <span error-for="emailAddress" class="error"></span>
                        </div>
+                       
                        <div>
                             <label>Password:<input name="password"  type="password" ng-model="Account_Login.password"/></label>
                             <span error-for="password" class="error"></span>
                             <input type="submit" ng-click="$parent.swForm.submit()" />
                        </div>
                       </sw-form>
+                      
+                      <br>
+                      <br>
+                      
+                      <!--- Example just using formFields --->
+                      <b>Example login using swfFormFields</b><br>
+                      <sw-form data-is-process-form="true" 
+                             data-object="Account_Login" 
+                             data-on-success="hide:this" 
+                             data-form-class="cssform" 
+                             data-error-class="error" 
+                             data-action="login">
+                       
+                            <swf-form-field type="email" object="Account_Login.emailAddress" class="formControl" name="emailAddress"></swf-form-field>
+                            <swf-form-field type="password" object="Account_Login.emailAddress" class="formControl" name="password"></swf-form-field>
+                            
+                            <input type="submit" ng-click="$parent.swForm.submit()" />
+                       </sw-form>
                 </div>
             </div>
         </div>
