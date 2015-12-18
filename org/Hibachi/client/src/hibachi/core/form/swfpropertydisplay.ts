@@ -104,7 +104,7 @@ class SWFPropertyDisplayController {
 		* Handles the logic for the frontend version of the property display.
 		*/
 	//@ngInject
-	constructor ( public $scope ) {
+	constructor ( public $scope, $slatwall ) {
 		
 		let vm:any = this;
 		vm.processObject = {};
@@ -124,8 +124,6 @@ class SWFPropertyDisplayController {
 		vm.object				= this.object; //this is the process object
 		vm.propertyIdentifier   = this.propertyIdentifier; //this is the property
 		vm.name			    	= this.name || vm.propertyIdentifier;
-		console.log("Name is:", vm.name, this.name, vm.propertyIdentifier);
-		console.log($scope, this, vm);
 		vm.loader				= this.loader;
 		vm.noValidate			= this.noValidate;
 
@@ -155,7 +153,9 @@ class SWFPropertyDisplayController {
 		if (this.type=="yesno" && (this.value && angular.isString(this.value))){
 			vm.selected == this.value;
 		}
-
+		
+		
+		
 		this.propertyDisplay = {
 			type: 	vm.type,
 			name: 	vm.name,
@@ -174,6 +174,9 @@ class SWFPropertyDisplayController {
 			value: 	vm.value,
 			errorText: vm.errorText,
 		};
+	}
+	public getType = (processObject, propertyIdentifier) => {
+				
 	}
 }
 
@@ -208,8 +211,13 @@ class SWFPropertyDisplay {
 			formTemplate: "@?",
 			class: "@?"
 	};
-	public link:ng.IDirectiveLinkFn = (scope, element: ng.IAugmentedJQuery, attrs:ng.IAttributes, formController:any, transcludeFn:ng.ITranscludeFunction) =>{
+	//@ngInject
+	public link:ng.IDirectiveLinkFn = (scope, element: ng.IAugmentedJQuery, attrs:ng.IAttributes, formController:any) =>{
 		scope.frmController = formController;
+		
+		if (scope.swfPropertyDisplay.type == undefined || scope.swfPropertyDisplay.type == ""){
+			console.log("Form Controller", scope, formController);
+		}
 	}
 	public static Factory(){
 		var directive = (

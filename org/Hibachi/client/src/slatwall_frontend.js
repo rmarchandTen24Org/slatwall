@@ -5638,6 +5638,7 @@
 	     */
 	    SWFormController.prototype.handleSelfInspection = function (context) {
 	        var _this = this;
+	        console.log("Context", context);
 	        /** local variables */
 	        this.processObject = this.object || "";
 	        var vm = context;
@@ -5855,7 +5856,7 @@
 	        this.restrict = "E";
 	        this.controller = SWFormController;
 	        this.controllerAs = "swForm";
-	        this.scope = {};
+	        this.scope = { object: "=?" };
 	        /**
 	         * Binds all of our variables to the controller so we can access using this
 	         */
@@ -5869,7 +5870,7 @@
 	            actions: "@?",
 	            formClass: "@?",
 	            formData: "=?",
-	            object: "=?",
+	            object: "@?",
 	            onSuccess: "@?",
 	            onError: "@?",
 	            hideUntil: "@?",
@@ -6559,8 +6560,10 @@
 	        * Handles the logic for the frontend version of the property display.
 	        */
 	    //@ngInject
-	    function SWFPropertyDisplayController($scope) {
+	    function SWFPropertyDisplayController($scope, $slatwall) {
 	        this.$scope = $scope;
+	        this.getType = function (processObject, propertyIdentifier) {
+	        };
 	        var vm = this;
 	        vm.processObject = {};
 	        vm.valueObjectProperty = this.valueObjectProperty;
@@ -6579,8 +6582,6 @@
 	        vm.object = this.object; //this is the process object
 	        vm.propertyIdentifier = this.propertyIdentifier; //this is the property
 	        vm.name = this.name || vm.propertyIdentifier;
-	        console.log("Name is:", vm.name, this.name, vm.propertyIdentifier);
-	        console.log($scope, this, vm);
 	        vm.loader = this.loader;
 	        vm.noValidate = this.noValidate;
 	        /** in order to attach the correct controller to local vm, we need a watch to bind */
@@ -6657,8 +6658,12 @@
 	            formTemplate: "@?",
 	            class: "@?"
 	        };
-	        this.link = function (scope, element, attrs, formController, transcludeFn) {
+	        //@ngInject
+	        this.link = function (scope, element, attrs, formController) {
 	            scope.frmController = formController;
+	            if (scope.swfPropertyDisplay.type == undefined || scope.swfPropertyDisplay.type == "") {
+	                console.log("Form Controller", scope, formController);
+	            }
 	        };
 	        this.templateUrl = pathBuilderConfig.buildPartialsPath(coreFormPartialsPath) + 'swfpropertydisplaypartial.html';
 	    }

@@ -86,8 +86,10 @@ interface ViewModel {
     * this class will attach any errors to the correspnding form element.
     */
     handleSelfInspection ( context ) {
+        console.log("Context", context);
     /** local variables */
         this.processObject = this.object || "";
+        
         let vm: ViewModel       = context;
             vm.hiddenFields     = this.hiddenFields;
             vm.entityName       = this.entityName;
@@ -315,7 +317,7 @@ class SWForm implements ng.IDirective {
     public restrict         = "E";
     public controller       = SWFormController;
     public controllerAs     = "swForm";
-    public scope            = {};
+    public scope            = { object : "=?" };
 
    /**
     * Binds all of our variables to the controller so we can access using this
@@ -330,7 +332,7 @@ class SWForm implements ng.IDirective {
             actions: "@?",
             formClass: "@?",
             formData: "=?",
-            object: "=?",
+            object: "@?",
             onSuccess: "@?",
             onError: "@?",
             hideUntil: "@?",
