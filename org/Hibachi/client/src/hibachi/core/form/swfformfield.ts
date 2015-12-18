@@ -81,7 +81,6 @@ class SWFFormFieldController {
 			}
 			console.log("Property", this.propertyDisplay);
 		}
-		
 	}
 }
 

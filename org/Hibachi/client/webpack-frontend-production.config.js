@@ -1,5 +1,9 @@
 //webpack --config webpack-production.config.js -p
-
+var slatwallAngular = {
+    slatwallConfig:{
+        baseUrl:'/'
+    }
+};
 var WebpackStrip = require('strip-loader');
 var devConfig = require('./webpack-frontend-develop.config');
 

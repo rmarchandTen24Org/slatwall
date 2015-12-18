@@ -6571,7 +6571,6 @@
 	        vm.label = this.label || "true";
 	        vm.labelText = this.labelText || "";
 	        vm.labelClass = this.labelClass || "";
-	        vm.name = this.name || "unnamed";
 	        vm.options = this.options;
 	        vm.optionValues = this.optionValues;
 	        vm.errorClass = this.errorClass;
@@ -6579,6 +6578,9 @@
 	        vm.formCtrl = {};
 	        vm.object = this.object; //this is the process object
 	        vm.propertyIdentifier = this.propertyIdentifier; //this is the property
+	        vm.name = this.name || vm.propertyIdentifier;
+	        console.log("Name is:", vm.name, this.name, vm.propertyIdentifier);
+	        console.log($scope, this, vm);
 	        vm.loader = this.loader;
 	        vm.noValidate = this.noValidate;
 	        /** in order to attach the correct controller to local vm, we need a watch to bind */
@@ -6633,12 +6635,12 @@
 	        this.transclude = true;
 	        this.templateUrl = "";
 	        this.controller = SWFPropertyDisplayController;
-	        this.controllerAs = "swfPropertyDisplayController";
+	        this.controllerAs = "swfPropertyDisplay";
 	        this.scope = {};
 	        this.bindToController = {
 	            type: "@?",
 	            name: "@?",
-	            class: "@?",
+	            propertyIdentifier: "@?",
 	            edit: "@?",
 	            title: "@?",
 	            hint: "@?",
@@ -6652,7 +6654,8 @@
 	            labelClass: "@?",
 	            errorText: "@?",
 	            errorClass: "@?",
-	            formTemplate: "@?"
+	            formTemplate: "@?",
+	            class: "@?"
 	        };
 	        this.link = function (scope, element, attrs, formController, transcludeFn) {
 	            scope.frmController = formController;

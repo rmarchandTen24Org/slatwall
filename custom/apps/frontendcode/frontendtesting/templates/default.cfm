@@ -98,7 +98,12 @@
                              data-error-class="error" 
                              data-action="login">
                        
-                            <swf-form-field type="email" object="Account_Login.emailAddress" class="formControl" name="emailAddress"></swf-form-field>
+                            <div>
+                            	<label >
+                            		Email Address
+                            	</label>
+                                <swf-form-field type="email" object="Account_Login.emailAddress" class="formControl" name="emailAddress"></swf-form-field>
+                            </div>
                             <swf-form-field type="password" object="Account_Login.emailAddress" class="formControl" name="password"></swf-form-field>
                             
                             <input type="submit" ng-click="$parent.swForm.submit()" />

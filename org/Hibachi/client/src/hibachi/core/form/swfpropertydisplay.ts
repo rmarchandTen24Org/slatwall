@@ -105,7 +105,7 @@ class SWFPropertyDisplayController {
 		*/
 	//@ngInject
 	constructor ( public $scope ) {
-
+		
 		let vm:any = this;
 		vm.processObject = {};
 		vm.valueObjectProperty 	= this.valueObjectProperty;
@@ -116,7 +116,6 @@ class SWFPropertyDisplayController {
 		vm.label			    = this.label || "true";
 		vm.labelText			= this.labelText || "";
 		vm.labelClass			= this.labelClass || "";
-		vm.name			    	= this.name || "unnamed";
 		vm.options				= this.options;
 		vm.optionValues        	= this.optionValues;
 		vm.errorClass			= this.errorClass;
@@ -124,6 +123,9 @@ class SWFPropertyDisplayController {
 		vm.formCtrl 			= {};
 		vm.object				= this.object; //this is the process object
 		vm.propertyIdentifier   = this.propertyIdentifier; //this is the property
+		vm.name			    	= this.name || vm.propertyIdentifier;
+		console.log("Name is:", vm.name, this.name, vm.propertyIdentifier);
+		console.log($scope, this, vm);
 		vm.loader				= this.loader;
 		vm.noValidate			= this.noValidate;
 
@@ -184,12 +186,12 @@ class SWFPropertyDisplay {
 	public transclude = true;
 	public templateUrl = "";
 	public controller = SWFPropertyDisplayController;
-	public controllerAs = "swfPropertyDisplayController";
+	public controllerAs = "swfPropertyDisplay";
 	public scope = {};
 	public bindToController = {
 			type: "@?",
 			name: "@?",
-			class: "@?",
+			propertyIdentifier: "@?",
 			edit: "@?",
 			title: "@?",
 			hint: "@?",
@@ -203,7 +205,8 @@ class SWFPropertyDisplay {
 			labelClass: "@?",
 			errorText: "@?",
 			errorClass: "@?",
-			formTemplate: "@?"
+			formTemplate: "@?",
+			class: "@?"
 	};
 	public link:ng.IDirectiveLinkFn = (scope, element: ng.IAugmentedJQuery, attrs:ng.IAttributes, formController:any, transcludeFn:ng.ITranscludeFunction) =>{
 		scope.frmController = formController;
