@@ -32,11 +32,14 @@
 				var simpleRepresentationPropertyName = example.getSimpleRepresentationPropertyName();
 				var primaryIDPropertyName = example.getPrimaryIDPropertyName();
 				var pmd = example.getPropertyMetaData( primaryIDPropertyName );
+				var simpleRepresentationMetaData = example.getPropertyMetaData( simpleRepresentationPropertyName );
+
 				if(!structKeyExists(pmd, "ormtype") || pmd.ormtype != 'integer') {
 					smartList.addKeywordProperty(propertyIdentifier=primaryIDPropertyName, weight=1);	
 				}
-				if(simpleRepresentationPropertyName != primaryIDPropertyName) {
-					smartList.addKeywordProperty(propertyIdentifier=simpleRepresentationPropertyName, weight=1);	
+				if(simpleRepresentationPropertyName != primaryIDPropertyName &&
+				(!structKeyExists(simpleRepresentationMetaData, "persistent") || simpleRepresentationMetaData.persistent)) {
+					smartList.addKeywordProperty(propertyIdentifier=simpleRepresentationPropertyName, weight=1);
 				}
 			}
 			
