@@ -216,7 +216,7 @@ class SWFPropertyDisplay {
 		scope.frmController = formController;
 		
 		if (scope.swfPropertyDisplay.type == undefined || scope.swfPropertyDisplay.type == ""){
-			console.log("Form Controller", scope, formController);
+			//console.log("Form Controller", scope, formController);
 		}
 	}
 	public static Factory(){

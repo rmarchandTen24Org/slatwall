@@ -44,8 +44,6 @@
                          
                          
                          <swf-directive partial-name="promopartial"></swf-directive>
-                         
-                         
                          <span ng-repeat="promoCode in slatwall.getPromotionCodes()">
                             <span ng-bind="('PromotionCode: ' + promoCode)"></span><button ng-click="slatwall.doAction('removePromotionCode', {'promotionCode': promoCode })">Delete</button>
                          </span>
@@ -104,10 +102,10 @@
                             	</label>
                                 <swf-form-field type="email" object="Account_Login.emailAddress" class="formControl" name="emailAddress"></swf-form-field>
                             </div>
-                            <swf-form-field type="password" object="Account_Login.emailAddress" class="formControl" name="password"></swf-form-field>
+                                <swf-form-field type="password" object="Account_Login.emailAddress" class="formControl" name="password"></swf-form-field>
                             
                             <input type="submit" ng-click="$parent.swForm.submit()" />
-                       </sw-form>
+                      </sw-form>
                 </div>
             </div>
         </div>

@@ -3019,11 +3019,12 @@
 	        this.init = function () {
 	            //			this.class = this.utilityService.replaceAll(this.utilityService.replaceAll(this.getAction(),':',''),'.','') + ' ' + this.class;
 	            _this.type = _this.type || 'link';
-	            if (_this.type == "button") {
+	            if (_this.type == "button" || _this.type == "submit") {
 	                //handle submit.
 	                /** in order to attach the correct controller to local vm, we need a watch to bind */
 	                var unbindWatcher = _this.$scope.$watch(function () { return _this.$scope.frmController; }, function (newValue, oldValue) {
 	                    if (newValue !== undefined) {
+	                        console.log("Value changed: ", newValue, _this.$scope);
 	                        _this.formCtrl = newValue;
 	                    }
 	                    unbindWatcher();
@@ -6662,7 +6663,6 @@
 	        this.link = function (scope, element, attrs, formController) {
 	            scope.frmController = formController;
 	            if (scope.swfPropertyDisplay.type == undefined || scope.swfPropertyDisplay.type == "") {
-	                console.log("Form Controller", scope, formController);
 	            }
 	        };
 	        this.templateUrl = pathBuilderConfig.buildPartialsPath(coreFormPartialsPath) + 'swfpropertydisplaypartial.html';

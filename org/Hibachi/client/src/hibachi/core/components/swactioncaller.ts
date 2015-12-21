@@ -47,20 +47,21 @@ class SWActionCallerController{
     }
 
     public init = ():void =>{
-//			this.class = this.utilityService.replaceAll(this.utilityService.replaceAll(this.getAction(),':',''),'.','') + ' ' + this.class;
+    //			this.class = this.utilityService.replaceAll(this.utilityService.replaceAll(this.getAction(),':',''),'.','') + ' ' + this.class;
         this.type = this.type || 'link';
             
-            if (this.type == "button"){
-                //handle submit.
-                /** in order to attach the correct controller to local vm, we need a watch to bind */
-                var unbindWatcher = this.$scope.$watch(() => { return this.$scope.frmController; }, (newValue, oldValue) => {
-                    if (newValue !== undefined){
-                        this.formCtrl = newValue;
-                    }
-                    unbindWatcher();
-                });
+        if (this.type == "button" || this.type == "submit"){
+            //handle submit.
+            /** in order to attach the correct controller to local vm, we need a watch to bind */
+            var unbindWatcher = this.$scope.$watch(() => { return this.$scope.frmController; }, (newValue, oldValue) => {
+                if (newValue !== undefined){
+                    console.log("Value changed: ", newValue, this.$scope);
+                    this.formCtrl = newValue;
+                }
+                unbindWatcher();
+            });
 
-            }
+        }
 //			this.actionItem = this.getActionItem();
 //			this.actionItemEntityName = this.getActionItemEntityName();
 //			this.text = this.getText();
@@ -283,8 +284,9 @@ class SWActionCaller implements ng.IDirective{
         ){
     }
 
-    public link:ng.IDirectiveLinkFn = (scope: any, element: ng.IAugmentedJQuery, attrs:ng.IAttributes, formController:any) =>{
+    public link:ng.IDirectiveLinkFn = (scope: ng.IScope, element: ng.IAugmentedJQuery, attrs:ng.IAttributes, formController:ng.IFormController) =>{
           scope.frmController = formController;
+          
     }
 
 }
