@@ -66,6 +66,7 @@ interface ViewModel {
         public events: any;
         public onSuccess:string;
         public onError:string;
+        public submit:Function;
         /**
          * This controller handles most of the logic for the swFormDirective when more complicated self inspection is needed.
          */

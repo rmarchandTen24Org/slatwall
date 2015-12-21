@@ -1,7 +1,9 @@
 /// <reference path='../../../../typings/slatwallTypescript.d.ts' />
 /// <reference path='../../../../typings/tsd.d.ts' />
 
-
+interface IActionCallerScope extends ng.IScope {
+    frmController:any
+}
 class SWActionCallerController{
     public type:string;
     public confirm:any;
@@ -55,7 +57,6 @@ class SWActionCallerController{
             /** in order to attach the correct controller to local vm, we need a watch to bind */
             var unbindWatcher = this.$scope.$watch(() => { return this.$scope.frmController; }, (newValue, oldValue) => {
                 if (newValue !== undefined){
-                    console.log("Value changed: ", newValue, this.$scope);
                     this.formCtrl = newValue;
                 }
                 unbindWatcher();
@@ -284,9 +285,8 @@ class SWActionCaller implements ng.IDirective{
         ){
     }
 
-    public link:ng.IDirectiveLinkFn = (scope: ng.IScope, element: ng.IAugmentedJQuery, attrs:ng.IAttributes, formController:ng.IFormController) =>{
+    public link:ng.IDirectiveLinkFn = (scope: IActionCallerScope, element: ng.IAugmentedJQuery, attrs:ng.IAttributes, formController:ng.IFormController) =>{
           scope.frmController = formController;
-          
     }
 
 }

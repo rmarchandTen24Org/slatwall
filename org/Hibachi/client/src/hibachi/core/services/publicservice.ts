@@ -63,8 +63,8 @@ class PublicService {
         let promise =  this.$http.post(urlBase, this.toFormParams(data), this.header).then((result:any)=>{
             
             /** update the account and the cart */
-            if (result.data.account){this.account = result.data.account;}
-            if (result.data.cart){this.cart = result.data.cart;}
+            this.account = result.data.account;
+            this.cart = result.data.cart;
             //if the action that was called was successful, then success is true.
             if (result.data.successfulActions.length){
                 this.success = true;

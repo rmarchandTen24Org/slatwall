@@ -2082,12 +2082,8 @@
 	            var urlBase = _this.baseUrl + action + _this.ajaxRequestParam;
 	            var promise = _this.$http.post(urlBase, _this.toFormParams(data), _this.header).then(function (result) {
 	                /** update the account and the cart */
-	                if (result.data.account) {
-	                    _this.account = result.data.account;
-	                }
-	                if (result.data.cart) {
-	                    _this.cart = result.data.cart;
-	                }
+	                _this.account = result.data.account;
+	                _this.cart = result.data.cart;
 	                //if the action that was called was successful, then success is true.
 	                if (result.data.successfulActions.length) {
 	                    _this.success = true;
@@ -3024,7 +3020,6 @@
 	                /** in order to attach the correct controller to local vm, we need a watch to bind */
 	                var unbindWatcher = _this.$scope.$watch(function () { return _this.$scope.frmController; }, function (newValue, oldValue) {
 	                    if (newValue !== undefined) {
-	                        console.log("Value changed: ", newValue, _this.$scope);
 	                        _this.formCtrl = newValue;
 	                    }
 	                    unbindWatcher();
