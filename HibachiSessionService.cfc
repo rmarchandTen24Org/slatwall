@@ -217,6 +217,9 @@ component output="false" accessors="true" extends="HibachiService"  {
 			account = arguments.account
 
 		};
+		
+		// Add the CKFinder Permissions
+		session["#getApplicationValue('applicationKey')#CKFinderAccess"] = getHibachiScope().authenticateAction("admin:main.ckfinder");
 
 		getHibachiAuditService().logAccountActivity( "login", auditLogData );
 		getHibachiEventService().announceEvent("onSessionAccountLogin");
