@@ -97,7 +97,9 @@ Notes:
 			<!--- if there is any error during update, restore the old files and throw the error --->
 			<cfcatch type="any">
 				<cfif updateCopyStarted>
-					<cfzip action="unzip" destination="../#slatwallRootPath#" file="#zipFileName#" >
+					<cfset var directoryLength = len(expandPath('/Slatwall'))>
+					<cfset var aboveRoot = left(expandPath('/Slatwall'),directoryLength-9)>
+					<cfzip action="unzip" destination="#aboveRoot#" file="#zipFileName#" >
 				</cfif>
 				<cfset logHibachiException(cfcatch) />
 				<cfset getHibachiScope().showMessageKey('admin.main.update.unexpected_error') />
