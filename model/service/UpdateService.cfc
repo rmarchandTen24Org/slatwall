@@ -73,18 +73,7 @@ Notes:
 			</cfif>
 			
 			<!--- before we do anything, make a backup --->
-			<cfdirectory action="list" directory="#slatwallRootPath#" name="slatwallDirectoryList">
-			<cfzip action="zip" file="#getTempDirectory()#slatwall_bak.zip" recurse="yes" overwrite="yes" source="#slatwallRootPath#">
-				<cfloop query="slatwallDirectoryList">
-					<cfif not listFindNoCase("WEB-INF,.project,setting.xml", slatwallDirectoryList.name)>
-						<cfif slatwallDirectoryList.type eq "File">
-							<cfzipparam source="#slatwallDirectoryList.name#" />
-						<cfelse>
-							<cfzipparam source="#slatwallDirectoryList.name#" prefix="#slatwallDirectoryList.name#" />
-						</cfif>
-					</cfif>
-				</cfloop>
-			</cfzip>
+			<cfset var zipFileName = makeBackup(slatwallRootPath)>
 			
 			<!--- start download --->
 			<cfhttp url="#downloadURL#" method="get" path="#getTempDirectory()#" file="#downloadFileName#" throwonerror="true" />
@@ -103,18 +92,36 @@ Notes:
 			<!--- Delete .zip file and unzipped folder --->
 			<cffile action="delete" file="#getTempDirectory()##downloadFileName#" >
 			<cfdirectory action="delete" directory="#sourcePath#" recurse="true">
-			
+			<cfthrow>
 			<cfset updateCMSApplications()>
 			<!--- if there is any error during update, restore the old files and throw the error --->
 			<cfcatch type="any">
 				<cfif updateCopyStarted>
-					<cfzip action="unzip" destination="#slatwallRootPath#" file="#getTempDirectory()#slatwall_bak.zip" >
+					<cfzip action="unzip" destination="#slatwallRootPath#" file="#zipFileName#" >
 				</cfif>
 				<cfset logHibachiException(cfcatch) />
 				<cfset getHibachiScope().showMessageKey('admin.main.update.unexpected_error') />
 			</cfcatch>
 			
 		</cftry>
+	</cffunction>
+	
+	<cffunction name="makeBackup">
+		<cfargument name="rootPath">
+		<cfdirectory action="list" directory="#arguments.rootPath#" name="slatwallDirectoryList">
+		<cfset var zipFileName = "#arguments.rootPath#slatwall_bak.zip">
+		<cfzip action="zip" file="#zipFileName#" recurse="yes" overwrite="yes" source="#arguments.rootPath#">
+			<cfloop query="slatwallDirectoryList">
+				<cfif not listFindNoCase("WEB-INF,.project,setting.xml", slatwallDirectoryList.name)>
+					<cfif slatwallDirectoryList.type eq "File">
+						<cfzipparam source="#slatwallDirectoryList.name#" />
+					<cfelse>
+						<cfzipparam source="#slatwallDirectoryList.name#" />
+					</cfif>
+				</cfif>
+			</cfloop>
+		</cfzip>
+		<cfreturn zipFileName>
 	</cffunction>
 	
 	<cffunction name="updateCMSApplications">
