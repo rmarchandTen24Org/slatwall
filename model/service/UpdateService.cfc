@@ -79,8 +79,6 @@ Notes:
 					<cfif not listFindNoCase("WEB-INF,.project,setting.xml", slatwallDirectoryList.name)>
 						<cfif slatwallDirectoryList.type eq "File">
 							<cfzipparam source="#slatwallDirectoryList.name#" />
-						<cfelse>
-							<cfzipparam source="#slatwallDirectoryList.name#" prefix="#slatwallDirectoryList.name#" />
 						</cfif>
 					</cfif>
 				</cfloop>
@@ -108,11 +106,7 @@ Notes:
 			<!--- if there is any error during update, restore the old files and throw the error --->
 			<cfcatch type="any">
 				<cfif updateCopyStarted>
-					<cfset var directoryLength = len(expandPath('/Slatwall'))>
-
-					<cfset var aboveRoot = left(expandPath('/Slatwall'),directoryLength-9)>
-					
-					<cfzip action="unzip" destination="#aboveRoot#" file="#getTempDirectory()#slatwall_bak.zip" >
+					<cfzip action="unzip" destination="#slatwallRoot#" file="#getTempDirectory()#slatwall_bak.zip" >
 				</cfif>
 				<cfset logHibachiException(cfcatch) />
 				<cfset getHibachiScope().showMessageKey('admin.main.update.unexpected_error') />
