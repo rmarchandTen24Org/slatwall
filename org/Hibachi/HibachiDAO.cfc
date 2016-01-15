@@ -123,7 +123,7 @@
 		}
 		
 		public any function getCollectionList(required string entityName,struct data={}){
-			var collectionList = getService('CollectionService').newCollection();
+			var collectionList = getService('HibachiCollectionService').newCollection();
 			collectionList.setup(argumentCollection=arguments);
 			return collectionList;
 		}
@@ -165,7 +165,7 @@
 		<cfset var entityIDproperty = arguments.entity.getPrimaryIDPropertyName() />
 		<cfset var propertyValue = arguments.entity.getValueByPropertyIdentifier( arguments.propertyName ) />
 		
-		<cfset var results = ormExecuteQuery(" from #entityName# e where e.#property# = :propertyValue and e.#entityIDproperty# != :entityID", {propertyValue=propertyValue, entityID=entityID}) />
+		<cfset var results = ormExecuteQuery(" from #entityName# e where e.#property# = :propertyValue and e.#entityIDproperty# != :entityID", {propertyValue=propertyValue, entityID=entityID},false,{maxresults=1}) />
 		
 		<cfif arrayLen(results)>
 			<cfreturn false />
@@ -301,12 +301,17 @@
 		<cfargument name="updateOnlyFlag" required="true" type="boolean" default="false" />
 		<cfargument name="returnPrimaryKeyValue" required="false" default="false" />
 		<cfargument name="primaryKeyColumn" required="false" default="" />
-		
+		<cfargument name="compositeKeyOperator" required="false" type="string" default="AND" />
+
 		<cfset var keyList = structKeyList(arguments.updateData) />
 		<cfset var rs = "" />
 		<cfset var sqlResult = "" />
 		<cfset var i = 0 />
 		
+		<cfif arguments.compositeKeyOperator eq "">
+			<cfset arguments.compositeKeyOperator = "AND">
+		</cfif>
+
 		<cfif arguments.returnPrimaryKeyValue>
 			<cfset var checkrs = "" />
 			<cfset var primaryKeyValue = "" />
@@ -319,7 +324,7 @@
 				WHERE
 					<cfloop from="1" to="#listLen(arguments.idColumns)#" index="i">
 						#listGetAt(arguments.idColumns, i)# = <cfqueryparam cfsqltype="cf_sql_#arguments.updateData[ listGetAt(arguments.idColumns, i) ].datatype#" value="#arguments.updateData[ listGetAt(arguments.idColumns, i) ].value#">
-						<cfif listLen(arguments.idColumns) gt i>AND </cfif>
+				<cfif listLen(arguments.idColumns) gt i>#arguments.compositeKeyOperator# </cfif>
 					</cfloop>
 			</cfquery>
 			<cfif checkrs.recordCount>

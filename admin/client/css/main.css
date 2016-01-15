@@ -1,4 +1,4 @@
-@import url("../../../client/lib/selectBoxIt/selectBoxIt.css");
+@import url("../../../org/Hibachi/client/lib/selectBoxIt/selectBoxIt.css");
 /*Import plugins*/
 .s-btn-ten24 {
   background-color: #f58620;
@@ -337,6 +337,21 @@ a {
 a:hover {
   color: #2a6496;
   text-decoration: none;
+}
+.badge {
+  display: inline-block;
+  min-width: 10px;
+  padding: 3px 5px;
+  font-size: 10px;
+  font-weight: 600;
+  line-height: 1;
+  color: #666;
+  text-align: center;
+  white-space: nowrap;
+  vertical-align: baseline;
+  background-color: #ccc;
+  border-radius: 2px;
+  line-height: 9px;
 }
 .btn,
 .dropdown-menu {
@@ -3775,6 +3790,7 @@ tabel .s-table-header {
 .s-pannel-group .panel-default a {
   text-decoration: none;
   cursor: pointer;
+  color: #aaa;
 }
 .s-pannel-group .s-panel-header-info {
   display: inline-block;

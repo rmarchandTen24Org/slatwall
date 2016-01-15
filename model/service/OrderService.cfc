@@ -782,19 +782,19 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 		var pc = getPromotionService().getPromotionCodeByPromotionCode(arguments.processObject.getPromotionCode());
 		//if we can't find a promotion or the promotion is no longer active then show the invalid promo message
 		if(isNull(pc) || !pc.getPromotion().getActiveFlag()) {
-			arguments.processObject.addError("promotionCode", rbKey('validate.promotionCode.invalid'));
+			arguments.processObject.addError("promotionCode", rbKey('validate.promotionCode.invalid'), true);
 		//if we have a promotion but it doesn't fall within the promos startData end date show invalid datetime message
 		} else if ( (!isNull(pc.getStartDateTime()) && pc.getStartDateTime() > now()) || (!isNull(pc.getEndDateTime()) && pc.getEndDateTime() < now()) || !pc.getPromotion().getCurrentFlag()) {
-			arguments.processObject.addError("promotionCode", rbKey('validate.promotionCode.invaliddatetime'));
+			arguments.processObject.addError("promotionCode", rbKey('validate.promotionCode.invaliddatetime'), true);
 		//if we find an promocode is only valid for specific accounts and the order account is not in the list then show invalid account message
 		} else if (arrayLen(pc.getAccounts()) && !pc.hasAccount(arguments.order.getAccount())) {
-			arguments.processObject.addError("promotionCode", rbKey('validate.promotionCode.invalidaccount'));
+			arguments.processObject.addError("promotionCode", rbKey('validate.promotionCode.invalidaccount'), true);
 		//if promo has a max account use and account related to order has used it more than the max account use, show over max account use message
 		} else if( !isNull(pc.getMaximumAccountUseCount()) && !isNull(arguments.order.getAccount()) && pc.getMaximumAccountUseCount() <= getPromotionService().getPromotionCodeAccountUseCount(pc, arguments.order.getAccount()) ) {
-			arguments.processObject.addError("promotionCode", rbKey('validate.promotionCode.overMaximumAccountUseCount'));
+			arguments.processObject.addError("promotionCode", rbKey('validate.promotionCode.overMaximumAccountUseCount'), true);
 		//if promo has a max use and the promo has been used more than the max use than display the over max use message
 		} else if( !isNull(pc.getMaximumUseCount()) && pc.getMaximumUseCount() <= getPromotionService().getPromotionCodeUseCount(pc) ) {
-			arguments.processObject.addError("promotionCode", rbKey('validate.promotionCode.overMaximumUseCount'));
+			arguments.processObject.addError("promotionCode", rbKey('validate.promotionCode.overMaximumUseCount'), true);
 		} else {
 			//check if whether the promo has been added already, if not then add it and update the ordr amounts
 			if(!arguments.order.hasPromotionCode( pc )) {
@@ -802,6 +802,7 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 				this.processOrder( arguments.order, {}, 'updateOrderAmounts' );
 			}
 		}
+
 		return arguments.order;
 	}
 
@@ -1101,69 +1102,43 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 		}
 
 		// Copy Order Items
-		for(var i=1; i<=arrayLen(arguments.order.getOrderItems()); i++) {
-			var newOrderItem = this.newOrderItem();
+		for(var i=1; i<=arrayLen(arguments.order.getRootOrderItems()); i++) {
 
-			newOrderItem.setPrice( arguments.order.getOrderItems()[i].getPrice() );
-			newOrderItem.setSkuPrice( arguments.order.getOrderItems()[i].getSkuPrice() );
-			newOrderItem.setCurrencyCode( arguments.order.getOrderItems()[i].getCurrencyCode() );
-			newOrderItem.setQuantity( arguments.order.getOrderItems()[i].getQuantity() );
-			newOrderItem.setOrderItemType( arguments.order.getOrderItems()[i].getOrderItemType() );
-			newOrderItem.setOrderItemStatusType( arguments.order.getOrderItems()[i].getOrderItemStatusType() );
-			newOrderItem.setSku( arguments.order.getOrderItems()[i].getSku() );
-			if(!isNull(arguments.order.getOrderItems()[i].getStock())) {
-				newOrderItem.setStock( arguments.order.getOrderItems()[i].getStock() );
-			}
+			var orderItemToDuplicate = arguments.order.getRootOrderItems()[i];
 
-			// copy order item customization
-			for(var attributeValue in arguments.order.getOrderItems()[i].getAttributeValues()) {
-				newOrderItem.setAttributeValue( attributeValue.getAttribute().getAttributeCode(), attributeValue.getAttributeValue() );
-			}
+			var newOrderItem = this.copyToNewOrderItem(orderItemToDuplicate);
 
 			var orderFulfillmentFound = false;
 
 			// check if there is a fulfillment method of this type in the order
 			for(var fulfillment in newOrder.getOrderFulfillments()) {
-				if(arguments.order.getOrderItems()[i].getOrderFulfillment().getFulfillmentMethod().getFulfillmentMethodID() == fulfillment.getFulfillmentMethod().getFulfillmentMethodID()) {
+				if(orderItemToDuplicate.getOrderFulfillment().getFulfillmentMethod().getFulfillmentMethodID() == fulfillment.getFulfillmentMethod().getFulfillmentMethodID()) {
 					var newOrderFulfillment = fulfillment;
 					orderFulfillmentFound = true;
 					break;
 				}
 			}
 
-            for(var recipient in arguments.order.getOrderItems()[i].getOrderItemGiftRecipients()){
-                var newRecipient = this.newOrderItemGiftRecipient();
-                newRecipient.setFirstName(recipient.getFirstName());
-                newRecipient.setLastName(recipient.getLastName());
-                newRecipient.setEmailAddress(recipient.getEmailAddress());
-                newRecipient.setGiftMessage(recipient.getGiftMessage());
-                newRecipient.setQuantity(recipient.getQuantity());
-                if(!isNull(recipient.getAccount())){
-                    newRecipient.setAccount(recipient.getAccount());
-                }
-                newRecipient.setOrderItem(newOrderItem);
-            }
-
 			// Duplicate Order Fulfillment
-			if(!orderFulfillmentFound && !isNull(arguments.order.getOrderItems()[i].getOrderFulfillment())) {
+			if(!orderFulfillmentFound && !isNull(orderItemToDuplicate.getOrderFulfillment())) {
 				var newOrderFulfillment = this.newOrderFulfillment();
-				newOrderFulfillment.setFulfillmentMethod( arguments.order.getOrderItems()[i].getOrderFulfillment().getFulfillmentMethod() );
+				newOrderFulfillment.setFulfillmentMethod( orderItemToDuplicate.getOrderFulfillment().getFulfillmentMethod() );
 				newOrderFulfillment.setOrder( newOrder );
-				newOrderFulfillment.setCurrencyCode( arguments.order.getOrderItems()[i].getOrderFulfillment().getCurrencyCode() );
-				if(!isNull(arguments.order.getOrderItems()[i].getOrderFulfillment().getShippingMethod())) {
-					newOrderFulfillment.setShippingMethod( arguments.order.getOrderItems()[i].getOrderFulfillment().getShippingMethod() );
+				newOrderFulfillment.setCurrencyCode( orderItemToDuplicate.getOrderFulfillment().getCurrencyCode() );
+				if(!isNull(orderItemToDuplicate.getOrderFulfillment().getShippingMethod())) {
+					newOrderFulfillment.setShippingMethod( orderItemToDuplicate.getOrderFulfillment().getShippingMethod() );
 				}
 
 				// Personal Info
 				if(copyPersonalDataFlag){
-					if(!isNull(arguments.order.getOrderItems()[i].getOrderFulfillment().getShippingAddress())) {
-						newOrderFulfillment.setShippingAddress( arguments.order.getOrderItems()[i].getOrderFulfillment().getShippingAddress().copyAddress( saveNewFlag ) );
+					if(!isNull(orderItemToDuplicate.getOrderFulfillment().getShippingAddress())) {
+						newOrderFulfillment.setShippingAddress( orderItemToDuplicate.getOrderFulfillment().getShippingAddress().copyAddress( saveNewFlag ) );
 					}
-					if(!isNull(arguments.order.getOrderItems()[i].getOrderFulfillment().getAccountAddress())) {
-						newOrderFulfillment.setAccountAddress( arguments.order.getOrderItems()[i].getOrderFulfillment().getAccountAddress() );
+					if(!isNull(orderItemToDuplicate.getOrderFulfillment().getAccountAddress())) {
+						newOrderFulfillment.setAccountAddress( orderItemToDuplicate.getOrderFulfillment().getAccountAddress() );
 					}
-					if(!isNull(arguments.order.getOrderItems()[i].getOrderFulfillment().getEmailAddress())) {
-						newOrderFulfillment.setEmailAddress( arguments.order.getOrderItems()[i].getOrderFulfillment().getEmailAddress() );
+					if(!isNull(orderItemToDuplicate.getOrderFulfillment().getEmailAddress())) {
+						newOrderFulfillment.setEmailAddress( orderItemToDuplicate.getOrderFulfillment().getEmailAddress() );
 					}
 				}
 
@@ -1202,6 +1177,44 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 		this.saveOrder( newOrder );
 
 		return newOrder;
+	}
+
+	public any function copyToNewOrderItem(required any orderItem){
+		var newOrderItem = this.newOrderItem();
+
+		newOrderItem.setPrice( arguments.orderItem.getPrice() );
+		newOrderItem.setSkuPrice( arguments.orderItem.getSkuPrice() );
+		newOrderItem.setCurrencyCode( arguments.orderItem.getCurrencyCode() );
+		newOrderItem.setQuantity(arguments.orderItem.getQuantity() );
+		newOrderItem.setOrderItemType( arguments.orderItem.getOrderItemType() );
+		newOrderItem.setOrderItemStatusType( arguments.orderItem.getOrderItemStatusType() );
+		newOrderItem.setSku( arguments.orderItem.getSku() );
+
+		if(!isNull(arguments.orderItem.getStock())) {
+			newOrderItem.setStock( arguments.orderItem.getStock() );
+		}
+		for(var attributeValue in arguments.orderItem.getAttributeValues()) {
+			newOrderItem.setAttributeValue( attributeValue.getAttribute().getAttributeCode(), attributeValue.getAttributeValue() );
+		}
+		for(var recipient in arguments.orderItem.getOrderItemGiftRecipients()){
+            var newRecipient = this.newOrderItemGiftRecipient();
+            newRecipient.setFirstName(recipient.getFirstName());
+            newRecipient.setLastName(recipient.getLastName());
+            newRecipient.setEmailAddress(recipient.getEmailAddress());
+            newRecipient.setGiftMessage(recipient.getGiftMessage());
+            newRecipient.setQuantity(recipient.getQuantity());
+            if(!isNull(recipient.getAccount())){
+                newRecipient.setAccount(recipient.getAccount());
+            }
+            newRecipient.setOrderItem(newOrderItem);
+        }
+        for(var j=1; j<arrayLen(orderItem.getChildOrderItems()); j++){
+			var newChildOrderItem = this.copyToNewOrderItem(orderItem.getChildOrderItems()[j]);
+			newOrderItem.addChildOrderItem(newChildOrderItem);
+
+		}
+
+        return newOrderItem;
 	}
 
 	public any function processOrder_forceItemQuantityUpdate(required any order) {
