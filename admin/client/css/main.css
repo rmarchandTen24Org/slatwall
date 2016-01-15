@@ -4179,6 +4179,9 @@ tabel .s-table-header {
   background: none !important;
   border: none !important;
 }
+.s-search-results-wrapper .s-photo img {
+  width: 100%;
+}
 .s-add-content .s-workflow-checkbox {
   display: inline-block;
   width: 100%;
@@ -4763,7 +4766,7 @@ a.disabled > i.hibachi-ui-radio-checked {
   max-height: 120px;
   max-height: 50vh;
   overflow-x: visible;
-  overflow-y: scroll;
+  overflow-y: auto;
   min-width: 100%;
 }
 .s-search-results-wrapper .dropdown-menu a {
@@ -4825,6 +4828,54 @@ a.disabled > i.hibachi-ui-radio-checked {
 }
 .s-search-results-wrapper .dropdown-menu .s-index-4:before {
   content: "----";
+  position: absolute;
+  top: 2px;
+  color: #ccc;
+  left: 15px;
+  font-size: 18px;
+  letter-spacing: 2px;
+}
+.s-search-results-wrapper .dropdown-menu .s-index-5 a {
+  padding-left: 55px;
+}
+.s-search-results-wrapper .dropdown-menu .s-index-5:before {
+  content: "-----";
+  position: absolute;
+  top: 2px;
+  color: #ccc;
+  left: 15px;
+  font-size: 18px;
+  letter-spacing: 2px;
+}
+.s-search-results-wrapper .dropdown-menu .s-index-6 a {
+  padding-left: 62px;
+}
+.s-search-results-wrapper .dropdown-menu .s-index-6:before {
+  content: "------";
+  position: absolute;
+  top: 2px;
+  color: #ccc;
+  left: 15px;
+  font-size: 18px;
+  letter-spacing: 2px;
+}
+.s-search-results-wrapper .dropdown-menu .s-index-7 a {
+  padding-left: 69px;
+}
+.s-search-results-wrapper .dropdown-menu .s-index-7:before {
+  content: "-------";
+  position: absolute;
+  top: 2px;
+  color: #ccc;
+  left: 15px;
+  font-size: 18px;
+  letter-spacing: 2px;
+}
+.s-search-results-wrapper .dropdown-menu .s-index-8 a {
+  padding-left: 76px;
+}
+.s-search-results-wrapper .dropdown-menu .s-index-8:before {
+  content: "--------";
   position: absolute;
   top: 2px;
   color: #ccc;
