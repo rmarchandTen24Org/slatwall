@@ -571,9 +571,9 @@ component extends="FW1.framework" {
 						//Update custom properties
 						var success = getHibachiScope().getService('updateService').updateEntitiesWithCustomProperties();
 						if (success){
-							writeLog(file="Slatwall", text="General Log - Attempting to update entities with custom properties.");
+							writeLog(file="#getApplicationValue('applicationKey')#", text="General Log - Attempting to update entities with custom properties.");
 						}else{
-							writeLog(file="Slatwall", text="General Log - Error updating entities with custom properties");
+							writeLog(file="#getApplicationValue('applicationKey')#", text="General Log - Error updating entities with custom properties");
 						}
 						// Reload ORM
 						writeLog(file="#variables.framework.applicationKey#", text="General Log - ORMReload() started");
