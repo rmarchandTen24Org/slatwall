@@ -33,6 +33,8 @@
 	<cfparam name="attributes.toggle" type="string" default="no" />							<!--- hint: This attribute indicates whether the field can be toggled to show/hide the value. Possible values are "no" (no toggling), "Show" (shows field by default but can be toggled), or "Hide" (hide field by default but can be toggled) --->
 	<cfparam name="attributes.displayType" default="dl" />									<!--- hint: This attribute is used to specify if the information comes back as a definition list (dl) item or table row (table) or with no formatting or label (plain) --->
 	
+	<cfparam name="attributes.showLabel" default="true" />									<!--- hint: This attribute is used to remove Label column--->
+
 	<cfparam name="attributes.errors" type="array" default="#arrayNew(1)#" />				<!--- hint: This holds any errors for the current field if needed --->
 	<cfparam name="attributes.displayVisible" type="string" default="" />					<!--- hint: binds visibility of element to another form value (ie displayVisible="{inputname}:{inputvalue}") --->
 	

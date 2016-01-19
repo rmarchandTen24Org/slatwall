@@ -55,6 +55,9 @@ Notes:
 	<cfparam name="attributes.object" type="any" default="" />
 	<cfparam name="attributes.recordsShow" type="string" default="10" />
 	<cfparam name="attributes.auditSmartList" type="any" default="" />
+	<cfparam name="attributes.findSubSystemSectionFlag" type="boolean" default="false" />
+
+	<cfset local.subsystemSection = "entity" />
 	
 	<cfset thisTag.hibachiAuditService = attributes.hibachiScope.getService('HibachiAuditService') />
 	<cfset thisTag.mode = "" />
@@ -114,6 +117,11 @@ Notes:
 						<cfset dateGroupingUsageFlags = {today=false, yesterday=false, thisweek=false, thismonth=false} />
 						
 						<cfloop array="#thisTag.auditArray#" index="currentAudit">
+
+							<cfif attributes.findSubSystemSectionFlag>
+
+								<cfset local.subsystemSection = #currentAudit.getRelatedEntity().getThisMetaData().HB_SUBSYSTEMSECTION#>
+							</cfif>
 							<!--- Remove time for day comparison --->
 							<cfset auditDate = createDate(year(currentAudit.getAuditDateTime()), month(currentAudit.getAuditDateTime()), day(currentAudit.getAuditDateTime())) />
 							
@@ -165,7 +173,7 @@ Notes:
 									<cfif not listFindNoCase("login,loginInvalid,logout", currentAudit.getAuditType())>
 										#currentAudit.getFormattedValue('auditType')#<cfif thisTag.mode neq 'object'> #currentAudit.getBaseObject()# - </cfif>
 										<cfif listFindNoCase("create,update,rollback,archive", currentAudit.getAuditType())>
-											<hb:HibachiActionCaller action="admin:entity.detail#currentAudit.getBaseObject()#" queryString="#currentAudit.getBaseObject()#ID=#currentAudit.getBaseID()#" text="#currentAudit.getTitle()#" />
+											<hb:HibachiActionCaller action="admin:#local.subsystemSection#.detail#currentAudit.getBaseObject()#" queryString="#currentAudit.getBaseObject()#ID=#currentAudit.getBaseID()#" text="#currentAudit.getTitle()#" />
 										<cfelse>
 											#currentAudit.getTitle()#
 										</cfif>
@@ -186,7 +194,7 @@ Notes:
 													</cfif>
 												<!--- propertyName is entity property --->
 												<cfelse>
-													#attributes.hibachiScope.rbKey("entity.#currentAudit.getBaseObject()#.#propertyName#")#<cfif indexCount neq structCount(data.newPropertyData)>,</cfif>
+													#attributes.hibachiScope.rbKey("#local.subsystemSection#.#currentAudit.getBaseObject()#.#propertyName#")#<cfif indexCount neq structCount(data.newPropertyData)>,</cfif>
 												</cfif>
 											</cfloop>
 											</em>
@@ -197,7 +205,7 @@ Notes:
 									</cfif>
 								</td>
 								<td class="admin admin1">
-									<hb:HibachiActionCaller action="admin:entity.preprocessaudit" queryString="processContext=rollback&#currentAudit.getPrimaryIDPropertyName()#=#currentAudit.getPrimaryIDValue()#&redirectAction=admin:entity.detail#currentAudit.getBaseObject()#" class="btn btn-xs" modal="true" icon="eye-open" iconOnly="true" />
+									<hb:HibachiActionCaller action="admin:entity.preprocessaudit" queryString="processContext=rollback&#currentAudit.getPrimaryIDPropertyName()#=#currentAudit.getPrimaryIDValue()#&redirectAction=admin:#local.subsystemSection#.detail#currentAudit.getBaseObject()#" class="btn btn-xs" modal="true" icon="eye-open" iconOnly="true" />
 								</td>
 							</tr>
 						</cfloop>

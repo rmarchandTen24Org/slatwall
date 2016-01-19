@@ -25,6 +25,7 @@
 
 	<cfparam name="attributes.toggle" type="string" default="no" />						<!--- hint: This attribute indicates whether the field can be toggled to show/hide the value. Possible values are "no" (no toggling), "Show" (shows field by default but can be toggled), or "Hide" (hide field by default but can be toggled) --->
 	<cfparam name="attributes.displayType" default="dl" />								<!--- hint: This attribute is used to specify if the information comes back as a definition list (dl) item or table row (table) or with no formatting or label (plain) --->
+	<cfparam name="attributes.showLabel" default="true" />									<!--- hint: This attribute is used to remove Label column --->
 
 	<cfparam name="attributes.removeLink" type="string" default="" />
 	<cfparam name="attributes.errors" type="array" default="#arrayNew(1)#" />			<!--- hint: This holds any errors for the current field if needed --->
@@ -38,13 +39,17 @@
 			<cfif attributes.edit>
 				<cfoutput>
 					<div class="form-group <cfif attributes.requiredFlag>s-required</cfif>">
-						<label for="#attributes.fieldName#" class="control-label col-sm-4">
-							<span class="s-title">#attributes.title#</span>
-							<cfif len(attributes.hint)> 
-								<a href="##" tabindex="-1" data-toggle="tooltip" class="s-tooltip-hint" data-title="#attributes.hint#"><i class="fa fa-info-circle"></i></a>
-							</cfif>
-						</label>
+						<cfif attributes.showLabel>
+							<label for="#attributes.fieldName#" class="control-label col-sm-4">
+								<span class="s-title">#attributes.title#</span>
+								<cfif len(attributes.hint)> 
+									<a href="##" tabindex="-1" data-toggle="tooltip" class="s-tooltip-hint" data-title="#attributes.hint#"><i class="fa fa-info-circle"></i></a>
+								</cfif>
+							</label>
 						<div class="col-sm-8">
+						<cfelse>
+							<div class="col-sm-12">
+						</cfif>
 							<hb:HibachiFormField attributecollection="#attributes#" />
 							<hb:HibachiErrorDisplay errors="#attributes.errors#" displayType="label" for="#attributes.fieldName#" />
 						</div>
@@ -53,9 +58,12 @@
 			<cfelse>
 				<cfoutput>
 					<div class="form-group">
-						<label class="control-label col-sm-4 title<cfif len(attributes.titleClass)> #attributes.titleClass#</cfif>">#attributes.title#<cfif len(attributes.hint)> <a href="##" tabindex="-1" data-toggle="tooltip" class="hint" data-title="#attributes.hint#"><i class="icon-question-sign"></i></a></cfif><cfif attributes.requiredFlag><i class="fa fa-asterisk"></i></cfif></label>
-						
+					<cfif attributes.showLabel>
+                        <label class="control-label col-sm-4 title<cfif len(attributes.titleClass)> #attributes.titleClass#</cfif>" style="text-align:left;">#attributes.title#<cfif len(attributes.hint)> <a href="##" tabindex="-1" data-toggle="tooltip" class="hint" data-title="#attributes.hint#"><i class="glyphicon glyphicon-question-sign"></i></a></cfif><cfif attributes.requiredFlag><i class="fa fa-asterisk"></i></cfif></label>
 						<div class="col-sm-8">
+						<cfelse>
+                        <div class="col-sm-12">
+					</cfif>
 							<cfif attributes.fieldType eq "listingMultiselect">
 								<p class="form-control-static value<cfif len(attributes.valueClass)> #attributes.valueClass#</cfif>"><hb:HibachiListingDisplay smartList="#attributes.valueOptionsSmartList#" multiselectFieldName="#attributes.fieldName#" multiselectValues="#attributes.value#" multiselectPropertyIdentifier="#attributes.multiselectPropertyIdentifier#" edit="false"></hb:HibachiListingDisplay></p>
 							<cfelse>
@@ -75,7 +83,7 @@
 			<cfif attributes.edit>
 				<cfoutput>
 					<tr>
-						<td class="title<cfif len(attributes.titleClass)> #attributes.titleClass#</cfif> <cfif attributes.requiredFlag>s-required</cfif>"><label for="#attributes.fieldName#">#attributes.title#<cfif len(attributes.hint)> <a href="##" tabindex="-1" data-toggle="tooltip" class="hint" data-title="#attributes.hint#"><i class="icon-question-sign"></i></a></cfif></label></td>
+						<td class="title<cfif len(attributes.titleClass)> #attributes.titleClass#</cfif> <cfif attributes.requiredFlag>s-required</cfif>"><label for="#attributes.fieldName#">#attributes.title#<cfif len(attributes.hint)> <a href="##" tabindex="-1" data-toggle="tooltip" class="hint" data-title="#attributes.hint#"><i class="glyphicon glyphicon-question-sign"></i></a></cfif></label></td>
 						<td class="value<cfif len(attributes.valueClass)> #attributes.valueClass#</cfif>">
 							<hb:HibachiFormField attributecollection="#attributes#" />
 							<hb:HibachiErrorDisplay errors="#attributes.errors#" displayType="label" for="#attributes.fieldName#" />
@@ -85,7 +93,7 @@
 			<cfelse>
 				<cfoutput>
 					<tr>
-						<td class="title<cfif len(attributes.titleClass)> #attributes.titleClass#</cfif>">#attributes.title#<cfif len(attributes.hint)> <a href="##" tabindex="-1" rel="tooltip" class="hint" title="#attributes.hint#"><i class="icon-question-sign"></i></a></cfif></td>
+						<td class="title<cfif len(attributes.titleClass)> #attributes.titleClass#</cfif>">#attributes.title#<cfif len(attributes.hint)> <a href="##" tabindex="-1" rel="tooltip" class="hint" title="#attributes.hint#"><i class="glyphicon glyphicon-question-sign"></i></a></cfif></td>
 						<cfif attributes.valueLink neq "">
 							<td class="value<cfif len(attributes.valueClass)> #attributes.valueClass#</cfif>"><a href="#attributes.valueLink#" class="#attributes.valueLinkClass#">#attributes.value#</a></td>
 						<cfelse>
@@ -99,7 +107,7 @@
 		<cfcase value="span">
 			<cfif attributes.edit>
 				<cfoutput>
-					<span class="title<cfif len(attributes.titleClass)> #attributes.titleClass#</cfif>"><label for="#attributes.fieldName#">#attributes.title#<cfif len(attributes.hint)> <a href="##" tabindex="-1" rel="tooltip" class="hint" title="#attributes.hint#"><i class="icon-question-sign"></i></a></cfif><cfif attributes.requiredFlag><i class="fa fa-asterisk"></i></cfif></label></span>
+					<span class="title<cfif len(attributes.titleClass)> #attributes.titleClass#</cfif>"><label for="#attributes.fieldName#">#attributes.title#<cfif len(attributes.hint)> <a href="##" tabindex="-1" rel="tooltip" class="hint" title="#attributes.hint#"><i class="glyphicon glyphicon-question-sign"></i></a></cfif><cfif attributes.requiredFlag><i class="fa fa-asterisk"></i></cfif></label></span>
 					<span class="value<cfif len(attributes.valueClass)> #attributes.valueClass#</cfif>">
 						<hb:HibachiFormField attributecollection="#attributes#" />
 						<hb:HibachiErrorDisplay errors="#attributes.errors#" displayType="label" for="#attributes.fieldName#" />
@@ -107,7 +115,7 @@
 				</cfoutput>
 			<cfelse>
 				<cfoutput>
-					<span class="title<cfif len(attributes.titleClass)> #attributes.titleClass#</cfif>">#attributes.title#<cfif len(attributes.hint)> <a href="##" tabindex="-1" rel="tooltip" class="hint" title="#attributes.hint#"><i class="icon-question-sign"></i></a></cfif>: </span>
+					<span class="title<cfif len(attributes.titleClass)> #attributes.titleClass#</cfif>">#attributes.title#<cfif len(attributes.hint)> <a href="##" tabindex="-1" rel="tooltip" class="hint" title="#attributes.hint#"><i class="glyphicon glyphicon-question-sign"></i></a></cfif>: </span>
 					<cfif attributes.valueLink neq "">
 						<span class="value<cfif len(attributes.valueClass)> #attributes.valueClass#</cfif>"><a href="#attributes.valueLink#" class="#attributes.valueLinkClass#">#attributes.value#</a></span>
 					<cfelse>

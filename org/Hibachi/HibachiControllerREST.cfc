@@ -42,8 +42,7 @@ component output="false" accessors="true" extends="HibachiController" {
     public any function before( required struct rc ) {
         
         arguments.rc.apiRequest = true;
-        
-        getFW().setView("public:main.blank");
+		getFW().setView("api:main.blank");
         arguments.rc.headers["Content-Type"] = "application/json";
         
         if(isnull(arguments.rc.apiResponse.content)){
@@ -133,7 +132,7 @@ component output="false" accessors="true" extends="HibachiController" {
     /**
      * This will return the path to an image based on the skuIDs (sent as a comma seperated list)
      * and a 'profile name' that determines the size of that image.
-     * http://slatwall/index.cfm?slatAction=api:main.getResizedImageByProfileName&profileName=orderItem&skuIDs=8a8080834721af1a0147220714810083,4028818d4b31a783014b5653ad5d00d2,4028818d4b05b871014b102acb0700d5
+	 * http://baseURL/index.cfm?hibachiAction=api:main.getResizedImageByProfileName&profileName=orderItem&skuIDs=8a8080834721af1a0147220714810083,4028818d4b31a783014b5653ad5d00d2,4028818d4b05b871014b102acb0700d5
      * ...should return three paths.
      */
     public any function getResizedImageByProfileName(required struct rc){
@@ -152,7 +151,7 @@ component output="false" accessors="true" extends="HibachiController" {
             var skus = [];
             
             //smart list to load up sku array
-            var skuSmartList = request.slatwallScope.getService('skuService').getSkuSmartList();
+            var skuSmartList = getHibachiScope().getService('skuService').getSkuSmartList();
             skuSmartList.addInFilter('skuID',rc.skuIDs);
             
             if( skuSmartList.getRecordsCount() > 0){
@@ -167,7 +166,7 @@ component output="false" accessors="true" extends="HibachiController" {
     
     public any function getValidationPropertyStatus(required struct rc){
             
-        var service = request.slatwallScope.getService("hibachiValidationService");
+        var service = getHibachiScope().getService("hibachiValidationService");
         var objectName = arguments.rc.object;
         var propertyIdentifier = arguments.rc.propertyIdentifier;
         var value = arguments.rc.value;
@@ -232,7 +231,7 @@ component output="false" accessors="true" extends="HibachiController" {
                 direction="ASC"
             }
         ];
-        //var data = {data=collectionEntity.getRecords()};
+        
         arguments.rc.apiResponse.content['data'] = collectionEntity.getRecords(formatRecords=false);
     }
     
@@ -481,8 +480,8 @@ component output="false" accessors="true" extends="HibachiController" {
         param name="arguments.rc.propertyIdentifiers" default="";
         //first check if we have an entityName value
         if(!structKeyExists(arguments.rc, "entityName")) {
-            arguments.rc.apiResponse.content['account'] = arguments.rc.$.slatwall.invokeMethod("getAccountData");
-            arguments.rc.apiResponse.content['cart'] = arguments.rc.$.slatwall.invokeMethod("getCartData");
+            arguments.rc.apiResponse.content['account'] = getHibachiScope().invokeMethod("getAccountData");
+            arguments.rc.apiResponse.content['cart'] = getHibachiScope().invokeMethod("getCartData");
         } else {
             //get entity service by entity name
             var currentPage = 1;
@@ -622,7 +621,10 @@ component output="false" accessors="true" extends="HibachiController" {
         
         // SAVE
         if(arguments.rc.context eq 'save') {
-            entity = entityService.invokeMethod("save#arguments.rc.entityName#", {1=entity, 2=structuredData});
+			if(!structKeyExists(arguments.rc,'validationContext')){
+				arguments.rc.validationContext = arguments.rc.context;
+			}
+			entity = entityService.invokeMethod("save#arguments.rc.entityName#", {1=entity, 2=structuredData, 3=arguments.rc.validationContext});
         // DELETE
         } else if (arguments.rc.context eq 'delete') {
             var deleteOK = entityService.invokeMethod("delete#arguments.rc.entityName#", {1=entity});

@@ -30,6 +30,8 @@
 	<cfparam name="attributes.deleteAction" type="string" default="#request.context.entityActionDetails.deleteAction#" />
 	<cfparam name="attributes.deleteQueryString" type="string" default="" />
 
+	<cfparam name="attributes.angularCreate" type="string" default="" />
+
 	<!--- Process Specific Values --->
 	<cfparam name="attributes.processAction" type="string" default="">
 	<cfparam name="attributes.processContext" type="string" default="">
@@ -91,7 +93,7 @@
 	
 									<!--- Detail: Actions --->
 									<cfif !attributes.object.isNew() && len( trim( thistag.generatedcontent ) ) gt 1>
-										<button class="btn dropdown-toggle btn-default" data-toggle="dropdown"><i class="icon-list-alt"></i> #attributes.hibachiScope.rbKey('define.actions')# <span class="caret"></span></button>
+										<button class="btn dropdown-toggle btn-default" data-toggle="dropdown"><i class="glyphicon glyphicon-list-alt"></i> #attributes.hibachiScope.rbKey('define.actions')# <span class="caret"></span></button>
 										<ul class="dropdown-menu pull-right">
 											<hb:HibachiDividerHider>
 												#thistag.generatedcontent#
@@ -170,7 +172,14 @@
 										<hb:HibachiActionCaller action="#attributes.cancelAction#" querystring="#attributes.cancelQueryString#" text="#attributes.hibachiScope.rbKey('define.cancel')#" class="btn btn-default" icon="remove icon-white">
 
 										<!--- Save --->
+                            			<cfif !len(attributes.angularCreate)>
 										<hb:HibachiActionCaller action="#request.context.entityActionDetails.saveAction#" text="#attributes.hibachiScope.rbKey('define.save')#" class="btn btn-success" type="button" submit="true" icon="ok icon-white">
+									<cfelse>
+                                            <button class="btn btn-success" title="Save" data-ng-click="#attributes.angularCreate#">
+                                                <i class="glyphicon glyphicon-ok icon-white"></i> #attributes.hibachiScope.rbKey('define.save')#
+                                            </button>
+										</cfif>
+
 									<cfelse>
 										<!--- Delete --->
 										<cfif attributes.showdelete>

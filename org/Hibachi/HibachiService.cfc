@@ -32,10 +32,13 @@
 				var simpleRepresentationPropertyName = example.getSimpleRepresentationPropertyName();
 				var primaryIDPropertyName = example.getPrimaryIDPropertyName();
 				var pmd = example.getPropertyMetaData( primaryIDPropertyName );
+				var simpleRepresentationMetaData = example.getPropertyMetaData( simpleRepresentationPropertyName );
+
 				if(!structKeyExists(pmd, "ormtype") || pmd.ormtype != 'integer') {
 					smartList.addKeywordProperty(propertyIdentifier=primaryIDPropertyName, weight=1);	
 				}
-				if(simpleRepresentationPropertyName != primaryIDPropertyName) {
+				if(simpleRepresentationPropertyName != primaryIDPropertyName &&
+				(!structKeyExists(simpleRepresentationMetaData, "persistent") || simpleRepresentationMetaData.persistent)) {
 					smartList.addKeywordProperty(propertyIdentifier=simpleRepresentationPropertyName, weight=1);	
 				}
 			}
@@ -838,6 +841,9 @@
 		public string function getLastEntityNameInPropertyIdentifier( required string entityName, required string propertyIdentifier ) {
 			if(listLen(arguments.propertyIdentifier, ".") gt 1) {
 				var propertiesSruct = getPropertiesStructByEntityName( arguments.entityName );
+				if(structKeyExists(propertiesSruct[listFirst(arguments.propertyIdentifier, ".")], "hb_cfc")){
+					propertiesSruct[listFirst(arguments.propertyIdentifier, ".")].cfc = propertiesSruct[listFirst(arguments.propertyIdentifier, ".")].hb_cfc;
+				}
 				if( !structKeyExists(propertiesSruct, listFirst(arguments.propertyIdentifier, ".")) || !structKeyExists(propertiesSruct[listFirst(arguments.propertyIdentifier, ".")], "cfc") ) {
 					throw("The Property Identifier #arguments.propertyIdentifier# is invalid for the entity #arguments.entityName#");
 				}

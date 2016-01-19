@@ -60,7 +60,7 @@ module slatwalladmin {
         public getActionItem = ():string =>{
             return this.utilityService.listLast(this.getAction(),'.');
         }
-        
+            
         public getActionItemEntityName = ():string =>{
             var firstFourLetters = this.utilityService.left(this.actionItem,4);
             var firstSixLetters = this.utilityService.left(this.actionItem,6);

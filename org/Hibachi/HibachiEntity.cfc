@@ -11,8 +11,8 @@ component output="false" accessors="true" persistent="false" extends="HibachiTra
 	property name="auditSmartList" type="any" persistent="false";
 	
 	// Audit Properties
-	property name="createdByAccount" persistent="false";
-	property name="modifiedByAccount" persistent="false";
+	property name="createdByAccount" hb_cfc="Account" persistent="false";
+	property name="modifiedByAccount" hb_cfc="Account" persistent="false";
 	   
 	// @hint global constructor arguments.  All Extended entities should call super.init() so that this gets called
 	public any function init() {
@@ -253,7 +253,7 @@ component output="false" accessors="true" persistent="false" extends="HibachiTra
 	// @hint public method to determine if this entity is audited
 	public any function getAuditableFlag() {
 		var metaData = getThisMetaData();
-		if(isPersistent() && (setting('globalAuditAutoArchiveVersionLimit') > 0) && (!structKeyExists(metaData, "hb_auditable") || (structKeyExists(metaData, "hb_auditable") && metaData.hb_auditable))) {
+		if(isPersistent() && (getHibachiScope().setting('globalAuditAutoArchiveVersionLimit') > 0) && (!structKeyExists(metaData, "hb_auditable") || (structKeyExists(metaData, "hb_auditable") && metaData.hb_auditable))) {
 			return true;
 		}
 		return false;
@@ -864,14 +864,45 @@ component output="false" accessors="true" persistent="false" extends="HibachiTra
 		var properties = getProperties();
 		
 		var defaultProperties = [];
-		for(var p=1; p<=arrayLen(properties); p++) {
-			if(len(arguments.excludesList) && ListFind(arguments.excludesList,properties[p].name)){
 				
+		//Check if there is any include column
+		if(len(arguments.includesList)){
+			var includesArray = ListToArray(arguments.includesList);
+			for(var inc in includesArray) {
+				//Loop through IncludeList looking for relational
+				inc = trim(inc);
+				if(Find('.', inc) != 0){
+					//if find, get relational Entity Stuck
+					var entityStructs = getService("hibachiService").getPropertiesByEntityName(
+						getService("hibachiService").getLastEntityNameInPropertyIdentifier(this.getClassName(), inc)
+					);
+
+					for(var property in entityStructs){
+						if(property.name == listLast(inc, '.')){
+							//Create a new struct instead of changing the "property" otherwise it will be cached with the changes.
+							var newProperty = {};
+							structAppend(newProperty,property);
+							newProperty.name = inc;
+							newProperty.title = rbKey('entity.'&inc);
+							//append the Column struct with relational name.
+							arrayAppend(defaultProperties, newProperty);
+						}
+					}
+				}else{
+					//If its not relationa, just use the current entity struct
+					for(var property in properties){
+						if(property.name == inc){
+							arrayAppend(defaultProperties, property);
+						}
+					}
+				}
+            }
 			}else{
-				if((len(arguments.includesList) && ListFind(arguments.includesList,properties[p].name)) || 
-				!structKeyExists(properties[p],'FKColumn') && (!structKeyExists(properties[p], "persistent") || 
-				properties[p].persistent)){
-					arrayAppend(defaultProperties,properties[p]);	
+			//Remove all non Persistent, Relational and Excluded columns
+			for(var property in properties){
+				if(!ListContains(excludesList, property.name) && !structKeyExists(property,'FKColumn') &&
+				(!structKeyExists(property, "persistent") || property.persistent)){
+					arrayAppend(defaultProperties,property);
 				}
 			}
 		}
@@ -882,8 +913,12 @@ component output="false" accessors="true" persistent="false" extends="HibachiTra
 		var properties = getProperties();
 		var defaultProperties = [];
 		for(var p=1; p<=arrayLen(properties); p++) {
-			if((len(includesList) && ListFind(arguments.includesList,properties[p].name) && !ListFind(arguments.excludesList,properties[p].name)) 
-			|| (!structKeyExists(properties[p], "persistent") || properties[p].persistent)){
+			if(len(arguments.includesList)){
+				if(ListFind(arguments.includesList,properties[p].name)){
+					properties[p]['displayPropertyIdentifier'] = getPropertyTitle(properties[p].name);
+					arrayAppend(defaultProperties, properties[p]);
+				}
+			}else if(!ListFind(arguments.excludesList,properties[p].name) && (!structKeyExists(properties[p], "persistent") || properties[p].persistent)){
 				properties[p]['displayPropertyIdentifier'] = getPropertyTitle(properties[p].name);
 				arrayAppend(defaultProperties,properties[p]);	
 			}
