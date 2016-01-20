@@ -5232,12 +5232,14 @@ a.disabled > i.hibachi-ui-radio-checked {
 .s-detail-modules-wrapper .s-sm-content-block .s-content .s-title {
   color: #000;
 }
-.s-detail-modules-wrapper .s-sm-content-block .s-content .s-title > .s-number {
-  color: #666;
+.s-detail-modules-wrapper .s-sm-content-block .s-content .s-search {
+  margin-top: 3px;
 }
-.s-detail-modules-wrapper .s-sm-content-block .s-content.s-single-line .s-title {
-  font-size: 13px;
-  margin-top: 8px;
+.s-detail-modules-wrapper .s-sm-content-block .s-link {
+  position: absolute;
+  right: 15px;
+  bottom: 1px;
+  font-size: 10px;
 }
 .s-detail-modules-wrapper .s-sm-content-block .s-content .s-body {
   color: #999;
