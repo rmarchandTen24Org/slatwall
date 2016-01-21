@@ -54,12 +54,11 @@
 	/*jshint browser:true */
 	var basebootstrap_1 = __webpack_require__(1);
 	var slatwalladmin_module_1 = __webpack_require__(57);
-	var logger_module_1 = __webpack_require__(181);
 	//custom bootstrapper
 	var bootstrapper = (function (_super) {
 	    __extends(bootstrapper, _super);
 	    function bootstrapper() {
-	        this.myApplication = [slatwalladmin_module_1.slatwalladminmodule.name, logger_module_1.loggermodule.name];
+	        this.myApplication = slatwalladmin_module_1.slatwalladminmodule.name;
 	        var angular = _super.call(this);
 	        angular.bootstrap();
 	    }
@@ -72,7 +71,7 @@
 /* 1 */
 /***/ function(module, exports, __webpack_require__) {
 
-	/// <reference path='../typings/slatwallTypescript.d.ts' />
+	/// <reference path='../typings/hibachiTypescript.d.ts' />
 	/// <reference path='../typings/tsd.d.ts' />
 	__webpack_require__(2)();
 	var core_module_1 = __webpack_require__(11);
@@ -180,7 +179,7 @@
 /* 2 */
 /***/ function(module, exports, __webpack_require__) {
 
-	/// <reference path='../typings/slatwallTypescript.d.ts' />
+	/// <reference path='../typings/hibachiTypescript.d.ts' />
 	/// <reference path='../typings/tsd.d.ts' />
 	module.exports = function () {
 	    /* JS */
@@ -838,7 +837,7 @@
 /* 11 */
 /***/ function(module, exports, __webpack_require__) {
 
-	/// <reference path='../../typings/slatwallTypescript.d.ts' />
+	/// <reference path='../../typings/hibachiTypescript.d.ts' />
 	/// <reference path='../../typings/tsd.d.ts' />
 	//services
 	var publicservice_1 = __webpack_require__(12);
@@ -1863,7 +1862,7 @@
 /* 12 */
 /***/ function(module, exports) {
 
-	/// <reference path='../../../typings/slatwallTypescript.d.ts' />
+	/// <reference path='../../../typings/hibachiTypescript.d.ts' />
 	/// <reference path='../../../typings/tsd.d.ts' />
 	var PublicService = (function () {
 	    //@ngInject
@@ -2019,7 +2018,7 @@
 	    function __() { this.constructor = d; }
 	    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
 	};
-	/// <reference path='../../../typings/slatwallTypescript.d.ts' />
+	/// <reference path='../../../typings/hibachiTypescript.d.ts' />
 	/// <reference path='../../../typings/tsd.d.ts' />
 	/*services return promises which can be handled uniquely based on success or failure by the controller*/
 	var baseservice_1 = __webpack_require__(14);
@@ -2263,7 +2262,7 @@
 /* 14 */
 /***/ function(module, exports) {
 
-	/// <reference path='../../../typings/slatwallTypescript.d.ts' />
+	/// <reference path='../../../typings/hibachiTypescript.d.ts' />
 	/// <reference path='../../../typings/tsd.d.ts' />
 	var BaseService = (function () {
 	    function BaseService() {
@@ -2277,7 +2276,7 @@
 /* 15 */
 /***/ function(module, exports, __webpack_require__) {
 
-	/// <reference path='../../../typings/slatwallTypescript.d.ts' />
+	/// <reference path='../../../typings/hibachiTypescript.d.ts' />
 	/// <reference path='../../../typings/tsd.d.ts' />
 	/*services return promises which can be handled uniquely based on success or failure by the controller*/
 	var __extends = (this && this.__extends) || function (d, b) {
@@ -2339,7 +2338,7 @@
 /* 16 */
 /***/ function(module, exports, __webpack_require__) {
 
-	/// <reference path='../../../typings/slatwallTypescript.d.ts' />
+	/// <reference path='../../../typings/hibachiTypescript.d.ts' />
 	/// <reference path='../../../typings/tsd.d.ts' />
 	/**
 	 * @ngdoc service
@@ -2455,7 +2454,7 @@
 /* 17 */
 /***/ function(module, exports) {
 
-	/// <reference path='../../../typings/slatwallTypescript.d.ts' />
+	/// <reference path='../../../typings/hibachiTypescript.d.ts' />
 	/// <reference path='../../../typings/tsd.d.ts' />
 	var Form = (function () {
 	    //@ngInject
@@ -2545,7 +2544,7 @@
 /* 18 */
 /***/ function(module, exports) {
 
-	/// <reference path='../../../typings/slatwallTypescript.d.ts' />
+	/// <reference path='../../../typings/hibachiTypescript.d.ts' />
 	/// <reference path='../../../typings/tsd.d.ts' />
 	var MetaDataService = (function () {
 	    //@ngInject
@@ -2641,7 +2640,7 @@
 /* 19 */
 /***/ function(module, exports) {
 
-	/// <reference path='../../../typings/slatwallTypescript.d.ts' />
+	/// <reference path='../../../typings/hibachiTypescript.d.ts' />
 	/// <reference path='../../../typings/tsd.d.ts' />
 	var RbKeyService = (function () {
 	    //@ngInject
@@ -2748,7 +2747,7 @@
 /* 20 */
 /***/ function(module, exports) {
 
-	/// <reference path='../../../typings/slatwallTypescript.d.ts' />
+	/// <reference path='../../../typings/hibachiTypescript.d.ts' />
 	/// <reference path='../../../typings/tsd.d.ts' />
 	// interface ISlatwallRootScopeService extends ng.IRootScopeService{
 	//     loadedResourceBundle:boolean;
@@ -3220,7 +3219,7 @@
 /* 21 */
 /***/ function(module, exports) {
 
-	/// <reference path='../../../typings/slatwallTypescript.d.ts' />
+	/// <reference path='../../../typings/hibachiTypescript.d.ts' />
 	/// <reference path='../../../typings/tsd.d.ts' />
 	var GlobalSearchController = (function () {
 	    //@ngInject
@@ -3358,7 +3357,7 @@
 /* 22 */
 /***/ function(module, exports) {
 
-	/// <reference path='../../../typings/slatwallTypescript.d.ts' />
+	/// <reference path='../../../typings/hibachiTypescript.d.ts' />
 	/// <reference path='../../../typings/tsd.d.ts' />
 	var PercentageFilter = (function () {
 	    function PercentageFilter() {
@@ -3382,7 +3381,7 @@
 /* 23 */
 /***/ function(module, exports) {
 
-	/// <reference path='../../../typings/slatwallTypescript.d.ts' />
+	/// <reference path='../../../typings/hibachiTypescript.d.ts' />
 	/// <reference path='../../../typings/tsd.d.ts' />
 	var SWActionCallerController = (function () {
 	    //@ngInject
@@ -3639,7 +3638,7 @@
 /* 24 */
 /***/ function(module, exports) {
 
-	/// <reference path='../../../typings/slatwallTypescript.d.ts' />
+	/// <reference path='../../../typings/hibachiTypescript.d.ts' />
 	/// <reference path='../../../typings/tsd.d.ts' />
 	var SWTypeaheadSearchController = (function () {
 	    // @ngInject
@@ -3839,8 +3838,8 @@
 /* 25 */
 /***/ function(module, exports) {
 
-	/// <reference path='../../../typings/slatwallTypescript.d.ts' />
-	/// <reference path='../../../typings/slatwallTypescript.d.ts' />
+	/// <reference path='../../../typings/hibachiTypescript.d.ts' />
+	/// <reference path='../../../typings/hibachiTypescript.d.ts' />
 	var SWTypeaheadSearchLineItemController = (function () {
 	    function SWTypeaheadSearchLineItemController() {
 	        this.init = function () {
@@ -3885,7 +3884,7 @@
 /* 26 */
 /***/ function(module, exports) {
 
-	/// <reference path='../../../typings/slatwallTypescript.d.ts' />
+	/// <reference path='../../../typings/hibachiTypescript.d.ts' />
 	/// <reference path='../../../typings/tsd.d.ts' />
 	var SWActionCallerDropdownController = (function () {
 	    function SWActionCallerDropdownController() {
@@ -3933,7 +3932,7 @@
 /* 27 */
 /***/ function(module, exports) {
 
-	/// <reference path='../../../typings/slatwallTypescript.d.ts' />
+	/// <reference path='../../../typings/hibachiTypescript.d.ts' />
 	/// <reference path='../../../typings/tsd.d.ts' />
 	var SWColumnSorter = (function () {
 	    //@ngInject
@@ -3980,7 +3979,7 @@
 /* 28 */
 /***/ function(module, exports) {
 
-	/// <reference path='../../../typings/slatwallTypescript.d.ts' />
+	/// <reference path='../../../typings/hibachiTypescript.d.ts' />
 	/// <reference path='../../../typings/tsd.d.ts' />
 	/**
 	 * <------------------------------------------------------------------------------------------------------------------------------------>
@@ -4132,7 +4131,7 @@
 /* 29 */
 /***/ function(module, exports) {
 
-	/// <reference path='../../../typings/slatwallTypescript.d.ts' />
+	/// <reference path='../../../typings/hibachiTypescript.d.ts' />
 	/// <reference path='../../../typings/tsd.d.ts' />
 	var SWEntityActionBarController = (function () {
 	    function SWEntityActionBarController() {
@@ -4197,7 +4196,7 @@
 /* 30 */
 /***/ function(module, exports) {
 
-	/// <reference path='../../../typings/slatwallTypescript.d.ts' />
+	/// <reference path='../../../typings/hibachiTypescript.d.ts' />
 	/// <reference path='../../../typings/tsd.d.ts' />
 	var SWEntityActionBarButtonGroupController = (function () {
 	    function SWEntityActionBarButtonGroupController() {
@@ -4235,7 +4234,7 @@
 /* 31 */
 /***/ function(module, exports) {
 
-	/// <reference path='../../../typings/slatwallTypescript.d.ts' />
+	/// <reference path='../../../typings/hibachiTypescript.d.ts' />
 	/// <reference path='../../../typings/tsd.d.ts' />
 	var SWExpandableRecordController = (function () {
 	    //@ngInject
@@ -4389,7 +4388,7 @@
 /* 32 */
 /***/ function(module, exports, __webpack_require__) {
 
-	/// <reference path='../../../typings/slatwallTypescript.d.ts' />
+	/// <reference path='../../../typings/hibachiTypescript.d.ts' />
 	/// <reference path='../../../typings/tsd.d.ts' />
 	var md5 = __webpack_require__(33);
 	var SWGravatarController = (function () {
@@ -4760,7 +4759,7 @@
 /* 37 */
 /***/ function(module, exports) {
 
-	/// <reference path='../../../typings/slatwallTypescript.d.ts' />
+	/// <reference path='../../../typings/hibachiTypescript.d.ts' />
 	/// <reference path='../../../typings/tsd.d.ts' />
 	var SWListingDisplayController = (function () {
 	    //@ngInject
@@ -5249,7 +5248,7 @@
 /* 38 */
 /***/ function(module, exports) {
 
-	/// <reference path='../../../typings/slatwallTypescript.d.ts' />
+	/// <reference path='../../../typings/hibachiTypescript.d.ts' />
 	/// <reference path='../../../typings/tsd.d.ts' />
 	var SWListingAggregateController = (function () {
 	    function SWListingAggregateController() {
@@ -5297,7 +5296,7 @@
 /* 39 */
 /***/ function(module, exports) {
 
-	/// <reference path='../../../typings/slatwallTypescript.d.ts' />
+	/// <reference path='../../../typings/hibachiTypescript.d.ts' />
 	/// <reference path='../../../typings/tsd.d.ts' />
 	var SWListingColorFilterController = (function () {
 	    function SWListingColorFilterController() {
@@ -5355,7 +5354,7 @@
 /* 40 */
 /***/ function(module, exports) {
 
-	/// <reference path='../../../typings/slatwallTypescript.d.ts' />
+	/// <reference path='../../../typings/hibachiTypescript.d.ts' />
 	/// <reference path='../../../typings/tsd.d.ts' />
 	var SWListingColumnController = (function () {
 	    function SWListingColumnController() {
@@ -5424,7 +5423,7 @@
 /* 41 */
 /***/ function(module, exports) {
 
-	/// <reference path='../../../typings/slatwallTypescript.d.ts' />
+	/// <reference path='../../../typings/hibachiTypescript.d.ts' />
 	/// <reference path='../../../typings/tsd.d.ts' />
 	var SWListingFilterController = (function () {
 	    function SWListingFilterController() {
@@ -5472,7 +5471,7 @@
 /* 42 */
 /***/ function(module, exports) {
 
-	/// <reference path='../../../typings/slatwallTypescript.d.ts' />
+	/// <reference path='../../../typings/hibachiTypescript.d.ts' />
 	/// <reference path='../../../typings/tsd.d.ts' />
 	var SWListingOrderByController = (function () {
 	    function SWListingOrderByController() {
@@ -5517,7 +5516,7 @@
 /* 43 */
 /***/ function(module, exports) {
 
-	/// <reference path='../../../typings/slatwallTypescript.d.ts' />
+	/// <reference path='../../../typings/hibachiTypescript.d.ts' />
 	/// <reference path='../../../typings/tsd.d.ts' />
 	var SWLoginController = (function () {
 	    function SWLoginController($route, $log, $window, corePartialsPath, $hibachi, dialogService) {
@@ -5586,7 +5585,7 @@
 /* 44 */
 /***/ function(module, exports) {
 
-	/// <reference path='../../../typings/slatwallTypescript.d.ts' />
+	/// <reference path='../../../typings/hibachiTypescript.d.ts' />
 	/// <reference path='../../../typings/tsd.d.ts' />
 	var SWNumbersOnly = (function () {
 	    function SWNumbersOnly() {
@@ -5642,7 +5641,7 @@
 /* 45 */
 /***/ function(module, exports) {
 
-	/// <reference path='../../../typings/slatwallTypescript.d.ts' />
+	/// <reference path='../../../typings/hibachiTypescript.d.ts' />
 	/// <reference path='../../../typings/tsd.d.ts' />
 	var SWLoading = (function () {
 	    function SWLoading($log, corePartialsPath, pathBuilderConfig) {
@@ -5677,7 +5676,7 @@
 /* 46 */
 /***/ function(module, exports) {
 
-	/// <reference path='../../../typings/slatwallTypescript.d.ts' />
+	/// <reference path='../../../typings/hibachiTypescript.d.ts' />
 	/// <reference path='../../../typings/tsd.d.ts' />
 	var SWScrollTrigger = (function () {
 	    function SWScrollTrigger($rootScope, $window, $timeout) {
@@ -5768,7 +5767,7 @@
 /* 47 */
 /***/ function(module, exports) {
 
-	/// <reference path='../../../typings/slatwallTypescript.d.ts' />
+	/// <reference path='../../../typings/hibachiTypescript.d.ts' />
 	/// <reference path='../../../typings/tsd.d.ts' />
 	var SWRbKey = (function () {
 	    function SWRbKey($hibachi, observerService, utilityService, $rootScope, $log, rbkeyService) {
@@ -5811,7 +5810,7 @@
 /* 48 */
 /***/ function(module, exports) {
 
-	/// <reference path='../../../typings/slatwallTypescript.d.ts' />
+	/// <reference path='../../../typings/hibachiTypescript.d.ts' />
 	/// <reference path='../../../typings/tsd.d.ts' />
 	var SWOptions = (function () {
 	    function SWOptions($log, $hibachi, observerService, corePartialsPath, pathBuilderConfig) {
@@ -5876,7 +5875,7 @@
 /* 49 */
 /***/ function(module, exports) {
 
-	/// <reference path='../../../typings/slatwallTypescript.d.ts' />
+	/// <reference path='../../../typings/hibachiTypescript.d.ts' />
 	/// <reference path='../../../typings/tsd.d.ts' />
 	var SWSelection = (function () {
 	    function SWSelection($log, selectionService, observerService, corePartialsPath, pathBuilderConfig) {
@@ -5936,7 +5935,7 @@
 /* 50 */
 /***/ function(module, exports) {
 
-	/// <reference path='../../../typings/slatwallTypescript.d.ts' />
+	/// <reference path='../../../typings/hibachiTypescript.d.ts' />
 	/// <reference path='../../../typings/tsd.d.ts' />
 	var SWClickOutside = (function () {
 	    //@ngInject
@@ -5992,7 +5991,7 @@
 /* 51 */
 /***/ function(module, exports) {
 
-	/// <reference path='../../../typings/slatwallTypescript.d.ts' />
+	/// <reference path='../../../typings/hibachiTypescript.d.ts' />
 	/// <reference path='../../../typings/tsd.d.ts' />
 	var SWDirective = (function () {
 	    //@ngInject
@@ -6036,7 +6035,7 @@
 /* 52 */
 /***/ function(module, exports) {
 
-	/// <reference path='../../../typings/slatwallTypescript.d.ts' />
+	/// <reference path='../../../typings/hibachiTypescript.d.ts' />
 	/// <reference path='../../../typings/tsd.d.ts' />
 	var SWExportAction = (function () {
 	    //@ngInject
@@ -6069,7 +6068,7 @@
 /* 53 */
 /***/ function(module, exports) {
 
-	/// <reference path='../../../typings/slatwallTypescript.d.ts' />
+	/// <reference path='../../../typings/hibachiTypescript.d.ts' />
 	/// <reference path='../../../typings/tsd.d.ts' />
 	var SWHref = (function () {
 	    function SWHref() {
@@ -6102,7 +6101,7 @@
 /* 54 */
 /***/ function(module, exports) {
 
-	/// <reference path='../../../typings/slatwallTypescript.d.ts' />
+	/// <reference path='../../../typings/hibachiTypescript.d.ts' />
 	/// <reference path='../../../typings/tsd.d.ts' />
 	var SWProcessCallerController = (function () {
 	    function SWProcessCallerController($templateRequest, $compile, corePartialsPath, $scope, $element, $transclude, utilityService, pathBuilderConfig) {
@@ -6182,7 +6181,7 @@
 /* 55 */
 /***/ function(module, exports) {
 
-	/// <reference path='../../../typings/slatwallTypescript.d.ts' />
+	/// <reference path='../../../typings/hibachiTypescript.d.ts' />
 	/// <reference path='../../../typings/tsd.d.ts' />
 	var SWSortable = (function () {
 	    function SWSortable(expression, compiledElement) {
@@ -6236,7 +6235,7 @@
 /* 56 */
 /***/ function(module, exports) {
 
-	/// <reference path='../../../typings/slatwallTypescript.d.ts' />
+	/// <reference path='../../../typings/hibachiTypescript.d.ts' />
 	/// <reference path='../../../typings/tsd.d.ts' />
 	var SWListingGlobalSearchController = (function () {
 	    //@ngInject
@@ -6298,17 +6297,17 @@
 /***/ function(module, exports, __webpack_require__) {
 
 	/// <reference path="../../typings/tsd.d.ts" />
-	/// <reference path="../../typings/slatwallTypeScript.d.ts" />
+	/// <reference path="../../typings/slatwallTypescript.d.ts" />
 	var hibachi_module_1 = __webpack_require__(58);
-	var slatwallinterceptor_1 = __webpack_require__(125);
-	var content_module_1 = __webpack_require__(126);
-	var giftcard_module_1 = __webpack_require__(131);
-	var optiongroup_module_1 = __webpack_require__(142);
-	var orderitem_module_1 = __webpack_require__(145);
-	var product_module_1 = __webpack_require__(152);
-	var productbundle_module_1 = __webpack_require__(154);
-	var workflow_module_1 = __webpack_require__(160);
-	var entity_module_1 = __webpack_require__(172);
+	var workflow_module_1 = __webpack_require__(125);
+	var entity_module_1 = __webpack_require__(137);
+	var slatwallinterceptor_1 = __webpack_require__(143);
+	var content_module_1 = __webpack_require__(144);
+	var giftcard_module_1 = __webpack_require__(149);
+	var optiongroup_module_1 = __webpack_require__(160);
+	var orderitem_module_1 = __webpack_require__(163);
+	var product_module_1 = __webpack_require__(170);
+	var productbundle_module_1 = __webpack_require__(172);
 	//directives
 	var swcurrencyformatter_1 = __webpack_require__(178);
 	//filters
@@ -6504,7 +6503,7 @@
 /* 58 */
 /***/ function(module, exports, __webpack_require__) {
 
-	/// <reference path='../../typings/slatwallTypescript.d.ts' />
+	/// <reference path='../../typings/hibachiTypescript.d.ts' />
 	/// <reference path='../../typings/tsd.d.ts' />
 	//import alertmodule = require('./alert/alert.module');
 	var alert_module_1 = __webpack_require__(59);
@@ -6534,7 +6533,7 @@
 /* 59 */
 /***/ function(module, exports, __webpack_require__) {
 
-	/// <reference path='../../typings/slatwallTypescript.d.ts' />
+	/// <reference path='../../typings/hibachiTypescript.d.ts' />
 	/// <reference path='../../typings/tsd.d.ts' />
 	//controllers
 	var alertcontroller_1 = __webpack_require__(60);
@@ -6550,7 +6549,7 @@
 /* 60 */
 /***/ function(module, exports) {
 
-	/// <reference path='../../../typings/slatwallTypescript.d.ts' />
+	/// <reference path='../../../typings/hibachiTypescript.d.ts' />
 	/// <reference path='../../../typings/tsd.d.ts' />
 	var AlertController = (function () {
 	    //@ngInject
@@ -6567,7 +6566,7 @@
 /* 61 */
 /***/ function(module, exports, __webpack_require__) {
 
-	/// <reference path='../../../typings/slatwallTypescript.d.ts' />
+	/// <reference path='../../../typings/hibachiTypescript.d.ts' />
 	/// <reference path='../../../typings/tsd.d.ts' />
 	//import Alert = require('../model/alert');
 	var alert_1 = __webpack_require__(62);
@@ -6641,7 +6640,7 @@
 /* 62 */
 /***/ function(module, exports) {
 
-	/// <reference path='../../../typings/slatwallTypescript.d.ts' />
+	/// <reference path='../../../typings/hibachiTypescript.d.ts' />
 	/// <reference path='../../../typings/tsd.d.ts' />
 	//model
 	var Alert = (function () {
@@ -6662,7 +6661,7 @@
 /* 63 */
 /***/ function(module, exports, __webpack_require__) {
 
-	/// <reference path='../../typings/slatwallTypescript.d.ts' />
+	/// <reference path='../../typings/hibachiTypescript.d.ts' />
 	/// <reference path='../../typings/tsd.d.ts' />
 	//modules
 	var core_module_1 = __webpack_require__(11);
@@ -6727,7 +6726,7 @@
 /* 64 */
 /***/ function(module, exports) {
 
-	/// <reference path='../../../typings/slatwallTypescript.d.ts' />
+	/// <reference path='../../../typings/hibachiTypescript.d.ts' />
 	/// <reference path='../../../typings/tsd.d.ts' />
 	var Column = (function () {
 	    function Column(propertyIdentifier, title, isVisible, isDeletable, isSearchable, isExportable, persistent, ormtype, attributeID, attributeSetObject) {
@@ -7361,7 +7360,7 @@
 /* 66 */
 /***/ function(module, exports) {
 
-	/// <reference path='../../../typings/slatwallTypescript.d.ts' />
+	/// <reference path='../../../typings/hibachiTypescript.d.ts' />
 	/// <reference path='../../../typings/tsd.d.ts' />
 	var CollectionController = (function () {
 	    //@ngInject
@@ -7621,7 +7620,7 @@
 /* 67 */
 /***/ function(module, exports) {
 
-	/// <reference path='../../../typings/slatwallTypescript.d.ts' />
+	/// <reference path='../../../typings/hibachiTypescript.d.ts' />
 	/// <reference path='../../../typings/tsd.d.ts' />
 	var CreateCollection = (function () {
 	    //@ngInject
@@ -7826,7 +7825,7 @@
 /* 68 */
 /***/ function(module, exports) {
 
-	/// <reference path='../../../typings/slatwallTypescript.d.ts' />
+	/// <reference path='../../../typings/hibachiTypescript.d.ts' />
 	/// <reference path='../../../typings/tsd.d.ts' />
 	var ConfirmationController = (function () {
 	    //@ngInject
@@ -7862,7 +7861,7 @@
 /* 69 */
 /***/ function(module, exports) {
 
-	/// <reference path='../../../typings/slatwallTypescript.d.ts' />
+	/// <reference path='../../../typings/hibachiTypescript.d.ts' />
 	/// <reference path='../../../typings/tsd.d.ts' />
 	var SWCollection = (function () {
 	    //@ngInject
@@ -7908,7 +7907,7 @@
 /* 70 */
 /***/ function(module, exports) {
 
-	/// <reference path='../../../typings/slatwallTypescript.d.ts' />
+	/// <reference path='../../../typings/hibachiTypescript.d.ts' />
 	/// <reference path='../../../typings/tsd.d.ts' />
 	var SWAddFilterButtons = (function () {
 	    //@ngInject
@@ -7954,7 +7953,7 @@
 /* 71 */
 /***/ function(module, exports) {
 
-	/// <reference path='../../../typings/slatwallTypescript.d.ts' />
+	/// <reference path='../../../typings/hibachiTypescript.d.ts' />
 	/// <reference path='../../../typings/tsd.d.ts' />
 	var SWDisplayOptions = (function () {
 	    //@ngInject
@@ -8125,7 +8124,7 @@
 /* 72 */
 /***/ function(module, exports) {
 
-	/// <reference path='../../../typings/slatwallTypescript.d.ts' />
+	/// <reference path='../../../typings/hibachiTypescript.d.ts' />
 	/// <reference path='../../../typings/tsd.d.ts' />
 	var SWDisplayItem = (function () {
 	    //@ngInject
@@ -8205,7 +8204,7 @@
 /* 73 */
 /***/ function(module, exports) {
 
-	/// <reference path='../../../typings/slatwallTypescript.d.ts' />
+	/// <reference path='../../../typings/hibachiTypescript.d.ts' />
 	/// <reference path='../../../typings/tsd.d.ts' />
 	var SWCollectionTable = (function () {
 	    //@ngInject
@@ -8272,7 +8271,7 @@
 /* 74 */
 /***/ function(module, exports) {
 
-	/// <reference path='../../../typings/slatwallTypescript.d.ts' />
+	/// <reference path='../../../typings/hibachiTypescript.d.ts' />
 	/// <reference path='../../../typings/tsd.d.ts' />
 	var SWColumnItem = (function () {
 	    function SWColumnItem($compile, $templateCache, $log, $timeout, pathBuilderConfig, collectionService, collectionPartialsPath) {
@@ -8472,7 +8471,7 @@
 /* 75 */
 /***/ function(module, exports) {
 
-	/// <reference path='../../../typings/slatwallTypescript.d.ts' />
+	/// <reference path='../../../typings/hibachiTypescript.d.ts' />
 	/// <reference path='../../../typings/tsd.d.ts' />
 	var SWConditionCriteria = (function () {
 	    function SWConditionCriteria($http, $compile, $templateCache, $log, $hibachi, $filter, workflowPartialsPath, collectionPartialsPath, collectionService, metadataService, pathBuilderConfig) {
@@ -9362,7 +9361,7 @@
 /* 76 */
 /***/ function(module, exports) {
 
-	/// <reference path='../../../typings/slatwallTypescript.d.ts' />
+	/// <reference path='../../../typings/hibachiTypescript.d.ts' />
 	/// <reference path='../../../typings/tsd.d.ts' />
 	var SWCriteria = (function () {
 	    function SWCriteria($log, $hibachi, $filter, collectionPartialsPath, collectionService, metadataService, pathBuilderConfig) {
@@ -9405,7 +9404,7 @@
 /* 77 */
 /***/ function(module, exports) {
 
-	/// <reference path='../../../typings/slatwallTypescript.d.ts' />
+	/// <reference path='../../../typings/hibachiTypescript.d.ts' />
 	/// <reference path='../../../typings/tsd.d.ts' />
 	var SWCriteriaBoolean = (function () {
 	    function SWCriteriaBoolean($log, $hibachi, $filter, collectionPartialsPath, collectionService, metadataService, pathBuilderConfig) {
@@ -9505,7 +9504,7 @@
 /* 78 */
 /***/ function(module, exports) {
 
-	/// <reference path='../../../typings/slatwallTypescript.d.ts' />
+	/// <reference path='../../../typings/hibachiTypescript.d.ts' />
 	/// <reference path='../../../typings/tsd.d.ts' />
 	var SWCriteriaManyToMany = (function () {
 	    function SWCriteriaManyToMany($log, $hibachi, $filter, collectionPartialsPath, collectionService, metadataService, dialogService, observerService, pathBuilderConfig, rbkeyService) {
@@ -9648,7 +9647,7 @@
 /* 79 */
 /***/ function(module, exports) {
 
-	/// <reference path='../../../typings/slatwallTypescript.d.ts' />
+	/// <reference path='../../../typings/hibachiTypescript.d.ts' />
 	/// <reference path='../../../typings/tsd.d.ts' />
 	var SWCriteriaManyToOne = (function () {
 	    function SWCriteriaManyToOne($log, $hibachi, $filter, collectionPartialsPath, collectionService, metadataService, pathBuilderConfig, rbkeyService) {
@@ -9811,7 +9810,7 @@
 /* 80 */
 /***/ function(module, exports) {
 
-	/// <reference path='../../../typings/slatwallTypescript.d.ts' />
+	/// <reference path='../../../typings/hibachiTypescript.d.ts' />
 	/// <reference path='../../../typings/tsd.d.ts' />
 	var SWCriteriaNumber = (function () {
 	    function SWCriteriaNumber($log, $hibachi, $filter, collectionPartialsPath, collectionService, metadataService, pathBuilderConfig) {
@@ -9976,7 +9975,7 @@
 /* 81 */
 /***/ function(module, exports) {
 
-	/// <reference path='../../../typings/slatwallTypescript.d.ts' />
+	/// <reference path='../../../typings/hibachiTypescript.d.ts' />
 	/// <reference path='../../../typings/tsd.d.ts' />
 	var SWCriteriaOneToMany = (function () {
 	    function SWCriteriaOneToMany($log, $hibachi, $filter, collectionPartialsPath, collectionService, metadataService, dialogService, observerService, pathBuilderConfig, rbkeyService) {
@@ -10115,7 +10114,7 @@
 /* 82 */
 /***/ function(module, exports) {
 
-	/// <reference path='../../../typings/slatwallTypescript.d.ts' />
+	/// <reference path='../../../typings/hibachiTypescript.d.ts' />
 	/// <reference path='../../../typings/tsd.d.ts' />
 	var SWCriteriaString = (function () {
 	    function SWCriteriaString($log, $hibachi, $filter, collectionPartialsPath, collectionService, metadataService, pathBuilderConfig) {
@@ -10297,7 +10296,7 @@
 /* 83 */
 /***/ function(module, exports) {
 
-	/// <reference path='../../../typings/slatwallTypescript.d.ts' />
+	/// <reference path='../../../typings/hibachiTypescript.d.ts' />
 	/// <reference path='../../../typings/tsd.d.ts' />
 	var SWEditFilterItem = (function () {
 	    function SWEditFilterItem($http, $compile, $templateCache, $log, $filter, $timeout, $hibachi, collectionPartialsPath, collectionService, metadataService, pathBuilderConfig, rbkeyService) {
@@ -10609,7 +10608,7 @@
 /* 84 */
 /***/ function(module, exports) {
 
-	/// <reference path='../../../typings/slatwallTypescript.d.ts' />
+	/// <reference path='../../../typings/hibachiTypescript.d.ts' />
 	/// <reference path='../../../typings/tsd.d.ts' />
 	var SWFilterGroups = (function () {
 	    function SWFilterGroups($http, $compile, $templateCache, $log, collectionPartialsPath, pathBuilderConfig) {
@@ -10708,7 +10707,7 @@
 /* 85 */
 /***/ function(module, exports) {
 
-	/// <reference path='../../../typings/slatwallTypescript.d.ts' />
+	/// <reference path='../../../typings/hibachiTypescript.d.ts' />
 	/// <reference path='../../../typings/tsd.d.ts' />
 	var SWFilterItem = (function () {
 	    function SWFilterItem($log, collectionService, collectionPartialsPath, pathBuilderConfig) {
@@ -10774,7 +10773,7 @@
 /* 86 */
 /***/ function(module, exports) {
 
-	/// <reference path='../../../typings/slatwallTypescript.d.ts' />
+	/// <reference path='../../../typings/hibachiTypescript.d.ts' />
 	/// <reference path='../../../typings/tsd.d.ts' />
 	var SWFilterGroupItem = (function () {
 	    function SWFilterGroupItem($http, $compile, $templateCache, $log, collectionService, collectionPartialsPath, pathBuilderConfig) {
@@ -10846,7 +10845,7 @@
 /* 87 */
 /***/ function(module, exports, __webpack_require__) {
 
-	/// <reference path='../../typings/slatwallTypescript.d.ts' />
+	/// <reference path='../../typings/hibachiTypescript.d.ts' />
 	/// <reference path='../../typings/tsd.d.ts' />
 	//services
 	var dialogservice_1 = __webpack_require__(88);
@@ -10905,7 +10904,7 @@
 /* 89 */
 /***/ function(module, exports) {
 
-	/// <reference path='../../../typings/slatwallTypescript.d.ts' />
+	/// <reference path='../../../typings/hibachiTypescript.d.ts' />
 	/// <reference path='../../../typings/tsd.d.ts' />
 	var PageDialogController = (function () {
 	    //@ngInject
@@ -10929,7 +10928,7 @@
 /***/ function(module, exports, __webpack_require__) {
 
 	/// <reference path="../../typings/tsd.d.ts" />
-	/// <reference path="../../typings/slatwallTypeScript.d.ts" />
+	/// <reference path="../../typings/hibachiTypescript.d.ts" />
 	//services
 	var paginationservice_1 = __webpack_require__(91);
 	var swpaginationbar_1 = __webpack_require__(92);
@@ -10948,7 +10947,7 @@
 /***/ function(module, exports) {
 
 	/// <reference path="../../../typings/tsd.d.ts" />
-	/// <reference path="../../../typings/slatwallTypeScript.d.ts" />
+	/// <reference path="../../../typings/hibachiTypescript.d.ts" />
 	/*collection service is used to maintain the state of the ui*/
 	var Pagination = (function () {
 	    //@ngInject
@@ -11125,7 +11124,7 @@
 /* 92 */
 /***/ function(module, exports) {
 
-	/// <reference path='../../../typings/slatwallTypescript.d.ts' />
+	/// <reference path='../../../typings/hibachiTypescript.d.ts' />
 	/// <reference path='../../../typings/tsd.d.ts' />
 	//import pagination = require('../services/paginationservice');
 	//var PaginationService = pagination.PaginationService;
@@ -11184,7 +11183,7 @@
 /* 93 */
 /***/ function(module, exports, __webpack_require__) {
 
-	/// <reference path='../../typings/slatwallTypescript.d.ts' />
+	/// <reference path='../../typings/hibachiTypescript.d.ts' />
 	/// <reference path='../../typings/tsd.d.ts' />
 	//services
 	// import {AccountService} from "./services/accountservice";
@@ -11235,7 +11234,7 @@
 /* 94 */
 /***/ function(module, exports) {
 
-	/// <reference path='../../../typings/slatwallTypescript.d.ts' />
+	/// <reference path='../../../typings/hibachiTypescript.d.ts' />
 	/// <reference path='../../../typings/tsd.d.ts' />
 	/**
 	 * This validate directive will look at the current element, figure out the context (save, edit, delete) and
@@ -11410,7 +11409,7 @@
 	 *********************************************************************************************
 	 *********************************************************************************************
 	 */
-	/// <reference path='../../../typings/slatwallTypescript.d.ts' />
+	/// <reference path='../../../typings/hibachiTypescript.d.ts' />
 	/// <reference path='../../../typings/tsd.d.ts' />
 	/**
 	    * Property Display Controller handles the logic for this directive.
@@ -11466,7 +11465,7 @@
 /* 96 */
 /***/ function(module, exports) {
 
-	/// <reference path='../../../typings/slatwallTypescript.d.ts' />
+	/// <reference path='../../../typings/hibachiTypescript.d.ts' />
 	/// <reference path='../../../typings/tsd.d.ts' />
 	/**
 	 * Form Controller handles the logic for this directive.
@@ -11767,7 +11766,7 @@
 /* 97 */
 /***/ function(module, exports) {
 
-	/// <reference path='../../../typings/slatwallTypescript.d.ts' />
+	/// <reference path='../../../typings/hibachiTypescript.d.ts' />
 	/// <reference path='../../../typings/tsd.d.ts' />
 	var SWFormField = (function () {
 	    function SWFormField($log, $templateCache, $window, $hibachi, formService, coreFormPartialsPath, pathBuilderConfig) {
@@ -11814,7 +11813,7 @@
 /* 98 */
 /***/ function(module, exports) {
 
-	/// <reference path='../../../typings/slatwallTypescript.d.ts' />
+	/// <reference path='../../../typings/hibachiTypescript.d.ts' />
 	/// <reference path='../../../typings/tsd.d.ts' />
 	var SWFormFieldJsonController = (function () {
 	    //@ngInject
@@ -11856,7 +11855,7 @@
 /* 99 */
 /***/ function(module, exports) {
 
-	/// <reference path='../../../typings/slatwallTypescript.d.ts' />
+	/// <reference path='../../../typings/hibachiTypescript.d.ts' />
 	/// <reference path='../../../typings/tsd.d.ts' />
 	var SWFormFieldNumberController = (function () {
 	    function SWFormFieldNumberController() {
@@ -11896,7 +11895,7 @@
 /* 100 */
 /***/ function(module, exports) {
 
-	/// <reference path='../../../typings/slatwallTypescript.d.ts' />
+	/// <reference path='../../../typings/hibachiTypescript.d.ts' />
 	/// <reference path='../../../typings/tsd.d.ts' />
 	var swFormFieldPasswordController = (function () {
 	    //@ngInject
@@ -11935,7 +11934,7 @@
 /* 101 */
 /***/ function(module, exports) {
 
-	/// <reference path='../../../typings/slatwallTypescript.d.ts' />
+	/// <reference path='../../../typings/hibachiTypescript.d.ts' />
 	/// <reference path='../../../typings/tsd.d.ts' />
 	var SWFormFieldRadio = (function () {
 	    //@ngInject
@@ -12012,7 +12011,7 @@
 /* 102 */
 /***/ function(module, exports) {
 
-	/// <reference path='../../../typings/slatwallTypescript.d.ts' />
+	/// <reference path='../../../typings/hibachiTypescript.d.ts' />
 	/// <reference path='../../../typings/tsd.d.ts' />
 	var SWFormFieldSearchSelect = (function () {
 	    function SWFormFieldSearchSelect($http, $log, $hibachi, formService, coreFormPartialsPath, pathBuilderConfig) {
@@ -12133,7 +12132,7 @@
 /* 103 */
 /***/ function(module, exports) {
 
-	/// <reference path='../../../typings/slatwallTypescript.d.ts' />
+	/// <reference path='../../../typings/hibachiTypescript.d.ts' />
 	/// <reference path='../../../typings/tsd.d.ts' />
 	var SWFormFieldSelect = (function () {
 	    //@ngInject
@@ -12267,7 +12266,7 @@
 /* 104 */
 /***/ function(module, exports) {
 
-	/// <reference path='../../../typings/slatwallTypescript.d.ts' />
+	/// <reference path='../../../typings/hibachiTypescript.d.ts' />
 	/// <reference path='../../../typings/tsd.d.ts' />
 	var SWFormFieldTextController = (function () {
 	    //@ngInject
@@ -12316,7 +12315,7 @@
 /* 105 */
 /***/ function(module, exports) {
 
-	/// <reference path='../../../typings/slatwallTypescript.d.ts' />
+	/// <reference path='../../../typings/hibachiTypescript.d.ts' />
 	/// <reference path='../../../typings/tsd.d.ts' />
 	var SWFormRegistrar = (function () {
 	    //@ngInject
@@ -12424,7 +12423,7 @@
 	 *********************************************************************************************
 	 *********************************************************************************************
 	 */
-	/// <reference path='../../../typings/slatwallTypescript.d.ts' />
+	/// <reference path='../../../typings/hibachiTypescript.d.ts' />
 	/// <reference path='../../../typings/tsd.d.ts' />
 	/**
 	    * Property Display Controller handles the logic for this directive.
@@ -12550,7 +12549,7 @@
 /* 107 */
 /***/ function(module, exports) {
 
-	/// <reference path='../../../typings/slatwallTypescript.d.ts' />
+	/// <reference path='../../../typings/hibachiTypescript.d.ts' />
 	/// <reference path='../../../typings/tsd.d.ts' />
 	var SWPropertyDisplay = (function () {
 	    function SWPropertyDisplay($log, $filter, coreFormPartialsPath, pathBuilderConfig) {
@@ -12653,7 +12652,7 @@
 /***/ function(module, exports, __webpack_require__) {
 
 	/// <reference path="../../typings/tsd.d.ts" />
-	/// <reference path="../../typings/slatwallTypeScript.d.ts" />
+	/// <reference path="../../typings/hibachiTypescript.d.ts" />
 	var swvalidate_1 = __webpack_require__(109);
 	var swvalidationminlength_1 = __webpack_require__(110);
 	var swvalidationdatatype_1 = __webpack_require__(111);
@@ -12694,7 +12693,7 @@
 /* 109 */
 /***/ function(module, exports) {
 
-	/// <reference path='../../../typings/slatwallTypescript.d.ts' />
+	/// <reference path='../../../typings/hibachiTypescript.d.ts' />
 	/// <reference path='../../../typings/tsd.d.ts' />
 	/**
 	 * This validate directive will look at the current element, figure out the context (save, edit, delete) and
@@ -13080,7 +13079,7 @@
 /* 110 */
 /***/ function(module, exports) {
 
-	/// <reference path='../../../typings/slatwallTypescript.d.ts' />
+	/// <reference path='../../../typings/hibachiTypescript.d.ts' />
 	/// <reference path='../../../typings/tsd.d.ts' />
 	/**
 	 * Returns true if the user value is greater than the min length.
@@ -13121,7 +13120,7 @@
 /* 111 */
 /***/ function(module, exports) {
 
-	/// <reference path='../../../typings/slatwallTypescript.d.ts' />
+	/// <reference path='../../../typings/hibachiTypescript.d.ts' />
 	/// <reference path='../../../typings/tsd.d.ts' />
 	/**
 	 * True if the data type matches the given data type.
@@ -13180,7 +13179,7 @@
 /* 112 */
 /***/ function(module, exports) {
 
-	/// <reference path='../../../typings/slatwallTypescript.d.ts' />
+	/// <reference path='../../../typings/hibachiTypescript.d.ts' />
 	/// <reference path='../../../typings/tsd.d.ts' />
 	/**
 	 * SwValidationEQ: Validates true if the user value == the constraint value.
@@ -13222,7 +13221,7 @@
 /* 113 */
 /***/ function(module, exports) {
 
-	/// <reference path='../../../typings/slatwallTypescript.d.ts' />
+	/// <reference path='../../../typings/hibachiTypescript.d.ts' />
 	/// <reference path='../../../typings/tsd.d.ts' />
 	/**
 	 * SwValidationGTE: Validates true if the user value >= to the constraint value.
@@ -13260,7 +13259,7 @@
 /* 114 */
 /***/ function(module, exports) {
 
-	/// <reference path='../../../typings/slatwallTypescript.d.ts' />
+	/// <reference path='../../../typings/hibachiTypescript.d.ts' />
 	/// <reference path='../../../typings/tsd.d.ts' />
 	/**
 	 * SwValidationLTE: Validates true if the user value <= to the constraint value.
@@ -13299,7 +13298,7 @@
 /* 115 */
 /***/ function(module, exports) {
 
-	/// <reference path='../../../typings/slatwallTypescript.d.ts' />
+	/// <reference path='../../../typings/hibachiTypescript.d.ts' />
 	/// <reference path='../../../typings/tsd.d.ts' />
 	/**
 	 * Returns true if the user value is greater than the max length.
@@ -13336,7 +13335,7 @@
 /* 116 */
 /***/ function(module, exports) {
 
-	/// <reference path='../../../typings/slatwallTypescript.d.ts' />
+	/// <reference path='../../../typings/hibachiTypescript.d.ts' />
 	/// <reference path='../../../typings/tsd.d.ts' />
 	/**
 	 * Returns true if the user value is greater than the min value.
@@ -13373,7 +13372,7 @@
 /* 117 */
 /***/ function(module, exports) {
 
-	/// <reference path='../../../typings/slatwallTypescript.d.ts' />
+	/// <reference path='../../../typings/hibachiTypescript.d.ts' />
 	/// <reference path='../../../typings/tsd.d.ts' />
 	/**
 	 * Returns true if the user value is greater than the minimum value.
@@ -13410,7 +13409,7 @@
 /* 118 */
 /***/ function(module, exports) {
 
-	/// <reference path='../../../typings/slatwallTypescript.d.ts' />
+	/// <reference path='../../../typings/hibachiTypescript.d.ts' />
 	/// <reference path='../../../typings/tsd.d.ts' />
 	/**
 	 *  Validates true if the user value != the property value.
@@ -13445,7 +13444,7 @@
 /* 119 */
 /***/ function(module, exports) {
 
-	/// <reference path='../../../typings/slatwallTypescript.d.ts' />
+	/// <reference path='../../../typings/hibachiTypescript.d.ts' />
 	/// <reference path='../../../typings/tsd.d.ts' />
 	/**
 	 * Validates true if the model value (user value) is a numeric value.
@@ -13484,7 +13483,7 @@
 /* 120 */
 /***/ function(module, exports) {
 
-	/// <reference path='../../../typings/slatwallTypescript.d.ts' />
+	/// <reference path='../../../typings/hibachiTypescript.d.ts' />
 	/// <reference path='../../../typings/tsd.d.ts' />
 	/**
 	 * Validates true if the model value matches a regex string.
@@ -13524,7 +13523,7 @@
 /* 121 */
 /***/ function(module, exports) {
 
-	/// <reference path='../../../typings/slatwallTypescript.d.ts' />
+	/// <reference path='../../../typings/hibachiTypescript.d.ts' />
 	/// <reference path='../../../typings/tsd.d.ts' />
 	/**
 	 * Returns true if the uservalue is empty and false otherwise
@@ -13560,7 +13559,7 @@
 /* 122 */
 /***/ function(module, exports) {
 
-	/// <reference path='../../../typings/slatwallTypescript.d.ts' />
+	/// <reference path='../../../typings/hibachiTypescript.d.ts' />
 	/// <reference path='../../../typings/tsd.d.ts' />
 	/**
 	 * Validates true if the given object is 'unique' and false otherwise.
@@ -13612,7 +13611,7 @@
 /* 123 */
 /***/ function(module, exports) {
 
-	/// <reference path='../../../typings/slatwallTypescript.d.ts' />
+	/// <reference path='../../../typings/hibachiTypescript.d.ts' />
 	/// <reference path='../../../typings/tsd.d.ts' />
 	/**
 	 * Validates true if the given object is 'unique' and false otherwise.
@@ -13664,7 +13663,7 @@
 /* 124 */
 /***/ function(module, exports) {
 
-	/// <reference path='../../../typings/slatwallTypescript.d.ts' />
+	/// <reference path='../../../typings/hibachiTypescript.d.ts' />
 	/// <reference path='../../../typings/tsd.d.ts' />
 	var SWSaveAndFinishController = (function () {
 	    //@ngInject
@@ -13753,6 +13752,1352 @@
 
 /***/ },
 /* 125 */
+/***/ function(module, exports, __webpack_require__) {
+
+	/// <reference path='../../typings/hibachiTypescript.d.ts' />
+	/// <reference path='../../typings/tsd.d.ts' />
+	//services
+	var workflowconditionservice_1 = __webpack_require__(126);
+	//directives
+	var swadmincreatesuperuser_1 = __webpack_require__(127);
+	var swworkflowbasic_1 = __webpack_require__(128);
+	var swworkflowcondition_1 = __webpack_require__(129);
+	var swworkflowconditiongroupitem_1 = __webpack_require__(130);
+	var swworkflowconditiongroups_1 = __webpack_require__(131);
+	var swworkflowtask_1 = __webpack_require__(132);
+	var swworkflowtaskactions_1 = __webpack_require__(133);
+	var swworkflowtasks_1 = __webpack_require__(134);
+	var swworkflowtrigger_1 = __webpack_require__(135);
+	var swworkflowtriggers_1 = __webpack_require__(136);
+	//filters
+	var workflowmodule = angular.module('hibachi.workflow', ['hibachi.collection']).config(function () {
+	})
+	    .constant('workflowPartialsPath', 'workflow/components/')
+	    .service('workflowConditionService', workflowconditionservice_1.WorkflowConditionService)
+	    .directive('swAdminCreateSuperUser', swadmincreatesuperuser_1.SWAdminCreateSuperUser.Factory())
+	    .directive('swWorkflowBasic', swworkflowbasic_1.SWWorkflowBasic.Factory())
+	    .directive('swWorkflowCondition', swworkflowcondition_1.SWWorkflowCondition.Factory())
+	    .directive('swWorkflowConditionGroupItem', swworkflowconditiongroupitem_1.SWWorkflowConditionGroupItem.Factory())
+	    .directive('swWorkflowConditionGroups', swworkflowconditiongroups_1.SWWorkflowConditionGroups.Factory())
+	    .directive('swWorkflowTask', swworkflowtask_1.SWWorkflowTask.Factory())
+	    .directive('swWorkflowTaskActions', swworkflowtaskactions_1.SWWorkflowTaskActions.Factory())
+	    .directive('swWorkflowTasks', swworkflowtasks_1.SWWorkflowTasks.Factory())
+	    .directive('swWorkflowTrigger', swworkflowtrigger_1.SWWorkflowTrigger.Factory())
+	    .directive('swWorkflowTriggers', swworkflowtriggers_1.SWWorkflowTriggers.Factory());
+	exports.workflowmodule = workflowmodule;
+
+
+/***/ },
+/* 126 */
+/***/ function(module, exports) {
+
+	/// <reference path='../../../typings/hibachiTypescript.d.ts' />
+	/// <reference path='../../../typings/tsd.d.ts' />
+	var WorkflowCondition = (function () {
+	    function WorkflowCondition() {
+	        this.propertyIdentifer = "";
+	        this.comparisonOperator = "";
+	        this.value = "";
+	        this.displayPropertyIdentifier = "";
+	        this.$$disabled = false;
+	        this.$$isClosed = true;
+	        this.$$isNew = true;
+	    }
+	    return WorkflowCondition;
+	})();
+	exports.WorkflowCondition = WorkflowCondition;
+	var WorkflowConditionGroupItem = (function () {
+	    function WorkflowConditionGroupItem() {
+	        this.workflowConditionGroup = [];
+	    }
+	    return WorkflowConditionGroupItem;
+	})();
+	exports.WorkflowConditionGroupItem = WorkflowConditionGroupItem;
+	var WorkflowConditionService = (function () {
+	    function WorkflowConditionService($log, $hibachi, alertService) {
+	        var _this = this;
+	        this.$log = $log;
+	        this.newWorkflowCondition = function () {
+	            return new WorkflowCondition;
+	        };
+	        this.addWorkflowCondition = function (groupItem, condition) {
+	            _this.$log.debug('addWorkflowCondition');
+	            _this.$log.debug(groupItem);
+	            _this.$log.debug(condition);
+	            if (groupItem.length >= 1) {
+	                condition.logicalOperator = 'AND';
+	            }
+	            groupItem.push(condition);
+	        };
+	        this.newWorkflowConditionGroupItem = function () {
+	            return new WorkflowConditionGroupItem;
+	        };
+	        this.addWorkflowConditionGroupItem = function (group, groupItem) {
+	            group.push(groupItem);
+	        };
+	    }
+	    WorkflowConditionService.$inject = ["$log", "$hibachi", "alertService"];
+	    return WorkflowConditionService;
+	})();
+	exports.WorkflowConditionService = WorkflowConditionService;
+
+
+/***/ },
+/* 127 */
+/***/ function(module, exports) {
+
+	/// <reference path='../../../typings/hibachiTypescript.d.ts' />
+	/// <reference path='../../../typings/tsd.d.ts' />
+	var SWAdminCreateSuperUser = (function () {
+	    function SWAdminCreateSuperUser($log, $hibachi, workflowPartialsPath, pathBuilderConfig) {
+	        return {
+	            restrict: 'E',
+	            scope: {},
+	            templateUrl: pathBuilderConfig.buildPartialsPath(workflowPartialsPath) + "admincreatesuperuser.html",
+	            link: function (scope, element, attrs) {
+	                scope.Account_SetupInitialAdmin = $hibachi.newAccount_SetupInitialAdmin();
+	            }
+	        };
+	    }
+	    SWAdminCreateSuperUser.Factory = function () {
+	        var directive = function ($log, $hibachi, workflowPartialsPath, pathBuilderConfig) {
+	            return new SWAdminCreateSuperUser($log, $hibachi, workflowPartialsPath, pathBuilderConfig);
+	        };
+	        directive.$inject = [
+	            '$log',
+	            '$hibachi',
+	            'workflowPartialsPath',
+	            'pathBuilderConfig'
+	        ];
+	        return directive;
+	    };
+	    return SWAdminCreateSuperUser;
+	})();
+	exports.SWAdminCreateSuperUser = SWAdminCreateSuperUser;
+
+
+/***/ },
+/* 128 */
+/***/ function(module, exports) {
+
+	/// <reference path='../../../typings/hibachiTypescript.d.ts' />
+	/// <reference path='../../../typings/tsd.d.ts' />
+	var SWWorkflowBasic = (function () {
+	    function SWWorkflowBasic($log, $location, $hibachi, formService, workflowPartialsPath, pathBuilderConfig) {
+	        return {
+	            restrict: 'A',
+	            scope: {
+	                workflow: "="
+	            },
+	            templateUrl: pathBuilderConfig.buildPartialsPath(workflowPartialsPath)
+	                + "workflowbasic.html",
+	            link: function (scope, element, attrs) {
+	                console.log('workflowtest');
+	                console.log(scope.workflow);
+	            }
+	        };
+	    }
+	    SWWorkflowBasic.Factory = function () {
+	        var directive = function ($log, $location, $hibachi, formService, workflowPartialsPath, pathBuilderConfig) {
+	            return new SWWorkflowBasic($log, $location, $hibachi, formService, workflowPartialsPath, pathBuilderConfig);
+	        };
+	        directive.$inject = [
+	            '$log',
+	            '$location',
+	            '$hibachi',
+	            'formService',
+	            'workflowPartialsPath',
+	            'pathBuilderConfig'
+	        ];
+	        return directive;
+	    };
+	    return SWWorkflowBasic;
+	})();
+	exports.SWWorkflowBasic = SWWorkflowBasic;
+
+
+/***/ },
+/* 129 */
+/***/ function(module, exports) {
+
+	/// <reference path='../../../typings/hibachiTypescript.d.ts' />
+	/// <reference path='../../../typings/tsd.d.ts' />
+	var SWWorkflowCondition = (function () {
+	    function SWWorkflowCondition($log, $location, $hibachi, formService, metadataService, workflowPartialsPath, pathBuilderConfig) {
+	        return {
+	            restrict: 'E',
+	            scope: {
+	                workflowCondition: "=",
+	                workflowConditionIndex: "=",
+	                workflow: "=",
+	                filterPropertiesList: "="
+	            },
+	            templateUrl: pathBuilderConfig.buildPartialsPath(workflowPartialsPath) + "workflowcondition.html",
+	            link: function (scope, element, attrs) {
+	                $log.debug('workflowCondition init');
+	                $log.debug(scope);
+	                scope.selectBreadCrumb = function (breadCrumbIndex) {
+	                    //splice out array items above index
+	                    var removeCount = scope.filterItem.breadCrumbs.length - 1 - breadCrumbIndex;
+	                    scope.filterItem.breadCrumbs.splice(breadCrumbIndex + 1, removeCount);
+	                    scope.selectedFilterPropertyChanged(null);
+	                };
+	                scope.selectedFilterPropertyChanged = function (selectedFilterProperty) {
+	                    $log.debug('selectedFilterProperty');
+	                    $log.debug(selectedFilterProperty);
+	                    scope.selectedFilterProperty = selectedFilterProperty;
+	                };
+	                if (angular.isUndefined(scope.workflowCondition.breadCrumbs)) {
+	                    scope.workflowCondition.breadCrumbs = [];
+	                    if (scope.workflowCondition.propertyIdentifier === "") {
+	                        scope.workflowCondition.breadCrumbs = [
+	                            {
+	                                entityAlias: scope.workflow.data.workflowObject,
+	                                cfc: scope.workflow.data.workflowObject,
+	                                propertyIdentifier: scope.workflow.data.workflowObject
+	                            }
+	                        ];
+	                    }
+	                    else {
+	                        var entityAliasArrayFromString = scope.workflowCondition.propertyIdentifier.split('.');
+	                        entityAliasArrayFromString.pop();
+	                        for (var i in entityAliasArrayFromString) {
+	                            var breadCrumb = {
+	                                entityAlias: entityAliasArrayFromString[i],
+	                                cfc: entityAliasArrayFromString[i],
+	                                propertyIdentifier: entityAliasArrayFromString[i]
+	                            };
+	                            scope.workflowCondition.breadCrumbs.push(breadCrumb);
+	                        }
+	                    }
+	                }
+	                else {
+	                    angular.forEach(scope.workflowCondition.breadCrumbs, function (breadCrumb, key) {
+	                        if (angular.isUndefined(scope.filterPropertiesList[breadCrumb.propertyIdentifier])) {
+	                            var filterPropertiesPromise = $hibachi.getFilterPropertiesByBaseEntityName(breadCrumb.cfc);
+	                            filterPropertiesPromise.then(function (value) {
+	                                metadataService.setPropertiesList(value, breadCrumb.propertyIdentifier);
+	                                scope.filterPropertiesList[breadCrumb.propertyIdentifier] = metadataService.getPropertiesListByBaseEntityAlias(breadCrumb.propertyIdentifier);
+	                                metadataService.formatPropertiesList(scope.filterPropertiesList[breadCrumb.propertyIdentifier], breadCrumb.propertyIdentifier);
+	                                var entityAliasArrayFromString = scope.workflowCondition.propertyIdentifier.split('.');
+	                                entityAliasArrayFromString.pop();
+	                                entityAliasArrayFromString = entityAliasArrayFromString.join('.').trim();
+	                                if (angular.isDefined(scope.filterPropertiesList[entityAliasArrayFromString])) {
+	                                    for (var i in scope.filterPropertiesList[entityAliasArrayFromString].data) {
+	                                        var filterProperty = scope.filterPropertiesList[entityAliasArrayFromString].data[i];
+	                                        if (filterProperty.propertyIdentifier === scope.workflowCondition.propertyIdentifier) {
+	                                            //selectItem from drop down
+	                                            scope.selectedFilterProperty = filterProperty;
+	                                            //decorate with value and comparison Operator so we can use it in the Condition section
+	                                            scope.selectedFilterProperty.value = scope.workflowCondition.value;
+	                                            scope.selectedFilterProperty.comparisonOperator = scope.workflowCondition.comparisonOperator;
+	                                        }
+	                                    }
+	                                }
+	                            });
+	                        }
+	                        else {
+	                            var entityAliasArrayFromString = scope.workflowCondition.propertyIdentifier.split('.');
+	                            entityAliasArrayFromString.pop();
+	                            entityAliasArrayFromString = entityAliasArrayFromString.join('.').trim();
+	                            if (angular.isDefined(scope.filterPropertiesList[entityAliasArrayFromString])) {
+	                                for (var i in scope.filterPropertiesList[entityAliasArrayFromString].data) {
+	                                    var filterProperty = scope.filterPropertiesList[entityAliasArrayFromString].data[i];
+	                                    if (filterProperty.propertyIdentifier === scope.workflowCondition.propertyIdentifier) {
+	                                        //selectItem from drop down
+	                                        scope.selectedFilterProperty = filterProperty;
+	                                        //decorate with value and comparison Operator so we can use it in the Condition section
+	                                        scope.selectedFilterProperty.value = scope.workflowCondition.value;
+	                                        scope.selectedFilterProperty.comparisonOperator = scope.workflowCondition.comparisonOperator;
+	                                    }
+	                                }
+	                            }
+	                        }
+	                    });
+	                }
+	            }
+	        };
+	    }
+	    SWWorkflowCondition.Factory = function () {
+	        var directive = function ($log, $location, $hibachi, formService, metadataService, workflowPartialsPath, pathBuilderConfig) {
+	            return new SWWorkflowCondition($log, $location, $hibachi, formService, metadataService, workflowPartialsPath, pathBuilderConfig);
+	        };
+	        directive.$inject = [
+	            '$log',
+	            '$location',
+	            '$hibachi',
+	            'formService',
+	            'metadataService',
+	            'workflowPartialsPath',
+	            'pathBuilderConfig'
+	        ];
+	        return directive;
+	    };
+	    return SWWorkflowCondition;
+	})();
+	exports.SWWorkflowCondition = SWWorkflowCondition;
+
+
+/***/ },
+/* 130 */
+/***/ function(module, exports) {
+
+	/// <reference path='../../../typings/hibachiTypescript.d.ts' />
+	/// <reference path='../../../typings/tsd.d.ts' />
+	var SWWorkflowConditionGroupItem = (function () {
+	    function SWWorkflowConditionGroupItem($log, $location, $hibachi, formService, workflowPartialsPath, pathBuilderConfig) {
+	        return {
+	            restrict: 'E',
+	            templateUrl: pathBuilderConfig.buildPartialsPath(workflowPartialsPath) + "workflowconditiongroupitem.html",
+	            link: function (scope, element, attrs) {
+	            }
+	        };
+	    }
+	    SWWorkflowConditionGroupItem.Factory = function () {
+	        var directive = function ($log, $location, $hibachi, formService, workflowPartialsPath, pathBuilderConfig) {
+	            return new ($log,
+	                $location,
+	                $hibachi,
+	                formService,
+	                workflowPartialsPath,
+	                pathBuilderConfig);
+	        };
+	        directive.$inject = [
+	            '$log',
+	            '$location',
+	            '$hibachi',
+	            'formService',
+	            'workflowPartialsPath',
+	            'pathBuilderConfig'
+	        ];
+	        return directive;
+	    };
+	    return SWWorkflowConditionGroupItem;
+	})();
+	exports.SWWorkflowConditionGroupItem = SWWorkflowConditionGroupItem;
+
+
+/***/ },
+/* 131 */
+/***/ function(module, exports) {
+
+	/// <reference path='../../../typings/hibachiTypescript.d.ts' />
+	/// <reference path='../../../typings/tsd.d.ts' />
+	var SWWorkflowConditionGroups = (function () {
+	    function SWWorkflowConditionGroups($log, workflowConditionService, workflowPartialsPath, pathBuilderConfig) {
+	        return {
+	            restrict: 'E',
+	            scope: {
+	                workflowConditionGroupItem: "=",
+	                workflowConditionGroup: "=",
+	                workflow: "=",
+	                filterPropertiesList: "="
+	            },
+	            templateUrl: pathBuilderConfig.buildPartialsPath(workflowPartialsPath) + "workflowconditiongroups.html",
+	            link: function (scope, element, attrs) {
+	                $log.debug('workflowconditiongroups init');
+	                scope.addWorkflowCondition = function () {
+	                    $log.debug('addWorkflowCondition');
+	                    var workflowCondition = workflowConditionService.newWorkflowCondition();
+	                    workflowConditionService.addWorkflowCondition(scope.workflowConditionGroupItem, workflowCondition);
+	                };
+	                scope.addWorkflowGroupItem = function () {
+	                    $log.debug('addWorkflowGrouptItem');
+	                    var workflowConditionGroupItem = workflowConditionService.newWorkflowConditionGroupItem();
+	                    workflowConditionService.addWorkflowConditionGroupItem(scope.workflowConditionItem, workflowConditionGroupItem);
+	                };
+	            }
+	        };
+	    }
+	    SWWorkflowConditionGroups.Factory = function () {
+	        var directive = function ($log, workflowConditionService, workflowPartialsPath, pathBuilderConfig) {
+	            return new SWWorkflowConditionGroups($log, workflowConditionService, workflowPartialsPath, pathBuilderConfig);
+	        };
+	        directive.$inject = [
+	            '$log',
+	            'workflowConditionService',
+	            'workflowPartialsPath',
+	            'pathBuilderConfig'
+	        ];
+	        return directive;
+	    };
+	    return SWWorkflowConditionGroups;
+	})();
+	exports.SWWorkflowConditionGroups = SWWorkflowConditionGroups;
+
+
+/***/ },
+/* 132 */
+/***/ function(module, exports) {
+
+	/// <reference path='../../../typings/hibachiTypescript.d.ts' />
+	/// <reference path='../../../typings/tsd.d.ts' />
+	var SWWorkflowTask = (function () {
+	    function SWWorkflowTask($log, $location, $timeout, $hibachi, metadataService, collectionService, workflowPartialsPath, pathBuilderConfig) {
+	        return {
+	            restrict: 'E',
+	            scope: {
+	                workflowTask: "=",
+	                workflowTasks: "=",
+	            },
+	            templateUrl: pathBuilderConfig.buildPartialsPath(workflowPartialsPath) + "workflowtask.html",
+	            link: function (scope, element, attrs) {
+	                scope.removeWorkflowTask = function (workflowTask) {
+	                    var deletePromise = workflowTask.$$delete();
+	                    deletePromise.then(function () {
+	                        if (workflowTask === scope.workflowTasks.selectedTask) {
+	                            delete scope.workflowTasks.selectedTask;
+	                        }
+	                        scope.workflowTasks.splice(workflowTask.$$index, 1);
+	                        for (var i in scope.workflowTasks) {
+	                            scope.workflowTasks[i].$$index = i;
+	                        }
+	                    });
+	                };
+	            }
+	        };
+	    }
+	    SWWorkflowTask.Factory = function () {
+	        var directive = function ($log, $location, $timeout, $hibachi, metadataService, collectionService, workflowPartialsPath, pathBuilderConfig) {
+	            return new SWWorkflowTask($log, $location, $timeout, $hibachi, metadataService, collectionService, workflowPartialsPath, pathBuilderConfig);
+	        };
+	        directive.$inject = [
+	            '$log',
+	            '$location',
+	            '$timeout',
+	            '$hibachi',
+	            'metadataService',
+	            'collectionService',
+	            'workflowPartialsPath',
+	            'pathBuilderConfig'
+	        ];
+	        return directive;
+	    };
+	    return SWWorkflowTask;
+	})();
+	exports.SWWorkflowTask = SWWorkflowTask;
+
+
+/***/ },
+/* 133 */
+/***/ function(module, exports) {
+
+	/// <reference path='../../../typings/hibachiTypescript.d.ts' />
+	/// <reference path='../../../typings/tsd.d.ts' />
+	var SWWorkflowTaskActions = (function () {
+	    function SWWorkflowTaskActions($log, $hibachi, metadataService, collectionService, workflowPartialsPath, pathBuilderConfig) {
+	        return {
+	            restrict: 'AE',
+	            scope: {
+	                workflowTask: "="
+	            },
+	            templateUrl: pathBuilderConfig.buildPartialsPath(workflowPartialsPath) + "workflowtaskactions.html",
+	            link: function (scope, element, attrs) {
+	                $log.debug('Workflow Task Actions Init');
+	                $log.debug(scope.workflowTask);
+	                scope.openActions = false;
+	                /**
+	                    * Returns the correct object based on the selected object type.
+	                    */
+	                var getObjectByActionType = function (workflowTaskAction) {
+	                    if (workflowTaskAction.data.actionType === 'email') {
+	                        workflowTaskAction.$$getEmailTemplate();
+	                    }
+	                    else if (workflowTaskAction.data.actionType === 'print') {
+	                        workflowTaskAction.$$getPrintTemplate();
+	                    }
+	                };
+	                /**
+	                    * --------------------------------------------------------------------------------------------------------
+	                    * Returns workflow task action, and saves them to the scope variable workflowtaskactions
+	                    * --------------------------------------------------------------------------------------------------------
+	                    */
+	                scope.getWorkflowTaskActions = function () {
+	                    /***
+	                    Note:
+	                    This conditional is checking whether or not we need to be retrieving to
+	                    items all over again. If we already have them, we won't make another
+	                    trip to the database.
+
+	                ***/
+	                    if (angular.isUndefined(scope.workflowTask.data.workflowTaskActions)) {
+	                        var workflowTaskPromise = scope.workflowTask.$$getWorkflowTaskActions();
+	                        workflowTaskPromise.then(function () {
+	                            scope.workflowTaskActions = scope.workflowTask.data.workflowTaskActions;
+	                            angular.forEach(scope.workflowTaskActions, function (workflowTaskAction) {
+	                                getObjectByActionType(workflowTaskAction);
+	                            });
+	                            $log.debug(scope.workflowTaskActions);
+	                        });
+	                    }
+	                    else {
+	                        scope.workflowTaskActions = scope.workflowTask.data.workflowTaskActions;
+	                    }
+	                    if (angular.isUndefined(scope.workflowTask.data.workflowTaskActions)) {
+	                        scope.workflowTask.data.workflowTaskActions = [];
+	                        scope.workflowTaskActions = scope.workflowTask.data.workflowTaskActions;
+	                    }
+	                };
+	                scope.getWorkflowTaskActions(); //Call get
+	                /**
+	                    * --------------------------------------------------------------------------------------------------------
+	                    * Saves the workflow task actions by calling the objects $$save method.
+	                    * @param taskAction
+	                    * --------------------------------------------------------------------------------------------------------
+	                    */
+	                scope.saveWorkflowTaskAction = function (taskAction, context) {
+	                    $log.debug("Context: " + context);
+	                    $log.debug("saving task action and parent task");
+	                    $log.debug(taskAction);
+	                    var savePromise = scope.workflowTaskActions.selectedTaskAction.$$save();
+	                    savePromise.then(function () {
+	                        var taSavePromise = taskAction.$$save;
+	                        //Clear the form by adding a new task action if 'save and add another' otherwise, set save and set finished
+	                        if (context == 'add') {
+	                            $log.debug("Save and New");
+	                            scope.addWorkflowTaskAction(taskAction);
+	                            scope.finished = false;
+	                        }
+	                        else if (context == "finish") {
+	                            scope.finished = true;
+	                        }
+	                    });
+	                }; //<--end save
+	                /**
+	                    * Sets the editing state to show/hide the edit screen.
+	                    */
+	                scope.setHidden = function (task) {
+	                    if (!angular.isObject(task)) {
+	                        task = {};
+	                    }
+	                    if (angular.isUndefined(task.hidden)) {
+	                        task.hidden = false;
+	                    }
+	                    else {
+	                        $log.debug("setHidden()", "Setting Hide Value To " + !task.hidden);
+	                        task.hidden = !task.hidden;
+	                    }
+	                };
+	                /**
+	                    * --------------------------------------------------------------------------------------------------------
+	                    * Adds workflow action items by calling the workflowTask objects $$addWorkflowTaskAction() method
+	                    * and sets the result to scope.
+	                    * @param taskAction
+	                    * --------------------------------------------------------------------------------------------------------
+	                    */
+	                scope.addWorkflowTaskAction = function (taskAction) {
+	                    var workflowTaskAction = scope.workflowTask.$$addWorkflowTaskAction();
+	                    scope.selectWorkflowTaskAction(workflowTaskAction);
+	                    $log.debug(scope.workflow);
+	                };
+	                /**
+	                    * --------------------------------------------------------------------------------------------------------
+	                    * Selects a new task action and populates the task action properties.
+	                    * --------------------------------------------------------------------------------------------------------
+	                    */
+	                scope.selectWorkflowTaskAction = function (workflowTaskAction) {
+	                    $log.debug("Selecting new task action for editing: ");
+	                    $log.debug(workflowTaskAction);
+	                    scope.finished = false;
+	                    scope.workflowTaskActions.selectedTaskAction = undefined;
+	                    var filterPropertiesPromise = $hibachi.getFilterPropertiesByBaseEntityName(scope.workflowTask.data.workflow.data.workflowObject);
+	                    filterPropertiesPromise.then(function (value) {
+	                        scope.filterPropertiesList = {
+	                            baseEntityName: scope.workflowTask.data.workflow.data.workflowObject,
+	                            baseEntityAlias: "_" + scope.workflowTask.data.workflow.data.workflowObject
+	                        };
+	                        metadataService.setPropertiesList(value, scope.workflowTask.data.workflow.data.workflowObject);
+	                        scope.filterPropertiesList[scope.workflowTask.data.workflow.data.workflowObject] = metadataService.getPropertiesListByBaseEntityAlias(scope.workflowTask.data.workflow.data.workflowObject);
+	                        metadataService.formatPropertiesList(scope.filterPropertiesList[scope.workflowTask.data.workflow.data.workflowObject], scope.workflowTask.data.workflow.data.workflowObject);
+	                        scope.workflowTaskActions.selectedTaskAction = workflowTaskAction;
+	                    });
+	                };
+	                /**
+	                    * Overrides the confirm directive method deleteEntity. This is needed for the modal popup.
+	                    */
+	                scope.deleteEntity = function (entity) {
+	                    scope.removeWorkflowTaskAction(entity);
+	                };
+	                /**
+	                    * --------------------------------------------------------------------------------------------------------
+	                    * Removes a workflow task action by calling the selected tasks $$delete method
+	                    * and reindexes the list.
+	                    * --------------------------------------------------------------------------------------------------------
+	                    */
+	                scope.removeWorkflowTaskAction = function (workflowTaskAction) {
+	                    var deletePromise = workflowTaskAction.$$delete();
+	                    deletePromise.then(function () {
+	                        if (workflowTaskAction === scope.workflowTaskActions.selectedTaskAction) {
+	                            delete scope.workflowTaskActions.selectedTaskAction;
+	                        }
+	                        $log.debug("removeWorkflowTaskAction");
+	                        $log.debug(workflowTaskAction);
+	                        scope.workflowTaskActions.splice(workflowTaskAction.$$actionIndex, 1);
+	                        for (var i in scope.workflowTaskActions) {
+	                            scope.workflowTaskActions[i].$$actionIndex = i;
+	                        }
+	                    });
+	                };
+	            }
+	        };
+	    }
+	    SWWorkflowTaskActions.Factory = function () {
+	        var directive = function ($log, $hibachi, metadataService, collectionService, workflowPartialsPath, pathBuilderConfig) {
+	            return new SWWorkflowTaskActions($log, $hibachi, metadataService, collectionService, workflowPartialsPath, pathBuilderConfig);
+	        };
+	        directive.$inject = [
+	            '$log',
+	            '$hibachi',
+	            'metadataService',
+	            'collectionService',
+	            'workflowPartialsPath',
+	            'pathBuilderConfig'
+	        ];
+	        return directive;
+	    };
+	    return SWWorkflowTaskActions;
+	})();
+	exports.SWWorkflowTaskActions = SWWorkflowTaskActions;
+
+
+/***/ },
+/* 134 */
+/***/ function(module, exports) {
+
+	/// <reference path='../../../typings/hibachiTypescript.d.ts' />
+	/// <reference path='../../../typings/tsd.d.ts' />
+	/**
+	 * Handles adding, editing, and deleting Workflows Tasks.
+	 */
+	var SWWorkflowTasks = (function () {
+	    function SWWorkflowTasks($log, $location, $hibachi, metadataService, collectionService, workflowPartialsPath, pathBuilderConfig) {
+	        return {
+	            restrict: 'A',
+	            scope: {
+	                workflow: "="
+	            },
+	            templateUrl: pathBuilderConfig.buildPartialsPath(workflowPartialsPath) + "workflowtasks.html",
+	            link: function (scope, element, attrs) {
+	                scope.workflowPartialsPath = pathBuilderConfig.buildPartialsPath(workflowPartialsPath);
+	                scope.propertiesList = {};
+	                function logger(context, message) {
+	                    $log.debug("SwWorkflowTasks :" + context + " : " + message);
+	                }
+	                /**
+	                 * Sets workflowTasks on the scope by populating with $$getWorkflowTasks()
+	                 */
+	                scope.getWorkflowTasks = function () {
+	                    logger("getWorkflowTasks", "Retrieving items");
+	                    logger("getWorkflowTasks", "Workflow Tasks");
+	                    $log.debug(scope.workflowTasks);
+	                    /***
+	                       Note:
+	                       This conditional is checking whether or not we need to be retrieving to
+	                       items all over again. If we already have them, we won't make another
+	                       trip to the database.
+
+	                     ***/
+	                    if (angular.isUndefined(scope.workflow.data.workflowTasks)) {
+	                        var workflowTasksPromise = scope.workflow.$$getWorkflowTasks();
+	                        workflowTasksPromise.then(function () {
+	                            scope.workflowTasks = scope.workflow.data.workflowTasks;
+	                        });
+	                    }
+	                    else {
+	                        logger("getWorkflowTasks", "Retrieving cached Items");
+	                        scope.workflowTasks = scope.workflow.data.workflowTasks;
+	                    }
+	                    if (angular.isUndefined(scope.workflow.data.workflowTasks)) {
+	                        //Reset the workflowTasks.
+	                        logger("getWorkflowTasks", "workflowTasks is undefined.");
+	                        scope.workflow.data.workflowTasks = [];
+	                        scope.workflowTasks = scope.workflow.data.workflowTasks;
+	                    }
+	                };
+	                scope.getWorkflowTasks(); //call tasks
+	                /**
+	                 * Sets the editing state to show/hide the edit screen.
+	                 */
+	                scope.setHidden = function (task) {
+	                    if (!angular.isObject(task) || angular.isUndefined(task.hidden)) {
+	                        task.hidden = false;
+	                    }
+	                    else {
+	                        logger("setHidden()", "Setting Hide Value To " + !task.hidden);
+	                        task.hidden = !task.hidden;
+	                    }
+	                };
+	                /**
+	                 * Add a workflow task and logs the result.
+	                 */
+	                scope.addWorkflowTask = function () {
+	                    var newWorkflowTask = scope.workflow.$$addWorkflowTask();
+	                    logger("var newWorkflowTask", newWorkflowTask);
+	                    scope.selectWorkflowTask(newWorkflowTask);
+	                };
+	                /**
+	                  * Watches the select for changes.
+	                  */
+	                scope.$watch('workflowTasks.selectedTask.data.workflow.data.workflowObject', function (newValue, oldValue) {
+	                    logger("scope.$watch", "Change Detected " + newValue + " from " + oldValue);
+	                    if ((newValue !== oldValue && angular.isDefined(scope.workflowTasks.selectedTask))) {
+	                        logger("scope.$watch", "Change to " + newValue);
+	                        scope.workflowTasks.selectedTask.data.taskConditionsConfig.baseEntityAlias = newValue;
+	                        scope.workflowTasks.selectedTask.data.taskConditionsConfig.baseEntityName = newValue;
+	                    }
+	                });
+	                /**
+	                   * --------------------------------------------------------------------------------------------------------
+	                   * Saves the workflow task by calling the objects $$save method.
+	                   * @param task
+	                   * --------------------------------------------------------------------------------------------------------
+	                   */
+	                scope.saveWorkflowTask = function (task, context) {
+	                    scope.done = true;
+	                    $log.debug("Context: " + context);
+	                    $log.debug("saving task");
+	                    $log.debug(scope.workflowTasks.selectedTask);
+	                    var savePromise = scope.workflowTasks.selectedTask.$$save();
+	                    savePromise.then(function () {
+	                        if (context === 'add') {
+	                            logger("SaveWorkflowTask", "Save and New");
+	                            scope.addWorkflowTask();
+	                            //scope.setHidden(scope.workflowTasks.selectedTask);
+	                            scope.finished = true;
+	                        }
+	                        else if (context == "finish") {
+	                            scope.finished = false;
+	                        }
+	                    });
+	                    scope.setHidden(scope.workflowTasks.selectedTask);
+	                }; //<--end save*/
+	                /**
+	                 * Select a workflow task.
+	                 */
+	                scope.selectWorkflowTask = function (workflowTask) {
+	                    scope.done = false;
+	                    logger("selectWorkflowTask", "selecting a workflow task");
+	                    $log.debug(workflowTask);
+	                    scope.finished = false;
+	                    scope.workflowTasks.selectedTask = undefined;
+	                    var filterPropertiesPromise = $hibachi.getFilterPropertiesByBaseEntityName(scope.workflow.data.workflowObject);
+	                    filterPropertiesPromise.then(function (value) {
+	                        scope.filterPropertiesList = {
+	                            baseEntityName: scope.workflow.data.workflowObject,
+	                            baseEntityAlias: "_" + scope.workflow.data.workflowObject
+	                        };
+	                        metadataService.setPropertiesList(value, scope.workflow.data.workflowObject);
+	                        scope.filterPropertiesList[scope.workflow.data.workflowObject] = metadataService.getPropertiesListByBaseEntityAlias(scope.workflow.data.workflowObject);
+	                        metadataService.formatPropertiesList(scope.filterPropertiesList[scope.workflow.data.workflowObject], scope.workflow.data.workflowObject);
+	                        scope.workflowTasks.selectedTask = workflowTask;
+	                    });
+	                };
+	                /* Does a delete of the property using delete */
+	                scope.softRemoveTask = function (workflowTask) {
+	                    logger("SoftRemoveTask", "calling delete");
+	                    if (workflowTask === scope.workflowTasks.selectedTask) {
+	                        delete scope.workflowTasks.selectedTask;
+	                    }
+	                    scope.removeIndexFromTasks(workflowTask.$$index);
+	                    scope.reindexTaskList();
+	                };
+	                /* Does an API call delete using $$delete */
+	                scope.hardRemoveTask = function (workflowTask) {
+	                    logger("HardRemoveTask", "$$delete");
+	                    var deletePromise = workflowTask.$$delete();
+	                    deletePromise.then(function () {
+	                        if (workflowTask === scope.workflowTasks.selectedTask) {
+	                            delete scope.workflowTasks.selectedTask;
+	                        }
+	                        scope.removeIndexFromTasks(workflowTask.$$index);
+	                        scope.reindexTaskList();
+	                    });
+	                };
+	                /*Override the delete entity in the confirmation controller*/
+	                scope.deleteEntity = function (entity) {
+	                    scope.hardRemoveTask(entity);
+	                };
+	                /* Re-indexes the task list */
+	                scope.reindexTaskList = function () {
+	                    for (var i in scope.workflowTasks) {
+	                        logger("ReIndexing the list", i);
+	                        scope.workflowTasks[i].$$index = i;
+	                    }
+	                };
+	                /* Removes the tasks index from the tasks array */
+	                scope.removeIndexFromTasks = function (index) {
+	                    logger("RemoveIndexFromTasks", index);
+	                    scope.workflowTasks.splice(index, 1);
+	                };
+	            }
+	        };
+	    }
+	    SWWorkflowTasks.Factory = function () {
+	        var directive = function ($log, $location, $hibachi, metadataService, collectionService, workflowPartialsPath, pathBuilderConfig) {
+	            return new SWWorkflowTasks($log, $location, $hibachi, metadataService, collectionService, workflowPartialsPath, pathBuilderConfig);
+	        };
+	        directive.$inject = [
+	            '$log',
+	            '$location',
+	            '$hibachi',
+	            'metadataService',
+	            'collectionService',
+	            'workflowPartialsPath',
+	            'pathBuilderConfig'
+	        ];
+	        return directive;
+	    };
+	    return SWWorkflowTasks;
+	})();
+	exports.SWWorkflowTasks = SWWorkflowTasks;
+
+
+/***/ },
+/* 135 */
+/***/ function(module, exports) {
+
+	/// <reference path='../../../typings/hibachiTypescript.d.ts' />
+	/// <reference path='../../../typings/tsd.d.ts' />
+	var SWWorkflowTrigger = (function () {
+	    function SWWorkflowTrigger($log, $hibachi, metadataService, workflowPartialsPath, pathBuilderConfig) {
+	        return {
+	            restrict: 'A',
+	            replace: true,
+	            scope: {
+	                workflowTrigger: "=",
+	                workflowTriggers: "="
+	            },
+	            templateUrl: pathBuilderConfig.buildPartialsPath(workflowPartialsPath) + "workflowtrigger.html",
+	            link: function (scope, element, attrs) {
+	                $log.debug('workflow trigger init');
+	                /**
+	                 * Selects the current workflow trigger.
+	                 */
+	                scope.selectWorkflowTrigger = function (workflowTrigger) {
+	                    $log.debug('SelectWorkflowTriggers');
+	                    scope.done = false;
+	                    $log.debug(workflowTrigger);
+	                    scope.finished = false;
+	                    scope.workflowTriggers.selectedTrigger = undefined;
+	                    var filterPropertiesPromise = $hibachi.getFilterPropertiesByBaseEntityName(scope.workflowTrigger.data.workflow.data.workflowObject);
+	                    filterPropertiesPromise.then(function (value) {
+	                        scope.filterPropertiesList = {
+	                            baseEntityName: scope.workflowTrigger.data.workflow.data.workflowObject,
+	                            baseEntityAlias: "_" + scope.workflowTrigger.data.workflow.data.workflowObject
+	                        };
+	                        metadataService.setPropertiesList(value, scope.workflowTrigger.data.workflow.data.workflowObject);
+	                        scope.filterPropertiesList[scope.workflowTrigger.data.workflow.data.workflowObject] = metadataService.getPropertiesListByBaseEntityAlias(scope.workflowTrigger.data.workflow.data.workflowObject);
+	                        metadataService.formatPropertiesList(scope.filterPropertiesList[scope.workflowTrigger.data.workflow.data.workflowObject], scope.workflowTrigger.data.workflow.data.workflowObject);
+	                        scope.workflowTriggers.selectedTrigger = workflowTrigger;
+	                    });
+	                };
+	                /**
+	                 * Overrides the delete function for the confirmation modal. Delegates to the normal delete method.
+	                 */
+	                scope.deleteEntity = function (entity) {
+	                    $log.debug("Delete Called");
+	                    $log.debug(entity);
+	                    scope.deleteTrigger(entity);
+	                };
+	                /**
+	                 * Hard deletes a workflow trigger
+	                 */
+	                scope.deleteTrigger = function (workflowTrigger) {
+	                    var deleteTriggerPromise = $hibachi.saveEntity('WorkflowTrigger', workflowTrigger.data.workflowTriggerID, {}, 'Delete');
+	                    deleteTriggerPromise.then(function (value) {
+	                        $log.debug('deleteTrigger');
+	                        scope.workflowTriggers.splice(workflowTrigger.$$index, 1);
+	                    });
+	                };
+	                /**
+	                 * Sets the editing state to show/hide the edit screen.
+	                 */
+	                scope.setHidden = function (trigger) {
+	                    if (!angular.isObject(trigger) || angular.isUndefined(trigger.hidden)) {
+	                        trigger.hidden = false;
+	                    }
+	                    else {
+	                        $log.debug("setHidden()", "Setting Hide Value To " + !trigger.hidden);
+	                        trigger.hidden = !trigger.hidden;
+	                    }
+	                };
+	            }
+	        };
+	    }
+	    SWWorkflowTrigger.Factory = function () {
+	        var directive = function ($log, $hibachi, metadataService, workflowPartialsPath, pathBuilderConfig) {
+	            return new SWWorkflowTrigger($log, $hibachi, metadataService, workflowPartialsPath, pathBuilderConfig);
+	        };
+	        directive.$inject = [
+	            '$log',
+	            '$hibachi',
+	            'metadataService',
+	            'workflowPartialsPath',
+	            'pathBuilderConfig'
+	        ];
+	        return directive;
+	    };
+	    return SWWorkflowTrigger;
+	})();
+	exports.SWWorkflowTrigger = SWWorkflowTrigger;
+
+
+/***/ },
+/* 136 */
+/***/ function(module, exports) {
+
+	/// <reference path='../../../typings/hibachiTypescript.d.ts' />
+	/// <reference path='../../../typings/tsd.d.ts' />
+	var SWWorkflowTriggers = (function () {
+	    function SWWorkflowTriggers($log, $location, $hibachi, workflowPartialsPath, formService, pathBuilderConfig) {
+	        return {
+	            restrict: 'E',
+	            scope: {
+	                workflow: "="
+	            },
+	            templateUrl: pathBuilderConfig.buildPartialsPath(workflowPartialsPath) + "workflowtriggers.html",
+	            link: function (scope, element, attrs, formController) {
+	                $log.debug('Workflow triggers init');
+	                scope.$id = 'swWorkflowTriggers';
+	                /**
+	                 * Retrieves the workflow triggers.
+	                 */
+	                scope.getWorkflowTriggers = function () {
+	                    /***
+	                       Note:
+	                       This conditional is checking whether or not we need to be retrieving to
+	                       items all over again. If we already have them, we won't make another
+	                       trip to the database.
+
+	                    ***/
+	                    if (angular.isUndefined(scope.workflow.data.workflowTriggers)) {
+	                        var workflowTriggersPromise = scope.workflow.$$getWorkflowTriggers();
+	                        workflowTriggersPromise.then(function () {
+	                            scope.workflowTriggers = scope.workflow.data.workflowTriggers;
+	                            $log.debug('workflowtriggers');
+	                            $log.debug(scope.workflowTriggers);
+	                            /* resets the workflow trigger */
+	                            if (angular.isUndefined(scope.workflow.data.workflowTriggers)) {
+	                                scope.workflow.data.workflowTriggers = [];
+	                                scope.workflowTriggers = scope.workflow.data.workflowTriggers;
+	                            }
+	                            angular.forEach(scope.workflowTriggers, function (workflowTrigger, key) {
+	                                $log.debug('trigger');
+	                                $log.debug(workflowTrigger);
+	                                if (workflowTrigger.data.triggerType === 'Schedule') {
+	                                    workflowTrigger.$$getSchedule();
+	                                    workflowTrigger.$$getScheduleCollection();
+	                                } //<---end if
+	                            }); //<---end forEach
+	                        }); //<---end workflow triggers promise
+	                    }
+	                    else {
+	                        //Use the cached versions.
+	                        scope.workflowTriggers = scope.workflow.data.workflowTriggers;
+	                    } //<---end else
+	                };
+	                scope.getWorkflowTriggers(); //call triggers
+	                scope.showCollections = false;
+	                scope.collections = [];
+	                scope.getCollectionByWorkflowObject = function () {
+	                    var filterGroupsConfig = '[' +
+	                        '{' +
+	                        '"filterGroup":[' +
+	                        '{' +
+	                        '"propertyIdentifier":"_collection.collectionObject",' +
+	                        '"comparisonOperator":"=",' +
+	                        '"value":"' + scope.workflow.data.workflowObject + '"' +
+	                        '}' +
+	                        ']' +
+	                        '}' +
+	                        ']';
+	                    var collectionsPromise = $hibachi.getEntity('Collection', { filterGroupsConfig: filterGroupsConfig });
+	                    collectionsPromise.then(function (value) {
+	                        $log.debug('getcollections');
+	                        scope.collections = value.pageRecords;
+	                        $log.debug(scope.collections);
+	                    });
+	                };
+	                scope.searchEvent = {
+	                    name: ''
+	                };
+	                /**
+	                 * Watches for changes in the event
+	                 */
+	                scope.showEventOptions = false;
+	                scope.eventOptions = [];
+	                scope.$watch('searchEvent.name', function (newValue, oldValue) {
+	                    if (newValue !== oldValue) {
+	                        scope.getEventOptions(scope.workflow.data.workflowObject);
+	                    }
+	                });
+	                /**
+	                 * Retrieves the event options for a workflow trigger item.
+	                 */
+	                scope.getEventOptions = function (objectName) {
+	                    if (!scope.eventOptions.length) {
+	                        var eventOptionsPromise = $hibachi.getEventOptions(objectName);
+	                        eventOptionsPromise.then(function (value) {
+	                            $log.debug('getEventOptions');
+	                            scope.eventOptions = value.data;
+	                            $log.debug(scope.eventOptions.name);
+	                        });
+	                    }
+	                    scope.showEventOptions = !scope.showEventOptions;
+	                };
+	                /**
+	                 * Saves the workflow triggers.
+	                 */
+	                scope.saveWorkflowTrigger = function (context) {
+	                    var saveWorkflowTriggerPromise = scope.workflowTriggers.selectedTrigger.$$save();
+	                    saveWorkflowTriggerPromise.then(function () {
+	                        //Clear the form by adding a new task action if 'save and add another' otherwise, set save and set finished
+	                        if (context == 'add') {
+	                            $log.debug("Save and New");
+	                            scope.addWorkflowTrigger();
+	                            scope.finished = false;
+	                        }
+	                        else if (context == "finish") {
+	                            scope.finished = true;
+	                        }
+	                    });
+	                };
+	                /**
+	                 * Changes the selected trigger value.
+	                 */
+	                scope.selectEvent = function (eventOption) {
+	                    $log.debug("SelectEvent");
+	                    $log.debug(eventOption);
+	                    //Needs to clear old and set new.
+	                    scope.workflowTriggers.selectedTrigger.data.triggerEvent = eventOption.value;
+	                    if (eventOption.entityName == scope.workflow.data.workflowObject) {
+	                        scope.workflowTriggers.selectedTrigger.data.objectPropertyIdentifier = '';
+	                    }
+	                    else {
+	                        scope.workflowTriggers.selectedTrigger.data.objectPropertyIdentifier = eventOption.entityName;
+	                    }
+	                    scope.searchEvent.name = eventOption.name;
+	                    $log.debug(eventOption);
+	                    $log.debug(scope.workflowTriggers);
+	                };
+	                /**
+	                 * Selects a new collection.
+	                 */
+	                scope.selectCollection = function (collection) {
+	                    $log.debug('selectCollection');
+	                    scope.workflowTriggers.selectedTrigger.data.scheduleCollection = collection;
+	                    scope.showCollections = false;
+	                };
+	                /**
+	                 * Removes a workflow trigger
+	                 */
+	                scope.removeWorkflowTrigger = function (workflowTrigger) {
+	                    if (workflowTrigger === scope.workflowTriggers.selectedTrigger) {
+	                        delete scope.workflowTriggers.selectedTrigger;
+	                    }
+	                    scope.workflowTriggers.splice(workflowTrigger.$$index, 1);
+	                };
+	                scope.setAsEvent = function (workflowTrigger) {
+	                    //add event,  clear schedule
+	                };
+	                scope.setAsSchedule = function (workflowTrigger) {
+	                };
+	                /**
+	                 * Adds a workflow trigger.
+	                 */
+	                scope.addWorkflowTrigger = function () {
+	                    $log.debug('addWorkflowTrigger');
+	                    var newWorkflowTrigger = scope.workflow.$$addWorkflowTrigger();
+	                    scope.workflowTriggers.selectedTrigger = newWorkflowTrigger;
+	                    $log.debug(scope.workflowTriggers);
+	                };
+	            }
+	        };
+	    }
+	    SWWorkflowTriggers.Factory = function () {
+	        var directive = function ($log, $location, $hibachi, workflowPartialsPath, formService, pathBuilderConfig) {
+	            return new SWWorkflowTriggers($log, $location, $hibachi, workflowPartialsPath, formService, pathBuilderConfig);
+	        };
+	        directive.$inject = [
+	            '$log',
+	            '$location',
+	            '$hibachi',
+	            'workflowPartialsPath',
+	            'formService',
+	            'pathBuilderConfig'
+	        ];
+	        return directive;
+	    };
+	    return SWWorkflowTriggers;
+	})();
+	exports.SWWorkflowTriggers = SWWorkflowTriggers;
+
+
+/***/ },
+/* 137 */
+/***/ function(module, exports, __webpack_require__) {
+
+	/// <reference path='../../typings/hibachiTypescript.d.ts' />
+	/// <reference path='../../typings/tsd.d.ts' />
+	//services
+	// import {AccountService} from "./services/accountservice";
+	// import {CartService} from "./services/cartservice";
+	// import {UtilityService} from "./services/utilityservice";
+	// import {SelectionService} from "./services/selectionservice";
+	// import {ObserverService} from "./services/observerservice";
+	// import {FormService} from "./services/formservice";
+	// import {MetaDataService} from "./services/metadataservice";
+	//controllers
+	var otherwisecontroller_1 = __webpack_require__(138);
+	var routercontroller_1 = __webpack_require__(139);
+	//directives
+	var swdetailtabs_1 = __webpack_require__(140);
+	var swdetail_1 = __webpack_require__(141);
+	var swlist_1 = __webpack_require__(142);
+	var entitymodule = angular.module('hibachi.entity', ['ngRoute'])
+	    .config(['$routeProvider', '$injector', '$locationProvider',
+	    function ($routeProvider, $injector, $locationProvider) {
+	        //detect if we are in hashbang mode
+	        var vars = {};
+	        var parts = window.location.href.replace(/[?&]+([^=&]+)#([^/]*)/gi, function (m, key, value) {
+	            vars[key] = value;
+	        });
+	        if (vars.ng) {
+	            $locationProvider.html5Mode(false).hashPrefix('!');
+	        }
+	        $routeProvider.when('/entity/:entityName/', {
+	            template: function (params) {
+	                var entityDirectiveExists = $injector.has('sw' + params.entityName + 'ListDirective');
+	                if (entityDirectiveExists) {
+	                    return '<sw-' + params.entityName.toLowerCase() + '-list>';
+	                }
+	                else {
+	                    return '<sw-list></sw-list>';
+	                }
+	            },
+	            controller: 'routerController'
+	        }).when('/entity/:entityName/:entityID', {
+	            template: function (params) {
+	                var entityDirectiveExists = $injector.has('sw' + params.entityName + 'DetailDirective');
+	                if (entityDirectiveExists) {
+	                    return '<sw-' + params.entityName.toLowerCase() + '-detail>';
+	                }
+	                else {
+	                    return '<sw-detail></sw-detail>';
+	                }
+	            },
+	            controller: 'routerController',
+	        }).otherwise({
+	            //controller:'otherwiseController'
+	            templateUrl: $.slatwall.getConfig().baseURL + '/admin/client/js/partials/otherwise.html',
+	        });
+	    }])
+	    .constant('coreEntityPartialsPath', 'entity/components/')
+	    .controller('otherwiseController', otherwisecontroller_1.OtherWiseController)
+	    .controller('routerController', routercontroller_1.RouterController)
+	    .directive('swDetail', swdetail_1.SWDetail.Factory())
+	    .directive('swDetailTabs', swdetailtabs_1.SWDetailTabs.Factory())
+	    .directive('swList', swlist_1.SWList.Factory());
+	exports.entitymodule = entitymodule;
+
+
+/***/ },
+/* 138 */
+/***/ function(module, exports) {
+
+	/// <reference path='../../../typings/hibachiTypescript.d.ts' />
+	/// <reference path='../../../typings/tsd.d.ts' />
+	var OtherWiseController = (function () {
+	    //@ngInject
+	    function OtherWiseController($scope) {
+	        $scope.$id = "otherwiseController";
+	    }
+	    return OtherWiseController;
+	})();
+	exports.OtherWiseController = OtherWiseController;
+
+
+/***/ },
+/* 139 */
+/***/ function(module, exports) {
+
+	/// <reference path='../../../typings/hibachiTypescript.d.ts' />
+	/// <reference path='../../../typings/tsd.d.ts' />
+	var RouterController = (function () {
+	    //@ngInject
+	    function RouterController($scope, $routeParams, $location, $log, partialsPath, baseURL) {
+	        $scope.$id = "routerController";
+	        $scope.partialRoute = '';
+	        $log.debug($routeParams);
+	        $log.debug($location);
+	        var path = $location.path();
+	        $scope.controllerType = path.split('/')[1];
+	        var type;
+	        if ($scope.controllerType === 'entity') {
+	            $scope.entityName = $routeParams.entityName;
+	            if (angular.isDefined($routeParams.entityID)) {
+	                $scope.entityID = $routeParams.entityID || '';
+	            }
+	        }
+	    }
+	    return RouterController;
+	})();
+	exports.RouterController = RouterController;
+
+
+/***/ },
+/* 140 */
+/***/ function(module, exports) {
+
+	/// <reference path='../../../typings/hibachiTypescript.d.ts' />
+	/// <reference path='../../../typings/tsd.d.ts' />
+	var SWDetailTabs = (function () {
+	    function SWDetailTabs($location, $log, $hibachi, coreEntityPartialsPath, pathBuilderConfig) {
+	        return {
+	            restrict: 'E',
+	            templateUrl: pathBuilderConfig.buildPartialsPath(coreEntityPartialsPath) + 'detailtabs.html',
+	            link: function (scope, element, attr) {
+	            }
+	        };
+	    }
+	    SWDetailTabs.Factory = function () {
+	        var directive = function ($location, $log, $hibachi, coreEntityPartialsPath, pathBuilderConfig) {
+	            return new SWDetailTabs($location, $log, $hibachi, coreEntityPartialsPath, pathBuilderConfig);
+	        };
+	        directive.$inject = [
+	            '$location',
+	            '$log',
+	            '$hibachi',
+	            'coreEntityPartialsPath',
+	            'pathBuilderConfig'
+	        ];
+	        return directive;
+	    };
+	    return SWDetailTabs;
+	})();
+	exports.SWDetailTabs = SWDetailTabs;
+
+
+/***/ },
+/* 141 */
+/***/ function(module, exports) {
+
+	/// <reference path='../../../typings/hibachiTypescript.d.ts' />
+	/// <reference path='../../../typings/tsd.d.ts' />
+	var SWDetail = (function () {
+	    function SWDetail($location, $log, $hibachi, coreEntityPartialsPath, pathBuilderConfig) {
+	        return {
+	            restrict: 'E',
+	            templateUrl: pathBuilderConfig.buildPartialsPath(coreEntityPartialsPath) + '/detail.html',
+	            link: function (scope, element, attr) {
+	                scope.$id = "slatwallDetailController";
+	                $log.debug('slatwallDetailController');
+	                /*Sets the view dirty on save*/
+	                scope.setDirty = function (entity) {
+	                    angular.forEach(entity.forms, function (form) {
+	                        form.$setSubmitted();
+	                    });
+	                };
+	                var setupMetaData = function () {
+	                    scope[scope.entityName.toLowerCase()] = scope.entity;
+	                    scope.entity.metaData.$$getDetailTabs().then(function (value) {
+	                        scope.detailTabs = value.data;
+	                        $log.debug('detailtabs');
+	                        $log.debug(scope.detailTabs);
+	                    });
+	                };
+	                var propertyCasedEntityName = scope.entityName.charAt(0).toUpperCase() + scope.entityName.slice(1);
+	                scope.tabPartialPath = pathBuilderConfig.buildPartialsPath(coreEntityPartialsPath);
+	                scope.getEntity = function () {
+	                    if (scope.entityID === 'null') {
+	                        scope.entity = $hibachi['new' + propertyCasedEntityName]();
+	                        setupMetaData();
+	                    }
+	                    else {
+	                        var entityPromise = $hibachi['get' + propertyCasedEntityName]({ id: scope.entityID });
+	                        entityPromise.promise.then(function () {
+	                            scope.entity = entityPromise.value;
+	                            setupMetaData();
+	                        });
+	                    }
+	                };
+	                scope.getEntity();
+	                scope.deleteEntity = function () {
+	                    var deletePromise = scope.entity.$$delete();
+	                    deletePromise.then(function () {
+	                        $location.path('/entity/' + propertyCasedEntityName + '/');
+	                    });
+	                };
+	                scope.allTabsOpen = false;
+	            }
+	        };
+	    }
+	    SWDetail.Factory = function () {
+	        var directive = function ($location, $log, $hibachi, coreEntityPartialsPath, pathBuilderConfig) {
+	            return new SWDetail($location, $log, $hibachi, coreEntityPartialsPath, pathBuilderConfig);
+	        };
+	        directive.$inject = [
+	            '$location',
+	            '$log',
+	            '$hibachi',
+	            'coreEntityPartialsPath',
+	            'pathBuilderConfig'
+	        ];
+	        return directive;
+	    };
+	    return SWDetail;
+	})();
+	exports.SWDetail = SWDetail;
+
+
+/***/ },
+/* 142 */
+/***/ function(module, exports) {
+
+	/// <reference path='../../../typings/hibachiTypescript.d.ts' />
+	/// <reference path='../../../typings/tsd.d.ts' />
+	var SWList = (function () {
+	    function SWList($log, $hibachi, coreEntityPartialsPath, pathBuilderConfig) {
+	        return {
+	            restrict: 'E',
+	            templateUrl: pathBuilderConfig.buildPartialsPath(coreEntityPartialsPath) + '/list.html',
+	            link: function (scope, element, attr) {
+	                $log.debug('slatwallList init');
+	                scope.getCollection = function () {
+	                    var pageShow = 50;
+	                    if (scope.pageShow !== 'Auto') {
+	                        pageShow = scope.pageShow;
+	                    }
+	                    scope.entityName = scope.entityName.charAt(0).toUpperCase() + scope.entityName.slice(1);
+	                    var collectionListingPromise = $hibachi.getEntity(scope.entityName, { currentPage: scope.currentPage, pageShow: pageShow, keywords: scope.keywords });
+	                    collectionListingPromise.then(function (value) {
+	                        scope.collection = value;
+	                        scope.collectionConfig = angular.fromJson(scope.collection.collectionConfig);
+	                    });
+	                };
+	                scope.getCollection();
+	            }
+	        };
+	    }
+	    SWList.Factory = function () {
+	        var directive = function ($log, $hibachi, coreEntityPartialsPath, pathBuilderConfig) {
+	            return new SWList($log, $hibachi, coreEntityPartialsPath, pathBuilderConfig);
+	        };
+	        directive.$inject = [
+	            '$log',
+	            '$hibachi',
+	            'coreEntityPartialsPath',
+	            'pathBuilderConfig'
+	        ];
+	        return directive;
+	    };
+	    return SWList;
+	})();
+	exports.SWList = SWList;
+
+
+/***/ },
+/* 143 */
 /***/ function(module, exports) {
 
 	/// <reference path='../../../typings/slatwallTypescript.d.ts' />
@@ -13893,7 +15238,7 @@
 
 
 /***/ },
-/* 126 */
+/* 144 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/// <reference path='../../typings/slatwallTypescript.d.ts' />
@@ -13901,10 +15246,10 @@
 	//services
 	//filters
 	//directives
-	var swcontentbasic_1 = __webpack_require__(127);
-	var swcontenteditor_1 = __webpack_require__(128);
-	var swcontentlist_1 = __webpack_require__(129);
-	var swcontentnode_1 = __webpack_require__(130);
+	var swcontentbasic_1 = __webpack_require__(145);
+	var swcontenteditor_1 = __webpack_require__(146);
+	var swcontentlist_1 = __webpack_require__(147);
+	var swcontentnode_1 = __webpack_require__(148);
 	var contentmodule = angular.module('hibachi.content', []).config(function () {
 	})
 	    .constant('contentPartialsPath', 'content/components/')
@@ -13916,7 +15261,7 @@
 
 
 /***/ },
-/* 127 */
+/* 145 */
 /***/ function(module, exports) {
 
 	/// <reference path='../../../typings/slatwallTypescript.d.ts' />
@@ -13992,7 +15337,7 @@
 
 
 /***/ },
-/* 128 */
+/* 146 */
 /***/ function(module, exports) {
 
 	/// <reference path='../../../typings/slatwallTypescript.d.ts' />
@@ -14052,7 +15397,7 @@
 
 
 /***/ },
-/* 129 */
+/* 147 */
 /***/ function(module, exports) {
 
 	/// <reference path='../../../typings/slatwallTypescript.d.ts' />
@@ -14285,7 +15630,7 @@
 
 
 /***/ },
-/* 130 */
+/* 148 */
 /***/ function(module, exports) {
 
 	/// <reference path='../../../typings/slatwallTypescript.d.ts' />
@@ -14427,7 +15772,7 @@
 
 
 /***/ },
-/* 131 */
+/* 149 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/// <reference path='../../typings/slatwallTypescript.d.ts' />
@@ -14435,16 +15780,16 @@
 	//modules
 	var core_module_1 = __webpack_require__(11);
 	//controllers
-	var preprocessorderitem_addorderitemgiftrecipient_1 = __webpack_require__(132);
+	var preprocessorderitem_addorderitemgiftrecipient_1 = __webpack_require__(150);
 	//directives
-	var swaddorderitemgiftrecipient_1 = __webpack_require__(134);
-	var swgiftcardbalance_1 = __webpack_require__(135);
-	var swgiftcarddetail_1 = __webpack_require__(136);
-	var swgiftcardhistory_1 = __webpack_require__(137);
-	var swgiftcardoverview_1 = __webpack_require__(138);
-	var swgiftcardorderinfo_1 = __webpack_require__(139);
-	var swgiftcardrecipientinfo_1 = __webpack_require__(140);
-	var sworderitemgiftrecipientrow_1 = __webpack_require__(141);
+	var swaddorderitemgiftrecipient_1 = __webpack_require__(152);
+	var swgiftcardbalance_1 = __webpack_require__(153);
+	var swgiftcarddetail_1 = __webpack_require__(154);
+	var swgiftcardhistory_1 = __webpack_require__(155);
+	var swgiftcardoverview_1 = __webpack_require__(156);
+	var swgiftcardorderinfo_1 = __webpack_require__(157);
+	var swgiftcardrecipientinfo_1 = __webpack_require__(158);
+	var sworderitemgiftrecipientrow_1 = __webpack_require__(159);
 	var giftcardmodule = angular.module('giftcard', [core_module_1.coremodule.name])
 	    .config([function () {
 	    }]).run([function () {
@@ -14463,12 +15808,12 @@
 
 
 /***/ },
-/* 132 */
+/* 150 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/// <reference path='../../../typings/slatwallTypescript.d.ts' />
 	/// <reference path='../../../typings/tsd.d.ts' />
-	var giftrecipient_1 = __webpack_require__(133);
+	var giftrecipient_1 = __webpack_require__(151);
 	var OrderItemGiftRecipientControl = (function () {
 	    //@ngInject
 	    function OrderItemGiftRecipientControl($scope, $hibachi) {
@@ -14510,7 +15855,7 @@
 
 
 /***/ },
-/* 133 */
+/* 151 */
 /***/ function(module, exports) {
 
 	/// <reference path='../../../typings/slatwallTypescript.d.ts' />
@@ -14536,12 +15881,12 @@
 
 
 /***/ },
-/* 134 */
+/* 152 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/// <reference path='../../../typings/slatwallTypescript.d.ts' />
 	/// <reference path='../../../typings/tsd.d.ts' />
-	var giftrecipient_1 = __webpack_require__(133);
+	var giftrecipient_1 = __webpack_require__(151);
 	var SWAddOrderItemRecipientController = (function () {
 	    function SWAddOrderItemRecipientController($hibachi) {
 	        var _this = this;
@@ -14684,7 +16029,7 @@
 
 
 /***/ },
-/* 135 */
+/* 153 */
 /***/ function(module, exports) {
 
 	/// <reference path='../../../typings/slatwallTypescript.d.ts' />
@@ -14762,7 +16107,7 @@
 
 
 /***/ },
-/* 136 */
+/* 154 */
 /***/ function(module, exports) {
 
 	/// <reference path='../../../typings/slatwallTypescript.d.ts' />
@@ -14820,7 +16165,7 @@
 
 
 /***/ },
-/* 137 */
+/* 155 */
 /***/ function(module, exports) {
 
 	/// <reference path='../../../typings/slatwallTypescript.d.ts' />
@@ -14949,7 +16294,7 @@
 
 
 /***/ },
-/* 138 */
+/* 156 */
 /***/ function(module, exports) {
 
 	/// <reference path='../../../typings/slatwallTypescript.d.ts' />
@@ -14989,7 +16334,7 @@
 
 
 /***/ },
-/* 139 */
+/* 157 */
 /***/ function(module, exports) {
 
 	/// <reference path='../../../typings/slatwallTypescript.d.ts' />
@@ -15048,7 +16393,7 @@
 
 
 /***/ },
-/* 140 */
+/* 158 */
 /***/ function(module, exports) {
 
 	/// <reference path='../../../typings/slatwallTypescript.d.ts' />
@@ -15088,7 +16433,7 @@
 
 
 /***/ },
-/* 141 */
+/* 159 */
 /***/ function(module, exports) {
 
 	/// <reference path='../../../typings/slatwallTypescript.d.ts' />
@@ -15195,7 +16540,7 @@
 
 
 /***/ },
-/* 142 */
+/* 160 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/// <reference path='../../typings/slatwallTypescript.d.ts' />
@@ -15204,8 +16549,8 @@
 	var core_module_1 = __webpack_require__(11);
 	//controllers
 	//directives
-	var swaddoptiongroup_1 = __webpack_require__(143);
-	var swoptionsforoptiongroup_1 = __webpack_require__(144);
+	var swaddoptiongroup_1 = __webpack_require__(161);
+	var swoptionsforoptiongroup_1 = __webpack_require__(162);
 	var optiongroupmodule = angular.module('optiongroup', [core_module_1.coremodule.name])
 	    .config([function () {
 	    }]).run([function () {
@@ -15217,7 +16562,7 @@
 
 
 /***/ },
-/* 143 */
+/* 161 */
 /***/ function(module, exports) {
 
 	/// <reference path='../../../typings/slatwallTypescript.d.ts' />
@@ -15385,7 +16730,7 @@
 
 
 /***/ },
-/* 144 */
+/* 162 */
 /***/ function(module, exports) {
 
 	/// <reference path='../../../typings/slatwallTypescript.d.ts' />
@@ -15456,19 +16801,19 @@
 
 
 /***/ },
-/* 145 */
+/* 163 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/// <reference path="../../typings/tsd.d.ts" />
-	/// <reference path="../../typings/slatwallTypeScript.d.ts" />
+	/// <reference path="../../typings/slatwallTypescript.d.ts" />
 	var core_module_1 = __webpack_require__(11);
 	//directives
-	var swchildorderitem_1 = __webpack_require__(146);
-	var sworderitem_1 = __webpack_require__(147);
-	var swoishippinglabelstamp_1 = __webpack_require__(148);
-	var sworderitemdetailstamp_1 = __webpack_require__(149);
-	var sworderitems_1 = __webpack_require__(150);
-	var swresizedimage_1 = __webpack_require__(151);
+	var swchildorderitem_1 = __webpack_require__(164);
+	var sworderitem_1 = __webpack_require__(165);
+	var swoishippinglabelstamp_1 = __webpack_require__(166);
+	var sworderitemdetailstamp_1 = __webpack_require__(167);
+	var sworderitems_1 = __webpack_require__(168);
+	var swresizedimage_1 = __webpack_require__(169);
 	var orderitemmodule = angular.module('hibachi.orderitem', [core_module_1.coremodule.name])
 	    .run([function () {
 	    }])
@@ -15483,7 +16828,7 @@
 
 
 /***/ },
-/* 146 */
+/* 164 */
 /***/ function(module, exports) {
 
 	/// <reference path='../../../typings/slatwallTypescript.d.ts' />
@@ -15773,7 +17118,7 @@
 
 
 /***/ },
-/* 147 */
+/* 165 */
 /***/ function(module, exports) {
 
 	/// <reference path='../../../typings/slatwallTypescript.d.ts' />
@@ -16192,7 +17537,7 @@
 
 
 /***/ },
-/* 148 */
+/* 166 */
 /***/ function(module, exports) {
 
 	/// <reference path='../../../typings/slatwallTypescript.d.ts' />
@@ -16235,7 +17580,7 @@
 
 
 /***/ },
-/* 149 */
+/* 167 */
 /***/ function(module, exports) {
 
 	/// <reference path='../../../typings/slatwallTypescript.d.ts' />
@@ -16336,7 +17681,7 @@
 
 
 /***/ },
-/* 150 */
+/* 168 */
 /***/ function(module, exports) {
 
 	/// <reference path='../../../typings/slatwallTypescript.d.ts' />
@@ -16486,7 +17831,7 @@
 
 
 /***/ },
-/* 151 */
+/* 169 */
 /***/ function(module, exports) {
 
 	/// <reference path='../../../typings/slatwallTypescript.d.ts' />
@@ -16529,7 +17874,7 @@
 
 
 /***/ },
-/* 152 */
+/* 170 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/// <reference path='../../typings/slatwallTypescript.d.ts' />
@@ -16538,7 +17883,7 @@
 	var core_module_1 = __webpack_require__(11);
 	//services
 	//controllers
-	var preprocessproduct_create_1 = __webpack_require__(153);
+	var preprocessproduct_create_1 = __webpack_require__(171);
 	//filters
 	//directives
 	var productmodule = angular.module('hibachi.product', [core_module_1.coremodule.name]).config(function () {
@@ -16549,7 +17894,7 @@
 
 
 /***/ },
-/* 153 */
+/* 171 */
 /***/ function(module, exports) {
 
 	/// <reference path='../../../typings/slatwallTypescript.d.ts' />
@@ -16626,7 +17971,7 @@
 
 
 /***/ },
-/* 154 */
+/* 172 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/// <reference path='../../typings/slatwallTypescript.d.ts' />
@@ -16634,13 +17979,13 @@
 	//modules
 	var core_module_1 = __webpack_require__(11);
 	//services
-	var productbundleservice_1 = __webpack_require__(155);
+	var productbundleservice_1 = __webpack_require__(173);
 	//controllers
-	var create_bundle_controller_1 = __webpack_require__(156);
+	var create_bundle_controller_1 = __webpack_require__(174);
 	//directives
-	var swproductbundlegrouptype_1 = __webpack_require__(157);
-	var swproductbundlegroups_1 = __webpack_require__(158);
-	var swproductbundlegroup_1 = __webpack_require__(159);
+	var swproductbundlegrouptype_1 = __webpack_require__(175);
+	var swproductbundlegroups_1 = __webpack_require__(176);
+	var swproductbundlegroup_1 = __webpack_require__(177);
 	//filters
 	var productbundlemodule = angular.module('hibachi.productbundle', [core_module_1.coremodule.name]).config(function () {
 	})
@@ -16654,7 +17999,7 @@
 
 
 /***/ },
-/* 155 */
+/* 173 */
 /***/ function(module, exports) {
 
 	/// <reference path='../../../typings/slatwallTypescript.d.ts' />
@@ -16739,7 +18084,7 @@
 
 
 /***/ },
-/* 156 */
+/* 174 */
 /***/ function(module, exports) {
 
 	/// <reference path='../../../typings/slatwallTypescript.d.ts' />
@@ -16811,7 +18156,7 @@
 
 
 /***/ },
-/* 157 */
+/* 175 */
 /***/ function(module, exports) {
 
 	/// <reference path='../../../typings/slatwallTypescript.d.ts' />
@@ -16983,7 +18328,7 @@
 
 
 /***/ },
-/* 158 */
+/* 176 */
 /***/ function(module, exports) {
 
 	/// <reference path='../../../typings/slatwallTypescript.d.ts' />
@@ -17043,7 +18388,7 @@
 
 
 /***/ },
-/* 159 */
+/* 177 */
 /***/ function(module, exports) {
 
 	/// <reference path='../../../typings/slatwallTypescript.d.ts' />
@@ -17389,1352 +18734,6 @@
 
 
 /***/ },
-/* 160 */
-/***/ function(module, exports, __webpack_require__) {
-
-	/// <reference path='../../typings/slatwallTypescript.d.ts' />
-	/// <reference path='../../typings/tsd.d.ts' />
-	//services
-	var workflowconditionservice_1 = __webpack_require__(161);
-	//directives
-	var swadmincreatesuperuser_1 = __webpack_require__(162);
-	var swworkflowbasic_1 = __webpack_require__(163);
-	var swworkflowcondition_1 = __webpack_require__(164);
-	var swworkflowconditiongroupitem_1 = __webpack_require__(165);
-	var swworkflowconditiongroups_1 = __webpack_require__(166);
-	var swworkflowtask_1 = __webpack_require__(167);
-	var swworkflowtaskactions_1 = __webpack_require__(168);
-	var swworkflowtasks_1 = __webpack_require__(169);
-	var swworkflowtrigger_1 = __webpack_require__(170);
-	var swworkflowtriggers_1 = __webpack_require__(171);
-	//filters
-	var workflowmodule = angular.module('hibachi.workflow', ['hibachi.collection']).config(function () {
-	})
-	    .constant('workflowPartialsPath', 'workflow/components/')
-	    .service('workflowConditionService', workflowconditionservice_1.WorkflowConditionService)
-	    .directive('swAdminCreateSuperUser', swadmincreatesuperuser_1.SWAdminCreateSuperUser.Factory())
-	    .directive('swWorkflowBasic', swworkflowbasic_1.SWWorkflowBasic.Factory())
-	    .directive('swWorkflowCondition', swworkflowcondition_1.SWWorkflowCondition.Factory())
-	    .directive('swWorkflowConditionGroupItem', swworkflowconditiongroupitem_1.SWWorkflowConditionGroupItem.Factory())
-	    .directive('swWorkflowConditionGroups', swworkflowconditiongroups_1.SWWorkflowConditionGroups.Factory())
-	    .directive('swWorkflowTask', swworkflowtask_1.SWWorkflowTask.Factory())
-	    .directive('swWorkflowTaskActions', swworkflowtaskactions_1.SWWorkflowTaskActions.Factory())
-	    .directive('swWorkflowTasks', swworkflowtasks_1.SWWorkflowTasks.Factory())
-	    .directive('swWorkflowTrigger', swworkflowtrigger_1.SWWorkflowTrigger.Factory())
-	    .directive('swWorkflowTriggers', swworkflowtriggers_1.SWWorkflowTriggers.Factory());
-	exports.workflowmodule = workflowmodule;
-
-
-/***/ },
-/* 161 */
-/***/ function(module, exports) {
-
-	/// <reference path='../../../typings/slatwallTypescript.d.ts' />
-	/// <reference path='../../../typings/tsd.d.ts' />
-	var WorkflowCondition = (function () {
-	    function WorkflowCondition() {
-	        this.propertyIdentifer = "";
-	        this.comparisonOperator = "";
-	        this.value = "";
-	        this.displayPropertyIdentifier = "";
-	        this.$$disabled = false;
-	        this.$$isClosed = true;
-	        this.$$isNew = true;
-	    }
-	    return WorkflowCondition;
-	})();
-	exports.WorkflowCondition = WorkflowCondition;
-	var WorkflowConditionGroupItem = (function () {
-	    function WorkflowConditionGroupItem() {
-	        this.workflowConditionGroup = [];
-	    }
-	    return WorkflowConditionGroupItem;
-	})();
-	exports.WorkflowConditionGroupItem = WorkflowConditionGroupItem;
-	var WorkflowConditionService = (function () {
-	    function WorkflowConditionService($log, $hibachi, alertService) {
-	        var _this = this;
-	        this.$log = $log;
-	        this.newWorkflowCondition = function () {
-	            return new WorkflowCondition;
-	        };
-	        this.addWorkflowCondition = function (groupItem, condition) {
-	            _this.$log.debug('addWorkflowCondition');
-	            _this.$log.debug(groupItem);
-	            _this.$log.debug(condition);
-	            if (groupItem.length >= 1) {
-	                condition.logicalOperator = 'AND';
-	            }
-	            groupItem.push(condition);
-	        };
-	        this.newWorkflowConditionGroupItem = function () {
-	            return new WorkflowConditionGroupItem;
-	        };
-	        this.addWorkflowConditionGroupItem = function (group, groupItem) {
-	            group.push(groupItem);
-	        };
-	    }
-	    WorkflowConditionService.$inject = ["$log", "$hibachi", "alertService"];
-	    return WorkflowConditionService;
-	})();
-	exports.WorkflowConditionService = WorkflowConditionService;
-
-
-/***/ },
-/* 162 */
-/***/ function(module, exports) {
-
-	/// <reference path='../../../typings/slatwallTypescript.d.ts' />
-	/// <reference path='../../../typings/tsd.d.ts' />
-	var SWAdminCreateSuperUser = (function () {
-	    function SWAdminCreateSuperUser($log, $hibachi, workflowPartialsPath, pathBuilderConfig) {
-	        return {
-	            restrict: 'E',
-	            scope: {},
-	            templateUrl: pathBuilderConfig.buildPartialsPath(workflowPartialsPath) + "admincreatesuperuser.html",
-	            link: function (scope, element, attrs) {
-	                scope.Account_SetupInitialAdmin = $hibachi.newAccount_SetupInitialAdmin();
-	            }
-	        };
-	    }
-	    SWAdminCreateSuperUser.Factory = function () {
-	        var directive = function ($log, $hibachi, workflowPartialsPath, pathBuilderConfig) {
-	            return new SWAdminCreateSuperUser($log, $hibachi, workflowPartialsPath, pathBuilderConfig);
-	        };
-	        directive.$inject = [
-	            '$log',
-	            '$hibachi',
-	            'workflowPartialsPath',
-	            'pathBuilderConfig'
-	        ];
-	        return directive;
-	    };
-	    return SWAdminCreateSuperUser;
-	})();
-	exports.SWAdminCreateSuperUser = SWAdminCreateSuperUser;
-
-
-/***/ },
-/* 163 */
-/***/ function(module, exports) {
-
-	/// <reference path='../../../typings/slatwallTypescript.d.ts' />
-	/// <reference path='../../../typings/tsd.d.ts' />
-	var SWWorkflowBasic = (function () {
-	    function SWWorkflowBasic($log, $location, $hibachi, formService, workflowPartialsPath, pathBuilderConfig) {
-	        return {
-	            restrict: 'A',
-	            scope: {
-	                workflow: "="
-	            },
-	            templateUrl: pathBuilderConfig.buildPartialsPath(workflowPartialsPath)
-	                + "workflowbasic.html",
-	            link: function (scope, element, attrs) {
-	                console.log('workflowtest');
-	                console.log(scope.workflow);
-	            }
-	        };
-	    }
-	    SWWorkflowBasic.Factory = function () {
-	        var directive = function ($log, $location, $hibachi, formService, workflowPartialsPath, pathBuilderConfig) {
-	            return new SWWorkflowBasic($log, $location, $hibachi, formService, workflowPartialsPath, pathBuilderConfig);
-	        };
-	        directive.$inject = [
-	            '$log',
-	            '$location',
-	            '$hibachi',
-	            'formService',
-	            'workflowPartialsPath',
-	            'pathBuilderConfig'
-	        ];
-	        return directive;
-	    };
-	    return SWWorkflowBasic;
-	})();
-	exports.SWWorkflowBasic = SWWorkflowBasic;
-
-
-/***/ },
-/* 164 */
-/***/ function(module, exports) {
-
-	/// <reference path='../../../typings/slatwallTypescript.d.ts' />
-	/// <reference path='../../../typings/tsd.d.ts' />
-	var SWWorkflowCondition = (function () {
-	    function SWWorkflowCondition($log, $location, $hibachi, formService, metadataService, workflowPartialsPath, pathBuilderConfig) {
-	        return {
-	            restrict: 'E',
-	            scope: {
-	                workflowCondition: "=",
-	                workflowConditionIndex: "=",
-	                workflow: "=",
-	                filterPropertiesList: "="
-	            },
-	            templateUrl: pathBuilderConfig.buildPartialsPath(workflowPartialsPath) + "workflowcondition.html",
-	            link: function (scope, element, attrs) {
-	                $log.debug('workflowCondition init');
-	                $log.debug(scope);
-	                scope.selectBreadCrumb = function (breadCrumbIndex) {
-	                    //splice out array items above index
-	                    var removeCount = scope.filterItem.breadCrumbs.length - 1 - breadCrumbIndex;
-	                    scope.filterItem.breadCrumbs.splice(breadCrumbIndex + 1, removeCount);
-	                    scope.selectedFilterPropertyChanged(null);
-	                };
-	                scope.selectedFilterPropertyChanged = function (selectedFilterProperty) {
-	                    $log.debug('selectedFilterProperty');
-	                    $log.debug(selectedFilterProperty);
-	                    scope.selectedFilterProperty = selectedFilterProperty;
-	                };
-	                if (angular.isUndefined(scope.workflowCondition.breadCrumbs)) {
-	                    scope.workflowCondition.breadCrumbs = [];
-	                    if (scope.workflowCondition.propertyIdentifier === "") {
-	                        scope.workflowCondition.breadCrumbs = [
-	                            {
-	                                entityAlias: scope.workflow.data.workflowObject,
-	                                cfc: scope.workflow.data.workflowObject,
-	                                propertyIdentifier: scope.workflow.data.workflowObject
-	                            }
-	                        ];
-	                    }
-	                    else {
-	                        var entityAliasArrayFromString = scope.workflowCondition.propertyIdentifier.split('.');
-	                        entityAliasArrayFromString.pop();
-	                        for (var i in entityAliasArrayFromString) {
-	                            var breadCrumb = {
-	                                entityAlias: entityAliasArrayFromString[i],
-	                                cfc: entityAliasArrayFromString[i],
-	                                propertyIdentifier: entityAliasArrayFromString[i]
-	                            };
-	                            scope.workflowCondition.breadCrumbs.push(breadCrumb);
-	                        }
-	                    }
-	                }
-	                else {
-	                    angular.forEach(scope.workflowCondition.breadCrumbs, function (breadCrumb, key) {
-	                        if (angular.isUndefined(scope.filterPropertiesList[breadCrumb.propertyIdentifier])) {
-	                            var filterPropertiesPromise = $hibachi.getFilterPropertiesByBaseEntityName(breadCrumb.cfc);
-	                            filterPropertiesPromise.then(function (value) {
-	                                metadataService.setPropertiesList(value, breadCrumb.propertyIdentifier);
-	                                scope.filterPropertiesList[breadCrumb.propertyIdentifier] = metadataService.getPropertiesListByBaseEntityAlias(breadCrumb.propertyIdentifier);
-	                                metadataService.formatPropertiesList(scope.filterPropertiesList[breadCrumb.propertyIdentifier], breadCrumb.propertyIdentifier);
-	                                var entityAliasArrayFromString = scope.workflowCondition.propertyIdentifier.split('.');
-	                                entityAliasArrayFromString.pop();
-	                                entityAliasArrayFromString = entityAliasArrayFromString.join('.').trim();
-	                                if (angular.isDefined(scope.filterPropertiesList[entityAliasArrayFromString])) {
-	                                    for (var i in scope.filterPropertiesList[entityAliasArrayFromString].data) {
-	                                        var filterProperty = scope.filterPropertiesList[entityAliasArrayFromString].data[i];
-	                                        if (filterProperty.propertyIdentifier === scope.workflowCondition.propertyIdentifier) {
-	                                            //selectItem from drop down
-	                                            scope.selectedFilterProperty = filterProperty;
-	                                            //decorate with value and comparison Operator so we can use it in the Condition section
-	                                            scope.selectedFilterProperty.value = scope.workflowCondition.value;
-	                                            scope.selectedFilterProperty.comparisonOperator = scope.workflowCondition.comparisonOperator;
-	                                        }
-	                                    }
-	                                }
-	                            });
-	                        }
-	                        else {
-	                            var entityAliasArrayFromString = scope.workflowCondition.propertyIdentifier.split('.');
-	                            entityAliasArrayFromString.pop();
-	                            entityAliasArrayFromString = entityAliasArrayFromString.join('.').trim();
-	                            if (angular.isDefined(scope.filterPropertiesList[entityAliasArrayFromString])) {
-	                                for (var i in scope.filterPropertiesList[entityAliasArrayFromString].data) {
-	                                    var filterProperty = scope.filterPropertiesList[entityAliasArrayFromString].data[i];
-	                                    if (filterProperty.propertyIdentifier === scope.workflowCondition.propertyIdentifier) {
-	                                        //selectItem from drop down
-	                                        scope.selectedFilterProperty = filterProperty;
-	                                        //decorate with value and comparison Operator so we can use it in the Condition section
-	                                        scope.selectedFilterProperty.value = scope.workflowCondition.value;
-	                                        scope.selectedFilterProperty.comparisonOperator = scope.workflowCondition.comparisonOperator;
-	                                    }
-	                                }
-	                            }
-	                        }
-	                    });
-	                }
-	            }
-	        };
-	    }
-	    SWWorkflowCondition.Factory = function () {
-	        var directive = function ($log, $location, $hibachi, formService, metadataService, workflowPartialsPath, pathBuilderConfig) {
-	            return new SWWorkflowCondition($log, $location, $hibachi, formService, metadataService, workflowPartialsPath, pathBuilderConfig);
-	        };
-	        directive.$inject = [
-	            '$log',
-	            '$location',
-	            '$hibachi',
-	            'formService',
-	            'metadataService',
-	            'workflowPartialsPath',
-	            'pathBuilderConfig'
-	        ];
-	        return directive;
-	    };
-	    return SWWorkflowCondition;
-	})();
-	exports.SWWorkflowCondition = SWWorkflowCondition;
-
-
-/***/ },
-/* 165 */
-/***/ function(module, exports) {
-
-	/// <reference path='../../../typings/slatwallTypescript.d.ts' />
-	/// <reference path='../../../typings/tsd.d.ts' />
-	var SWWorkflowConditionGroupItem = (function () {
-	    function SWWorkflowConditionGroupItem($log, $location, $hibachi, formService, workflowPartialsPath, pathBuilderConfig) {
-	        return {
-	            restrict: 'E',
-	            templateUrl: pathBuilderConfig.buildPartialsPath(workflowPartialsPath) + "workflowconditiongroupitem.html",
-	            link: function (scope, element, attrs) {
-	            }
-	        };
-	    }
-	    SWWorkflowConditionGroupItem.Factory = function () {
-	        var directive = function ($log, $location, $hibachi, formService, workflowPartialsPath, pathBuilderConfig) {
-	            return new ($log,
-	                $location,
-	                $hibachi,
-	                formService,
-	                workflowPartialsPath,
-	                pathBuilderConfig);
-	        };
-	        directive.$inject = [
-	            '$log',
-	            '$location',
-	            '$hibachi',
-	            'formService',
-	            'workflowPartialsPath',
-	            'pathBuilderConfig'
-	        ];
-	        return directive;
-	    };
-	    return SWWorkflowConditionGroupItem;
-	})();
-	exports.SWWorkflowConditionGroupItem = SWWorkflowConditionGroupItem;
-
-
-/***/ },
-/* 166 */
-/***/ function(module, exports) {
-
-	/// <reference path='../../../typings/slatwallTypescript.d.ts' />
-	/// <reference path='../../../typings/tsd.d.ts' />
-	var SWWorkflowConditionGroups = (function () {
-	    function SWWorkflowConditionGroups($log, workflowConditionService, workflowPartialsPath, pathBuilderConfig) {
-	        return {
-	            restrict: 'E',
-	            scope: {
-	                workflowConditionGroupItem: "=",
-	                workflowConditionGroup: "=",
-	                workflow: "=",
-	                filterPropertiesList: "="
-	            },
-	            templateUrl: pathBuilderConfig.buildPartialsPath(workflowPartialsPath) + "workflowconditiongroups.html",
-	            link: function (scope, element, attrs) {
-	                $log.debug('workflowconditiongroups init');
-	                scope.addWorkflowCondition = function () {
-	                    $log.debug('addWorkflowCondition');
-	                    var workflowCondition = workflowConditionService.newWorkflowCondition();
-	                    workflowConditionService.addWorkflowCondition(scope.workflowConditionGroupItem, workflowCondition);
-	                };
-	                scope.addWorkflowGroupItem = function () {
-	                    $log.debug('addWorkflowGrouptItem');
-	                    var workflowConditionGroupItem = workflowConditionService.newWorkflowConditionGroupItem();
-	                    workflowConditionService.addWorkflowConditionGroupItem(scope.workflowConditionItem, workflowConditionGroupItem);
-	                };
-	            }
-	        };
-	    }
-	    SWWorkflowConditionGroups.Factory = function () {
-	        var directive = function ($log, workflowConditionService, workflowPartialsPath, pathBuilderConfig) {
-	            return new SWWorkflowConditionGroups($log, workflowConditionService, workflowPartialsPath, pathBuilderConfig);
-	        };
-	        directive.$inject = [
-	            '$log',
-	            'workflowConditionService',
-	            'workflowPartialsPath',
-	            'pathBuilderConfig'
-	        ];
-	        return directive;
-	    };
-	    return SWWorkflowConditionGroups;
-	})();
-	exports.SWWorkflowConditionGroups = SWWorkflowConditionGroups;
-
-
-/***/ },
-/* 167 */
-/***/ function(module, exports) {
-
-	/// <reference path='../../../typings/slatwallTypescript.d.ts' />
-	/// <reference path='../../../typings/tsd.d.ts' />
-	var SWWorkflowTask = (function () {
-	    function SWWorkflowTask($log, $location, $timeout, $hibachi, metadataService, collectionService, workflowPartialsPath, pathBuilderConfig) {
-	        return {
-	            restrict: 'E',
-	            scope: {
-	                workflowTask: "=",
-	                workflowTasks: "=",
-	            },
-	            templateUrl: pathBuilderConfig.buildPartialsPath(workflowPartialsPath) + "workflowtask.html",
-	            link: function (scope, element, attrs) {
-	                scope.removeWorkflowTask = function (workflowTask) {
-	                    var deletePromise = workflowTask.$$delete();
-	                    deletePromise.then(function () {
-	                        if (workflowTask === scope.workflowTasks.selectedTask) {
-	                            delete scope.workflowTasks.selectedTask;
-	                        }
-	                        scope.workflowTasks.splice(workflowTask.$$index, 1);
-	                        for (var i in scope.workflowTasks) {
-	                            scope.workflowTasks[i].$$index = i;
-	                        }
-	                    });
-	                };
-	            }
-	        };
-	    }
-	    SWWorkflowTask.Factory = function () {
-	        var directive = function ($log, $location, $timeout, $hibachi, metadataService, collectionService, workflowPartialsPath, pathBuilderConfig) {
-	            return new SWWorkflowTask($log, $location, $timeout, $hibachi, metadataService, collectionService, workflowPartialsPath, pathBuilderConfig);
-	        };
-	        directive.$inject = [
-	            '$log',
-	            '$location',
-	            '$timeout',
-	            '$hibachi',
-	            'metadataService',
-	            'collectionService',
-	            'workflowPartialsPath',
-	            'pathBuilderConfig'
-	        ];
-	        return directive;
-	    };
-	    return SWWorkflowTask;
-	})();
-	exports.SWWorkflowTask = SWWorkflowTask;
-
-
-/***/ },
-/* 168 */
-/***/ function(module, exports) {
-
-	/// <reference path='../../../typings/slatwallTypescript.d.ts' />
-	/// <reference path='../../../typings/tsd.d.ts' />
-	var SWWorkflowTaskActions = (function () {
-	    function SWWorkflowTaskActions($log, $hibachi, metadataService, collectionService, workflowPartialsPath, pathBuilderConfig) {
-	        return {
-	            restrict: 'AE',
-	            scope: {
-	                workflowTask: "="
-	            },
-	            templateUrl: pathBuilderConfig.buildPartialsPath(workflowPartialsPath) + "workflowtaskactions.html",
-	            link: function (scope, element, attrs) {
-	                $log.debug('Workflow Task Actions Init');
-	                $log.debug(scope.workflowTask);
-	                scope.openActions = false;
-	                /**
-	                    * Returns the correct object based on the selected object type.
-	                    */
-	                var getObjectByActionType = function (workflowTaskAction) {
-	                    if (workflowTaskAction.data.actionType === 'email') {
-	                        workflowTaskAction.$$getEmailTemplate();
-	                    }
-	                    else if (workflowTaskAction.data.actionType === 'print') {
-	                        workflowTaskAction.$$getPrintTemplate();
-	                    }
-	                };
-	                /**
-	                    * --------------------------------------------------------------------------------------------------------
-	                    * Returns workflow task action, and saves them to the scope variable workflowtaskactions
-	                    * --------------------------------------------------------------------------------------------------------
-	                    */
-	                scope.getWorkflowTaskActions = function () {
-	                    /***
-	                    Note:
-	                    This conditional is checking whether or not we need to be retrieving to
-	                    items all over again. If we already have them, we won't make another
-	                    trip to the database.
-
-	                ***/
-	                    if (angular.isUndefined(scope.workflowTask.data.workflowTaskActions)) {
-	                        var workflowTaskPromise = scope.workflowTask.$$getWorkflowTaskActions();
-	                        workflowTaskPromise.then(function () {
-	                            scope.workflowTaskActions = scope.workflowTask.data.workflowTaskActions;
-	                            angular.forEach(scope.workflowTaskActions, function (workflowTaskAction) {
-	                                getObjectByActionType(workflowTaskAction);
-	                            });
-	                            $log.debug(scope.workflowTaskActions);
-	                        });
-	                    }
-	                    else {
-	                        scope.workflowTaskActions = scope.workflowTask.data.workflowTaskActions;
-	                    }
-	                    if (angular.isUndefined(scope.workflowTask.data.workflowTaskActions)) {
-	                        scope.workflowTask.data.workflowTaskActions = [];
-	                        scope.workflowTaskActions = scope.workflowTask.data.workflowTaskActions;
-	                    }
-	                };
-	                scope.getWorkflowTaskActions(); //Call get
-	                /**
-	                    * --------------------------------------------------------------------------------------------------------
-	                    * Saves the workflow task actions by calling the objects $$save method.
-	                    * @param taskAction
-	                    * --------------------------------------------------------------------------------------------------------
-	                    */
-	                scope.saveWorkflowTaskAction = function (taskAction, context) {
-	                    $log.debug("Context: " + context);
-	                    $log.debug("saving task action and parent task");
-	                    $log.debug(taskAction);
-	                    var savePromise = scope.workflowTaskActions.selectedTaskAction.$$save();
-	                    savePromise.then(function () {
-	                        var taSavePromise = taskAction.$$save;
-	                        //Clear the form by adding a new task action if 'save and add another' otherwise, set save and set finished
-	                        if (context == 'add') {
-	                            $log.debug("Save and New");
-	                            scope.addWorkflowTaskAction(taskAction);
-	                            scope.finished = false;
-	                        }
-	                        else if (context == "finish") {
-	                            scope.finished = true;
-	                        }
-	                    });
-	                }; //<--end save
-	                /**
-	                    * Sets the editing state to show/hide the edit screen.
-	                    */
-	                scope.setHidden = function (task) {
-	                    if (!angular.isObject(task)) {
-	                        task = {};
-	                    }
-	                    if (angular.isUndefined(task.hidden)) {
-	                        task.hidden = false;
-	                    }
-	                    else {
-	                        $log.debug("setHidden()", "Setting Hide Value To " + !task.hidden);
-	                        task.hidden = !task.hidden;
-	                    }
-	                };
-	                /**
-	                    * --------------------------------------------------------------------------------------------------------
-	                    * Adds workflow action items by calling the workflowTask objects $$addWorkflowTaskAction() method
-	                    * and sets the result to scope.
-	                    * @param taskAction
-	                    * --------------------------------------------------------------------------------------------------------
-	                    */
-	                scope.addWorkflowTaskAction = function (taskAction) {
-	                    var workflowTaskAction = scope.workflowTask.$$addWorkflowTaskAction();
-	                    scope.selectWorkflowTaskAction(workflowTaskAction);
-	                    $log.debug(scope.workflow);
-	                };
-	                /**
-	                    * --------------------------------------------------------------------------------------------------------
-	                    * Selects a new task action and populates the task action properties.
-	                    * --------------------------------------------------------------------------------------------------------
-	                    */
-	                scope.selectWorkflowTaskAction = function (workflowTaskAction) {
-	                    $log.debug("Selecting new task action for editing: ");
-	                    $log.debug(workflowTaskAction);
-	                    scope.finished = false;
-	                    scope.workflowTaskActions.selectedTaskAction = undefined;
-	                    var filterPropertiesPromise = $hibachi.getFilterPropertiesByBaseEntityName(scope.workflowTask.data.workflow.data.workflowObject);
-	                    filterPropertiesPromise.then(function (value) {
-	                        scope.filterPropertiesList = {
-	                            baseEntityName: scope.workflowTask.data.workflow.data.workflowObject,
-	                            baseEntityAlias: "_" + scope.workflowTask.data.workflow.data.workflowObject
-	                        };
-	                        metadataService.setPropertiesList(value, scope.workflowTask.data.workflow.data.workflowObject);
-	                        scope.filterPropertiesList[scope.workflowTask.data.workflow.data.workflowObject] = metadataService.getPropertiesListByBaseEntityAlias(scope.workflowTask.data.workflow.data.workflowObject);
-	                        metadataService.formatPropertiesList(scope.filterPropertiesList[scope.workflowTask.data.workflow.data.workflowObject], scope.workflowTask.data.workflow.data.workflowObject);
-	                        scope.workflowTaskActions.selectedTaskAction = workflowTaskAction;
-	                    });
-	                };
-	                /**
-	                    * Overrides the confirm directive method deleteEntity. This is needed for the modal popup.
-	                    */
-	                scope.deleteEntity = function (entity) {
-	                    scope.removeWorkflowTaskAction(entity);
-	                };
-	                /**
-	                    * --------------------------------------------------------------------------------------------------------
-	                    * Removes a workflow task action by calling the selected tasks $$delete method
-	                    * and reindexes the list.
-	                    * --------------------------------------------------------------------------------------------------------
-	                    */
-	                scope.removeWorkflowTaskAction = function (workflowTaskAction) {
-	                    var deletePromise = workflowTaskAction.$$delete();
-	                    deletePromise.then(function () {
-	                        if (workflowTaskAction === scope.workflowTaskActions.selectedTaskAction) {
-	                            delete scope.workflowTaskActions.selectedTaskAction;
-	                        }
-	                        $log.debug("removeWorkflowTaskAction");
-	                        $log.debug(workflowTaskAction);
-	                        scope.workflowTaskActions.splice(workflowTaskAction.$$actionIndex, 1);
-	                        for (var i in scope.workflowTaskActions) {
-	                            scope.workflowTaskActions[i].$$actionIndex = i;
-	                        }
-	                    });
-	                };
-	            }
-	        };
-	    }
-	    SWWorkflowTaskActions.Factory = function () {
-	        var directive = function ($log, $hibachi, metadataService, collectionService, workflowPartialsPath, pathBuilderConfig) {
-	            return new SWWorkflowTaskActions($log, $hibachi, metadataService, collectionService, workflowPartialsPath, pathBuilderConfig);
-	        };
-	        directive.$inject = [
-	            '$log',
-	            '$hibachi',
-	            'metadataService',
-	            'collectionService',
-	            'workflowPartialsPath',
-	            'pathBuilderConfig'
-	        ];
-	        return directive;
-	    };
-	    return SWWorkflowTaskActions;
-	})();
-	exports.SWWorkflowTaskActions = SWWorkflowTaskActions;
-
-
-/***/ },
-/* 169 */
-/***/ function(module, exports) {
-
-	/// <reference path='../../../typings/slatwallTypescript.d.ts' />
-	/// <reference path='../../../typings/tsd.d.ts' />
-	/**
-	 * Handles adding, editing, and deleting Workflows Tasks.
-	 */
-	var SWWorkflowTasks = (function () {
-	    function SWWorkflowTasks($log, $location, $hibachi, metadataService, collectionService, workflowPartialsPath, pathBuilderConfig) {
-	        return {
-	            restrict: 'A',
-	            scope: {
-	                workflow: "="
-	            },
-	            templateUrl: pathBuilderConfig.buildPartialsPath(workflowPartialsPath) + "workflowtasks.html",
-	            link: function (scope, element, attrs) {
-	                scope.workflowPartialsPath = pathBuilderConfig.buildPartialsPath(workflowPartialsPath);
-	                scope.propertiesList = {};
-	                function logger(context, message) {
-	                    $log.debug("SwWorkflowTasks :" + context + " : " + message);
-	                }
-	                /**
-	                 * Sets workflowTasks on the scope by populating with $$getWorkflowTasks()
-	                 */
-	                scope.getWorkflowTasks = function () {
-	                    logger("getWorkflowTasks", "Retrieving items");
-	                    logger("getWorkflowTasks", "Workflow Tasks");
-	                    $log.debug(scope.workflowTasks);
-	                    /***
-	                       Note:
-	                       This conditional is checking whether or not we need to be retrieving to
-	                       items all over again. If we already have them, we won't make another
-	                       trip to the database.
-
-	                     ***/
-	                    if (angular.isUndefined(scope.workflow.data.workflowTasks)) {
-	                        var workflowTasksPromise = scope.workflow.$$getWorkflowTasks();
-	                        workflowTasksPromise.then(function () {
-	                            scope.workflowTasks = scope.workflow.data.workflowTasks;
-	                        });
-	                    }
-	                    else {
-	                        logger("getWorkflowTasks", "Retrieving cached Items");
-	                        scope.workflowTasks = scope.workflow.data.workflowTasks;
-	                    }
-	                    if (angular.isUndefined(scope.workflow.data.workflowTasks)) {
-	                        //Reset the workflowTasks.
-	                        logger("getWorkflowTasks", "workflowTasks is undefined.");
-	                        scope.workflow.data.workflowTasks = [];
-	                        scope.workflowTasks = scope.workflow.data.workflowTasks;
-	                    }
-	                };
-	                scope.getWorkflowTasks(); //call tasks
-	                /**
-	                 * Sets the editing state to show/hide the edit screen.
-	                 */
-	                scope.setHidden = function (task) {
-	                    if (!angular.isObject(task) || angular.isUndefined(task.hidden)) {
-	                        task.hidden = false;
-	                    }
-	                    else {
-	                        logger("setHidden()", "Setting Hide Value To " + !task.hidden);
-	                        task.hidden = !task.hidden;
-	                    }
-	                };
-	                /**
-	                 * Add a workflow task and logs the result.
-	                 */
-	                scope.addWorkflowTask = function () {
-	                    var newWorkflowTask = scope.workflow.$$addWorkflowTask();
-	                    logger("var newWorkflowTask", newWorkflowTask);
-	                    scope.selectWorkflowTask(newWorkflowTask);
-	                };
-	                /**
-	                  * Watches the select for changes.
-	                  */
-	                scope.$watch('workflowTasks.selectedTask.data.workflow.data.workflowObject', function (newValue, oldValue) {
-	                    logger("scope.$watch", "Change Detected " + newValue + " from " + oldValue);
-	                    if ((newValue !== oldValue && angular.isDefined(scope.workflowTasks.selectedTask))) {
-	                        logger("scope.$watch", "Change to " + newValue);
-	                        scope.workflowTasks.selectedTask.data.taskConditionsConfig.baseEntityAlias = newValue;
-	                        scope.workflowTasks.selectedTask.data.taskConditionsConfig.baseEntityName = newValue;
-	                    }
-	                });
-	                /**
-	                   * --------------------------------------------------------------------------------------------------------
-	                   * Saves the workflow task by calling the objects $$save method.
-	                   * @param task
-	                   * --------------------------------------------------------------------------------------------------------
-	                   */
-	                scope.saveWorkflowTask = function (task, context) {
-	                    scope.done = true;
-	                    $log.debug("Context: " + context);
-	                    $log.debug("saving task");
-	                    $log.debug(scope.workflowTasks.selectedTask);
-	                    var savePromise = scope.workflowTasks.selectedTask.$$save();
-	                    savePromise.then(function () {
-	                        if (context === 'add') {
-	                            logger("SaveWorkflowTask", "Save and New");
-	                            scope.addWorkflowTask();
-	                            //scope.setHidden(scope.workflowTasks.selectedTask);
-	                            scope.finished = true;
-	                        }
-	                        else if (context == "finish") {
-	                            scope.finished = false;
-	                        }
-	                    });
-	                    scope.setHidden(scope.workflowTasks.selectedTask);
-	                }; //<--end save*/
-	                /**
-	                 * Select a workflow task.
-	                 */
-	                scope.selectWorkflowTask = function (workflowTask) {
-	                    scope.done = false;
-	                    logger("selectWorkflowTask", "selecting a workflow task");
-	                    $log.debug(workflowTask);
-	                    scope.finished = false;
-	                    scope.workflowTasks.selectedTask = undefined;
-	                    var filterPropertiesPromise = $hibachi.getFilterPropertiesByBaseEntityName(scope.workflow.data.workflowObject);
-	                    filterPropertiesPromise.then(function (value) {
-	                        scope.filterPropertiesList = {
-	                            baseEntityName: scope.workflow.data.workflowObject,
-	                            baseEntityAlias: "_" + scope.workflow.data.workflowObject
-	                        };
-	                        metadataService.setPropertiesList(value, scope.workflow.data.workflowObject);
-	                        scope.filterPropertiesList[scope.workflow.data.workflowObject] = metadataService.getPropertiesListByBaseEntityAlias(scope.workflow.data.workflowObject);
-	                        metadataService.formatPropertiesList(scope.filterPropertiesList[scope.workflow.data.workflowObject], scope.workflow.data.workflowObject);
-	                        scope.workflowTasks.selectedTask = workflowTask;
-	                    });
-	                };
-	                /* Does a delete of the property using delete */
-	                scope.softRemoveTask = function (workflowTask) {
-	                    logger("SoftRemoveTask", "calling delete");
-	                    if (workflowTask === scope.workflowTasks.selectedTask) {
-	                        delete scope.workflowTasks.selectedTask;
-	                    }
-	                    scope.removeIndexFromTasks(workflowTask.$$index);
-	                    scope.reindexTaskList();
-	                };
-	                /* Does an API call delete using $$delete */
-	                scope.hardRemoveTask = function (workflowTask) {
-	                    logger("HardRemoveTask", "$$delete");
-	                    var deletePromise = workflowTask.$$delete();
-	                    deletePromise.then(function () {
-	                        if (workflowTask === scope.workflowTasks.selectedTask) {
-	                            delete scope.workflowTasks.selectedTask;
-	                        }
-	                        scope.removeIndexFromTasks(workflowTask.$$index);
-	                        scope.reindexTaskList();
-	                    });
-	                };
-	                /*Override the delete entity in the confirmation controller*/
-	                scope.deleteEntity = function (entity) {
-	                    scope.hardRemoveTask(entity);
-	                };
-	                /* Re-indexes the task list */
-	                scope.reindexTaskList = function () {
-	                    for (var i in scope.workflowTasks) {
-	                        logger("ReIndexing the list", i);
-	                        scope.workflowTasks[i].$$index = i;
-	                    }
-	                };
-	                /* Removes the tasks index from the tasks array */
-	                scope.removeIndexFromTasks = function (index) {
-	                    logger("RemoveIndexFromTasks", index);
-	                    scope.workflowTasks.splice(index, 1);
-	                };
-	            }
-	        };
-	    }
-	    SWWorkflowTasks.Factory = function () {
-	        var directive = function ($log, $location, $hibachi, metadataService, collectionService, workflowPartialsPath, pathBuilderConfig) {
-	            return new SWWorkflowTasks($log, $location, $hibachi, metadataService, collectionService, workflowPartialsPath, pathBuilderConfig);
-	        };
-	        directive.$inject = [
-	            '$log',
-	            '$location',
-	            '$hibachi',
-	            'metadataService',
-	            'collectionService',
-	            'workflowPartialsPath',
-	            'pathBuilderConfig'
-	        ];
-	        return directive;
-	    };
-	    return SWWorkflowTasks;
-	})();
-	exports.SWWorkflowTasks = SWWorkflowTasks;
-
-
-/***/ },
-/* 170 */
-/***/ function(module, exports) {
-
-	/// <reference path='../../../typings/slatwallTypescript.d.ts' />
-	/// <reference path='../../../typings/tsd.d.ts' />
-	var SWWorkflowTrigger = (function () {
-	    function SWWorkflowTrigger($log, $hibachi, metadataService, workflowPartialsPath, pathBuilderConfig) {
-	        return {
-	            restrict: 'A',
-	            replace: true,
-	            scope: {
-	                workflowTrigger: "=",
-	                workflowTriggers: "="
-	            },
-	            templateUrl: pathBuilderConfig.buildPartialsPath(workflowPartialsPath) + "workflowtrigger.html",
-	            link: function (scope, element, attrs) {
-	                $log.debug('workflow trigger init');
-	                /**
-	                 * Selects the current workflow trigger.
-	                 */
-	                scope.selectWorkflowTrigger = function (workflowTrigger) {
-	                    $log.debug('SelectWorkflowTriggers');
-	                    scope.done = false;
-	                    $log.debug(workflowTrigger);
-	                    scope.finished = false;
-	                    scope.workflowTriggers.selectedTrigger = undefined;
-	                    var filterPropertiesPromise = $hibachi.getFilterPropertiesByBaseEntityName(scope.workflowTrigger.data.workflow.data.workflowObject);
-	                    filterPropertiesPromise.then(function (value) {
-	                        scope.filterPropertiesList = {
-	                            baseEntityName: scope.workflowTrigger.data.workflow.data.workflowObject,
-	                            baseEntityAlias: "_" + scope.workflowTrigger.data.workflow.data.workflowObject
-	                        };
-	                        metadataService.setPropertiesList(value, scope.workflowTrigger.data.workflow.data.workflowObject);
-	                        scope.filterPropertiesList[scope.workflowTrigger.data.workflow.data.workflowObject] = metadataService.getPropertiesListByBaseEntityAlias(scope.workflowTrigger.data.workflow.data.workflowObject);
-	                        metadataService.formatPropertiesList(scope.filterPropertiesList[scope.workflowTrigger.data.workflow.data.workflowObject], scope.workflowTrigger.data.workflow.data.workflowObject);
-	                        scope.workflowTriggers.selectedTrigger = workflowTrigger;
-	                    });
-	                };
-	                /**
-	                 * Overrides the delete function for the confirmation modal. Delegates to the normal delete method.
-	                 */
-	                scope.deleteEntity = function (entity) {
-	                    $log.debug("Delete Called");
-	                    $log.debug(entity);
-	                    scope.deleteTrigger(entity);
-	                };
-	                /**
-	                 * Hard deletes a workflow trigger
-	                 */
-	                scope.deleteTrigger = function (workflowTrigger) {
-	                    var deleteTriggerPromise = $hibachi.saveEntity('WorkflowTrigger', workflowTrigger.data.workflowTriggerID, {}, 'Delete');
-	                    deleteTriggerPromise.then(function (value) {
-	                        $log.debug('deleteTrigger');
-	                        scope.workflowTriggers.splice(workflowTrigger.$$index, 1);
-	                    });
-	                };
-	                /**
-	                 * Sets the editing state to show/hide the edit screen.
-	                 */
-	                scope.setHidden = function (trigger) {
-	                    if (!angular.isObject(trigger) || angular.isUndefined(trigger.hidden)) {
-	                        trigger.hidden = false;
-	                    }
-	                    else {
-	                        $log.debug("setHidden()", "Setting Hide Value To " + !trigger.hidden);
-	                        trigger.hidden = !trigger.hidden;
-	                    }
-	                };
-	            }
-	        };
-	    }
-	    SWWorkflowTrigger.Factory = function () {
-	        var directive = function ($log, $hibachi, metadataService, workflowPartialsPath, pathBuilderConfig) {
-	            return new SWWorkflowTrigger($log, $hibachi, metadataService, workflowPartialsPath, pathBuilderConfig);
-	        };
-	        directive.$inject = [
-	            '$log',
-	            '$hibachi',
-	            'metadataService',
-	            'workflowPartialsPath',
-	            'pathBuilderConfig'
-	        ];
-	        return directive;
-	    };
-	    return SWWorkflowTrigger;
-	})();
-	exports.SWWorkflowTrigger = SWWorkflowTrigger;
-
-
-/***/ },
-/* 171 */
-/***/ function(module, exports) {
-
-	/// <reference path='../../../typings/slatwallTypescript.d.ts' />
-	/// <reference path='../../../typings/tsd.d.ts' />
-	var SWWorkflowTriggers = (function () {
-	    function SWWorkflowTriggers($log, $location, $hibachi, workflowPartialsPath, formService, pathBuilderConfig) {
-	        return {
-	            restrict: 'E',
-	            scope: {
-	                workflow: "="
-	            },
-	            templateUrl: pathBuilderConfig.buildPartialsPath(workflowPartialsPath) + "workflowtriggers.html",
-	            link: function (scope, element, attrs, formController) {
-	                $log.debug('Workflow triggers init');
-	                scope.$id = 'swWorkflowTriggers';
-	                /**
-	                 * Retrieves the workflow triggers.
-	                 */
-	                scope.getWorkflowTriggers = function () {
-	                    /***
-	                       Note:
-	                       This conditional is checking whether or not we need to be retrieving to
-	                       items all over again. If we already have them, we won't make another
-	                       trip to the database.
-
-	                    ***/
-	                    if (angular.isUndefined(scope.workflow.data.workflowTriggers)) {
-	                        var workflowTriggersPromise = scope.workflow.$$getWorkflowTriggers();
-	                        workflowTriggersPromise.then(function () {
-	                            scope.workflowTriggers = scope.workflow.data.workflowTriggers;
-	                            $log.debug('workflowtriggers');
-	                            $log.debug(scope.workflowTriggers);
-	                            /* resets the workflow trigger */
-	                            if (angular.isUndefined(scope.workflow.data.workflowTriggers)) {
-	                                scope.workflow.data.workflowTriggers = [];
-	                                scope.workflowTriggers = scope.workflow.data.workflowTriggers;
-	                            }
-	                            angular.forEach(scope.workflowTriggers, function (workflowTrigger, key) {
-	                                $log.debug('trigger');
-	                                $log.debug(workflowTrigger);
-	                                if (workflowTrigger.data.triggerType === 'Schedule') {
-	                                    workflowTrigger.$$getSchedule();
-	                                    workflowTrigger.$$getScheduleCollection();
-	                                } //<---end if
-	                            }); //<---end forEach
-	                        }); //<---end workflow triggers promise
-	                    }
-	                    else {
-	                        //Use the cached versions.
-	                        scope.workflowTriggers = scope.workflow.data.workflowTriggers;
-	                    } //<---end else
-	                };
-	                scope.getWorkflowTriggers(); //call triggers
-	                scope.showCollections = false;
-	                scope.collections = [];
-	                scope.getCollectionByWorkflowObject = function () {
-	                    var filterGroupsConfig = '[' +
-	                        '{' +
-	                        '"filterGroup":[' +
-	                        '{' +
-	                        '"propertyIdentifier":"_collection.collectionObject",' +
-	                        '"comparisonOperator":"=",' +
-	                        '"value":"' + scope.workflow.data.workflowObject + '"' +
-	                        '}' +
-	                        ']' +
-	                        '}' +
-	                        ']';
-	                    var collectionsPromise = $hibachi.getEntity('Collection', { filterGroupsConfig: filterGroupsConfig });
-	                    collectionsPromise.then(function (value) {
-	                        $log.debug('getcollections');
-	                        scope.collections = value.pageRecords;
-	                        $log.debug(scope.collections);
-	                    });
-	                };
-	                scope.searchEvent = {
-	                    name: ''
-	                };
-	                /**
-	                 * Watches for changes in the event
-	                 */
-	                scope.showEventOptions = false;
-	                scope.eventOptions = [];
-	                scope.$watch('searchEvent.name', function (newValue, oldValue) {
-	                    if (newValue !== oldValue) {
-	                        scope.getEventOptions(scope.workflow.data.workflowObject);
-	                    }
-	                });
-	                /**
-	                 * Retrieves the event options for a workflow trigger item.
-	                 */
-	                scope.getEventOptions = function (objectName) {
-	                    if (!scope.eventOptions.length) {
-	                        var eventOptionsPromise = $hibachi.getEventOptions(objectName);
-	                        eventOptionsPromise.then(function (value) {
-	                            $log.debug('getEventOptions');
-	                            scope.eventOptions = value.data;
-	                            $log.debug(scope.eventOptions.name);
-	                        });
-	                    }
-	                    scope.showEventOptions = !scope.showEventOptions;
-	                };
-	                /**
-	                 * Saves the workflow triggers.
-	                 */
-	                scope.saveWorkflowTrigger = function (context) {
-	                    var saveWorkflowTriggerPromise = scope.workflowTriggers.selectedTrigger.$$save();
-	                    saveWorkflowTriggerPromise.then(function () {
-	                        //Clear the form by adding a new task action if 'save and add another' otherwise, set save and set finished
-	                        if (context == 'add') {
-	                            $log.debug("Save and New");
-	                            scope.addWorkflowTrigger();
-	                            scope.finished = false;
-	                        }
-	                        else if (context == "finish") {
-	                            scope.finished = true;
-	                        }
-	                    });
-	                };
-	                /**
-	                 * Changes the selected trigger value.
-	                 */
-	                scope.selectEvent = function (eventOption) {
-	                    $log.debug("SelectEvent");
-	                    $log.debug(eventOption);
-	                    //Needs to clear old and set new.
-	                    scope.workflowTriggers.selectedTrigger.data.triggerEvent = eventOption.value;
-	                    if (eventOption.entityName == scope.workflow.data.workflowObject) {
-	                        scope.workflowTriggers.selectedTrigger.data.objectPropertyIdentifier = '';
-	                    }
-	                    else {
-	                        scope.workflowTriggers.selectedTrigger.data.objectPropertyIdentifier = eventOption.entityName;
-	                    }
-	                    scope.searchEvent.name = eventOption.name;
-	                    $log.debug(eventOption);
-	                    $log.debug(scope.workflowTriggers);
-	                };
-	                /**
-	                 * Selects a new collection.
-	                 */
-	                scope.selectCollection = function (collection) {
-	                    $log.debug('selectCollection');
-	                    scope.workflowTriggers.selectedTrigger.data.scheduleCollection = collection;
-	                    scope.showCollections = false;
-	                };
-	                /**
-	                 * Removes a workflow trigger
-	                 */
-	                scope.removeWorkflowTrigger = function (workflowTrigger) {
-	                    if (workflowTrigger === scope.workflowTriggers.selectedTrigger) {
-	                        delete scope.workflowTriggers.selectedTrigger;
-	                    }
-	                    scope.workflowTriggers.splice(workflowTrigger.$$index, 1);
-	                };
-	                scope.setAsEvent = function (workflowTrigger) {
-	                    //add event,  clear schedule
-	                };
-	                scope.setAsSchedule = function (workflowTrigger) {
-	                };
-	                /**
-	                 * Adds a workflow trigger.
-	                 */
-	                scope.addWorkflowTrigger = function () {
-	                    $log.debug('addWorkflowTrigger');
-	                    var newWorkflowTrigger = scope.workflow.$$addWorkflowTrigger();
-	                    scope.workflowTriggers.selectedTrigger = newWorkflowTrigger;
-	                    $log.debug(scope.workflowTriggers);
-	                };
-	            }
-	        };
-	    }
-	    SWWorkflowTriggers.Factory = function () {
-	        var directive = function ($log, $location, $hibachi, workflowPartialsPath, formService, pathBuilderConfig) {
-	            return new SWWorkflowTriggers($log, $location, $hibachi, workflowPartialsPath, formService, pathBuilderConfig);
-	        };
-	        directive.$inject = [
-	            '$log',
-	            '$location',
-	            '$hibachi',
-	            'workflowPartialsPath',
-	            'formService',
-	            'pathBuilderConfig'
-	        ];
-	        return directive;
-	    };
-	    return SWWorkflowTriggers;
-	})();
-	exports.SWWorkflowTriggers = SWWorkflowTriggers;
-
-
-/***/ },
-/* 172 */
-/***/ function(module, exports, __webpack_require__) {
-
-	/// <reference path='../../typings/slatwallTypescript.d.ts' />
-	/// <reference path='../../typings/tsd.d.ts' />
-	//services
-	// import {AccountService} from "./services/accountservice";
-	// import {CartService} from "./services/cartservice";
-	// import {UtilityService} from "./services/utilityservice";
-	// import {SelectionService} from "./services/selectionservice";
-	// import {ObserverService} from "./services/observerservice";
-	// import {FormService} from "./services/formservice";
-	// import {MetaDataService} from "./services/metadataservice";
-	//controllers
-	var otherwisecontroller_1 = __webpack_require__(173);
-	var routercontroller_1 = __webpack_require__(174);
-	//directives
-	var swdetailtabs_1 = __webpack_require__(175);
-	var swdetail_1 = __webpack_require__(176);
-	var swlist_1 = __webpack_require__(177);
-	var entitymodule = angular.module('hibachi.entity', ['ngRoute'])
-	    .config(['$routeProvider', '$injector', '$locationProvider',
-	    function ($routeProvider, $injector, $locationProvider) {
-	        //detect if we are in hashbang mode
-	        var vars = {};
-	        var parts = window.location.href.replace(/[?&]+([^=&]+)#([^/]*)/gi, function (m, key, value) {
-	            vars[key] = value;
-	        });
-	        if (vars.ng) {
-	            $locationProvider.html5Mode(false).hashPrefix('!');
-	        }
-	        $routeProvider.when('/entity/:entityName/', {
-	            template: function (params) {
-	                var entityDirectiveExists = $injector.has('sw' + params.entityName + 'ListDirective');
-	                if (entityDirectiveExists) {
-	                    return '<sw-' + params.entityName.toLowerCase() + '-list>';
-	                }
-	                else {
-	                    return '<sw-list></sw-list>';
-	                }
-	            },
-	            controller: 'routerController'
-	        }).when('/entity/:entityName/:entityID', {
-	            template: function (params) {
-	                var entityDirectiveExists = $injector.has('sw' + params.entityName + 'DetailDirective');
-	                if (entityDirectiveExists) {
-	                    return '<sw-' + params.entityName.toLowerCase() + '-detail>';
-	                }
-	                else {
-	                    return '<sw-detail></sw-detail>';
-	                }
-	            },
-	            controller: 'routerController',
-	        }).otherwise({
-	            //controller:'otherwiseController'
-	            templateUrl: $.slatwall.getConfig().baseURL + '/admin/client/js/partials/otherwise.html',
-	        });
-	    }])
-	    .constant('coreEntityPartialsPath', 'entity/components/')
-	    .controller('otherwiseController', otherwisecontroller_1.OtherWiseController)
-	    .controller('routerController', routercontroller_1.RouterController)
-	    .directive('swDetail', swdetail_1.SWDetail.Factory())
-	    .directive('swDetailTabs', swdetailtabs_1.SWDetailTabs.Factory())
-	    .directive('swList', swlist_1.SWList.Factory());
-	exports.entitymodule = entitymodule;
-
-
-/***/ },
-/* 173 */
-/***/ function(module, exports) {
-
-	/// <reference path='../../../typings/slatwallTypescript.d.ts' />
-	/// <reference path='../../../typings/tsd.d.ts' />
-	var OtherWiseController = (function () {
-	    //@ngInject
-	    function OtherWiseController($scope) {
-	        $scope.$id = "otherwiseController";
-	    }
-	    return OtherWiseController;
-	})();
-	exports.OtherWiseController = OtherWiseController;
-
-
-/***/ },
-/* 174 */
-/***/ function(module, exports) {
-
-	/// <reference path='../../../typings/slatwallTypescript.d.ts' />
-	/// <reference path='../../../typings/tsd.d.ts' />
-	var RouterController = (function () {
-	    //@ngInject
-	    function RouterController($scope, $routeParams, $location, $log, partialsPath, baseURL) {
-	        $scope.$id = "routerController";
-	        $scope.partialRoute = '';
-	        $log.debug($routeParams);
-	        $log.debug($location);
-	        var path = $location.path();
-	        $scope.controllerType = path.split('/')[1];
-	        var type;
-	        if ($scope.controllerType === 'entity') {
-	            $scope.entityName = $routeParams.entityName;
-	            if (angular.isDefined($routeParams.entityID)) {
-	                $scope.entityID = $routeParams.entityID || '';
-	            }
-	        }
-	    }
-	    return RouterController;
-	})();
-	exports.RouterController = RouterController;
-
-
-/***/ },
-/* 175 */
-/***/ function(module, exports) {
-
-	/// <reference path='../../../typings/slatwallTypescript.d.ts' />
-	/// <reference path='../../../typings/tsd.d.ts' />
-	var SWDetailTabs = (function () {
-	    function SWDetailTabs($location, $log, $hibachi, coreEntityPartialsPath, pathBuilderConfig) {
-	        return {
-	            restrict: 'E',
-	            templateUrl: pathBuilderConfig.buildPartialsPath(coreEntityPartialsPath) + 'detailtabs.html',
-	            link: function (scope, element, attr) {
-	            }
-	        };
-	    }
-	    SWDetailTabs.Factory = function () {
-	        var directive = function ($location, $log, $hibachi, coreEntityPartialsPath, pathBuilderConfig) {
-	            return new SWDetailTabs($location, $log, $hibachi, coreEntityPartialsPath, pathBuilderConfig);
-	        };
-	        directive.$inject = [
-	            '$location',
-	            '$log',
-	            '$hibachi',
-	            'coreEntityPartialsPath',
-	            'pathBuilderConfig'
-	        ];
-	        return directive;
-	    };
-	    return SWDetailTabs;
-	})();
-	exports.SWDetailTabs = SWDetailTabs;
-
-
-/***/ },
-/* 176 */
-/***/ function(module, exports) {
-
-	/// <reference path='../../../typings/slatwallTypescript.d.ts' />
-	/// <reference path='../../../typings/tsd.d.ts' />
-	var SWDetail = (function () {
-	    function SWDetail($location, $log, $hibachi, coreEntityPartialsPath, pathBuilderConfig) {
-	        return {
-	            restrict: 'E',
-	            templateUrl: pathBuilderConfig.buildPartialsPath(coreEntityPartialsPath) + '/detail.html',
-	            link: function (scope, element, attr) {
-	                scope.$id = "slatwallDetailController";
-	                $log.debug('slatwallDetailController');
-	                /*Sets the view dirty on save*/
-	                scope.setDirty = function (entity) {
-	                    angular.forEach(entity.forms, function (form) {
-	                        form.$setSubmitted();
-	                    });
-	                };
-	                var setupMetaData = function () {
-	                    scope[scope.entityName.toLowerCase()] = scope.entity;
-	                    scope.entity.metaData.$$getDetailTabs().then(function (value) {
-	                        scope.detailTabs = value.data;
-	                        $log.debug('detailtabs');
-	                        $log.debug(scope.detailTabs);
-	                    });
-	                };
-	                var propertyCasedEntityName = scope.entityName.charAt(0).toUpperCase() + scope.entityName.slice(1);
-	                scope.tabPartialPath = pathBuilderConfig.buildPartialsPath(coreEntityPartialsPath);
-	                scope.getEntity = function () {
-	                    if (scope.entityID === 'null') {
-	                        scope.entity = $hibachi['new' + propertyCasedEntityName]();
-	                        setupMetaData();
-	                    }
-	                    else {
-	                        var entityPromise = $hibachi['get' + propertyCasedEntityName]({ id: scope.entityID });
-	                        entityPromise.promise.then(function () {
-	                            scope.entity = entityPromise.value;
-	                            setupMetaData();
-	                        });
-	                    }
-	                };
-	                scope.getEntity();
-	                scope.deleteEntity = function () {
-	                    var deletePromise = scope.entity.$$delete();
-	                    deletePromise.then(function () {
-	                        $location.path('/entity/' + propertyCasedEntityName + '/');
-	                    });
-	                };
-	                scope.allTabsOpen = false;
-	            }
-	        };
-	    }
-	    SWDetail.Factory = function () {
-	        var directive = function ($location, $log, $hibachi, coreEntityPartialsPath, pathBuilderConfig) {
-	            return new SWDetail($location, $log, $hibachi, coreEntityPartialsPath, pathBuilderConfig);
-	        };
-	        directive.$inject = [
-	            '$location',
-	            '$log',
-	            '$hibachi',
-	            'coreEntityPartialsPath',
-	            'pathBuilderConfig'
-	        ];
-	        return directive;
-	    };
-	    return SWDetail;
-	})();
-	exports.SWDetail = SWDetail;
-
-
-/***/ },
-/* 177 */
-/***/ function(module, exports) {
-
-	/// <reference path='../../../typings/slatwallTypescript.d.ts' />
-	/// <reference path='../../../typings/tsd.d.ts' />
-	var SWList = (function () {
-	    function SWList($log, $hibachi, coreEntityPartialsPath, pathBuilderConfig) {
-	        return {
-	            restrict: 'E',
-	            templateUrl: pathBuilderConfig.buildPartialsPath(coreEntityPartialsPath) + '/list.html',
-	            link: function (scope, element, attr) {
-	                $log.debug('slatwallList init');
-	                scope.getCollection = function () {
-	                    var pageShow = 50;
-	                    if (scope.pageShow !== 'Auto') {
-	                        pageShow = scope.pageShow;
-	                    }
-	                    scope.entityName = scope.entityName.charAt(0).toUpperCase() + scope.entityName.slice(1);
-	                    var collectionListingPromise = $hibachi.getEntity(scope.entityName, { currentPage: scope.currentPage, pageShow: pageShow, keywords: scope.keywords });
-	                    collectionListingPromise.then(function (value) {
-	                        scope.collection = value;
-	                        scope.collectionConfig = angular.fromJson(scope.collection.collectionConfig);
-	                    });
-	                };
-	                scope.getCollection();
-	            }
-	        };
-	    }
-	    SWList.Factory = function () {
-	        var directive = function ($log, $hibachi, coreEntityPartialsPath, pathBuilderConfig) {
-	            return new SWList($log, $hibachi, coreEntityPartialsPath, pathBuilderConfig);
-	        };
-	        directive.$inject = [
-	            '$log',
-	            '$hibachi',
-	            'coreEntityPartialsPath',
-	            'pathBuilderConfig'
-	        ];
-	        return directive;
-	    };
-	    return SWList;
-	})();
-	exports.SWList = SWList;
-
-
-/***/ },
 /* 178 */
 /***/ function(module, exports) {
 
@@ -18872,20 +18871,6 @@
 	    return SWCurrency;
 	})();
 	exports.SWCurrency = SWCurrency;
-
-
-/***/ },
-/* 181 */
-/***/ function(module, exports, __webpack_require__) {
-
-	/// <reference path="../../typings/tsd.d.ts" />
-	/// <reference path="../../typings/slatwallTypeScript.d.ts" />
-	var alert_module_1 = __webpack_require__(59);
-	var loggermodule = angular.module('logger', [alert_module_1.alertmodule.name])
-	    .run([function () {
-	    }]);
-	exports.loggermodule = loggermodule;
-	//.factory('$exceptionHandler', ['$injector', ($injector) => new ExceptionHandler($injector)]);;
 
 
 /***/ }
