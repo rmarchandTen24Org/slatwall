@@ -1580,7 +1580,7 @@
 	                            target.focus();
 	                            var targetID = target.attr('id');
 	                            $anchorScroll();
-	                            deferred.reject('input is invalid');
+	                            deferred.reject('Input is invalid.');
 	                        }
 	                    });
 	                    //return timeoutPromise;
@@ -1624,6 +1624,9 @@
 	                                //$log.debug('key:'+key);
 	                                if (key.charAt(0) !== '$' && angular.isObject(form[key])) {
 	                                    var inputField = form[key];
+	                                    if (inputField.$modelValue) {
+	                                        inputField.$dirty = true;
+	                                    }
 	                                    if (angular.isDefined(inputField.$valid) && inputField.$valid === true && (inputField.$dirty === true || (form.autoDirty && form.autoDirty == true))) {
 	                                        if (angular.isDefined(entityInstance.metaData[key])
 	                                            && angular.isDefined(entityInstance.metaData[key].hb_formfieldtype)
@@ -3985,10 +3988,7 @@
 	        this.$timeout = $timeout;
 	        this.utilityService = utilityService;
 	        this.collectionConfigService = collectionConfigService;
-	        this.searchText = "";
-	        this.results = [];
 	        this.displayList = [];
-	        this.hideSearch = true;
 	        this.clearSearch = function () {
 	            _this.searchText = "";
 	            _this.hideSearch = true;
@@ -4012,48 +4012,20 @@
 	                filterConfig = filterConfig.trim();
 	                _this.typeaheadCollectionConfig.loadFilterGroups(JSON.parse(filterConfig));
 	            }
-	            if (search.length > 2) {
-	                _this._timeoutPromise = _this.$timeout(function () {
-	                    var promise = _this.typeaheadCollectionConfig.getEntity();
-	                    promise.then(function (response) {
-	                        if (angular.isDefined(_this.allRecords) && _this.allRecords == false) {
-	                            _this.results = response.pageRecords;
-	                        }
-	                        else {
-	                            _this.results = response.records;
-	                        }
-	                        //Custom method for gravatar on accounts (non-persistant-property)
-	                        //if(angular.isDefined(this.results) && this.entity == "Account"){
-	                        //	angular.forEach(this.results,(account)=>{
-	                        //		account.gravatar = "http://www.gravatar.com/avatar/" + md5(account.primaryEmailAddress_emailAddress.toLowerCase().trim());
-	                        //	});
-	                        //}
-	                    }).finally(function () {
-	                        _this.resultsDeferred.resolve();
-	                        _this.hideSearch = false;
-	                    });
-	                }, 500);
-	            }
-	            else if (search.length == 0) {
-	                _this._timeoutPromise = _this.$timeout(function () {
-	                    var promise = _this.typeaheadCollectionConfig.getEntity();
-	                    promise.then(function (response) {
-	                        if (angular.isDefined(_this.allRecords) && _this.allRecords == false) {
-	                            _this.results = response.pageRecords;
-	                        }
-	                        else {
-	                            _this.results = response.records;
-	                        }
-	                    }).finally(function () {
-	                        _this.resultsDeferred.resolve();
-	                        _this.hideSearch = false;
-	                    });
+	            _this._timeoutPromise = _this.$timeout(function () {
+	                var promise = _this.typeaheadCollectionConfig.getEntity();
+	                promise.then(function (response) {
+	                    if (angular.isDefined(_this.allRecords) && _this.allRecords == false) {
+	                        _this.results = response.pageRecords;
+	                    }
+	                    else {
+	                        _this.results = response.records;
+	                    }
+	                }).finally(function () {
+	                    _this.resultsDeferred.resolve();
+	                    _this.hideSearch = (_this.results.length == 0);
 	                });
-	            }
-	            else {
-	                _this.results = [];
-	                _this.hideSearch = true;
-	            }
+	            }, 500);
 	        };
 	        this.addItem = function (item) {
 	            if (!_this.hideSearch) {
@@ -4084,6 +4056,18 @@
 	        };
 	        this.resultsDeferred = $q.defer();
 	        this.resultsPromise = this.resultsDeferred.promise;
+	        if (angular.isUndefined(this.searchText)) {
+	            this.searchText = "";
+	        }
+	        if (angular.isUndefined(this.results)) {
+	            this.results = [];
+	        }
+	        if (angular.isUndefined(this.validateRequired)) {
+	            this.validateRequired = false;
+	        }
+	        if (angular.isUndefined(this.hideSearch)) {
+	            this.hideSearch = true;
+	        }
 	        if (angular.isDefined(this.collectionConfig)) {
 	            this.typeaheadCollectionConfig = this.collectionConfig;
 	        }
@@ -4135,8 +4119,9 @@
 	            results: "=?",
 	            addFunction: "&?",
 	            addButtonFunction: "&?",
-	            hideSearch: "=?",
-	            clickOutsideArguments: "=?"
+	            validateRequired: "=?",
+	            clickOutsideArguments: "=?",
+	            hideSearch: "=?"
 	        };
 	        this.controller = SWTypeaheadSearchController;
 	        this.controllerAs = "swTypeaheadSearch";
@@ -6898,7 +6883,7 @@
 	            }, 3500);
 	        };
 	        this.addAlerts = function (alerts) {
-	            alerts.forEach(function (alert) {
+	            angular.forEach(alerts, function (alert) {
 	                _this.addAlert(alert);
 	            });
 	        };
@@ -14423,10 +14408,12 @@
 	/// <reference path='../../../typings/tsd.d.ts' />
 	var SWSaveAndFinishController = (function () {
 	    //@ngInject
-	    function SWSaveAndFinishController($hibachi, dialogService, $log) {
+	    function SWSaveAndFinishController($hibachi, dialogService, alertService, rbkeyService, $log) {
 	        var _this = this;
 	        this.$hibachi = $hibachi;
 	        this.dialogService = dialogService;
+	        this.alertService = alertService;
+	        this.rbkeyService = rbkeyService;
 	        this.$log = $log;
 	        this.saving = false;
 	        this.initialSetup = function () {
@@ -14445,10 +14432,9 @@
 	        };
 	        this.save = function () {
 	            _this.saving = true;
-	            _this.entity.$$save().then(function (data) {
+	            var savePromise = _this.entity.$$save();
+	            savePromise.then(function (data) {
 	                _this.dialogService.removeCurrentDialog();
-	            }).finally(function (data) {
-	                _this.saving = false;
 	                if (_this.openNewDialog && angular.isDefined(_this.partial)) {
 	                    _this.dialogService.addPageDialog(_this.partial);
 	                }
@@ -14460,12 +14446,28 @@
 	                        if (angular.isUndefined(_this.redirectQueryString)) {
 	                            _this.redirectQueryString = "";
 	                        }
-	                        window.location = _this.$hibachi.buildURL(_this.redirectAction, _this.redirectQueryString);
+	                        window.location = _this.$hibachi.buildUrl(_this.redirectAction, _this.redirectQueryString);
 	                    }
 	                    else {
 	                        _this.$log.debug("You did not specify a redirect for swSaveAndFinish");
 	                    }
 	                }
+	            }).catch(function (data) {
+	                if (angular.isDefined(_this.customErrorRbkey)) {
+	                    data = _this.rbkeyService.getRBKey(_this.customErrorRbkey);
+	                }
+	                if (angular.isString(data)) {
+	                    var alert = _this.alertService.newAlert();
+	                    alert.msg = data;
+	                    alert.type = "error";
+	                    alert.fade = true;
+	                    _this.alertService.addAlert(alert);
+	                }
+	                else {
+	                    _this.alertService.addAlerts(data);
+	                }
+	            }).finally(function () {
+	                _this.saving = false;
 	            });
 	        };
 	        if (!angular.isFunction(this.entity.$$save)) {
@@ -14490,7 +14492,8 @@
 	            redirectAction: "@?",
 	            redirectQueryString: "@?",
 	            finish: "@?",
-	            partial: "@?"
+	            partial: "@?",
+	            customErrorRbkey: "@?"
 	        };
 	        this.templateUrl = hibachiPathBuilder.buildPartialsPath(hibachiPartialsPath) + "saveandfinish.html";
 	    }
