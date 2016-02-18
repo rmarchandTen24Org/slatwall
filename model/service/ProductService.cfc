@@ -541,7 +541,7 @@ component extends="HibachiService" accessors="true" {
 		// Return the product
 		return arguments.product;
 	}
-
+	
 	public any function processProduct_addSkuBundle(required any product, required any processObject) {
 		// Create a new sku object
 		var newSku = getSkuService().newSku();
@@ -597,27 +597,26 @@ component extends="HibachiService" accessors="true" {
   				newSku.setEventCapacity( arrayMax(listToArray(capacities)) );
 
   			}
+  			if(arrayLen(skuArray)) {
+
+				// Loop over skus from the process object and create entries for sku bundles
+				for(var i=1; i<=arrayLen(skuArray); i++) {
+					
+					// Create a new sku bundle
+					var skubundle = getSkuService().newSkuBundle();
+	
+					skuBundle.setSku( newSku );
+					skuBundle.setBundledSku( getSkuService().getSku( skuArray[i] ) );
+					skuBundle.setBundledQuantity(1);
+	
+					// Persist the new sku bundle
+					skuBundle = getSkuService().saveSkuBundle( skuBundle );
+				}
+			}
   		}
 
 		// Persist the new sku
 		newSku = getSkuService().saveSku( newSku );
-
-		if(arrayLen(skuArray)) {
-
-			// Loop over skus from the process object and create entries for sku bundles
-			for(var i=1; i<=arrayLen(skuArray); i++) {
-
-				// Create a new sku bundle
-				var skubundle = getSkuService().newSkuBundle();
-
-				skuBundle.setSku( newSku );
-				skuBundle.setBundledSku( getSkuService().getSku( skuArray[i] ) );
-				skuBundle.setBundledQuantity(1);
-
-				// Persist the new sku bundle
-				skuBundle = getSkuService().saveSkuBundle( skuBundle );
-			}
-		}
 
 		// Return the product
 		return arguments.product;
