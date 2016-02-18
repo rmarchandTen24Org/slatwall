@@ -691,149 +691,156 @@ component extends="HibachiService" accessors="true" {
 		}
 		return arguments.product;
 	}
+	
+	public any function createContentAccessProduct(required any product, required any processObject){
+		// Bundle Content Into A Single Sku
+		if( !isNull(arguments.processObject.getBundleContentAccessFlag()) && arguments.processObject.getBundleContentAccessFlag() ) {
+
+			var newSku = this.newSku();
+			newSku.setPrice(arguments.processObject.getPrice());
+			newSku.setSkuCode(arguments.product.getProductCode() & "-1");
+			newSku.setProduct(arguments.product);
+			newSku.setImageFile(newSku.generateImageFileName());
+
+			for(var c=1; c<=listLen(arguments.processObject.getContents()); c++) {
+				newSku.addAccessContent( getContentService().getContent( listGetAt(arguments.processObject.getContents(), c) ) );
+			}
+			product.setDefaultSku(newSku);
+
+		// Create Sku for each piece of Content
+		} else {
+
+			for(var c=1; c<=listLen(arguments.processObject.getContents()); c++) {
+				var newSku = this.newSku();
+				newSku.setPrice(arguments.processObject.getPrice());
+				newSku.setSkuCode(arguments.product.getProductCode() & "-#c#");
+				newSku.setProduct(arguments.product);
+				newSku.setImageFile(newSku.generateImageFileName());
+
+				newSku.addAccessContent( getContentService().getContent( listGetAt(arguments.processObject.getContents(), c) ) );
+				if(c==1) {
+					arguments.product.setDefaultSku(newSku);
+				}
+			}
+
+		}
+		return arguments.product;
+	}
+	
+	public any function createMerchandiseProductByOptions(required any product, required any processObejct){
+		var optionGroups = {};
+		var totalCombos = 1;
+		var indexedKeys = [];
+		var currentIndexesByKey = {};
+		var keyToChange = "";
+
+		// Loop over all the options to put them into a struct by groupID
+		for(var i=1; i<=listLen(arguments.processObject.getOptions()); i++) {
+			var option = getOptionService().getOption( listGetAt(arguments.processObject.getOptions(), i) );
+			if(!structKeyExists(optionGroups, option.getOptionGroup().getOptionGroupID())) {
+				optionGroups[ option.getOptionGroup().getOptionGroupID() ] = [];
+			}
+			arrayAppend(optionGroups[ option.getOptionGroup().getOptionGroupID() ], option);
+		}
+
+		// Loop over the groups to see how many we will be creating and to setup the option indexes to use
+		for(var key in optionGroups) {
+			arrayAppend(indexedKeys, key);
+			currentIndexesByKey[ key ] = 1;
+			totalCombos = totalCombos * arrayLen(optionGroups[key]);
+		}
+
+		// Create a sku with 1 option from each group, and then update the indexes properly for the next loop
+		for(var i = 1; i<=totalCombos; i++) {
+
+			// Setup the New Sku
+			var newSku = this.newSku();
+			newSku.setPrice(arguments.processObject.getPrice());
+			if(isNumeric(arguments.product.getlistPrice()) && arguments.product.getlistPrice() > 0) {
+				newSku.setListPrice(arguments.product.getlistPrice());
+			}
+			newSku.setSkuCode(product.getProductCode() & "-#arrayLen(product.getSkus()) + 1#");
+
+			// Add the Sku to the product, and if the product doesn't have a default, then also set as default
+			arguments.product.addSku(newSku);
+			if(isNull(arguments.product.getDefaultSku())) {
+				arguments.product.setDefaultSku(newSku);
+			}
+
+			newSku.setImageFile(newSku.generateImageFileName());
+
+			// Add each of the options
+			for(var key in optionGroups) {
+				newSku.addOption( optionGroups[key][ currentIndexesByKey[key] ]);
+			}
+			if(i < totalCombos) {
+				var indexesUpdated = false;
+				var changeKeyIndex = 1;
+				while(indexesUpdated == false) {
+					if(currentIndexesByKey[ indexedKeys[ changeKeyIndex ] ] < arrayLen(optionGroups[ indexedKeys[ changeKeyIndex ] ])) {
+						currentIndexesByKey[ indexedKeys[ changeKeyIndex ] ]++;
+						indexesUpdated = true;
+					} else {
+						currentIndexesByKey[ indexedKeys[ changeKeyIndex ] ] = 1;
+						changeKeyIndex++;
+					}
+				}
+			}
+		}
+	}
+	
+	public any function createMerchandiseProduct(required any product, required any processObject){
+		// If options were passed in create multiple skus
+		if(!isNull(arguments.processObject.getOptions()) && len(arguments.processObject.getOptions())) {
+			arguments.product = createMerchandiseProductByOptions(argumentCollection=arguments);
+		// If no options were passed in we will just create a single sku
+		} else {
+			arguments.product = createSingleSku(arguments.product, arguments.processObject);
+		}
+		return arguments.product;
+	}
+	
+	public any function createSubscriptionProduct(required any product, required any processObject){
+		for(var i=1; i <= listLen(arguments.processObject.getSubscriptionTerms()); i++){
+			var thisSku = this.newSku();
+			thisSku.setProduct(arguments.product);
+			thisSku.setPrice(arguments.processObject.getPrice());
+			if(!isNull(arguments.processObject.getRenewalPrice())){
+				thisSku.setRenewalPrice(arguments.processObject.getRenewalPrice());
+			}
+			thisSku.setSubscriptionTerm( getSubscriptionService().getSubscriptionTerm(listGetAt(arguments.processObject.getSubscriptionTerms(), i)) );
+			thisSku.setSkuCode(product.getProductCode() & "-#i#");
+			thisSku.setRenewalSku(arguments.processObject.getRenewalSku());
+			for(var b=1; b <= listLen(arguments.processObject.getSubscriptionBenefits()); b++) {
+				thisSku.addSubscriptionBenefit( getSubscriptionService().getSubscriptionBenefit( listGetAt(arguments.processObject.getSubscriptionBenefits(), b) ) );
+			}
+			for(var b=1; b <= listLen(arguments.processObject.getRenewalSubscriptionBenefits()); b++) {
+				thisSku.addRenewalSubscriptionBenefit( getSubscriptionService().getSubscriptionBenefit( listGetAt(arguments.processObject.getRenewalSubscriptionBenefits(), b) ) );
+			}
+			if(i==1) {
+				arguments.product.setDefaultSku( thisSku );
+				arguments.product.setRenewalSku( arguments.processObject.getRenewalSku() );
+
+			}
+			thisSku.setImageFile(thisSku.generateImageFileName());
+		}
+		return arguments.product;
+	}
 
 	public any function processProduct_create(required any product, required any processObject) {
 
 		// GENERATE - CONTENT ACCESS SKUS
 		if(arguments.processObject.getGenerateSkusFlag() && arguments.processObject.getBaseProductType() == "contentAccess") {
-
-			// Bundle Content Into A Single Sku
-			if( !isNull(arguments.processObject.getBundleContentAccessFlag()) && arguments.processObject.getBundleContentAccessFlag() ) {
-
-				var newSku = this.newSku();
-				newSku.setPrice(arguments.processObject.getPrice());
-				newSku.setSkuCode(arguments.product.getProductCode() & "-1");
-				newSku.setProduct(arguments.product);
-				newSku.setImageFile(newSku.generateImageFileName());
-
-				for(var c=1; c<=listLen(arguments.processObject.getContents()); c++) {
-					newSku.addAccessContent( getContentService().getContent( listGetAt(arguments.processObject.getContents(), c) ) );
-				}
-				product.setDefaultSku(newSku);
-
-			// Create Sku for each piece of Content
-			} else {
-
-				for(var c=1; c<=listLen(arguments.processObject.getContents()); c++) {
-					var newSku = this.newSku();
-					newSku.setPrice(arguments.processObject.getPrice());
-					newSku.setSkuCode(arguments.product.getProductCode() & "-#c#");
-					newSku.setProduct(arguments.product);
-					newSku.setImageFile(newSku.generateImageFileName());
-
-					newSku.addAccessContent( getContentService().getContent( listGetAt(arguments.processObject.getContents(), c) ) );
-					if(c==1) {
-						arguments.product.setDefaultSku(newSku);
-					}
-				}
-
-			}
-
+			arguments.product = createContentAccessProduct(argumentCollection=arguments);
 		// GENERATE - EVENT SKUS
 		} else if (arguments.processObject.getGenerateSkusFlag() && arguments.processObject.getBaseProductType() == "event") {
-
 			arguments.product = this.processProduct(arguments.product, arguments.data, 'addEventSchedule');
-
-
 		// GENERATE - MERCHANDISE SKUS
 		} else if(arguments.processObject.getGenerateSkusFlag() && arguments.processObject.getBaseProductType() == "merchandise") {
-
-			// If options were passed in create multiple skus
-			if(!isNull(arguments.processObject.getOptions()) && len(arguments.processObject.getOptions())) {
-
-				var optionGroups = {};
-				var totalCombos = 1;
-				var indexedKeys = [];
-				var currentIndexesByKey = {};
-				var keyToChange = "";
-
-				// Loop over all the options to put them into a struct by groupID
-				for(var i=1; i<=listLen(arguments.processObject.getOptions()); i++) {
-					var option = getOptionService().getOption( listGetAt(arguments.processObject.getOptions(), i) );
-					if(!structKeyExists(optionGroups, option.getOptionGroup().getOptionGroupID())) {
-						optionGroups[ option.getOptionGroup().getOptionGroupID() ] = [];
-					}
-					arrayAppend(optionGroups[ option.getOptionGroup().getOptionGroupID() ], option);
-				}
-
-				// Loop over the groups to see how many we will be creating and to setup the option indexes to use
-				for(var key in optionGroups) {
-					arrayAppend(indexedKeys, key);
-					currentIndexesByKey[ key ] = 1;
-					totalCombos = totalCombos * arrayLen(optionGroups[key]);
-				}
-
-				// Create a sku with 1 option from each group, and then update the indexes properly for the next loop
-				for(var i = 1; i<=totalCombos; i++) {
-
-					// Setup the New Sku
-					var newSku = this.newSku();
-					newSku.setPrice(arguments.processObject.getPrice());
-					if(isNumeric(arguments.product.getlistPrice()) && arguments.product.getlistPrice() > 0) {
-						newSku.setListPrice(arguments.product.getlistPrice());
-					}
-					newSku.setSkuCode(product.getProductCode() & "-#arrayLen(product.getSkus()) + 1#");
-
-					// Add the Sku to the product, and if the product doesn't have a default, then also set as default
-					arguments.product.addSku(newSku);
-					if(isNull(arguments.product.getDefaultSku())) {
-						arguments.product.setDefaultSku(newSku);
-					}
-
-					newSku.setImageFile(newSku.generateImageFileName());
-
-					// Add each of the options
-					for(var key in optionGroups) {
-						newSku.addOption( optionGroups[key][ currentIndexesByKey[key] ]);
-					}
-					if(i < totalCombos) {
-						var indexesUpdated = false;
-						var changeKeyIndex = 1;
-						while(indexesUpdated == false) {
-							if(currentIndexesByKey[ indexedKeys[ changeKeyIndex ] ] < arrayLen(optionGroups[ indexedKeys[ changeKeyIndex ] ])) {
-								currentIndexesByKey[ indexedKeys[ changeKeyIndex ] ]++;
-								indexesUpdated = true;
-							} else {
-								currentIndexesByKey[ indexedKeys[ changeKeyIndex ] ] = 1;
-								changeKeyIndex++;
-							}
-						}
-					}
-				}
-
-			// If no options were passed in we will just create a single sku
-			} else {
-
-				arguments.product = createSingleSku(arguments.product, arguments.processObject);
-
-			}
-
+			createMerchandiseProduct(argumentCollection=arguments);
 		// GENERATE - SUBSCRIPTION SKUS
 		} else if (arguments.processObject.getGenerateSkusFlag() && arguments.processObject.getBaseProductType() == "subscription") {
-
-			for(var i=1; i <= listLen(arguments.processObject.getSubscriptionTerms()); i++){
-				var thisSku = this.newSku();
-				thisSku.setProduct(arguments.product);
-				thisSku.setPrice(arguments.processObject.getPrice());
-				if(!isNull(arguments.processObject.getRenewalPrice())){
-					thisSku.setRenewalPrice(arguments.processObject.getRenewalPrice());
-				}
-				thisSku.setSubscriptionTerm( getSubscriptionService().getSubscriptionTerm(listGetAt(arguments.processObject.getSubscriptionTerms(), i)) );
-				thisSku.setSkuCode(product.getProductCode() & "-#i#");
-				thisSku.setRenewalSku(arguments.processObject.getRenewalSku());
-				for(var b=1; b <= listLen(arguments.processObject.getSubscriptionBenefits()); b++) {
-					thisSku.addSubscriptionBenefit( getSubscriptionService().getSubscriptionBenefit( listGetAt(arguments.processObject.getSubscriptionBenefits(), b) ) );
-				}
-				for(var b=1; b <= listLen(arguments.processObject.getRenewalSubscriptionBenefits()); b++) {
-					thisSku.addRenewalSubscriptionBenefit( getSubscriptionService().getSubscriptionBenefit( listGetAt(arguments.processObject.getRenewalSubscriptionBenefits(), b) ) );
-				}
-				if(i==1) {
-					arguments.product.setDefaultSku( thisSku );
-					arguments.product.setRenewalSku( arguments.processObject.getRenewalSku() );
-
-				}
-				thisSku.setImageFile(thisSku.generateImageFileName());
-			}
+			arguments.product = createSubscriptionProduct(argumentCollection=arguments);
 		//GENERATE - GIFT SKUS
 		}else if(arguments.processObject.getBaseProductType() == 'gift-card'){
 			arguments.product = createGiftCardProduct(arguments.product,arguments.processObject);
