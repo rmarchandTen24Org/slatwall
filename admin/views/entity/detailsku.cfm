@@ -101,7 +101,7 @@ Notes:
 			<cfelseif rc.product.getBaseProductType() eq "merchandise">
 				<hb:HibachiEntityDetailItem view="admin:entity/skutabs/inventory" />
 				<cfif rc.sku.getBundleFlag() eq true>
-					<hb:HibachiEntityDetailItem view="admin:entity/skutabs/bundledskus" />
+					<hb:HibachiEntityDetailItem view="admin:entity/skutabs/bundledskus" count="#rc.sku.getBundledSkusCount()#" />
 				<cfelse>	
 					<hb:HibachiEntityDetailItem view="admin:entity/skutabs/options" />
 				</cfif>
