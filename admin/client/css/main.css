@@ -298,6 +298,10 @@ body.s-login-screen .form-group {
     padding: 0px /*Remove for responsive*/;
   }
 }
+.s-remove-pointer {
+  pointer-events: none;
+  cursor: auto;
+}
 .s-image-wrapper > img {
   border: 3px solid #eee;
   border-radius: 3px;
@@ -376,6 +380,9 @@ a:hover {
   width: 100%;
   margin-bottom: 0px !important;
 }
+.table-responsive tr.s-disabled .s-table-checkbox label {
+  display: none;
+}
 .table-responsive.s-loading {
   opacity: 0.3;
   pointer-events: none;
@@ -406,11 +413,23 @@ a:hover {
 .table-responsive .s-table-checkbox a i {
   margin: 0px;
 }
+.table-responsive .s-child {
+  background: #FBFBFB;
+}
 .table-responsive .select {
   width: 65px;
 }
 .table-responsive .s-table-select {
   text-align: center;
+  width: 60px;
+}
+.table-responsive .s-table-select .radio {
+  margin: 0px;
+  padding: 0px;
+}
+.table-responsive .s-table-select .radio label {
+  margin: 0px;
+  padding: 0px;
 }
 .table-responsive .s-table-input-element {
   padding: 0px 11px;
@@ -447,6 +466,15 @@ a:hover {
 }
 .table-responsive td.s-number {
   text-align: right;
+  min-width: 93px;
+  padding: 8px 10px;
+}
+.table-responsive td.s-number input {
+  max-width: 70px;
+}
+.table-responsive td.s-number select {
+  float: left;
+  margin-left: 2px;
 }
 .table-responsive table .s-sort-arrows {
   display: inline-block;
@@ -637,6 +665,12 @@ input[type=number] {
   font-size: 11px !important;
   line-height: 1.5 !important;
   border-radius: 2px !important;
+}
+.input-xs {
+  width: auto !important;
+  display: inline-block !important;
+  height: 22px !important;
+  vertical-align: bottom !important;
 }
 a,
 a:active,
@@ -1195,11 +1229,12 @@ select.error {
   text-decoration: underline;
 }
 .table i.s-listing-arrow {
-  margin-left: 15px;
-  padding: 0px 6px 0px 10px;
+  padding: 0px 6px 0px 0px;
   cursor: pointer;
   font-size: 14px;
   margin-top: 2px;
+  position: absolute;
+  left: -5px;
 }
 .s-property-info .table > thead > tr > th,
 .table > tbody > tr > th,
@@ -2143,6 +2178,13 @@ content.s-body-box .s-no-items {
   font-size: 15px;
   background: #f2f2f2;
   font-family: "open_sansbold", Helvetica, Arial, sans-serif;
+}
+content.s-body-box .s-detail-notifications {
+  border-right: 1px solid #DDD;
+  border-left: 1px solid #DDD;
+}
+content.s-body-box .s-detail-notifications .dropdown {
+  display: inline-block;
 }
 tabel .s-table-header {
   margin-bottom: 10px;
@@ -6043,6 +6085,33 @@ a.disabled > i.hibachi-ui-radio-checked {
 }
 .s-detail-content-wrapper .s-detail-body .s-detail-content-table {
   border: 0px;
+}
+.s-body-box .table-responsive thead {
+  background: #f2f2f2;
+}
+.s-detail-content-table tbody tr td {
+  position: relative;
+}
+.s-detail-content-table tbody tr td.admin {
+  text-align: center;
+}
+.s-detail-content-table tbody tr td span.s-rate {
+  color: #aaa;
+}
+.s-detail-content-table tbody tr td.s-image {
+  padding: 0px 13px;
+  width: 57px;
+}
+.s-detail-content-table tbody tr td.s-image {
+  vertical-align: middle;
+  text-align: center;
+}
+.s-detail-content-table tbody tr td.s-price {
+  padding: 0px 13px;
+}
+.s-detail-content-table tbody tr td.s-price .s-pricing-wrapper {
+  margin-top: 9px;
+  display: inline-block;
 }
 .s-detail-content-wrapper .s-detail-body .s-detail-content-table thead tr th:first-child,
 .s-detail-content-wrapper .s-detail-body .s-detail-content-table tbody tr td:first-child,
