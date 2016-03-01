@@ -45,9 +45,7 @@ class HibachiInterceptor implements IInterceptor{
 			appConfig:string,
 			dialogService,
 			utilityService,
-            hibachiPathBuilder,
-            corePartialsPath,
-            hibachiScope
+            hibachiPathBuilder
 		)=> new HibachiInterceptor(
 			$location,
 			$window,
@@ -58,9 +56,7 @@ class HibachiInterceptor implements IInterceptor{
 			appConfig,
 			dialogService,
 			utilityService,
-            hibachiPathBuilder,
-            corePartialsPath,
-            hibachiScope
+            hibachiPathBuilder
 		);
 		eventHandler.$inject = [
 			'$location',
@@ -72,9 +68,7 @@ class HibachiInterceptor implements IInterceptor{
 			'appConfig',
 			'dialogService',
 			'utilityService',
-            'hibachiPathBuilder',
-            'corePartialsPath',
-            'hibachiScope'
+            'hibachiPathBuilder'
 		];
 		return eventHandler;
 	}
@@ -83,7 +77,6 @@ class HibachiInterceptor implements IInterceptor{
     public authHeader = 'Authorization';
     public authPrefix = 'Bearer ';
     public baseUrl:string;
-    public loginDisplayed:boolean=false;
 	//@ngInject
     constructor(
         public $location:ng.ILocationService,
@@ -95,9 +88,7 @@ class HibachiInterceptor implements IInterceptor{
 		public appConfig:any,
 		public dialogService,
         public utilityService,
-        public hibachiPathBuilder,
-        public corePartialsPath,
-        public hibachiScope
+        public hibachiPathBuilder
 	) {
         this.$location = $location;
     	this.$window = $window;
@@ -106,14 +97,10 @@ class HibachiInterceptor implements IInterceptor{
 		this.$injector = $injector;
 		this.alertService = alertService;
 		this.appConfig = appConfig;
-        this.baseUrl = appConfig.baseURL;
+        this.baseUrl = appConfig.baseUrl;
 		this.dialogService = dialogService;
         this.utilityService = utilityService;
         this.hibachiPathBuilder = hibachiPathBuilder;
-        this.corePartialsPath = corePartialsPath;
-        this.hibachiScope = hibachiScope;
-        console.log('hibachiScope');
-        console.log(hibachiScope);
     }
 
 	public request = (config): ng.IPromise<any> => {
@@ -129,12 +116,9 @@ class HibachiInterceptor implements IInterceptor{
         }
         config.cache = true;
         config.headers = config.headers || {};
-        console.log('requestcache');
         if (this.$window.localStorage.getItem('token') && this.$window.localStorage.getItem('token') !== "undefined") {
-            this.hibachiScope.setToken(this.$window.localStorage.getItem('token'));
-            if(this.hibachiScope.isValidToken){
-                config.headers.Authorization = 'Bearer ' + this.$window.localStorage.getItem('token');
-            }
+
+            config.headers.Authorization = 'Bearer ' + this.$window.localStorage.getItem('token');
         }
         var queryParams = this.utilityService.getQueryParamsFromUrl(config.url);
 		if(config.method == 'GET' && (queryParams[this.appConfig.action] && queryParams[this.appConfig.action] === 'api:main.get')){
@@ -191,16 +175,10 @@ class HibachiInterceptor implements IInterceptor{
 				var $http = this.$injector.get<ng.IHttpService>('$http');
 				if(rejection.data.messages[0].message === 'timeout'){
 					//open dialog
-                    //this will be implemented later
-//                    if(this.hibachiScope.loginDisplayed === false){
-//                       // this.hibachiScope.loginDisplayed=true;
-//                        this.dialogService.addPageDialog(this.hibachiPathBuilder.buildPartialsPath(this.corePartialsPath+'preprocesslogin'),{} );
-//                    }
-                    location.href = this.appConfig.baseURL + '/index.cfm/?'+this.appConfig.action+'=main.logout';
+					this.dialogService.addPageDialog(this.hibachiPathBuilder.buildPartialsPath('preprocesslogin'),{} );
 				}else if(rejection.data.messages[0].message === 'invalid_token'){
                     return $http.get(this.baseUrl+'/index.cfm/api/auth/login').then((loginResponse:IHibachiInterceptorPromise<any>)=>{
                         this.$window.localStorage.setItem('token',loginResponse.data.token);
-                        this.hibachiScope.setToken(loginResponse.data.token);
                         rejection.config.headers = rejection.config.headers || {};
                         rejection.config.headers.Authorization = 'Bearer ' + this.$window.localStorage.getItem('token');
                         return $http(rejection.config).then(function(response) {
