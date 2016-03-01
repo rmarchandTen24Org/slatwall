@@ -454,7 +454,9 @@ component extends="FW1.framework" {
 					if(!coreBF.containsBean("hibachiValidationService")) {
 						coreBF.declareBean("hibachiValidationService", "#variables.framework.applicationKey#.org.Hibachi.HibachiValidationService", true);	
 					}
-					
+					if(!coreBF.containsBean("hibachiCollectionService")) {
+                        coreBF.declareBean("hibachiCollectionService", "#variables.framework.applicationKey#.org.Hibachi.hibachiCollectionService", true);
+                    }
 					// If the default transient beans were not found in the model, add a reference to the core one in hibachi
 					if(!coreBF.containsBean("hibachiScope")) {
 						coreBF.declareBean("hibachiScope", "#variables.framework.applicationKey#.org.Hibachi.HibachiScope", false);
@@ -578,18 +580,28 @@ component extends="FW1.framework" {
 		if(request.context.apiRequest) {
 				
 			param name="request.context.headers.contentType" default="application/json"; 
+		param name="request.context.apiResponse.content" default="#structNew()#";
     		//need response header for api
     		var context = getPageContext();
     		context.getOut().clearBuffer();
     		var response = context.getResponse();
-    		for(header in request.context.headers){
+		for(var header in request.context.headers){
     			response.setHeader(header,request.context.headers[header]);
     		}
     		
     		var responseString = '';
     		
     		if(structKeyExists(request.context, "messages")) {
-				request.context.apiResponse.content["messages"] = request.context.messages;	
+			if(!structKeyExists(request.context.apiResponse.content,'messages')){
+				request.context.apiResponse.content["messages"] = request.context.messages;
+			}else{
+				for(var message in request.context.messages){
+					request.context.apiResponse.content["messages"];
+					arrayAppend(request.context.apiResponse.content["messages"],message);
+				}
+
+			}
+
 			}
     		
     		//leaving a note here in case we ever wish to support XML for api responses
