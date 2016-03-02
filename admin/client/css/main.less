@@ -480,6 +480,7 @@ body.s-login-screen .form-group {display: inline-block;width: 100%;}
 .s-loading-icon-fullwidth {width: 100%; text-align: center;}
 .s-loading-icon-fullwidth i {font-size: 40px;}
 .s-label-desc {color: #ccc;}
+.s-responsive-image {width: 100%;}
 hr {border-color:@black-20;}
 hr.s-dotted {border:none;border-bottom:3px dotted @black-5;margin-top:20px;margin-bottom:20px;}
 a {color:@brand-primary;}
@@ -510,14 +511,26 @@ a:hover {color: @link-color-hover;text-decoration:none;}
 .table-responsive .s-table-select a i {margin:0px;}
 .table-responsive .s-table-sort {width: 30px;text-align: center;}
 .table-responsive .dropdown a.dropdown-toggle {color: #666;font-weight:600;}
-.table-responsive td.s-number {text-align: right;min-width: 93px;padding: 8px 10px;}
-.table-responsive td.s-number input {max-width: 70px;}
-.table-responsive td.s-number select {float: left;margin-left: 2px;}
 .table-responsive table .s-sort-arrows {display: inline-block;height: 17px;overflow: hidden;margin-bottom: -5px;position: relative;top: -2px;}
 .table-responsive table .s-sort-arrows object {height: 48px;pointer-events: none;}
 .table-responsive table .s-sort-arrows .s-active {fill: #666 !important;stroke: #666 !important;}
 .table-responsive table .s-sort-arrows:hover .s-ascending {fill: #428bca;stroke: #428bca;}
 .table-responsive table .s-sort-arrows:hover .s-descending {fill: #428bca;stroke: #428bca;}
+.table-responsive tr.s-disabled {pointer-events: auto;cursor: not-allowed;}
+.table-responsive tr.s-disabled td i, 
+.table-responsive tr.s-disabled td input, 
+.table-responsive tr.s-disabled td a,
+.table-responsive tr.s-disabled td select, 
+.table-responsive tr.s-disabled td button {pointer-events: none;}
+.table-responsive td.s-number {text-align: right;min-width: 93px;padding: 8px 10px;}
+.table-responsive td.s-number input {max-width: 70px;}
+.table-responsive td.s-number select {float: none;margin-left: 2px;}
+
+.table-responsive .s-levels {position: initial !important;padding-left: 25px !important;}
+.table-responsive .s-levels .s-levels-wrapper {position: relative;}
+.table-responsive .s-levels .s-levels-wrapper i {position: absolute;left: -15px;}
+.table-responsive .s-toggle-panels {text-align: center;}
+.table-responsive tr.s-child .s-levels .s-title, table tr.s-child .s-number-group, table tr.s-child.s-price-group-child .s-price-group {font-style: italic;color: #999;}
 
 .s-table-title {font-size: 14px;color: #666;}
 .s-table-alternate-title {position:absolute;font-size: 14px;color: #666;}
@@ -750,7 +763,7 @@ table tr th .glyphicon {vertical-align:text-top;}
 .row .s-pannel-control .col-md-12	{text-align:right;}
 .s-pannel-control a {color:#888;font-size:11px;}
 .s-pannel-control a:hover {text-decoration:none;}
-.panel-heading h4.panel-title {font-size:14px !important;}
+.panel-heading h4.panel-title {font-size:14px !important;text-transform: uppercase;}
 .panel-heading h4.panel-title span > span {background-color: @black-20;.border-radius();margin: 0px 10px;padding: 0px 5px;height: 10px;color: @white;font-size:11px;}
 .openall {border-right:1px solid ##999;padding-right:4px;}
 .panel-heading .fa {float:right;margin-top: 3px;}
@@ -947,7 +960,6 @@ tabel .s-table-header {margin-bottom:10px;}
 .s-search-bar {display:inline-block;}
 .hiddenRow {padding: 0 !important;}
 .s-alert-footer {.border-radius(0);position: fixed;left: 0;right: 0;bottom: 0;margin: 0;z-index:7000;text-align:center;}
-.s-disabled {pointer-events: none;opacity: 0.5;}
 .s-focus {box-shadow: 0px 0px 10px 0px @black-30;}
 .s-filter-group-style.s-focus {background-color: white;-webkit-box-shadow:1px 1px   0 rgba(0,   0,   0,   0.100),3px 3px   0 rgba(255, 255, 255, 1.0),4px 4px   0 rgba(0,   0,   0,   0.125),6px 6px   0 rgba(255, 255, 255, 1.0),4px 7px 7px   0 @black-30;-moz-box-shadow:1px 1px   0 rgba(0,   0,   0,   0.100),3px 3px   0 rgba(255, 255, 255, 1.0),4px 4px   0 rgba(0,   0,   0,   0.125),6px 6px   0 rgba(255, 255, 255, 1.0),4px 7px 7px   0 @black-30;box-shadow:1px 1px   0 rgba(0,   0,   0,   0.100),3px 3px   0 rgba(255, 255, 255, 1.0),4px 4px   0 rgba(0,   0,   0,   0.125),6px 6px   0 rgba(255, 255, 255, 1.0),4px 7px 7px   0 @black-30;}
 .s-focus .panel-heading {background-color:@brand-primary !important;}
@@ -2563,8 +2575,7 @@ a.disabled > i.hibachi-ui-radio-checked {background-position:-16px -64px !import
 .s-detail-content-table tbody tr td {position:relative;}
 .s-detail-content-table tbody tr td.admin {text-align:center;}
 .s-detail-content-table tbody tr td span.s-rate {color: #aaa;}
-.s-detail-content-table tbody tr td.s-image {padding: 0px 13px;width:57px;}
-.s-detail-content-table tbody tr td.s-image {vertical-align: middle;text-align:center;}
+.s-detail-content-table tbody tr td.s-image {padding: 0px 13px;width:57px;vertical-align: middle;text-align:center;position: initial;}
 .s-detail-content-table tbody tr td.s-price {padding:0px 13px;}
 .s-detail-content-table tbody tr td.s-price .s-pricing-wrapper {margin-top: 9px;display:inline-block;}
 .s-detail-content-wrapper .s-detail-body .s-detail-content-table thead tr th:first-child,
