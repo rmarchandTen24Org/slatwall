@@ -685,8 +685,6 @@
                     									</div>
                                                     </div>
                                                     
-                                                    
-                                                    
                                                     <div class="table-responsive">
                                                         
                                                         <table class="table table-bordered s-detail-content-table">
@@ -753,17 +751,7 @@
                             												</svg>
                             											</a>
                                                                     </th>
-                                                                    <th>
-                                                                        <span>Currency</span>
-                                                                        <a href="#" class="s-sort-arrows">
-                            												<svg class="nc-icon outline" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="20px" height="20px" viewBox="0 0 64 64">
-                                                                                <g transform="translate(0.5, 0.5)"> 
-                            														<polygon class="s-ascending" fill="#aaaaaa" stroke="#aaaaaa" stroke-width="3" stroke-linecap="square" stroke-miterlimit="10" points="20,26 44,26 32,12 " stroke-linejoin="round"></polygon> 
-                            														<polygon class="s-descending" fill="#aaaaaa" stroke="#aaaaaa" stroke-width="3" stroke-linecap="square" stroke-miterlimit="10" points="44,38 20,38 32,52 " stroke-linejoin="round"></polygon> 
-                            													</g>
-                            												</svg>
-                            											</a>
-                                                                    </th>
+                                                                    
                                                                     <th>
                                                                         <span>Price</span>
                                                                         <a href="#" class="s-sort-arrows">
@@ -807,12 +795,42 @@
                                                                     <td class="s-price-group">Default</td>
                                                                     <td class="s-number"></td>
                                                                     <td class="s-number"></td>
-                                                                    <td class="s-currency">USD</td>
                                                                     <td class="s-number">
-                                                                        <span class="pull-left">
-                                                                            234.33
-                                                                        </span>
-                                                                        <span class="s-sale-price" data-toggle="tooltip" data-placement="top" data-original-title="Sale Price: 20% OFF Promo">(187.47)</span>
+                                                                        <style>
+                                                                            .s-number ul {
+                                                                                padding:0px;
+                                                                                margin:0px;
+                                                                            }
+                                                                            .s-number ul li {
+                                                                                display: inline-block;
+                                                                                width: 100%;
+                                                                                margin-bottom: 7px;
+                                                                            }
+                                                                            .s-number ul li:last-child {
+                                                                                margin-bottom: 0px;
+                                                                            }
+                                                                        </style>
+                                                                        <ul class="list-unstyled">
+                                                                            <li>
+                                                                                <span class="s-pricing-wrapper">
+                                                                                    <input type="text" class="form-control input-xs" value="234.33" data-currency="USD">
+                                                                                </span>
+                                                                                <span class="s-pricing-wrapper" style="margin-top: 1px;margin-left: 4px;">USD</span>
+                                                                                <span class="s-sale-price" data-toggle="tooltip" data-placement="top" data-original-title="Sale Price: 20% OFF Promo">(187.47)</span>        
+                                                                            </li>
+                                                                            <li>
+                                                                                <span class="s-pricing-wrapper s-price-overwrite">
+                                                                                    <input type="text" class="form-control input-xs" value="327.84" data-currency="AUD">
+                                                                                    <button class="btn btn-xs btn-default" data-toggle="tooltip" data-placement="top" data-original-title="Revert price to default AUD currency rate">
+                                                                                        <i class="fa fa-refresh"></i>
+                                                                                    </button>
+                                                                                </span>
+                                                                                <span class="s-pricing-wrapper" style="margin-top: 1px;margin-left: 4px;">AUD</span>
+                                                                                <span class="s-sale-price" data-toggle="tooltip" data-placement="top" data-original-title="Sale Price: 20% OFF Promo">(262.27)</span>        
+                                                                            </li>
+                                                                          
+                                                                        </ul>
+                                                                        
                                                                     </td>
                                                                     <td class="s-image">
                                                                         <a data-toggle="modal" href="#j-image-detail">
@@ -844,98 +862,6 @@
                                                                     </td>
                                                                     <td class="s-levels" style="padding-left: 45px !important;">
                                                                         <div class="s-levels-wrapper">
-                                                                            <i class="fa fa-caret-down s-listing-arrow"></i> 
-                                                                            <span class="s-title">EDGE-BLK</span>
-                                                                        </div>
-                                                                    </td>
-                                                                    <td class="s-number-group">Finish: Black</td>
-                                                                    <td class="s-price-group">Default</td>
-                                                                    <td class="s-number">
-                                                                        
-                                                                    </td>
-                                                                    <td class="s-number">
-                                                                        
-                                                                    </td>
-                                                                    <td class="s-currency">USD</td>
-                                                                    <td class="s-number">
-                                                                        <span class="s-pricing-wrapper">
-                                                                            <input type="text" class="form-control input-xs" value="234.33">
-                                                                        </span>
-                                                                        <span class="s-sale-price" data-toggle="tooltip" data-placement="top" data-original-title="Sale Price: 20% OFF Promo">(187.47)</span>
-                                                                    </td>
-                                                                    <td class="s-image">
-                                                                        -
-                                                                    </td>
-                                                                    <td class="s-table-select">
-                                                                        -
-                                                                    </td>
-                                                                    <td class="admin">
-                                                                        <a href="##" title="" class="btn btn-default btn-xs" target="_self">
-                                                                            <i class="fa fa-eye"></i> 
-                                                                        </a> 
-                                                                        <a href="##" title="" class="btn btn-default btn-xs" target="_self">
-                                                                            <i class="fa fa-pencil"></i> 
-                                                                        </a> 
-                                                                    </td>
-                                                                </tr>
-                                                                
-                                                                <tr class="s-child s-price-group-child">
-                                                                    <td class="s-table-checkbox ">
-                                                                        <div class="s-checkbox">
-                                                                            <input type="checkbox">
-                                                                            <label for="exampleID"></label>
-                                                                        </div>
-                                                                    </td>
-                                                                    <td class="s-levels" style="padding-left: 65px !important;">
-                                                                        <div class="s-levels-wrapper">
-                                                                            <span class="s-title">EDGE-BLK</span>
-                                                                        </div>
-                                                                    </td>
-                                                                    <td class="s-number-group" style="padding-left: 45px !important;">Finish: Black</td>
-                                                                    <td class="s-price-group" style="padding-left: 45px !important;">Default</td>
-                                                                    <td class="s-number"></td>
-                                                                    <td class="s-number"></td>
-                                                                    <td class="s-currency" style="padding-left: 45px !important;"><span data-toggle="tooltip" data-placement="top" data-original-title="Conversion Rate: N/A">AUD</span></td>
-                                                                    <td class="s-number">
-                                                                        <span class="s-pricing-wrapper s-price-overwrite">
-                                                                            <input type="text" class="form-control input-xs" value="327.84">
-                                                                            
-                                                                            <button class="btn btn-xs btn-default" data-toggle="tooltip" data-placement="top" data-original-title="Revert price to default AUD currency rate">
-                                                                                <i class="fa fa-refresh"></i>
-                                                                            </button>
-                                                                        </span>
-                                                                        <span class="s-sale-price" data-toggle="tooltip" data-placement="top" data-original-title="Sale Price: 20% OFF Promo">(262.27)</span>
-                                                                    </td>
-                                                                    <td class="s-image">
-                                                                        -
-                                                                    </td>
-                                                                    <td class="s-table-select">
-                                                                        -
-                                                                    </td>
-                                                                    <td class="admin">
-                                                                        <a href="##" title="" class="btn btn-default btn-xs" target="_self">
-                                                                            <i class="fa fa-remove"></i> 
-                                                                        </a> 
-                                                                    </td>
-                                                                </tr> 
-                                                                
-                                                                
-                                                                
-                                                                
-                                                                
-                                                                
-                                                                
-                                                                
-                                                                
-                                                                <tr class="s-child">
-                                                                    <td class="s-table-checkbox">
-                                                                        <div class="s-checkbox">
-                                                                            <input type="checkbox">
-                                                                            <label for="exampleID"></label>
-                                                                        </div>
-                                                                    </td>
-                                                                    <td class="s-levels" style="padding-left: 45px !important;">
-                                                                        <div class="s-levels-wrapper">
                                                                             <span class="s-title">EDGE-BLK</span>
                                                                         </div>
                                                                     </td>
@@ -943,17 +869,30 @@
                                                                     <td class="s-price-group">Employee Price</td>
                                                                     <td class="s-number"></td>
                                                                     <td class="s-number"></td>
-                                                                    <td class="s-currency">USD</td>
                                                                     <td class="s-number">
-                                                                        <span class="s-pricing-wrapper">
-                                                                            <input type="text" class="form-control input-xs" value="100.00">
-                                                                        </span>
+                                                                        <ul class="list-unstyled">
+                                                                            <li>
+                                                                                <span class="s-pricing-wrapper">
+                                                                                    <input type="text" class="form-control input-xs" value="234.33" data-currency="USD">
+                                                                                </span>
+                                                                                <span class="s-pricing-wrapper" style="margin-top: 1px;margin-left: 4px;">USD</span>
+                                                                                <span class="s-sale-price" data-toggle="tooltip" data-placement="top" data-original-title="Sale Price: 20% OFF Promo">(187.47)</span>        
+                                                                            </li>
+                                                                            <li>
+                                                                                <span class="s-pricing-wrapper">
+                                                                                    <input type="text" class="form-control input-xs" value="327.84" data-currency="AUD">
+                                                                                </span>
+                                                                                <span class="s-pricing-wrapper" style="margin-top: 1px;margin-left: 4px;">AUD</span>
+                                                                                <span class="s-sale-price" data-toggle="tooltip" data-placement="top" data-original-title="Sale Price: 20% OFF Promo">(262.27)</span>        
+                                                                            </li>
+                                                                          
+                                                                        </ul>
                                                                     </td>
                                                                     <td class="s-image">
-                                                                        -
+                                                                        
                                                                     </td>
                                                                     <td class="s-table-select">
-                                                                        -
+                                                                        
                                                                     </td>
                                                                     <td class="admin">
                                                                         <a href="##" title="" class="btn btn-default btn-xs" target="_self">
@@ -985,20 +924,30 @@
                                                                             <input type="text" class="form-control input-xs" value="99">
                                                                         </span>
                                                                     </td>
-                                                                    <td class="s-currency">USD</td>
                                                                     <td class="s-number">
-                                                                        <span class="s-pricing-wrapper s-price-overwrite">
-                                                                            <input type="text" class="form-control input-xs" value="205.34">
-                                                                            <button class="btn btn-xs btn-default" data-toggle="tooltip" data-placement="top" data-original-title="Revert price to price rule">
-                                                                                <i class="fa fa-refresh"></i>
-                                                                            </button>
-                                                                        </span>
+                                                                        <ul class="list-unstyled">
+                                                                            <li>
+                                                                                <span class="s-pricing-wrapper">
+                                                                                    <input type="text" class="form-control input-xs" value="234.33" data-currency="USD">
+                                                                                </span>
+                                                                                <span class="s-pricing-wrapper" style="margin-top: 1px;margin-left: 4px;">USD</span>
+                                                                                <span class="s-sale-price" data-toggle="tooltip" data-placement="top" data-original-title="Sale Price: 20% OFF Promo">(187.47)</span>        
+                                                                            </li>
+                                                                            <li>
+                                                                                <span class="s-pricing-wrapper">
+                                                                                    <input type="text" class="form-control input-xs" value="327.84" data-currency="AUD">
+                                                                                </span>
+                                                                                <span class="s-pricing-wrapper" style="margin-top: 1px;margin-left: 4px;">AUD</span>
+                                                                                <span class="s-sale-price" data-toggle="tooltip" data-placement="top" data-original-title="Sale Price: 20% OFF Promo">(262.27)</span>        
+                                                                            </li>
+                                                                          
+                                                                        </ul>
                                                                     </td>
                                                                     <td class="s-image">
-                                                                        -
+                                                                        
                                                                     </td>
                                                                     <td class="s-table-select">
-                                                                        -
+                                                                        
                                                                     </td>
                                                                     <td class="admin">
                                                                         <a href="##" title="" class="btn btn-default btn-xs" target="_self">
@@ -1013,11 +962,8 @@
                                                                             <label for="exampleID"></label>
                                                                         </div>
                                                                     </td>
-                                                                    <td class="s-levels" style="padding-left: 45px !important;">
-                                                                        <div class="s-levels-wrapper">
-                                                                            <i class="fa fa-caret-down s-listing-arrow"></i> 
-                                                                            <span class="s-title">EDGE-BLK</span>
-                                                                        </div>
+                                                                    <td style="padding-left: 45px !important;">
+                                                                        <span class="s-title">EDGE-BLK</span>
                                                                     </td>
                                                                     <td class="s-number-group">Finish: Black</td>
                                                                     <td class="s-price-group">Wholesale</td>
@@ -1031,17 +977,30 @@
                                                                             <input type="text" class="form-control input-xs" value="999">
                                                                         </span>
                                                                     </td>
-                                                                    <td class="s-currency">USD</td>
                                                                     <td class="s-number">
-                                                                        <span class="s-pricing-wrapper">
-                                                                            <input type="text" class="form-control input-xs" value="189.34">
-                                                                        </span>
+                                                                        <ul class="list-unstyled">
+                                                                            <li>
+                                                                                <span class="s-pricing-wrapper">
+                                                                                    <input type="text" class="form-control input-xs" value="234.33" data-currency="USD">
+                                                                                </span>
+                                                                                <span class="s-pricing-wrapper" style="margin-top: 1px;margin-left: 4px;">USD</span>
+                                                                                <span class="s-sale-price" data-toggle="tooltip" data-placement="top" data-original-title="Sale Price: 20% OFF Promo">(187.47)</span>        
+                                                                            </li>
+                                                                            <li>
+                                                                                <span class="s-pricing-wrapper">
+                                                                                    <input type="text" class="form-control input-xs" value="327.84" data-currency="AUD">
+                                                                                </span>
+                                                                                <span class="s-pricing-wrapper" style="margin-top: 1px;margin-left: 4px;">AUD</span>
+                                                                                <span class="s-sale-price" data-toggle="tooltip" data-placement="top" data-original-title="Sale Price: 20% OFF Promo">(262.27)</span>        
+                                                                            </li>
+                                                                          
+                                                                        </ul>
                                                                     </td>
                                                                     <td class="s-image">
-                                                                        -
+                                                                        
                                                                     </td>
                                                                     <td class="s-table-select">
-                                                                        -
+                                                                        
                                                                     </td>
                                                                     <td class="admin">
                                                                         <a href="##" title="" class="btn btn-default btn-xs" target="_self">
@@ -1050,63 +1009,7 @@
                                                                     </td>
                                                                 </tr>
                                                                 
-                                                                <tr class="s-child s-price-group-child">
-                                                                    <td class="s-table-checkbox ">
-                                                                        <div class="s-checkbox">
-                                                                            <input type="checkbox">
-                                                                            <label for="exampleID"></label>
-                                                                        </div>
-                                                                    </td>
-                                                                    <td class="s-levels" style="padding-left: 65px !important;">
-                                                                        <div class="s-levels-wrapper">
-                                                                            <span class="s-title">EDGE-BLK</span>
-                                                                        </div>
-                                                                    </td>
-                                                                    <td class="s-number-group" style="padding-left: 45px !important;">Finish: Black</td>
-                                                                    <td class="s-price-group" style="padding-left: 45px !important;">Wholesale</td>
-                                                                    <td class="s-number"></td>
-                                                                    <td class="s-number"></td>
-                                                                    <td class="s-currency" style="padding-left: 45px !important;">
-                                                                        <span  data-toggle="tooltip" data-placement="top" data-original-title="Conversion Rate: 1.78">AUD</span>
-                                                                    </td>
-                                                                    <td class="s-number">
-                                                                        <span class="s-pricing-wrapper">
-                                                                            <input type="text" class="form-control input-xs" value="257.50">
-                                                                        </span>
-                                                                    </td>
-                                                                    <td class="s-image">
-                                                                        -
-                                                                    </td>
-                                                                    <td class="s-table-select">
-                                                                        -
-                                                                    </td>
-                                                                    <td class="admin">
-                                                                        <a href="##" title="" class="btn btn-default btn-xs" target="_self">
-                                                                            <i class="fa fa-remove"></i> 
-                                                                        </a> 
-                                                                    </td>
-                                                                </tr> 
-                                                                
-                                                                
                                                             
-                                                                
-                                                            
-                                                                
-                                                                
-                                                                
-                                                                
-                                                                
-                                                                
-                                                                
-                                                                
-                                                                
-                                                                
-                                                                
-                                                                
-                                                                 
-                                                                
-                                                                
-                                                        
                                                             </tbody>
                                                         </table>
                                                     </div>
@@ -3201,6 +3104,8 @@
         </script>
         <script>
             (function(){
+                
+                
                 
                 $('.s-openall').click(function(event){
                     event.preventDefault();

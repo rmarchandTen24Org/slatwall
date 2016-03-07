@@ -480,6 +480,9 @@ body.s-login-screen .form-group {display: inline-block;width: 100%;}
 @media only screen and (max-width: 992px) {
     body {padding:0px /*Remove for responsive*/;}
 }
+.tooltip.top {font-weight: 500 !important;}
+.tooltip.top .tooltip-arrow {top: auto !important;}
+.tooltip.bottom .tooltip-arrow {bottom: auto !important;top:0px !important;}
 .s-remove-pointer {pointer-events: none;cursor: auto}
 .s-image-wrapper > img {border: 3px solid #eee;border-radius: 3px;}
 .no-records-found {font-style: italic;text-align: center;background: #F4F9FB;color: #31708f;font-size: 12px;text-transform: capitalize;}
@@ -502,11 +505,11 @@ a:hover {color: @link-color-hover;text-decoration:none;}
 .table-responsive tr.s-disabled .s-table-checkbox label {display: none;}
 .table-responsive.s-loading {opacity: 0.3;pointer-events: none;}
 .table-responsive table th {font-weight: 600;}
-.table-responsive .s-table-checkbox {width: 40px;text-align: left;position: relative;vertical-align: middle !important;}
+.table-responsive .s-table-checkbox {width: 40px;text-align: left;position: relative;vertical-align: top !important;}
 .table-responsive .s-table-checkbox .s-checkbox .dropdown > span {position: absolute;right: -20px;top: -20px;height: 24px;width: 20px;text-align: center;padding-top: 6px;cursor: pointer;}
 .table-responsive .multiselect {text-align:center;width:40px;}
 .table-responsive .s-table-checkbox a i {margin: 0px;}
-.table-responsive .s-child {background: #FBFBFB;}
+.table-responsive .s-child {background: #FBFBFB;font-weight: 500;}
 .table-responsive .select {width:65px;}
 .table-responsive .s-table-select {text-align: center;text-align: center;width: 60px;}
 .table-responsive .s-table-select .radio {margin: 0px;padding: 0px;}
@@ -531,15 +534,19 @@ a:hover {color: @link-color-hover;text-decoration:none;}
 .table-responsive tr.s-disabled td a,
 .table-responsive tr.s-disabled td select, 
 .table-responsive tr.s-disabled td button {pointer-events: none;}
-.table-responsive td.s-number {text-align: right;min-width: 93px;padding: 8px 10px;}
-.table-responsive td.s-number input {max-width: 70px;}
+.table-responsive td.s-number {text-align: right;min-width: 93px;font-style:initial;}
+.table-responsive td.s-number input {max-width: 100px;}
 .table-responsive td.s-number select {float: none;margin-left: 2px;}
+.table-responsive td.s-number ul > li {margin-top: 8px;width: 100%;display: inline-block;}
+.table-responsive td.s-number ul > li:first-child {margin: 0px;}
 
 .table-responsive .s-levels {position: initial !important;padding-left: 25px !important;}
 .table-responsive .s-levels .s-levels-wrapper {position: relative;}
 .table-responsive .s-levels .s-levels-wrapper i {position: absolute;left: -15px;}
 .table-responsive .s-toggle-panels {text-align: center;}
-.table-responsive tr.s-child .s-levels .s-title, table tr.s-child .s-number-group, table tr.s-child.s-price-group-child .s-price-group {font-style: italic;color: #999;}
+table tr.s-child td {color: #666;}
+table tr.s-child.s-price-group-child td {color: #aaa;}
+table tr.s-child.s-price-group-child {font-style: italic;}
 
 .s-table-title {font-size: 14px;color: #666;}
 .s-table-alternate-title {position:absolute;font-size: 14px;color: #666;}
@@ -743,8 +750,8 @@ input.ng-invalid.ng-touched, select.ng-invalid.ng-touched, input.error, select.e
 .listing-display-header {background-color:@white;}
 .listing-display-header .s-content-left {padding-left:0px;}
 .listing-display-header .s-content-right {padding-right:0px;}
-.table td.admin a {color: #666;background: none !important;border:none;}
-.table td.admin a:hover {color: #000;}
+.table td.admin a {color: @brand-primary;background: none !important;border:none;}
+.table td.admin a:hover {color: #3873A7;}
 .table>thead>tr>td.admin.admin2, .table>tbody>tr>td.admin.admin2, .table>thead>tr>td.admin.admin1, .table>tbody>tr>td.admin.admin1 {width:78px;padding: 9px 11px;text-align:center;}
 .table>thead>tr>td.admin.admin3, .table>tbody>tr>td.admin.admin3 {text-align:center;width:100px;}
 table a.btn i {vertical-align:middle;padding-bottom:3px;}
@@ -857,7 +864,7 @@ input:focus, textarea:focus, select:focus {-webkit-box-shadow: none !important;b
 .panel-group .panel-heading+.panel-collapse>.panel-body {border-top: none;}
 .table>thead>tr>th, .table>tbody>tr>th, .table>tfoot>tr>th, .table>thead>tr>td, .table>tbody>tr>td, .table>tfoot>tr>td {padding: 11px 11px;}
 .table tr .s-checkbox label {margin:0px !important;padding:0px !important;}
-.table-bordered>thead>tr>th, .table-bordered>thead>tr>td {border-bottom-width:1px;white-space: nowrap;padding: 11px 8px 8px 11px;line-height: 16px;}
+.table-bordered>thead>tr>th, .table-bordered>thead>tr>td {border-bottom-width:1px;white-space: nowrap;padding: 11px 8px 8px 11px;line-height: 16px;white-space:nowrap;}
 .table-striped {background-color:@white;}
 table .s-edit-elements {width: 72px;text-align: center;}
 table .s-edit-elements ul {margin:0px;}
@@ -1909,15 +1916,9 @@ a.disabled > i.hibachi-ui-radio-checked {background-position:-16px -64px !import
 .s-search-results-wrapper .dropdown-menu a > .s-wrapper {display: inline-block;width: 100%;}
 .s-search-results-wrapper .dropdown-menu li:last-child a {border-bottom:0px;}
 .s-search-results-wrapper .dropdown-menu a:hover {background-color:#fafafa;color:@black-60 !important;}
-.s-search-results-wrapper .dropdown-menu li {
-    position: relative;
-}
-.s-search-results-wrapper .dropdown-menu .s-index-0 a {
-    color: #000;
-}
-.s-search-results-wrapper .dropdown-menu .s-index-1 a {
-    padding-left: 27px;
-}
+.s-search-results-wrapper .dropdown-menu li {position: relative;}
+.s-search-results-wrapper .dropdown-menu .s-index-0 a {color: #000;}
+.s-search-results-wrapper .dropdown-menu .s-index-1 a {padding-left: 27px;}
 .s-search-results-wrapper .dropdown-menu .s-index-1:before {
     content: "-";
     position: absolute;
@@ -2017,6 +2018,12 @@ a.disabled > i.hibachi-ui-radio-checked {background-position:-16px -64px !import
 .s-select-list-wrapper.s-dropdown .s-input-btn span, .s-select-list-wrapper.s-dropdown .s-input-btn i {right: 68px;}
 .s-select-list-wrapper .s-input-btn span:hover {color:@brand-danger;}
 .s-select-list-wrapper .input-group-btn button.btn-default {border-top:1px solid @black-20;border-bottom:1px solid @black-20;left: -1px;margin-right: -1px;}
+
+/*Custom button group component*/
+.s-input-group {display: inline-block;}
+.s-input-group .s-title {background: #F2F2F2;border: 1px solid #CCC;border-right: 0px;padding: 3px 4px 3px 4px;display: inline-block;vertical-align: top;margin-right: -4px;border-top-left-radius: 2px;border-bottom-left-radius: 2px;font-size: 10px;color: #aaa;}
+.s-input-group button, .s-input-group input, .s-input-group span {vertical-align: top;}
+.s-input-group button {margin-left: -5px;border: 1px solid #CCC;border-top-left-radius: 0px;border-bottom-left-radius: 0px;}
 
 /*-- List Select Component Without Add --*/
 .s-select-list-wrapper.s-search .input-group-btn button.btn-default {
@@ -2593,12 +2600,16 @@ a.disabled > i.hibachi-ui-radio-checked {background-position:-16px -64px !import
     border: 0px;
 }
 .s-body-box .table-responsive thead {background: #f2f2f2;}
+.s-detail-content-table tbody tr {font-weight: 600;}
 .s-detail-content-table tbody tr td {position:relative;}
 .s-detail-content-table tbody tr td.admin {text-align:center;}
 .s-detail-content-table tbody tr td span.s-rate {color: #aaa;}
 .s-detail-content-table tbody tr td.s-image {padding: 0px 13px;width:57px;vertical-align: middle;text-align:center;position: initial;}
 .s-detail-content-table tbody tr td.s-price {padding:0px 13px;}
-.s-detail-content-table tbody tr td.s-price .s-pricing-wrapper {margin-top: 9px;display:inline-block;}
+.s-detail-content-table tbody tr td.s-number .s-pricing-wrapper {margin-top: -2px;display:inline-block;float:left;position:relative;}
+.s-detail-content-table tbody tr td .s-sale-price {color: #EA8181;font-style: italic;float:right;}
+.s-detail-content-table tbody tr td.s-price-list ul li {margin-top: 8px;}
+.s-detail-content-table tbody tr td.s-price-list ul li:first-child {margin-top: 0px;}
 .s-detail-content-wrapper .s-detail-body .s-detail-content-table thead tr th:first-child,
 .s-detail-content-wrapper .s-detail-body .s-detail-content-table tbody tr td:first-child,
 .s-detail-content-wrapper.s-shrink-view .s-detail-body .s-detail-content-table thead tr th:nth-child(2),

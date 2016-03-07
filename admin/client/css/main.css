@@ -298,6 +298,16 @@ body.s-login-screen .form-group {
     padding: 0px /*Remove for responsive*/;
   }
 }
+.tooltip.top {
+  font-weight: 500 !important;
+}
+.tooltip.top .tooltip-arrow {
+  top: auto !important;
+}
+.tooltip.bottom .tooltip-arrow {
+  bottom: auto !important;
+  top: 0px !important;
+}
 .s-remove-pointer {
   pointer-events: none;
   cursor: auto;
@@ -397,7 +407,7 @@ a:hover {
   width: 40px;
   text-align: left;
   position: relative;
-  vertical-align: middle !important;
+  vertical-align: top !important;
 }
 .table-responsive .s-table-checkbox .s-checkbox .dropdown > span {
   position: absolute;
@@ -418,6 +428,7 @@ a:hover {
 }
 .table-responsive .s-child {
   background: #FBFBFB;
+  font-weight: 500;
 }
 .table-responsive .select {
   width: 65px;
@@ -505,14 +516,22 @@ a:hover {
 .table-responsive td.s-number {
   text-align: right;
   min-width: 93px;
-  padding: 8px 10px;
+  font-style: initial;
 }
 .table-responsive td.s-number input {
-  max-width: 70px;
+  max-width: 100px;
 }
 .table-responsive td.s-number select {
   float: none;
   margin-left: 2px;
+}
+.table-responsive td.s-number ul > li {
+  margin-top: 8px;
+  width: 100%;
+  display: inline-block;
+}
+.table-responsive td.s-number ul > li:first-child {
+  margin: 0px;
 }
 .table-responsive .s-levels {
   position: initial !important;
@@ -528,11 +547,14 @@ a:hover {
 .table-responsive .s-toggle-panels {
   text-align: center;
 }
-.table-responsive tr.s-child .s-levels .s-title,
-table tr.s-child .s-number-group,
-table tr.s-child.s-price-group-child .s-price-group {
+table tr.s-child td {
+  color: #666;
+}
+table tr.s-child.s-price-group-child td {
+  color: #aaa;
+}
+table tr.s-child.s-price-group-child {
   font-style: italic;
-  color: #999;
 }
 .s-table-title {
   font-size: 14px;
@@ -1310,12 +1332,12 @@ select.error {
   padding-right: 0px;
 }
 .table td.admin a {
-  color: #666;
+  color: #428bca;
   background: none !important;
   border: none;
 }
 .table td.admin a:hover {
-  color: #000;
+  color: #3873A7;
 }
 .table > thead > tr > td.admin.admin2,
 .table > tbody > tr > td.admin.admin2,
@@ -1747,9 +1769,9 @@ select:focus {
 .table-bordered > thead > tr > th,
 .table-bordered > thead > tr > td {
   border-bottom-width: 1px;
-  white-space: nowrap;
   padding: 11px 8px 8px 11px;
   line-height: 16px;
+  white-space: nowrap;
 }
 .table-striped {
   background-color: #ffffff;
@@ -5405,6 +5427,34 @@ a.disabled > i.hibachi-ui-radio-checked {
   left: -1px;
   margin-right: -1px;
 }
+/*Custom button group component*/
+.s-input-group {
+  display: inline-block;
+}
+.s-input-group .s-title {
+  background: #F2F2F2;
+  border: 1px solid #CCC;
+  border-right: 0px;
+  padding: 3px 4px 3px 4px;
+  display: inline-block;
+  vertical-align: top;
+  margin-right: -4px;
+  border-top-left-radius: 2px;
+  border-bottom-left-radius: 2px;
+  font-size: 10px;
+  color: #aaa;
+}
+.s-input-group button,
+.s-input-group input,
+.s-input-group span {
+  vertical-align: top;
+}
+.s-input-group button {
+  margin-left: -5px;
+  border: 1px solid #CCC;
+  border-top-left-radius: 0px;
+  border-bottom-left-radius: 0px;
+}
 /*-- List Select Component Without Add --*/
 .s-select-list-wrapper.s-search .input-group-btn button.btn-default {
   border-right: 1px solid #CCC;
@@ -6176,6 +6226,9 @@ a.disabled > i.hibachi-ui-radio-checked {
 .s-body-box .table-responsive thead {
   background: #f2f2f2;
 }
+.s-detail-content-table tbody tr {
+  font-weight: 600;
+}
 .s-detail-content-table tbody tr td {
   position: relative;
 }
@@ -6195,9 +6248,22 @@ a.disabled > i.hibachi-ui-radio-checked {
 .s-detail-content-table tbody tr td.s-price {
   padding: 0px 13px;
 }
-.s-detail-content-table tbody tr td.s-price .s-pricing-wrapper {
-  margin-top: 9px;
+.s-detail-content-table tbody tr td.s-number .s-pricing-wrapper {
+  margin-top: -2px;
   display: inline-block;
+  float: left;
+  position: relative;
+}
+.s-detail-content-table tbody tr td .s-sale-price {
+  color: #EA8181;
+  font-style: italic;
+  float: right;
+}
+.s-detail-content-table tbody tr td.s-price-list ul li {
+  margin-top: 8px;
+}
+.s-detail-content-table tbody tr td.s-price-list ul li:first-child {
+  margin-top: 0px;
 }
 .s-detail-content-wrapper .s-detail-body .s-detail-content-table thead tr th:first-child,
 .s-detail-content-wrapper .s-detail-body .s-detail-content-table tbody tr td:first-child,
