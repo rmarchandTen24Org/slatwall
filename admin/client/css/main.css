@@ -346,6 +346,10 @@ body.s-login-screen .form-group {
 .s-responsive-image {
   width: 100%;
 }
+.s-right-align-dropdown {
+  right: 0px;
+  left: auto;
+}
 hr {
   border-color: #cccccc;
 }
@@ -502,6 +506,19 @@ a:hover {
   fill: #428bca;
   stroke: #428bca;
 }
+.table-responsive td.s-actions,
+.table-responsive th.s-actions {
+  width: 100px;
+  text-align: center;
+}
+.table-responsive td.s-actions a.btn,
+.table-responsive th.s-actions a.btn {
+  background: none;
+  border: none;
+}
+.table-responsive td.s-actions .dropdown {
+  display: inline-block;
+}
 .table-responsive tr.s-disabled {
   pointer-events: auto;
   cursor: not-allowed;
@@ -546,6 +563,34 @@ a:hover {
 }
 .table-responsive .s-toggle-panels {
   text-align: center;
+}
+.s-tab-table {
+  border: 1px solid #eee;
+  padding: 10px;
+}
+.s-tab-table .s-tabs {
+  background: #F7F7F7;
+  margin-left: -10px;
+  margin-right: -10px;
+  margin-top: -10px;
+  border: none;
+  padding: 0px;
+}
+.s-tab-table .s-tabs ul {
+  border: none;
+  padding: 0px;
+}
+.s-tab-table .s-tabs ul li.active a {
+  background: #fff;
+  border-bottom: 0px;
+  border-radius: 0px;
+}
+.s-tab-table .tab-content {
+  padding: 0px;
+  -moz-box-shadow: inset none;
+  -webkit-box-shadow: none;
+  box-shadow: none;
+  background: none;
 }
 table tr.s-child td {
   color: #666;
@@ -780,6 +825,41 @@ label {
 .modal-body {
   overflow-y: auto;
   overflow-x: auto;
+}
+.modal-body .s-alert-message .alert {
+  margin-bottom: 20px;
+}
+.modal-body .s-alert-message .alert button {
+  margin-left: 10px;
+}
+.modal-body .s-alert-message ul {
+  margin-top: 10px;
+  padding-left: 17px;
+}
+.modal-body .s-alert-message .s-alert-message-hidden {
+  display: none;
+}
+.modal-body .s-alert-message .s-image-edit .thumbnail .s-image :hover .s-image-hover {
+  display: block;
+}
+.modal-body .s-alert-message .s-image-edit .s-image {
+  position: relative;
+}
+.modal-body .s-alert-message .s-image-edit .s-image-hover {
+  position: absolute;
+  top: 0px;
+  bottom: 0px;
+  background: #eee;
+  opacity: .6;
+  width: 100%;
+  text-align: center;
+  display: none;
+}
+.modal-body .s-alert-message .s-image-edit .s-image-hover i {
+  font-size: 8em;
+  display: inline-block;
+  width: 100%;
+  margin-top: 20%;
 }
 .modal-content .s-content-wrapper {
   margin-top: 5px;
@@ -1332,12 +1412,12 @@ select.error {
   padding-right: 0px;
 }
 .table td.admin a {
-  color: #428bca;
+  color: #666;
   background: none !important;
   border: none;
 }
 .table td.admin a:hover {
-  color: #3873A7;
+  color: #428bca;
 }
 .table > thead > tr > td.admin.admin2,
 .table > tbody > tr > td.admin.admin2,
@@ -4035,15 +4115,15 @@ tabel .s-table-header {
 .s-order-item-table .s-return {
   background: #FEE;
 }
-.s-order-item-table .s-price-list {
+.s-order-item-table .s-input-table-cell {
   font-size: 9px;
   color: #b3b3b3;
 }
-.s-order-item-table .s-price-list .btn {
+.s-order-item-table .s-input-table-cell .btn {
   margin-top: 10px;
   font-size: 11px;
 }
-.s-order-item-table .s-price-list ul li {
+.s-order-item-table .s-input-table-cell ul li {
   line-height: 10px;
   font-weight: normal;
 }
@@ -5430,6 +5510,7 @@ a.disabled > i.hibachi-ui-radio-checked {
 /*Custom button group component*/
 .s-input-group {
   display: inline-block;
+  position: relative;
 }
 .s-input-group .s-title {
   background: #F2F2F2;
@@ -5444,16 +5525,27 @@ a.disabled > i.hibachi-ui-radio-checked {
   font-size: 10px;
   color: #aaa;
 }
-.s-input-group button,
+.s-input-group .btn,
 .s-input-group input,
 .s-input-group span {
   vertical-align: top;
 }
-.s-input-group button {
+.s-input-group .btn {
   margin-left: -5px;
   border: 1px solid #CCC;
   border-top-left-radius: 0px;
   border-bottom-left-radius: 0px;
+}
+.s-input-group .s-action-btn {
+  border-color: #5cb85c;
+  position: absolute;
+  right: 0px;
+  top: 0px;
+}
+.s-input-group .s-indicator-icon {
+  padding: 2px;
+  display: inline-block;
+  vertical-align: top;
 }
 /*-- List Select Component Without Add --*/
 .s-select-list-wrapper.s-search .input-group-btn button.btn-default {
@@ -6259,11 +6351,27 @@ a.disabled > i.hibachi-ui-radio-checked {
   font-style: italic;
   float: right;
 }
-.s-detail-content-table tbody tr td.s-price-list ul li {
+.s-detail-content-table tbody tr td.s-input-table-cell ul {
+  margin: 0px;
+  margin-top: -2px;
+}
+.s-detail-content-table tbody tr td.s-input-table-cell ul li {
   margin-top: 8px;
 }
-.s-detail-content-table tbody tr td.s-price-list ul li:first-child {
+.s-detail-content-table tbody tr td.s-input-table-cell ul li:first-child {
   margin-top: 0px;
+}
+.s-detail-content-table tbody tr td.s-input-table-cell.s-qty .s-input-group input {
+  max-width: 90px;
+}
+.s-detail-content-table tbody tr td.s-qty-range input {
+  max-width: 80px;
+}
+.s-detail-content-table tbody tr td.s-input-table-cell span.s-sale-price {
+  cursor: pointer;
+}
+.s-detail-content-table tbody tr td.s-input-table-cell .s-popover-row {
+  white-space: nowrap;
 }
 .s-detail-content-wrapper .s-detail-body .s-detail-content-table thead tr th:first-child,
 .s-detail-content-wrapper .s-detail-body .s-detail-content-table tbody tr td:first-child,
