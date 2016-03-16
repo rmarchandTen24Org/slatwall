@@ -839,13 +839,13 @@ label {
 .modal-body .s-alert-message .s-alert-message-hidden {
   display: none;
 }
-.modal-body .s-alert-message .s-image-edit .thumbnail .s-image :hover .s-image-hover {
+.modal-body .s-image-edit .thumbnail .s-image :hover .s-image-hover {
   display: block;
 }
-.modal-body .s-alert-message .s-image-edit .s-image {
+.modal-body .s-image-edit .s-image {
   position: relative;
 }
-.modal-body .s-alert-message .s-image-edit .s-image-hover {
+.modal-body .s-image-edit .s-image-hover {
   position: absolute;
   top: 0px;
   bottom: 0px;
@@ -855,7 +855,7 @@ label {
   text-align: center;
   display: none;
 }
-.modal-body .s-alert-message .s-image-edit .s-image-hover i {
+.modal-body .s-image-edit .s-image-hover i {
   font-size: 8em;
   display: inline-block;
   width: 100%;
