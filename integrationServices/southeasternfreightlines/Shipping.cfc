@@ -52,14 +52,6 @@ component accessors="true" output="false" displayname="FedEx" implements="Slatwa
 	public any function init() {
 		// Insert Custom Logic Here 
 		variables.shippingMethods = {
-			FIRST_OVERNIGHT="FedEx First Overnight",
-			PRIORITY_OVERNIGHT="FedEx Priority Overnight",
-			STANDARD_OVERNIGHT="FedEx Standard Overnight",
-			FEDEX_2_DAY="FedEx 2 Day",
-			FEDEX_EXPRESS_SAVER="FedEx Express Saver",
-			FEDEX_GROUND="FedEx Ground",
-			INTERNATIONAL_ECONOMY="FedEx International Economy",
-			INTERNATIONAL_PRIORITY="FedEx International Priority"
 		};
 		return this;
 	}
@@ -135,7 +127,7 @@ component accessors="true" output="false" displayname="FedEx" implements="Slatwa
 		httpRequest.addParam(type="formfield",name="OriginCity",value="#setting('originCity')#");
 		httpRequest.addParam(type="formfield",name="OriginState",value="#setting('originState')#");
 		httpRequest.addParam(type="formfield",name="OriginZip",value="#setting('originZip')#");
-		httpRequest.addParam(type="formfield",name="OrigCountry",value="#setting('origCountry')#");
+		httpRequest.addParam(type="formfield",name="OrigCountry",value="#left(setting('origCountry'),1)#");
 		httpRequest.addParam(type="formfield",name="PickupDateDD",value="18");
 		httpRequest.addParam(type="formfield",name="PickupDateMM",value="03");
 		httpRequest.addParam(type="formfield",name="PickupDateYYYY",value="2016");
@@ -171,7 +163,6 @@ component accessors="true" output="false" displayname="FedEx" implements="Slatwa
 				}
 				StructInsert(quotes[currentIndex], item.XmlName, item.XmlText, true );
 			}
-			writeDump(var=test); abort;
 
 			for(var i=1; i<=arrayLen(quotes); i++) {
 				responseBean.addShippingMethod(
