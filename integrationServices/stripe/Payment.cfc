@@ -169,8 +169,8 @@ component accessors="true" output="false" displayname="Stripe" implements="Slatw
             }
             
             //get the setting for statement_descriptor
-            if (!isNull(getHibachiScope().getService('siteService').getCurrentRequestSite()) && len(getHibachiScope().getService('siteService').getCurrentRequestSite().getSiteCode())){
-                var siteCode = getHibachiScope().getService('siteService').getCurrentRequestSite().getSiteCode();
+            if (!isNull(requestBean.getOrder().getOrderCreatedSite()) && len(requestBean.getOrder().getOrderCreatedSite().getSiteCode())){
+                var siteCode = requestBean.getOrder().getOrderCreatedSite().getSiteCode();
                 var statementDescriptionSettingValue = getHibachiScope().getService('SettingService').getSettingValue('integration#siteCode#StatementDescription');
             }
             
