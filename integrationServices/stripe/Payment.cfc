@@ -168,6 +168,16 @@ component accessors="true" output="false" displayname="Stripe" implements="Slatw
                 populateRequestParamsWithCardInfo(requestBean, authorizeChargeRequest);
             }
             
+            //get the setting for statement_descriptor
+            if (!isNull(getHibachiScope().getService('siteService').getCurrentRequestSite()) && len(getHibachiScope().getService('siteService').getCurrentRequestSite().getSiteCode())){
+                var siteCode = getHibachiScope().getService('siteService').getCurrentRequestSite().getSiteCode();
+                var statementDescriptionSettingValue = getHibachiScope().getService('SettingService').getSettingValue('integration#siteCode#StatementDescription');
+            }
+            
+            if (!isNull(statementDescriptionSettingValue) && !isNull(siteCode)){
+                authorizeChargeRequest.addParam(type="formfield", name="statement_descriptor",  value="#statementDescriptionSettingValue#"); //This one should overwrite the default.   
+            }
+            
             authorizeChargeRequest.addParam(type="header", name="authorization", value="bearer #activeSecretKey#");
             authorizeChargeRequest.addParam(type="formfield", name="description", value="#generateDescription(requestBean)#");
             authorizeChargeRequest.addParam(type="formfield", name="currency", value="#requestBean.getTransactionCurrency()#");
@@ -452,4 +462,3 @@ component accessors="true" output="false" displayname="Stripe" implements="Slatw
     }
     
 }
-
