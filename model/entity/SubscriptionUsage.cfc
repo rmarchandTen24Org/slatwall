@@ -247,7 +247,7 @@ component entityname="SlatwallSubscriptionUsage" table="SwSubsUsage" persistent=
         if(arrayLen(records)){
         	return records[1].getOrderItem().getSku();
         }
-        return;
+        return [];
 	}
 
 	public any function getInitialProduct(){

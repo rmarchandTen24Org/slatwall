@@ -64,6 +64,7 @@ Notes:
 			<hb:HibachiPropertyList>
 				<hb:HibachiPropertyDisplay object="#rc.processObject#" property="benefitTermType" edit="#rc.edit#">
 				<hb:HibachiPropertyDisplay object="#rc.processObject#" property="subscriptionBenefitID" edit="#rc.edit#">
+				<hb:HibachiPropertyDisplay object="#rc.processObject#" property="updateAllSubscriptionBenefitsWithSameInitialSkuFlag" edit="#rc.edit#">
 			</hb:HibachiPropertyList>
 		</hb:HibachiPropertyRow>
 		

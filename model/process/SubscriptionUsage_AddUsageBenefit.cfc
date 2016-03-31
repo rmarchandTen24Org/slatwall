@@ -58,7 +58,7 @@ component output="false" accessors="true" extends="HibachiProcess" {
 	// Data Properties (ID's)
 	property name="benefitTermType" hb_formFieldType="select";
 	property name="subscriptionBenefitID" hb_formFieldType="select" hb_rbKey="entity.subscriptionBenefit";
-	
+	property name="updateAllSubscriptionBenefitsWithSameInitialSkuFlag" hb_formFieldType="checkbox" hb_rbKey="processObject.SubscriptionUsage_AddUsageBenefit.updateAllSubscriptionBenefitsWithSameInitialSkuFlag";
 	// Data Properties (Inputs)
 	
 	// Data Properties (Related Entity Populate)
