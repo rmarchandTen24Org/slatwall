@@ -410,9 +410,9 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
         var records = subscriptionOrderItemSmartList.getPageRecords();
         var subscriptionUsageIDList = "";
         if(arrayLen(records)){
-               for (var record in records){
-               	    subscriptionUsageIDList = listAppend(subscriptionUsageIDList, record.getSubscriptionUsage().getSubscriptionUsageID());
-               }
+           for (var record in records){
+           	    subscriptionUsageIDList = listAppend(subscriptionUsageIDList, record.getSubscriptionUsage().getSubscriptionUsageID());
+           }
         }
         if (len(subscriptionUsageIDList)){
         	var listWithoutDupes = listRemoveDupes(subscriptionUsageIDList, ",");
