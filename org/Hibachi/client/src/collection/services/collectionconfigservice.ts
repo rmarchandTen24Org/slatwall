@@ -45,6 +45,7 @@ class Filter{
         public logicalOperator?:string,
         public displayPropertyIdentifier?:string,
         public displayValue?:string,
+        public hidden:boolean=false,
         public pattern?:string
     ){}
 }
@@ -160,6 +161,7 @@ class CollectionConfig {
     };
 
     public getCollectionConfig= ():any =>{
+        this.validateFilter(this.filterGroups);
         return {
             baseEntityAlias: this.baseEntityAlias,
             baseEntityName: this.baseEntityName,
@@ -280,6 +282,10 @@ class CollectionConfig {
                 lastProperty=column.split('.').pop()
                 ;
             var lastEntity = this.$hibachi.getEntityExample(this.$hibachi.getLastEntityNameInPropertyIdentifier(this.baseEntityName,column));
+            if(angular.isUndefined(lastEntity)){
+                throw("You have passed an incorrect entity name to a collection config");
+            }
+            
             if(angular.isUndefined(this.columns)){
                 this.columns = [];
             }
@@ -349,7 +355,7 @@ class CollectionConfig {
         }
         var column = {
             propertyIdentifier:this.formatPropertyIdentifier(propertyIdentifier, true),
-            title : this.rbkeyService.getRBKey("entity."+this.baseEntityName+"."+propertyIdentifier),
+            title : this.rbkeyService.getRBKey("entity."+this.$hibachi.getLastEntityNameInPropertyIdentifier(this.baseEntityName,propertyIdentifier)+"."+this.utilityService.listLast(propertyIdentifier)),
             aggregate:{
                 aggregateFunction:aggregateFunction,
                 aggregateAlias:aggregateAlias
@@ -378,57 +384,31 @@ class CollectionConfig {
             if(angular.isDefined(_DividedTitles[index]) && _DividedTitles[index].trim() != '') {
                 title = _DividedTitles[index].trim();
             }else {
-                title = this.rbkeyService.getRBKey("entity."+this.baseEntityName+"."+column);
+                title = this.rbkeyService.getRBKey("entity."+this.$hibachi.getLastEntityNameInPropertyIdentifier(this.baseEntityName,column)+"."+this.utilityService.listLast(column, "."));
             }
             this.addColumn(this.formatPropertyIdentifier(column),title, options);
         });
         return this;
     };
 
-    public addFilter= (propertyIdentifier: string, value: any, comparisonOperator: string = '=', logicalOperator?: string):CollectionConfig =>{
-
-        //if filterGroups does not exists then set a default
-        if(!this.filterGroups){
-            this.filterGroups = [{filterGroup:[]}];
-        }
-
-        //if filterGroups is longer than 0 then we at least need to default the logical Operator to AND
-        if(this.filterGroups[0].filterGroup.length && !logicalOperator) logicalOperator = 'AND';
-
-        if(propertyIdentifier.split('.').length < 2){
-            var join = false;
-        } else {
-            var join = true;
-        }
-        //create filter group
-        var filter = new Filter(
-            this.formatPropertyIdentifier(propertyIdentifier, join),
-            value,
-            comparisonOperator,
-            logicalOperator,
-            propertyIdentifier.split('.').pop(), //RB KEY HERE
-            value
-        );
+    public addFilter= (propertyIdentifier: string, value: any, comparisonOperator: string = '=', logicalOperator?: string, hidden:boolean=false):CollectionConfig =>{
+        //create filter
+        var filter = this.createFilter(propertyIdentifier, value, comparisonOperator, logicalOperator, hidden);
 
         this.filterGroups[0].filterGroup.push(filter);
         return this;
     };
 
-    public addLikeFilter= (propertyIdentifier: string, value: any, pattern: string = '%w%', logicalOperator?: string):CollectionConfig =>{
+    public addLikeFilter= (propertyIdentifier: string, value: any, pattern: string = '%w%',  logicalOperator?: string, hidden:boolean=false):CollectionConfig =>{
 
         //if filterGroups does not exists then set a default
         if(!this.filterGroups){
             this.filterGroups = [{filterGroup:[]}];
         }
-
         //if filterGroups is longer than 0 then we at least need to default the logical Operator to AND
         if(this.filterGroups[0].filterGroup.length && !logicalOperator) logicalOperator = 'AND';
 
-        if(propertyIdentifier.split('.').length < 2){
-            var join = false;
-        } else {
-            var join = true;
-        }
+        var join = propertyIdentifier.split('.').length > 1;
 
         //create filter group
         var filter = new Filter(
@@ -438,10 +418,55 @@ class CollectionConfig {
             logicalOperator,
             propertyIdentifier.split('.').pop(),
             value,
+            hidden,
             pattern
         );
 
         this.filterGroups[0].filterGroup.push(filter);
+        return this;
+    };
+
+    public createFilter= (propertyIdentifier: string, value: any, comparisonOperator: string = '=', logicalOperator?: string, hidden:boolean=false):Filter =>{
+
+        //if filterGroups does not exists then set a default
+        if(!this.filterGroups){
+            this.filterGroups = [{filterGroup:[]}];
+        }
+
+        //if filterGroups is longer than 0 then we at least need to default the logical Operator to AND
+        if(this.filterGroups[0].filterGroup.length && !logicalOperator) logicalOperator = 'AND';
+
+        var join = propertyIdentifier.split('.').length > 1;
+
+        //create filter group
+        var filter = new Filter(
+            this.formatPropertyIdentifier(propertyIdentifier, join),
+            value,
+            comparisonOperator,
+            logicalOperator,
+            propertyIdentifier.split('.').pop(),
+            value,
+            hidden
+        );
+        return filter;
+    };
+
+    public addFilterGroup = (filterGroup:any):CollectionConfig =>{
+        var group = {
+            filterGroup:[]
+        };
+        for(var i =  0; i < filterGroup.length; i++){
+            var filter = this.createFilter(
+                filterGroup[i].propertyIdentifier,
+                filterGroup[i].comparisonValue,
+                filterGroup[i].comparisonOperator,
+                filterGroup[i].hidden,
+                filterGroup[i].logicalOperator
+            );
+            group.filterGroup.push(filter);
+        }
+
+        this.filterGroups[0].filterGroup.push(group);
         return this;
     };
 

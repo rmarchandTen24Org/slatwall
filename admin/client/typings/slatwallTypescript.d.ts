@@ -1,6 +1,11 @@
 //{
 /// <reference path="../src/bootstrap.ts" />
 /// <reference path="../src/content/content.module.ts" />
+<<<<<<< HEAD
+=======
+/// <reference path="../src/formbuilder/formbuilder.module.ts" />
+/// <reference path="../src/giftcard/giftcard.module.ts" />
+>>>>>>> 7c18ffbf71d2487ff78ca92c45f19b65c4d25f12
 /// <reference path="../src/optiongroup/optiongroup.module.ts" />
 /// <reference path="../src/giftcard/giftcard.module.ts" />
 /// <reference path="../src/orderitem/orderitem.module.ts" />
@@ -11,8 +16,12 @@
 /// <reference path="../src/content/components/swcontenteditor.ts" />
 /// <reference path="../src/content/components/swcontentlist.ts" />
 /// <reference path="../src/content/components/swcontentnode.ts" />
+<<<<<<< HEAD
 /// <reference path="../src/optiongroup/components/swaddoptiongroup.ts" />
 /// <reference path="../src/optiongroup/components/swoptionsforoptiongroup.ts" />
+=======
+/// <reference path="../src/formbuilder/components/swformresponselisting.ts" />
+>>>>>>> 7c18ffbf71d2487ff78ca92c45f19b65c4d25f12
 /// <reference path="../src/giftcard/components/swaddorderitemgiftrecipient.ts" />
 /// <reference path="../src/giftcard/components/swgiftcardbalance.ts" />
 /// <reference path="../src/giftcard/components/swgiftcarddetail.ts" />
@@ -24,6 +33,11 @@
 /// <reference path="../src/giftcard/controllers/preprocessorderitem_addorderitemgiftrecipient.ts" />
 /// <reference path="../src/giftcard/models/giftcard.ts" />
 /// <reference path="../src/giftcard/models/giftrecipient.ts" />
+<<<<<<< HEAD
+=======
+/// <reference path="../src/optiongroup/components/swaddoptiongroup.ts" />
+/// <reference path="../src/optiongroup/components/swoptionsforoptiongroup.ts" />
+>>>>>>> 7c18ffbf71d2487ff78ca92c45f19b65c4d25f12
 /// <reference path="../src/orderitem/components/swchildorderitem.ts" />
 /// <reference path="../src/orderitem/components/swoishippinglabelstamp.ts" />
 /// <reference path="../src/orderitem/components/sworderitem.ts" />

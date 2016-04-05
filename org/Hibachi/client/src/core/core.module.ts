@@ -26,20 +26,25 @@ import {EntityRBKey} from "./filters/entityrbkey";
 //  components
 import {SWActionCaller} from "./components/swactioncaller";
 import {SWTypeaheadSearch} from "./components/swtypeaheadsearch";
+import {SWTypeaheadInputField} from "./components/swtypeaheadinputfield";
 import {SWTypeaheadSearchLineItem} from "./components/swtypeaheadsearchlineitem";
+import {SWCollectionConfig} from "./components/swcollectionconfig";
+import {SWCollectionFilter} from "./components/swcollectionfilter";
+import {SWCollectionColumn} from "./components/swcollectioncolumn";
 import {SWActionCallerDropdown} from "./components/swactioncallerdropdown";
 import {SWColumnSorter} from "./components/swcolumnsorter";
 import {SWConfirm} from "./components/swconfirm";
 import {SWEntityActionBar} from "./components/swentityactionbar";
 import {SWEntityActionBarButtonGroup} from "./components/swentityactionbarbuttongroup";
 import {SWExpandableRecord} from "./components/swexpandablerecord";
-import {SWGravatar} from "./components/swgravatar"; 
+import {SWGravatar} from "./components/swgravatar";
 import {SWListingDisplay} from "./components/swlistingdisplay";
 import {SWListingControls} from "./components/swlistingcontrols";
 import {SWListingAggregate} from "./components/swlistingaggregate";
 import {SWListingColorFilter} from "./components/swlistingcolorfilter";
 import {SWListingColumn} from "./components/swlistingcolumn";
 import {SWListingFilter} from "./components/swlistingfilter";
+import {SWListingFilterGroup} from "./components/swlistingfiltergroup";
 import {SWListingOrderBy} from "./components/swlistingorderby";
 import {SWLogin} from "./components/swlogin";
 import {SWNumbersOnly} from "./components/swnumbersonly";
@@ -68,7 +73,7 @@ var coremodule = angular.module('hibachi.core',[
 ]).config(['$httpProvider','$logProvider','$filterProvider','$provide','hibachiPathBuilder','appConfig',($httpProvider,$logProvider,$filterProvider,$provide,hibachiPathBuilder,appConfig)=>{
     hibachiPathBuilder.setBaseURL(appConfig.baseURL);
     hibachiPathBuilder.setBasePartialsPath('/org/Hibachi/client/src/');
-    
+
     $logProvider.debugEnabled( appConfig.debugFlag );
      $filterProvider.register('likeFilter',function(){
          return function(text){
@@ -101,8 +106,8 @@ var coremodule = angular.module('hibachi.core',[
              return input;
          };
      });
-    
-    
+
+
     hibachiPathBuilder.setBaseURL(appConfig.baseURL);
     hibachiPathBuilder.setBasePartialsPath('/org/Hibachi/client/src/');
     $provide.decorator('$hibachi',[
@@ -1183,7 +1188,7 @@ var coremodule = angular.module('hibachi.core',[
      $httpProvider.interceptors.push('hibachiInterceptor');
 }])
 .run(['$rootScope','$hibachi', '$route', '$location',($rootScope,$hibachi, $route, $location)=>{
-    $rootScope.buildUrl = $hibachi.buildUrl;    
+    $rootScope.buildUrl = $hibachi.buildUrl;
     var original = $location.path;
     $location.path = function (path, reload) {
         if (reload === false) {
@@ -1216,7 +1221,11 @@ var coremodule = angular.module('hibachi.core',[
 .filter('percentage',[PercentageFilter.Factory])
 .filter('entityRBKey',['rbkeyService',EntityRBKey.Factory])
 //directives
+.directive('swCollectionConfig',SWCollectionConfig.Factory())
+.directive('swCollectionColumn',SWCollectionColumn.Factory())
+.directive('swCollectionFilter',SWCollectionFilter.Factory())
 .directive('swTypeaheadSearch',SWTypeaheadSearch.Factory())
+.directive('swTypeaheadInputField',SWTypeaheadInputField.Factory())
 .directive('swTypeaheadSearchLineItem', SWTypeaheadSearchLineItem.Factory())
 .directive('swActionCaller',SWActionCaller.Factory())
 .directive('swActionCallerDropdown',SWActionCallerDropdown.Factory())
@@ -1232,6 +1241,7 @@ var coremodule = angular.module('hibachi.core',[
 .directive('swListingColorFilter',SWListingColorFilter.Factory())
 .directive('swListingColumn',SWListingColumn.Factory())
 .directive('swListingFilter',SWListingFilter.Factory())
+.directive('swListingFilterGroup',SWListingFilterGroup.Factory())
 .directive('swListingOrderBy',SWListingOrderBy.Factory())
 .directive('swLogin',SWLogin.Factory())
 .directive('swNumbersOnly',SWNumbersOnly.Factory())
