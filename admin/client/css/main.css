@@ -593,7 +593,7 @@ table th {
 .table-responsive .s-levels .s-levels-wrapper {
   position: relative;
 }
-.table-responsive .s-levels .s-levels-wrapper i {
+.table-responsive .s-levels .s-levels-wrapper i.s-listing-arrow {
   position: absolute;
   left: -15px;
 }
@@ -3441,6 +3441,7 @@ tabel .s-table-header {
 .s-search-wrapper .input-group .s-search {
   border-bottom-right-radius: 2px;
   border-top-right-radius: 2px;
+  height: 30px;
 }
 .s-search-wrapper .s-search {
   position: relative;
@@ -6424,11 +6425,24 @@ a.disabled > i.hibachi-ui-radio-checked {
 .s-detail-content-table tbody tr td.s-qty-range input {
   max-width: 80px;
 }
+.s-detail-content-table tbody tr td.s-qty-range .s-inherited {
+  color: #aaa;
+  font-style: italic;
+  background: #FBFBFB;
+}
 .s-detail-content-table tbody tr td.s-input-table-cell span.s-sale-price {
   cursor: pointer;
 }
 .s-detail-content-table tbody tr td.s-input-table-cell .s-popover-row {
   white-space: nowrap;
+}
+.s-detail-content-table tbody tr td.s-qty-range .fa-info-circle {
+  cursor: pointer;
+  margin-bottom: 4px;
+  color: #aaa;
+}
+.s-detail-content-table tbody tr td.s-qty-range .fa-info-circle:hover {
+  color: #666;
 }
 .s-detail-content-wrapper .s-detail-body .s-detail-content-table thead tr th:first-child,
 .s-detail-content-wrapper .s-detail-body .s-detail-content-table tbody tr td:first-child,

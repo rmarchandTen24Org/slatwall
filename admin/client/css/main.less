@@ -519,7 +519,7 @@ table th {font-weight: 600;}
 
 .table-responsive .s-levels {position: initial !important;padding-left: 25px !important;}
 .table-responsive .s-levels .s-levels-wrapper {position: relative;}
-.table-responsive .s-levels .s-levels-wrapper i {position: absolute;left: -15px;}
+.table-responsive .s-levels .s-levels-wrapper i.s-listing-arrow {position: absolute;left: -15px;}
 .table-responsive .s-toggle-panels {text-align: center;}
 
 .s-tab-table {border: 1px solid #eee;padding: 10px;}
@@ -1196,7 +1196,7 @@ tabel .s-table-header {margin-bottom:10px;}
 
 .s-search-wrapper .input-group .input-group-btn.s-action {padding-left: 5px;}
 .s-search-wrapper .input-group .input-group-btn.s-action .btn {border-radius: 2px !important;}
-.s-search-wrapper .input-group .s-search {border-bottom-right-radius: 2px;border-top-right-radius: 2px;}
+.s-search-wrapper .input-group .s-search {border-bottom-right-radius: 2px;border-top-right-radius: 2px;height: 30px;}
 .s-search-wrapper .s-search {position: relative;}
 .s-search-wrapper  .btn.s-add-search-param {position: absolute;right: 4px;top: 4px;z-index: 2;}
 
@@ -2612,8 +2612,11 @@ a.disabled > i.hibachi-ui-radio-checked {background-position:-16px -64px !import
 .s-detail-content-table tbody tr td.s-input-table-cell ul li:first-child {margin-top: 0px;}
 .s-detail-content-table tbody tr td.s-input-table-cell.s-qty .s-input-group input {max-width: 90px;}
 .s-detail-content-table tbody tr td.s-qty-range input {max-width: 80px;}
+.s-detail-content-table tbody tr td.s-qty-range .s-inherited {color: #aaa;font-style: italic;background: #FBFBFB;}
 .s-detail-content-table tbody tr td.s-input-table-cell span.s-sale-price {cursor: pointer;}
 .s-detail-content-table tbody tr td.s-input-table-cell .s-popover-row {white-space: nowrap;}
+.s-detail-content-table tbody tr td.s-qty-range .fa-info-circle {cursor: pointer;margin-bottom: 4px;color: #aaa;}
+.s-detail-content-table tbody tr td.s-qty-range .fa-info-circle:hover {color: #666;}
 .s-detail-content-wrapper .s-detail-body .s-detail-content-table thead tr th:first-child,
 .s-detail-content-wrapper .s-detail-body .s-detail-content-table tbody tr td:first-child,
 .s-detail-content-wrapper.s-shrink-view .s-detail-body .s-detail-content-table thead tr th:nth-child(2),
