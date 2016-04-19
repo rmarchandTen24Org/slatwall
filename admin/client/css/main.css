@@ -484,6 +484,12 @@ table th {
 }
 .table-responsive tr.s-disabled td.s-actions {
   opacity: 1;
+  pointer-events: auto;
+  cursor: auto;
+}
+.table-responsive tr.s-disabled td.s-actions a {
+  pointer-events: auto;
+  cursor: auto;
 }
 .table-responsive .select {
   width: 65px;
@@ -5699,7 +5705,7 @@ a.disabled > i.hibachi-ui-radio-checked {
 }
 .s-toggle-switch input:checked + div > label .s-toggle-switch-handle {
   left: 90%;
-  left: calc(88%);
+  left: calc(80%);
 }
 .s-toggle-switch-on,
 .s-toggle-switch-off {
@@ -6504,6 +6510,14 @@ a.disabled > i.hibachi-ui-radio-checked {
 .s-detail-content-table tbody tr td {
   position: relative;
 }
+.s-detail-content-table tbody tr td .s-list {
+  padding-left: 17px;
+  margin-top: 9px;
+  font-weight: 500;
+}
+.s-detail-content-table tbody tr td .s-title > a[data-toggle="collapse"] {
+  text-decoration: underline;
+}
 .s-detail-content-table tbody tr td.admin {
   text-align: center;
 }
@@ -6558,12 +6572,13 @@ a.disabled > i.hibachi-ui-radio-checked {
 .s-detail-content-table tbody tr td.s-input-table-cell .s-popover-row {
   white-space: nowrap;
 }
-.s-detail-content-table tbody tr td.s-qty-range .fa-info-circle {
+.s-detail-content-table tbody tr td.s-actions .fa-info-circle {
   cursor: pointer;
   margin-bottom: 4px;
   color: #aaa;
+  pointer-events: auto;
 }
-.s-detail-content-table tbody tr td.s-qty-range .fa-info-circle:hover {
+.s-detail-content-table tbody tr td.s-actions .fa-info-circle:hover {
   color: #666;
 }
 .s-detail-content-wrapper .s-detail-body .s-detail-content-table thead tr th:first-child,
