@@ -67,8 +67,8 @@ component extends="FW1.framework" {
 		,{ "$GET/api/:entityName/$" = "/api:main/get/entityName/:entityName"}
 		,{ "$GET/api/:entityName/:entityID/$" = "/api:main/get/entityName/:entityName/entityID/:entityID"}
 		
-		,{ "$POST/api/" = "/api:main/post/" }
-		,{ "$POST/api/:entityName/:entityID" = "/api:main/post/entityName/:entityName/entityID/:entityID"}
+		,{ "$POST/api/$" = "/api:main/post/" }
+		,{ "$POST/api/:entityName/:entityID/$" = "/api:main/post/entityName/:entityName/entityID/:entityID"}
 		
 	];
 	
@@ -91,6 +91,8 @@ component extends="FW1.framework" {
 	variables.framework.hibachi.noaccessDefaultSubsystem = 'admin';
 	variables.framework.hibachi.noaccessDefaultSection = 'main';
 	variables.framework.hibachi.noaccessDefaultItem = 'noaccess';
+	variables.framework.hibachi.sessionCookieDomain = "";
+	variables.framework.hibachi.lineBreakStyle = SERVER.OS.NAME;
 	
 	// Allow For Application Config
 	try{include "../../config/configFramework.cfm";}catch(any e){}
@@ -195,6 +197,8 @@ component extends="FW1.framework" {
 	}
 	
 	public void function setupGlobalRequest() {
+		var httpRequestData = GetHttpRequestData();
+		
 		if(!structKeyExists(request, "#variables.framework.applicationKey#Scope")) {
             if(fileExists(expandPath('/#variables.framework.applicationKey#') & "/custom/model/transient/HibachiScope.cfc")) {
                 request["#variables.framework.applicationKey#Scope"] = createObject("component", "#variables.framework.applicationKey#.custom.model.transient.HibachiScope").init();
@@ -205,11 +209,33 @@ component extends="FW1.framework" {
 			// Verify that the application is setup
 			verifyApplicationSetup();
 			// Verify that the session is setup
-			getHibachiScope().getService("hibachiSessionService").setPropperSession();
-			//check if we have the authorization header
-			if(structKeyExists(GetHttpRequestData().Headers,'Authorization')){
+			getHibachiScope().getService("hibachiSessionService").setProperSession();
+			
+			// If there is no account on the session, then we can look for an authToken,public key, and timestamp to setup that account for this one request.
+			if(!getHibachiScope().getLoggedInFlag() && 
+				structKeyExists(httpRequestData, "headers") && 
+				structKeyExists(httpRequestData.headers, "secretAccessKey") && 
+				len(httpRequestData.headers.secretAccessKey) && 
+				structKeyExists(httpRequestData.headers, "accessKey") && 
+				len(httpRequestData.headers.accessKey)) {
 				
-				var authorizationHeader = GetHttpRequestData().Headers.authorization;
+				var secretAccessKey = httpRequestData.headers.secretAccessKey;
+				var accessKey 		= httpRequestData.headers.accessKey;
+				
+				//recreate the hash from the users data to find an account by....
+				var hashedSaltedPassword = getHibachiScope().getService("AccountService").getHashedAndSaltedPassword(secretAccessKey, accessKey);
+				var authentication =  getHibachiScope().getService("AccountService").getAccountAuthenticationByAuthToken(hashedSaltedPassword);
+				
+				//now set the account on the session if this is not a super user account and the authentication exists.
+				if (!isNull(authentication)){
+					getHibachiScope().getSession().setAccount( authentication.getAccount() );
+				}
+			}
+			
+			//check if we have the authorization header
+			if(structKeyExists(GetHttpRequestData().Headers,'Auth-Token')){
+				
+				var authorizationHeader = GetHttpRequestData().Headers['Auth-Token'];
 				var prefix = 'Bearer ';
 				//get token by stripping prefix
 				var token = right(authorizationHeader,len(authorizationHeader) - len(prefix));
@@ -239,6 +265,7 @@ component extends="FW1.framework" {
 	}
 	
 	public void function setupRequest() {
+		var status = 200;
 		setupGlobalRequest();
 		var httpRequestData = getHTTPRequestData();
 
@@ -303,7 +330,8 @@ component extends="FW1.framework" {
 		if(
 			!authorizationDetails.authorizedFlag 
 		) {
-			
+			// Get the hibachiConfig out of the application scope in case any changes were made to it
+			var hibachiConfig = getHibachiScope().getApplicationValue("hibachiConfig");
 			
 			// setup the success redirect URL as this current page
 			request.context.sRedirectURL = getHibachiScope().getURL();
@@ -323,8 +351,9 @@ component extends="FW1.framework" {
 			} else {
 					// If the current subsystem is a 'login' subsystem, then we can use the current subsystem
 				if(find("ajaxsubmit=1", request.context.sRedirectURL)!=0 || find("modal=1", request.context.sRedirectURL)!=0 ){
-					var context = getPageContext().getResponse();
-					context.getResponse().setStatus(401, "#getSubsystem(request.context[ getAction() ])#:#hibachiConfig.loginDefaultSection#.#hibachiConfig.loginDefaultItem#");
+					var context = getPageContext();
+					status = 403;
+					context.getResponse().setStatus(status, "#getSubsystem(request.context[ getAction() ])#:#hibachiConfig.loginDefaultSection#.#hibachiConfig.loginDefaultItem#");
 					abort;
 				} else if(listFindNoCase(hibachiConfig.loginSubsystems, getSubsystem(request.context[ getAction() ]))) {
 					redirect(action="#getSubsystem(request.context[ getAction() ])#:#hibachiConfig.loginDefaultSection#.#hibachiConfig.loginDefaultItem#", preserve="swprid,sRedirectURL");
@@ -345,7 +374,7 @@ component extends="FW1.framework" {
 			if(structKeyExists(apiController,'publicMethods')){
 				publicMethods = apiController.publicMethods;
 			}
-			var context = getPageContext().getResponse();
+			var context = getPageContext();
 			if(!structKeyExists(request.context,'messages')){
 				request.context.messages = [];
 			}
@@ -354,17 +383,20 @@ component extends="FW1.framework" {
 			if(!listFindNoCase(publicMethods,getItem())){
 				var message = {};
 				if(structKeyExists(authorizationDetails,'forbidden') && authorizationDetails.forbidden == true){
-					context.getResponse().setStatus(403, "#getSubsystem(request.context[ getAction() ])#:#hibachiConfig.loginDefaultSection#.#hibachiConfig.loginDefaultItem#");
+					status = 403;
+					context.getResponse().setStatus(status, "#getSubsystem(request.context[ getAction() ])#:#hibachiConfig.loginDefaultSection#.#hibachiConfig.loginDefaultItem#");
 					message['message'] = 'forbidden';
 				}else if(structKeyExists(authorizationDetails,'timeout') && authorizationDetails.timeout == true){
-					context.getResponse().setStatus(401, "#getSubsystem(request.context[ getAction() ])#:#hibachiConfig.loginDefaultSection#.#hibachiConfig.loginDefaultItem#");
+					status = getHibachiScope().getService("hibachiAuthenticationService").getInvalidCredentialsStatusCode();
+					context.getResponse().setStatus(status, "#getSubsystem(request.context[ getAction() ])#:#hibachiConfig.loginDefaultSection#.#hibachiConfig.loginDefaultItem#");
 					message['message'] = 'timeout';
 				}else if(structKeyExists(authorizationDetails,'invalidToken') && authorizationDetails.invalidToken == true){
-					context.getResponse().setStatus(401, "#getSubsystem(request.context[ getAction() ])#:#hibachiConfig.loginDefaultSection#.#hibachiConfig.loginDefaultItem#");
+					status = getHibachiScope().getService("hibachiAuthenticationService").getInvalidCredentialsStatusCode();;
+					context.getResponse().setStatus(status, "#getSubsystem(request.context[ getAction() ])#:#hibachiConfig.loginDefaultSection#.#hibachiConfig.loginDefaultItem#");
 					message['message'] = 'invalid_token';
 				}
 				//did we get an error? if so stop!
-				if(context.getResponse().getStatus() != 200){
+				if(status != 200){
 					var message['messageType'] = 'error';
 					arrayAppend(request.context.messages,message);
 					renderApiResponse();
@@ -441,7 +473,7 @@ component extends="FW1.framework" {
 					applicationInitData["baseURL"] = 					variables.framework.baseURL;
 					applicationInitData["action"] = 					variables.framework.action;
 					applicationInitData["hibachiConfig"] =				variables.framework.hibachi;
-					
+					applicationInitData["lineBreakStyle"] =				variables.framework.hibachi.lineBreakStyle;
 					// Log the setup start with values
 					writeLog(file="#variables.framework.applicationKey#", text="General Log - Application setup started.");
 					for(var key in applicationInitData) {
@@ -492,6 +524,9 @@ component extends="FW1.framework" {
 					if(!coreBF.containsBean("hibachiDataService")) {
 						coreBF.declareBean("hibachiDataService", "#variables.framework.applicationKey#.org.Hibachi.HibachiDataService", true);	
 					}
+					if(!coreBF.containsBean("hibachiDocsService")) {
+						coreBF.declareBean("hibachiDocsService", "#variables.framework.applicationKey#.org.Hibachi.HibachiDocsService", true);
+					}
 					if(!coreBF.containsBean("hibachiEventService")) {
 						coreBF.declareBean("hibachiEventService", "#variables.framework.applicationKey#.org.Hibachi.HibachiEventService", true);	
 					}
@@ -514,10 +549,13 @@ component extends="FW1.framework" {
 						coreBF.declareBean("hibachiValidationService", "#variables.framework.applicationKey#.org.Hibachi.HibachiValidationService", true);	
 					}
 					if(!coreBF.containsBean("hibachiCollectionService")) {
-                        coreBF.declareBean("hibachiCollectionService", "#variables.framework.applicationKey#.org.Hibachi.hibachiCollectionService", true);  
+                        coreBF.declareBean("hibachiCollectionService", "#variables.framework.applicationKey#.org.Hibachi.HibachiCollectionService", true);  
+                    } 
+                    if(!coreBF.containsBean("hibachiYamlService")) {
+                        coreBF.declareBean("hibachiYamlService", "#variables.framework.applicationKey#.org.Hibachi.HibachiYamlService", true);  
                     } 
                     if(!coreBF.containsBean("hibachiJWTService")) {
-                        coreBF.declareBean("hibachiJWTService", "#variables.framework.applicationKey#.org.Hibachi.hibachiJWTService", true);  
+                        coreBF.declareBean("hibachiJWTService", "#variables.framework.applicationKey#.org.Hibachi.HibachiJWTService", true);  
                     } 
 					// If the default transient beans were not found in the model, add a reference to the core one in hibachi
 					if(!coreBF.containsBean("hibachiScope")) {
@@ -572,7 +610,6 @@ component extends="FW1.framework" {
 					}
 					writeLog(file="#variables.framework.applicationKey#", text="General Log - Bean Factory Set");
 					
-					
 					//========================= END: IOC SETUP ===============================
 					
 					// Call the onFirstRequest() Method for the parent Application.cfc
@@ -584,7 +621,6 @@ component extends="FW1.framework" {
 						
 						// Set the request timeout to 360
 						getHibachiScope().getService("hibachiTagService").cfsetting(requesttimeout=600);
-						
 						
 						//Update custom properties
 						var success = getHibachiScope().getService('updateService').updateEntitiesWithCustomProperties();

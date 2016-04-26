@@ -104,8 +104,9 @@ component output="false" update="true" extends="HibachiService" {
 				if(structKeyExists(object,'callEvent')){
 					object.callEvent(eventName=arguments.eventName,eventData=arguments.eventData);
 				//support legacy event handlers
-				}else if(structKeyExists(object,'onEvent')){
-					object.onEvent(eventName=arguments.eventName,eventData=arguments.eventData);
+				}else{ 
+					// Attempt to evaluate this method
+					evaluate("object.#eventName#( argumentCollection=arguments.eventData )");	
 				}
 				
 			}
@@ -209,12 +210,6 @@ component output="false" update="true" extends="HibachiService" {
 	public any function getEventNameOptionsForObject(required string objectName, boolean doOneToManyOptions = true) {
 		if(!structKeyExists(variables.EventNameOptions,arguments.objectName)){
 			var opArr = [];
-		
-			if(arguments.doOneToManyOptions){
-				optionStruct['name'] ="#getHibachiScope().rbKey('define.select')#";
-				optionStruct['value']="";
-				arrayAppend(opArr, optionStruct);
-			}
 			
 			var emd = getEntityMetaData(arguments.objectName);
 			

@@ -99,6 +99,11 @@ class SWWorkflowTriggers{
 					   trip to the database.
 
 					***/
+                    if(!scope.workflow.$$isPersisted()){
+                        scope.workflow.data.workflowTriggers = [];
+                        scope.workflowTriggers = scope.workflow.data.workflowTriggers;
+                        return;
+                    }
 					if(angular.isUndefined(scope.workflow.data.workflowTriggers)){
 						var workflowTriggersPromise = scope.workflow.$$getWorkflowTriggers();
 						workflowTriggersPromise.then(function(){
@@ -175,6 +180,11 @@ class SWWorkflowTriggers{
                     }
 					var saveWorkflowTriggerPromise = scope.workflowTriggers.selectedTrigger.$$save();
 					saveWorkflowTriggerPromise.then(function(){
+
+                        scope.showEventOptions = true;
+                        scope.searchEvent = {
+                            name:''
+                        };
                         //Clear the form by adding a new task action if 'save and add another' otherwise, set save and set finished
                         if (context == 'add'){
                             console.log("Save and New");

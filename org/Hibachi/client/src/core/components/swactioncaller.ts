@@ -1,13 +1,13 @@
 /// <reference path='../../../typings/hibachiTypescript.d.ts' />
 /// <reference path='../../../typings/tsd.d.ts' />
 
-
 class SWActionCallerController{
     public type:string;
     public confirm:any;
     public action:string;
     public actionItem:string;
     public title:string;
+    public titleRbKey:string;
     public class:string;
     public confirmtext:string;
     public disabledtext:string;
@@ -18,6 +18,7 @@ class SWActionCallerController{
     public formCtrl:any;
     public actionUrl:string;
     public queryString:string;
+    public isAngularRoute:boolean;
     //@ngInject
     constructor(
         private $scope,
@@ -52,7 +53,10 @@ class SWActionCallerController{
     public init = ():void =>{
 
         //Check if is NOT a ngRouter
-        if(this.utilityService.isAngularRoute()){
+        if(angular.isUndefined(this.isAngularRoute)){
+            this.isAngularRoute = this.utilityService.isAngularRoute();    
+        }
+        if(!this.isAngularRoute){
             this.actionUrl= this.$hibachi.buildUrl(this.action,this.queryString);
         }else{
             this.actionUrl = '#!/entity/'+this.action+'/'+this.queryString.split('=')[1];
@@ -60,6 +64,12 @@ class SWActionCallerController{
 
 //			this.class = this.utilityService.replaceAll(this.utilityService.replaceAll(this.getAction(),':',''),'.','') + ' ' + this.class;
         this.type = this.type || 'link';
+        if(angular.isDefined(this.titleRbKey)){
+            this.title = this.rbkeyService.getRBKey(this.titleRbKey);
+        }
+        if(angular.isUndefined(this.text)){
+            this.text = this.title;
+        }
 
             if (this.type == "button"){
                 //handle submit.
@@ -215,7 +225,7 @@ class SWActionCallerController{
                 this.disabledtext = this.rbkeyService.getRBKey(disabledrbkey);
             }
             //add disabled class
-            this.class += " s-btn-disabled";
+            this.class += " btn-disabled";
             this.confirm = false;
             return this.disabledtext;
         }
@@ -255,7 +265,8 @@ class SWActionCaller implements ng.IDirective{
         text:"@",
         type:"@",
         queryString:"@",
-        title:"@",
+        title:"@?",
+        titleRbKey:"@?",
         'class':"@",
         icon:"@",
         iconOnly:"=",
@@ -266,7 +277,8 @@ class SWActionCaller implements ng.IDirective{
         disabledtext:"@",
         modal:"=",
         modalFullWidth:"=",
-        id:"@"
+        id:"@",
+        isAngularRoute:"=?"
     };
     public controller=SWActionCallerController;
     public controllerAs="swActionCaller";
@@ -303,6 +315,4 @@ export{
     SWActionCaller,
     SWActionCallerController
 }
-	//angular.module('slatwalladmin').directive('swActionCaller',[() => new SWActionCaller()]);
-
 

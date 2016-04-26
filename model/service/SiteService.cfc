@@ -55,14 +55,13 @@ component  extends="HibachiService" accessors="true" {
 	public string function getSharedAssetsPath(){
 		return variables.sharedAssetsPath;
 	}
-
+	//deprecated please use hibachiscope
 	public any function getCurrentRequestSite() {
-		var domain = listFirst(cgi.HTTP_HOST,':');
-		return getDAO('siteDAO').getSiteByDomainName(domain);
+		return getHibachiScope().getCurrentRequestSite();
 	}
-
+	//deprecated please use hibachiscope
 	public any function getCurrentDomain() {
-		return listFirst(cgi.HTTP_HOST,':');
+		return getHibachiScope().getCurrentDomain();
 	}
 
 	public string function getSkeletonSitePath(){
@@ -206,6 +205,7 @@ component  extends="HibachiService" accessors="true" {
 		};
 		var homePageContent = getService('contentService').newContent();
 		homePageContent.setSite(arguments.site);
+		arguments.site.addContent(homePageContent);
 		homePageContent = getService('contentService').saveContent(homePageContent,homePageContentData);
 		ormflush();
 		createHomePageChildrenContent(homePageContent,arguments.site);
@@ -247,7 +247,7 @@ component  extends="HibachiService" accessors="true" {
 			copyContentExclusionList=".svn,.git"
 		);
 		if(arguments.createContent){
-		createDefaultContentPages(arguments.site);
+			createDefaultContentPages(arguments.site);
 		}
 
 

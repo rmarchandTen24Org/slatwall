@@ -80,8 +80,8 @@ component displayname="Content" entityname="SlatwallContent" table="SwContent" p
 	
 	// Related Object Properties (many-to-many - inverse)
 	property name="skus" singularname="sku" cfc="Sku" type="array" fieldtype="many-to-many" linktable="SwSkuAccessContent" fkcolumn="contentID" inversejoincolumn="skuID" inverse="true";
-	property name="listingProducts" singularname="listingProduct" cfc="Product" type="array" fieldtype="many-to-many" linktable="SwProductListingPage" fkcolumn="contentID" inversejoincolumn="productID" inverse="true";
-	property name="attributeSets" singularname="attributeSet" cfc="AttributeSet" type="array" fieldtype="many-to-many" linktable="SwAttributeSetContent" fkcolumn="contentID" inversejoincolumn="attributeSetID" inverse="true";
+	property name="listingProducts" singularname="listingProduct" cfc="Product" type="array" fieldtype="many-to-many" linktable="SwProductListingPage" fkcolumn="contentID" inversejoincolumn="productID" cascade="all-delete-orphan" inverse="true";
+	property name="attributeSets" singularname="attributeSet" cfc="AttributeSet" type="array" fieldtype="many-to-many" linktable="SwAttributeSetContent" fkcolumn="contentID" inversejoincolumn="attributeSetID" cascade="all-delete-orphan" inverse="true";
 	
 	// Remote properties
 	property name="remoteID" ormtype="string" hint="Only used when integrated with a remote system";
@@ -426,23 +426,6 @@ component displayname="Content" entityname="SlatwallContent" table="SwContent" p
 		structDelete(variables, "parentContent");
 	}
 	
-	// Site (many-to-one)
-	public void function setSite(required any site) {
-		variables.site = arguments.site;
-		if(isNew() or !arguments.site.hasContent( this )) {
-			arrayAppend(arguments.site.getContents(), this);
-		}
-	}
-	public void function removeSite(any Site) {
-		if(!structKeyExists(arguments, "Site")) {
-			arguments.Site = variables.Site;
-		}
-		var index = arrayFind(arguments.Site.getContents(), this);
-		if(index > 0) {
-			arrayDeleteAt(arguments.Site.getContents(), index);
-		}
-		structDelete(variables, "Site");
-	}
 	
 	// Child Contents (one-to-many)    
 	public void function addChildContent(required any childContent) {    
