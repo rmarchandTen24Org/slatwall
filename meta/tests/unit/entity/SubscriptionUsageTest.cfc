@@ -57,42 +57,17 @@ component extends="Slatwall.meta.tests.unit.entity.SlatwallEntityTestBase" {
 	}
 	
 	public void function isActiveTest_whereSubscriptionStatusTypeIsNull(){
+		//mock data
 		var subscriptionUsageData = {
 			subscriptionUsageId=""
 		};
 		var subscriptionUsage = createTestEntity('SubscriptionUsage',subscriptionUsageData);
-		assertFalse(subscriptionUsage.isActive());
+		assertFalse(subscriptionUsage.isActive());//assert the result
 	}
 	
-	public void function getCurrentStatusTest(){
-		var subscriptionUsageData = {
-			subscriptionUsageId=""
-		};
-		var subscriptionUsage = createPersistedTestEntity('SubscriptionUsage',subscriptionUsageData);
-		
-		var subscriptionStatusData={
-			subscriptionStatusId="",
-			effectiveDateTime=now(),
-			subscriptionStatusType={
-				typeID="444df31fa8adde8d71c5ca279e42a00d"
-			}
-			
-		};
-		var subscriptionStatus = createPersistedTestEntity('SubscriptionStatus',subscriptionStatusData);
-		//request.debug(subscriptionStatus.getEffectiveDateTime());
-		subscriptionUsage.addSubscriptionStatus(subscriptionStatus);
-		subscriptionStatus.setSubscriptionUsage(subscriptionUsage);
-		request.debug(subscriptionUsage.getSubscriptionStatus()[1].getSubscriptionStatusType().getSystemCode());
-		//request.debug(subscriptionUsage.getSubscriptionStatus()[1]);
-		request.debug(subscriptionStatus.getSubscriptionUsage().getSubscriptionUsageID());
-	//	public void function isActiveTest_whereSubscriptionStatusTypeIsNull());
-		request.debug(result);
-		
-		//var currentStatus = subscriptionUsage.getCurrentStatus();
-		//request.debug(currentStatus);
-		//assertTrue();
-	}
+	
 	public void function hasSubscriptionOrderItemsTest(){
+		//mock data
 		var subscriptionUsageData = {
 			subscriptionUsageID="",
 			subscriptionOrderItems=[
@@ -102,11 +77,12 @@ component extends="Slatwall.meta.tests.unit.entity.SlatwallEntityTestBase" {
 			]
 		};
 		var subscriptionUsage = createTestEntity('subscriptionUsage',subscriptionUsageData);
-		assertTrue(subscriptionUsage.hasSubscriptionOrderItems());
+		assertTrue(subscriptionUsage.hasSubscriptionOrderItems()); 
 		}
 	
 	
 	public void function getTotalNumberOfSubscriptionOrderItemsTest(){
+		//mock data
 		var subscriptionUsageData={
 			subscriptionOrderItems=[
 				{
@@ -119,9 +95,9 @@ component extends="Slatwall.meta.tests.unit.entity.SlatwallEntityTestBase" {
 		};
 	var subscriptionUsage= createTestEntity('subscriptionUsage', subscriptionUsageData);
 	var result= subscriptionUsage.getTotalNumberOfSubscriptionOrderItems();
-	assertEquals(result,2);
+	assertEquals(result,2); //assert the number of subscription order items
 	}
-	public void function getUseRenewalSku(){
+	public void function getUseRenewalSkuTest(){
 		var subscriptionUsageData={
 			renewalSku=[
 			{
@@ -134,13 +110,10 @@ component extends="Slatwall.meta.tests.unit.entity.SlatwallEntityTestBase" {
 		  assertFalse(result);
 	}
 	public void function getInitialOrderTest(){
-		
-		
-		var orderItemData = {
+		var orderItemData ={
 			orderItemID="",
 			currencyCode="USD"
-			
-		};
+			} ;
 		var orderItem = createPersistedTestEntity('orderItem',orderItemData);
 		
 		var skuData = {
@@ -188,8 +161,9 @@ component extends="Slatwall.meta.tests.unit.entity.SlatwallEntityTestBase" {
 
 		var result=subscriptionUsage.getInitialOrder();
 		
-		assert(!isNull(result));
+		assert(!isNull(result));//assert if the function works correctly or not
 	}
+	
 }	
 
  
