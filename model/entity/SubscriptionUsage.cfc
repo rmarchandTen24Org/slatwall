@@ -144,13 +144,15 @@ component entityname="SlatwallSubscriptionUsage" table="SwSubsUsage" persistent=
 
 		// Copy all the info from subscription term
 		var subscriptionTerm = orderItem.getSku().getSubscriptionTerm();
-		setSubscriptionTerm( subscriptionTerm );
-		setInitialTerm( subscriptionTerm.getInitialTerm() );
-		setRenewalTerm( subscriptionTerm.getRenewalTerm() );
-		setGracePeriodTerm( subscriptionTerm.getGracePeriodTerm() );
-		setAllowProrateFlag( subscriptionTerm.getAllowProrateFlag() );
-		setAutoRenewFlag( subscriptionTerm.getAutoRenewFlag() );
-		setAutoPayFlag( subscriptionTerm.getAutoPayFlag() );
+		if(!isNull(subscriptionTerm)){
+			setSubscriptionTerm( subscriptionTerm );
+			setInitialTerm( subscriptionTerm.getInitialTerm() );
+			setRenewalTerm( subscriptionTerm.getRenewalTerm() );
+			setGracePeriodTerm( subscriptionTerm.getGracePeriodTerm() );
+			setAllowProrateFlag( subscriptionTerm.getAllowProrateFlag() );
+			setAutoRenewFlag( subscriptionTerm.getAutoRenewFlag() );
+			setAutoPayFlag( subscriptionTerm.getAutoPayFlag() );
+		}
 
 		//Copy the shipping information from order fulfillment.
 		var orderFulfillment = orderItem.getOrderFulfillment();
@@ -219,23 +221,36 @@ component entityname="SlatwallSubscriptionUsage" table="SwSubsUsage" persistent=
 	}
 
 	public any function getInitialSubscriptionOrderItem(){
-		if( hasSubscriptionOrderItems() ){
-			var subscriptionSmartList = getService('SubscriptionService').getSubscriptionOrderItemSmartList();
-			subscriptionSmartList.addFilter("subscriptionOrderItemType.systemCode", "soitInitial");
-			return subscriptionSmartList.getRecords();
+		if(!structKeyExists(variables,'initialSubscriptionOrderItem')){
+			
+			if( hasSubscriptionOrderItems() ){
+				var subscriptionSmartList = getService('SubscriptionService').getSubscriptionOrderItemSmartList();
+				subscriptionSmartList.addFilter("subscriptionOrderItemType.systemCode", "soitInitial");
+				subscriptionSmartList.setPageRecordsShow(1);
+				
+				if(arraylen(subscriptionSmartList.getPageRecords())){
+					variables.initialSubscriptionOrderItem = subscriptionSmartList.getPageRecords()[1];
+				}
+			}
 		}
+		return variables.initialSubscriptionOrderItem;
 	}
 
 	public any function getInitialOrderItem(){
-
-		if( hasSubscriptionOrderItems() ){
-			var initialSubscriptionOrderItem = getInitialSubscriptionOrderItem();
-
-			if(!isNull(initialSubscriptionOrderItem)){
-				var orderitem = initialSubscriptionOrderItem[1].getOrderItem();
-				return orderitem;
+		if(!structKeyExists(variables,'initialOrderItem')){
+			if( hasSubscriptionOrderItems() ){
+			
+				if(
+					!isNull(getInitialSubscriptionOrderItem()) &&
+					!isNull(getInitialSubscriptionOrderItem().getOrderItem())
+				){
+					
+					variables.initialOrderItem = getInitialSubscriptionOrderItem().getOrderItem();
+				}
 			}
 		}
+		return variables.initialOrderItem;
+		
 	}
 
 	public any function getInitialSku(){

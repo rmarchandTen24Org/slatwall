@@ -92,35 +92,104 @@ component extends="Slatwall.meta.tests.unit.entity.SlatwallEntityTestBase" {
 		//request.debug(currentStatus);
 		//assertTrue();
 	}
-public void function hasSubscriptionOrderItemsTest(){
-	var subscriptionUsageData = {
-		subscripitionUsageID="",
-		subscriptionOrderItems=[
-			{
-				subscriptionOrderItemID=""
-			}
-		]
-	};
-	var subscriptionUsage = createTestEntity('subscriptionUsage',subscriptionUsageData);
-	assertTrue(subscriptionUsage.hasSubscriptionOrderItems());
-	}
-
-
-public void function getTotalNumberOfSubscriptionOrderItemsTest(){
-	var subscriptionUsageData={
-		subscriptionOrderItems=[
-			{
-				subscriptionOrderItemid=""
-			},
-			{
-				subscriptionOrderItemid=""
-			}
-		]
-	};
-var subscriptionUsage= createTestEntity('subscriptionUsage', subscriptionUsageData);
-var result= subscriptionUsage.getTotalNumberOfSubscriptionOrderItems();
-assertEquals(result,2);
-}
+	public void function hasSubscriptionOrderItemsTest(){
+		var subscriptionUsageData = {
+			subscriptionUsageID="",
+			subscriptionOrderItems=[
+				{
+					subscriptionOrderItemID=""
+				}
+			]
+		};
+		var subscriptionUsage = createTestEntity('subscriptionUsage',subscriptionUsageData);
+		assertTrue(subscriptionUsage.hasSubscriptionOrderItems());
+		}
 	
-}
+	
+	public void function getTotalNumberOfSubscriptionOrderItemsTest(){
+		var subscriptionUsageData={
+			subscriptionOrderItems=[
+				{
+					subscriptionOrderItemid=""
+				},
+				{
+					subscriptionOrderItemid=""
+				}
+			]
+		};
+	var subscriptionUsage= createTestEntity('subscriptionUsage', subscriptionUsageData);
+	var result= subscriptionUsage.getTotalNumberOfSubscriptionOrderItems();
+	assertEquals(result,2);
+	}
+	public void function getUseRenewalSku(){
+		var subscriptionUsageData={
+			renewalSku=[
+			{
+				skuID=""
+				}
+			]
+		  };
+		  var subscriptionUsage=createTestEntity('subscriptionUsage',subscriptionUsageData);
+		  var result= subscriptionUsage.getUseRenewalSku();
+		  assertFalse(result);
+	}
+	public void function getInitialOrderTest(){
+		
+		
+		var orderItemData = {
+			orderItemID="",
+			currencyCode="USD"
+			
+		};
+		var orderItem = createPersistedTestEntity('orderItem',orderItemData);
+		
+		var skuData = {
+			skuID="",
+			skuCode="#createUUID()#"
+		};
+		var sku = createPersistedTestEntity('sku',skuData);
+		
+		var orderData = {
+			orderID="",
+			sku={
+				skuID=sku.getSkuID()
+			}
+		};
+		var order = createPersistedTestEntity('order',orderData);
+		order.addOrderItem(orderItem);
+		
+		
+		
+		orderItem.setSku(sku);
+		
+		
+		
+		var subscriptionUsageData = {
+			subscriptionUsageID=""
+			
+			
+		};
+		var subscriptionUsage=createPersistedTestEntity('subscriptionUsage', subscriptionUsageData);
+		
+		
+		var subscriptionOrderItemData = {
+			subscriptionOrderItemID="",
+			subscriptionOrderItemType={
+				//soitInitial
+				typeID="444df311d7615e7cf56b836f515aebd4"
+			},
+			subscriptionUsage={
+				subscriptionUsageID=subscriptionUsage.getSubscriptionUsageID()
+			}
+		};
+		var subscriptionOrderItem = createPersistedTestEntity('subscriptionOrderItem',subscriptionOrderItemData);
+		
+		subscriptionOrderItem.setOrderItem(orderItem);
+
+		var result=subscriptionUsage.getInitialOrder();
+		
+		assert(!isNull(result));
+	}
+}	
+
  
