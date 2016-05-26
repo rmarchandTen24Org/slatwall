@@ -59,7 +59,7 @@ Notes:
 <cfoutput>
 	<hb:HibachiEntityProcessForm entity="#rc.account#" edit="#rc.edit#" sRedirectAction="admin:entity.detailaccount" forceSSLFlag="#$.slatwall.setting('globalForceCreditCardOverSSL')#">
 		
-		<hb:HibachiEntityActionBar type="preprocess" object="#rc.account#">
+		<hb:HibachiEntityActionBar type="preprocess" object="#rc.account#" backAction="entity.editaccount"  backQueryString="accountID=#rc.account.getAccountID()#">
 		</hb:HibachiEntityActionBar>
 		
 		<hb:HibachiPropertyRow>

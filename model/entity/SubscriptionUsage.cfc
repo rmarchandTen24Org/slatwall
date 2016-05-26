@@ -227,7 +227,6 @@ component entityname="SlatwallSubscriptionUsage" table="SwSubsUsage" persistent=
 				var subscriptionSmartList = getService('SubscriptionService').getSubscriptionOrderItemSmartList();
 				subscriptionSmartList.addFilter("subscriptionOrderItemType.systemCode", "soitInitial");
 				subscriptionSmartList.setPageRecordsShow(1);
-				
 				if(arraylen(subscriptionSmartList.getPageRecords())){
 					variables.initialSubscriptionOrderItem = subscriptionSmartList.getPageRecords()[1];
 				}
