@@ -230,7 +230,7 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 					orderFulfillment.setOrder( arguments.order );
 
 					// Setup Fulfillment Method Object
-					var fulfillmentStrategy = orderFulfillment.getAddOrderItemFulfillmentStrategy(processObject);
+					var fulfillmentStrategy = orderFulfillment.getAddOrderItemFulfillmentStrategy(arguments.processObject);
 					
 					//Setup Fulfillment Method Specific Values - such as email, shipping address, or pickup location.
 					orderFulfillment = fulfillmentStrategy.populateFulfillmentProperty();
