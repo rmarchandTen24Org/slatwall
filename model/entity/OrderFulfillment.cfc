@@ -718,7 +718,7 @@ component displayname="Order Fulfillment" entityname="SlatwallOrderFulfillment" 
 			case "pickup": return new orderFulfillmentPickupStrategy(this, data);
 			case "email": return new orderFulfillmentEmailStrategy(this, data);
 			default:
-				throw("No add orderitem fulfillment strategy found for type: #this.getFulfillmentMethod().getFulfillmentMethodType()#");
+				arguments.data.addError('fulfillmentMethodType', rbKey('validate.processOrder_addOrderitem.orderFulfillmentID.noValidFulfillmentMethodType'));
 	}
 	// ================== START: Deprecated Methods ========================
 
