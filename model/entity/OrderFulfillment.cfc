@@ -110,7 +110,7 @@ component displayname="Order Fulfillment" entityname="SlatwallOrderFulfillment" 
 	property name="totalShippingWeight" type="numeric" persistent="false" hb_formatType="weight";
     property name="totalShippingQuantity" type="numeric" persistent="false" hb_formatType="weight";
     property name="shipmentItemMultiplier" type="numeric" persistent="false";
-    
+    property name="addOrderItemFulfillmentStrategy" type="OrderItemFulfillmentStrategy" persistent="false";
 	// Deprecated
 	property name="discountTotal" persistent="false";
 	property name="shippingCharge" persistent="false";
@@ -712,7 +712,14 @@ component displayname="Order Fulfillment" entityname="SlatwallOrderFulfillment" 
 	}
 
 	// ===================  END:  ORM Event Hooks  =========================
-
+	public any function getAddOrderItemFulfillmentStrategy(any data){
+		switch (this.getFulfillmentMethod().getFulfillmentMethodType())
+			case "shipping": return new orderFulfillmentShippingStrategy(this, data);
+			case "pickup": return new orderFulfillmentPickupStrategy(this, data);
+			case "email": return new orderFulfillmentEmailStrategy(this, data);
+			default:
+				throw("No add orderitem fulfillment strategy found for type: #this.getFulfillmentMethod().getFulfillmentMethodType()#");
+	}
 	// ================== START: Deprecated Methods ========================
 
 	// Now just delegates to getShippingAddress

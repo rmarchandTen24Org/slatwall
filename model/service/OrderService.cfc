@@ -186,7 +186,6 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 
 	// Process: Order
 	public any function processOrder_addOrderItem(required any order, required any processObject){
-
 		// Setup a boolean to see if we were able to just add this order item to an existing one
 		var foundItem = false;
 
@@ -209,7 +208,7 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 					}
 				}
 			}
-
+			
 			// Last if we can't use an existing one, then we need to create a new one
 			if(isNull(orderFulfillment) || orderFulfillment.getOrder().getOrderID() != arguments.order.getOrderID()) {
 
@@ -222,76 +221,23 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 				}
 
 				if(!isNull(fulfillmentMethod)) {
+					
 					// Setup a new order fulfillment
 					var orderFulfillment = this.newOrderFulfillment();
-
+					
 					orderFulfillment.setFulfillmentMethod( fulfillmentMethod );
 					orderFulfillment.setCurrencyCode( arguments.order.getCurrencyCode() );
 					orderFulfillment.setOrder( arguments.order );
 
-					// Setup 'Shipping' Values
-					if(orderFulfillment.getFulfillmentMethod().getFulfillmentMethodType() eq "shipping") {
-
-						// Check for an accountAddress
-						if(len(arguments.processObject.getShippingAccountAddressID())) {
-
-							// Find the correct account address, and set it in the order fulfillment
-							var accountAddress = getAccountService().getAccountAddress( arguments.processObject.getShippingAccountAddressID() );
-							orderFulfillment.setAccountAddress( accountAddress );
-
-						// Otherwise try to setup a new shipping address
-						} else {
-
-							// Check to see if the new shipping address passes full validation.
-							fullAddressErrors = getHibachiValidationService().validate( arguments.processObject.getShippingAddress(), 'full', false );
-
-							if(!fullAddressErrors.hasErrors()) {
-								// First we need to persist the address from the processObject
-								getAddressService().saveAddress( arguments.processObject.getShippingAddress() );
-
-								// If we are supposed to save the new address, then we can do that here
-								if(arguments.processObject.getSaveShippingAccountAddressFlag() && !isNull(arguments.order.getAccount()) ) {
-
-									var newAccountAddress = getAccountService().newAccountAddress();
-									newAccountAddress.setAccount( arguments.order.getAccount() );
-									newAccountAddress.setAccountAddressName( arguments.processObject.getSaveShippingAccountAddressName() );
-									newAccountAddress.setAddress( arguments.processObject.getShippingAddress() );
-									orderFulfillment.setAccountAddress( newAccountAddress );
-
-								// Otherwise just set then new address in the order fulfillment
-								} else {
-
-									orderFulfillment.setShippingAddress( arguments.processObject.getShippingAddress() );
-								}
-							}
-						}
-
-					// Set 'Pickup' Values
-					} else if (orderFulfillment.getFulfillmentMethod().getFulfillmentMethodType() eq "pickup") {
-
-						// Check for a pickupLocationID
-						if(!isNull(arguments.processObject.getPickupLocationID()) && len(arguments.processObject.getPickupLocationID())) {
-
-							// Find the pickup location
-							var pickupLocation = getLocationService().getLocation(arguments.processObject.getPickupLocationID());
-
-							// if found set in the orderFulfillment
-							if(!isNull(pickupLocation)) {
-								orderFulfillment.setPickupLocation(pickupLocation);
-							}
-						}
-
-					// Set 'Email' Value
-					} else if (orderFulfillment.getFulfillmentMethod().getFulfillmentMethodType() eq "email") {
-
-						// Check for an email address
-						if(!isNull(arguments.processObject.getEmailAddress()) && len(arguments.processObject.getEmailAddress())) {
-							orderFulfillment.setEmailAddress( arguments.processObject.getEmailAddress() );
-						}
-
-					}
-
+					// Setup Fulfillment Method Object
+					var fulfillmentStrategy = orderFulfillment.getAddOrderItemFulfillmentStrategy(processObject);
+					
+					//Setup Fulfillment Method Specific Values - such as email, shipping address, or pickup location.
+					orderFulfillment = fulfillmentStrategy.populateFulfillmentProperty();
+					
+					//Save the fulfillment
 					orderFulfillment = this.saveOrderFulfillment( orderFulfillment );
+                    
                     //check the fulfillment and display errors if needed.
                     if (orderFulfillment.hasErrors()){
                         arguments.order.addError('addOrderItem', orderFulfillment.getErrors());
