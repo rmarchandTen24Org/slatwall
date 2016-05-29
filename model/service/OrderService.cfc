@@ -207,7 +207,6 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 			
 		}
 		
-		
 		//Handle Recipients
         var recipients = arguments.processObject.getRecipients();
 		if(!isNull(recipients) && arguments.processObject.getSku().isGiftCardSku()){
