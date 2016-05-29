@@ -77,8 +77,7 @@ component accessors="true" output="false" displayname="Stripe" implements="Slatw
 			activePublicKey = setting("livePublicKey");
 			activeSecretKey = setting("liveSecretKey");
 		}
-		//There are some natural types here. 
-		//TransactionDelegate, GenerateTokenTransaction, AuthorizeTransaction, AuthorizeAndChargeTransaction, chargePreAuthorizationTransaction, CreditTransaction	
+		
 		var paymentTransactionStrategy = new Slatwall.integrationServices.stripe.TransactionStrategies.PaymentTransactionDelegate(requestBean.getTransactionType(), requestBean, responseBean);
 		paymentTransactionStrategy.setActivePublicKey(activePublicKey);
 		paymentTransactionStrategy.setActiveSecretKey(activeSecretKey);
