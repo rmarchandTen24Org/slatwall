@@ -712,6 +712,7 @@ component displayname="Order Fulfillment" entityname="SlatwallOrderFulfillment" 
 	}
 
 	// ===================  END:  ORM Event Hooks  =========================
+	// ===================  START: Delegate Methods ========================
 	public any function getAddOrderItemFulfillmentStrategy(any data){
 		switch (this.getFulfillmentMethod().getFulfillmentMethodType()){
 			case "shipping": return new Slatwall.model.service.AddOrderItemStrategies.orderFulfillmentShippingStrategy(this, data); break;
@@ -722,6 +723,7 @@ component displayname="Order Fulfillment" entityname="SlatwallOrderFulfillment" 
 				arguments.data.addError('fulfillmentMethodType', rbKey('validate.processOrder_addOrderitem.orderFulfillmentID.noValidFulfillmentMethodType'));
 		}
 	}
+	// ===================  END: Delegate Methods ========================
 	// ================== START: Deprecated Methods ========================
 
 	// Now just delegates to getShippingAddress
