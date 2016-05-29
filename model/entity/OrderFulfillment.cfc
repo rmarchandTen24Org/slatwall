@@ -714,9 +714,9 @@ component displayname="Order Fulfillment" entityname="SlatwallOrderFulfillment" 
 	// ===================  END:  ORM Event Hooks  =========================
 	public any function getAddOrderItemFulfillmentStrategy(any data){
 		switch (this.getFulfillmentMethod().getFulfillmentMethodType()){
-			case "shipping": return new orderFulfillmentShippingStrategy(this, data); break;
-			case "pickup": return new orderFulfillmentPickupStrategy(this, data); break;
-			case "email": return new orderFulfillmentEmailStrategy(this, data); break;
+			case "shipping": return new Slatwall.model.service.AddOrderItemStrategies.orderFulfillmentShippingStrategy(this, data); break;
+			case "pickup": return new Slatwall.model.service.AddOrderItemStrategies.orderFulfillmentPickupStrategy(this, data); break;
+			case "email": return new Slatwall.model.service.AddOrderItemStrategies.orderFulfillmentEmailStrategy(this, data); break;
 			default:
 				arguments.data.addError('fulfillmentMethodType', rbKey('validate.processOrder_addOrderitem.orderFulfillmentID.noValidFulfillmentMethodType'));
 		}
