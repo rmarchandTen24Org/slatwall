@@ -1,8 +1,9 @@
-component  displayname="AddOrderItemStrategyDelegate" hint="Returns a new orderItemStrategy depending on type" output="false" accessors="true"   
+component  displayname="AddOrderItemStrategyDelegate" hint="Returns a new orderItemStrategy depending on type" output="false" accessors="true" initmethod="AddOrderItemStrategyDelegate" persistent="false"     
 {
 	property any processObject;
 	property any order;
 	
+	/** CTOR */
 	public any function AddOrderItemStrategyDelegate(any order, any processObject){
 		//figure out the type of orderItem. 
 		setOrder(arguments.order);
@@ -12,10 +13,10 @@ component  displayname="AddOrderItemStrategyDelegate" hint="Returns a new orderI
 	
 	public any function getAddOrderItemStrategy(){
 		switch (getProcessObject().getOrderItemTypeSystemCode()){
-			case "oitSale": return new AddSaleOrderItemStrategy(getOrder(), getData()); break;
-			case "oitDeposit": return new AddDepositOrderItemStrategy(getOrder(), getData()); break;
-			case "oitReturn": return new AddReturnOrderItemStrategy(getOrder(), getData()); break;
-			default: arguments.data.addError('OrderItemTypeSystemCode', rbKey('validate.processOrder_addOrderitem.orderItemTypeSystemcode.noValidOrderItemSystemCodeType'));
+			case "oitSale": return new Slatwall.model.service.AddOrderItemStrategies.AddSaleOrderItemStrategy(getOrder(), getData()); break;
+			case "oitDeposit": return new Slatwall.model.service.AddOrderItemStrategies.AddDepositOrderItemStrategy(getOrder(), getData()); break;
+			case "oitReturn": return new Slatwall.model.service.AddOrderItemStrategies.AddReturnOrderItemStrategy(getOrder(), getData()); break;
+				default: arguments.data.addError('OrderItemTypeSystemCode', rbKey('validate.processOrder_addOrderitem.orderItemTypeSystemcode.noValidOrderItemSystemCodeType'));
 		}
 	}
 }

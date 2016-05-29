@@ -1,4 +1,4 @@
-component  displayname="AddSaleOrderItemStrategy" hint="Encapsulates Add Order Item Logic for Sale Type Items" output="false" accessors="true" implements="IAddOrderItemStrategy" extends="ConcreteAddOrderItemStrategy"  
+component  displayname="AddSaleOrderItemStrategy" hint="Encapsulates Add Order Item Logic for Sale Type Items" output="false" accessors="true" implements="IAddOrderItemStrategy" extends="ConcreteAddOrderItemStrategy" initmethod="AddSaleOrderItemStrategy"   
 {
 	
 	public any function AddSaleOrderItemStrategy(any order, any processObject){

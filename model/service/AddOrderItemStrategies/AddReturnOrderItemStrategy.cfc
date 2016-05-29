@@ -1,4 +1,4 @@
-component  displayname="AddReturnOrderItemStrategy" hint="Encapsulates Add Order Item Logic for Sale Type Items" output="false" accessors="true" implements="IAddOrderItemStrategy" extends="ConcreteAddOrderItemStrategy"   
+component  displayname="AddReturnOrderItemStrategy" hint="Encapsulates Add Order Item Logic for Sale Type Items" output="false" accessors="true" implements="IAddOrderItemStrategy" extends="ConcreteAddOrderItemStrategy" initmethod="AddReturnOrderItemStrategy"    
 {
 
 	property boolean requiresFulfillment;

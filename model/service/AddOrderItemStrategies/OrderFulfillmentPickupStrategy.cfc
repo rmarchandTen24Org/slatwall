@@ -1,4 +1,4 @@
-component  displayname="OrderFulfillmentPickupStrategy" hint="Encapsulates Add Order Item Logic for Sale Type Items" output="false" implements="IOrderFulfillmentStrategy"
+component  displayname="OrderFulfillmentPickupStrategy" hint="Encapsulates Add Order Item Logic for Sale Type Items" output="false" implements="IOrderFulfillmentStrategy" initmethod="OrderFulfillmentPickupStrategy" 
 {
 	property any processObject;
 	property any orderFulfillment;

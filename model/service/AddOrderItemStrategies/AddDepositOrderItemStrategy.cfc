@@ -1,4 +1,4 @@
-component  displayname="AddDepositOrderItemStrategy" hint="Encapsulates Add Order Item Logic for Deposit Type Items" output="false" accessors="true" implements="IAddOrderItemStrategy" extends="ConcreteAddOrderItemStrategy"  
+component  displayname="AddDepositOrderItemStrategy" hint="Encapsulates Add Order Item Logic for Deposit Type Items" output="false" accessors="true" implements="IAddOrderItemStrategy" extends="ConcreteAddOrderItemStrategy" initmethod="AddDepositOrderItemStrategy"  
 {
 	/** This class extends the concrete implmentation of the addOrderItemStrategy.
 	*/

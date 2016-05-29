@@ -1,4 +1,4 @@
-component  displayname="ConcreteAddOrderItemStrategy" hint="Encapsulates Add Order Item Logic for This Type Item" output="false" accessors="true" implements="IAddOrderItemStrategy"
+component  displayname="ConcreteAddOrderItemStrategy" hint="Encapsulates Add Order Item Logic for This Type Item" output="false" accessors="true" implements="IAddOrderItemStrategy" initmethod="ConcreteAddOrderItemStrategy" 
 {
 	property boolean skuExistsOnFulfillment;
 	property any foundOrderItem;
