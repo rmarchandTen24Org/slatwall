@@ -7,12 +7,12 @@ component  displayname="CreateInventoryStockAdjustmentDeliveryItemStrategy" hint
 		setEntity(arguments.entity);
 	}
 	
-	public any function create(entity){
-		if(arguments.entity.getStock().getSku().setting("skuTrackInventoryFlag")) {
+	public any function create(){
+		if(getEntity().getStock().getSku().setting("skuTrackInventoryFlag")) {
 			var inventory = this.newInventory();
-			inventory.setQuantityOut(arguments.entity.getQuantity());
-			inventory.setStock(arguments.entity.getStock());
-			inventory.setStockAdjustmentDeliveryItem(arguments.entity);
+			inventory.setQuantityOut(getEntity().getQuantity());
+			inventory.setStock(getEntity().getStock());
+			inventory.setStockAdjustmentDeliveryItem(getEntity());
 			getHibachiDAO().save( inventory );
 		}
 	}

@@ -1,4 +1,5 @@
 interface displayname="ICreateInventoryStrategy" hint="This prototype determines which functionality is common amoung all strategies of this type"
 {
-	public any function create(any entity);
+	/** Creates the new inventory item based on type of the passed in entity */
+	public any function create();
 }

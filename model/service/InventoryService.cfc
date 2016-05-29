@@ -50,23 +50,24 @@ component extends="HibachiService" accessors="true" output="false" {
 
 	property name="inventoryDAO" type="any";
 	property name="skuService" type="any";
+	property name="entity" type="any";
 	
 	// entity will be one of StockReceiverItem, StrockAdjustmentDeliveryItem, VendorOrderDeliveryItem, OrderDeliveryItem
 	public void function createInventory(required any entity) {
-		var createInventoryStrategy = getCreateInventoryStrategyDelegate(arguments.entity.entityName);
+		setEntity(arguments.entity);
+		var createInventoryStrategy = getCreateInventoryStrategyDelegate(arguments.entity.getEntityName());
 		createInventoryStrategy.create();
-		
 	}
 	
 	//Returns the proper strategy depending on type.
-	public any function getCreateInventoryStrategyDelegate(any entity, any type){
+	public any function getCreateInventoryStrategyDelegate(string type){
 		switch(arguments.type) {
 			case "SlatwallStockReceiverItem": {
 				return new Slatwall.model.service.CreateInventoryStrategies.CreateInventoryStockRecieverStrategy(getEntity());
 				break;
 			}
 			case "SlatwallOrderDeliveryItem": {
-				return new Slatwall.model.service.CreateInventoryStrategies.CreateInventoryOrderDeliveryStrategy(getEntity());
+				return new Slatwall.model.service.CreateInventoryStrategies.CreateInventoryOrderDeliveryItemStrategy(getEntity());
 				break;
 			}
 			case "SlatwallVendorOrderDeliveryItem": {
@@ -74,7 +75,7 @@ component extends="HibachiService" accessors="true" output="false" {
 				break;
 			}
 			case "SlatwallStockAdjustmentDeliveryItem": {
-				return new Slatwall.model.service.CreateInventoryStrategies.CreateInventoryStockAdjustmentOrderDeliveryItemStrategy(getEntity());
+				return new Slatwall.model.service.CreateInventoryStrategies.CreateInventoryStockAdjustmentDeliveryItemStrategy(getEntity());
 				break;
 			}
 			default: {

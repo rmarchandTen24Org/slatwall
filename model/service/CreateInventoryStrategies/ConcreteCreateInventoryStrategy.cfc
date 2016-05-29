@@ -7,10 +7,7 @@ component  displayname="ConcreteAddOrderItemStrategy" hint="Encapsulates Add Ord
 		setEntity(arguments.entity);
 	}
 	
-	public any function create(entity){
-		setEntity(arguments.entity);
-	}
-	
+	public any function create(){}
 	
 	public any function getEntity(){
 		return variables.entity;

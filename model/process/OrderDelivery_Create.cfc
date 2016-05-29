@@ -50,7 +50,6 @@ component output="false" accessors="true" extends="HibachiProcess" {
 
 	// Injected Entity
 	property name="orderDelivery";
-
 	// Data Properties
 	property name="order" cfc="Order" fieldtype="many-to-one" fkcolumn="orderID";
 	property name="orderFulfillment" cfc="OrderFulfillment" fieldtype="many-to-one" fkcolumn="orderFulfillmentID";
@@ -60,9 +59,8 @@ component output="false" accessors="true" extends="HibachiProcess" {
 	property name="shippingAddress" cfc="Address" fieldtype="many-to-one" fkcolumn="shippingAddressID";
 	property name="orderDeliveryItems" type="array" hb_populateArray="true";
 	property name="giftCardCodes" type="array" hb_populateArray="true";
-	
-	property name="useShippingIntegrationForTrackingNumber" hb_formFieldType="yesno";
-	property name="trackingNumber";
+	property name="useShippingIntegrationForTrackingNumber" hb_formFieldType="yesno" default="false" ;
+	property name="trackingNumber" default="";
 	property name="containerLabel";
 	property name="captureAuthorizedPaymentsFlag" hb_formFieldType="yesno";
 	property name="capturableAmount" hb_formatType="currency";
@@ -83,10 +81,11 @@ component output="false" accessors="true" extends="HibachiProcess" {
 	}
 	
 	public boolean function getUseShippingIntegrationForTrackingNumber(){
-		return (
-			!isNull(getorderfulfillment().getSelectedShippingMethodOption().getShippingMethodRate())
-			&& !isNull(getorderfulfillment().getSelectedShippingMethodOption().getShippingMethodRate().getShippingIntegration())
-		);
+		if (!isNull(getOrderFulfillment()) && !isNull(getOrderFulfillment().getSelectedShippingMethodOption()) && !isNull(getOrderfulfillment().getSelectedShippingMethodOption().getShippingMethodRate()) && !isNull(getOrderfulfillment().getSelectedShippingMethodOption().getShippingMethodRate().getShippingIntegration())){
+			return true;
+		}else{
+			return false;
+		}
 	}
 
 	public boolean function hasQuantityOnOneOrderDeliveryItem() {
@@ -110,7 +109,11 @@ component output="false" accessors="true" extends="HibachiProcess" {
 				processShipmentRequest();
 			}
 		}
-		return variables.trackingNumber;
+		if (isDefined("variables.trackingNumber")){
+			return variables.trackingNumber;
+		}else{
+			return "";
+		}
 	}
 	
 	public string function getContainerLabel(){
@@ -120,7 +123,11 @@ component output="false" accessors="true" extends="HibachiProcess" {
 				processShipmentRequest();
 			}
 		}
-		return variables.containerLabel;
+		if (isDefined("variables.containerLabel")){
+			return variables.containerLabel;
+		}else{
+			return "";
+		}
 	}
 
 	
