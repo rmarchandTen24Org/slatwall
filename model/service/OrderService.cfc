@@ -186,129 +186,27 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 
 	// Process: Order
 	public any function processOrder_addOrderItem(required any order, required any processObject){
-		// Setup a boolean to see if we were able to just add this order item to an existing one
-		var foundItem = false;
-
 		// Make sure that the currencyCode gets set for this order
 		if(isNull(arguments.order.getCurrencyCode())) {
 			arguments.order.setCurrencyCode( arguments.processObject.getCurrencyCode() );
 		}
-
-		// If this is a Sale Order Item then we need to setup the fulfillment
-		if(listFindNoCase("oitSale,oitDeposit",arguments.processObject.getOrderItemTypeSystemCode())) {
-
-			// First See if we can use an existing order fulfillment
-			var orderFulfillment = processObject.getOrderFulfillment();
-			// Next if orderFulfillment is still null, then we can check the order to see if there is already an orderFulfillment
-			if(isNull(orderFulfillment) && ( isNull(processObject.getOrderFulfillmentID()) || processObject.getOrderFulfillmentID() != 'new' ) && arrayLen(arguments.order.getOrderFulfillments())) {
-				for(var f=1; f<=arrayLen(arguments.order.getOrderFulfillments()); f++) {
-					if(listFindNoCase(arguments.processObject.getSku().setting('skuEligibleFulfillmentMethods'), arguments.order.getOrderFulfillments()[f].getFulfillmentMethod().getFulfillmentMethodID()) ) {
-						var orderFulfillment = arguments.order.getOrderFulfillments()[f];
-						break;
-					}
-				}
-			}
-			
-			// Last if we can't use an existing one, then we need to create a new one
-			if(isNull(orderFulfillment) || orderFulfillment.getOrder().getOrderID() != arguments.order.getOrderID()) {
-
-				// get the correct fulfillment method for this new order fulfillment
-				var fulfillmentMethod = arguments.processObject.getFulfillmentMethod();
-
-				// If the fulfillmentMethod is still null because the above didn't execute, then we can pull it in from the first ID in the sku settings
-				if(isNull(fulfillmentMethod) && listLen(arguments.processObject.getSku().setting('skuEligibleFulfillmentMethods'))) {
-					var fulfillmentMethod = getFulfillmentService().getFulfillmentMethod( listFirst(arguments.processObject.getSku().setting('skuEligibleFulfillmentMethods')) );
-				}
-
-				if(!isNull(fulfillmentMethod)) {
-					
-					// Setup a new order fulfillment
-					var orderFulfillment = this.newOrderFulfillment();
-					
-					orderFulfillment.setFulfillmentMethod( fulfillmentMethod );
-					orderFulfillment.setCurrencyCode( arguments.order.getCurrencyCode() );
-					orderFulfillment.setOrder( arguments.order );
-
-					// Setup Fulfillment Method Object
-					var fulfillmentStrategy = orderFulfillment.getAddOrderItemFulfillmentStrategy(arguments.processObject);
-					
-					//Setup Fulfillment Method Specific Values - such as email, shipping address, or pickup location.
-					orderFulfillment = fulfillmentStrategy.populateFulfillmentProperty();
-					
-					//Save the fulfillment
-					orderFulfillment = this.saveOrderFulfillment( orderFulfillment );
-                    
-                    //check the fulfillment and display errors if needed.
-                    if (orderFulfillment.hasErrors()){
-                        arguments.order.addError('addOrderItem', orderFulfillment.getErrors());
-                    }
-
-				} else {
-
-					arguments.processObject.addError('fulfillmentMethodID', rbKey('validate.processOrder_addOrderitem.orderFulfillmentID.noValidFulfillmentMethod'));
-
-				}
-
-			}
-
-			// Check for the sku in the orderFulfillment already, so long that the order doens't have any errors
-			if(!arguments.order.hasErrors()) {
-				for(var orderItem in orderFulfillment.getOrderFulfillmentItems()){
-					// If the sku, price, attributes & stock all match then just increase the quantity
-
-					if(arguments.processObject.matchesOrderItem( orderItem )){
-						foundItem = true;
-						var foundOrderItem = orderItem;
-						orderItem.setQuantity(orderItem.getQuantity() + arguments.processObject.getQuantity());
-						orderItem.validate(context='save');
-						if(orderItem.hasErrors()) {
-							arguments.order.addError('addOrderItem', orderItem.getErrors());
-						}
-						break;
-					}
-				}
-			}
-
-		// If this is a return order item, then we need to setup or find the orderReturn
-		} else if (arguments.processObject.getOrderItemTypeSystemCode() eq "oitReturn") {
-
-			// First see if we can use an existing order return
-			var orderReturn = processObject.getOrderReturn();
-
-			// Next if we can't use an existing one, then we need to create a new one
-			if(isNull(orderReturn) || orderReturn.getOrder().getOrderID() neq arguments.order.getOrderID()) {
-
-				// Setup a new order return
-				var orderReturn = this.newOrderReturn();
-				orderReturn.setOrder( arguments.order );
-				orderReturn.setCurrencyCode( arguments.order.getCurrencyCode() );
-				orderReturn.setReturnLocation( arguments.processObject.getReturnLocation() );
-				orderReturn.setFulfillmentRefundAmount( arguments.processObject.getFulfillmentRefundAmount() );
-
-				orderReturn = this.saveOrderReturn( orderReturn );
-			}
-
-		}
+		
+		//Returns the specific strategy for this orderItem System code. The strategies encapsulate all the service logic.
+		var addOrderItemStrategy = new AddOrderItemStrategyDelegate(order, processObject);
+		
+		// If this is a Sale Order Item then we need to setup the fulfillment, if return setup orderReturn etc...
+		addOrderItemStrategy.setup();
 
 		// If we didn't already find the item in an orderFulfillment, then we can add it here.
-		if(!foundItem && !arguments.order.hasErrors()) {
+		if(addOrderItemStrategy.requiresFulfillment() && !addOrderItemStrategy.isSkuOnFulfillment() && !arguments.order.hasErrors()) {
 			// Create a new Order Item
 			var newOrderItem = this.newOrderItem();
 
-
 			// Set Header Info
-			newOrderItem.setOrder( arguments.order );
-			newOrderItem.setPublicRemoteID( arguments.processObject.getPublicRemoteID() );
-			if(arguments.processObject.getOrderItemTypeSystemCode() eq "oitSale") {
-				newOrderItem.setOrderFulfillment( orderFulfillment );
-				newOrderItem.setOrderItemType( getTypeService().getTypeBySystemCode('oitSale') );
-			} else if (arguments.processObject.getOrderItemTypeSystemCode() eq "oitReturn") {
-				newOrderItem.setOrderReturn( orderReturn );
-				newOrderItem.setOrderItemType( getTypeService().getTypeBySystemCode('oitReturn') );
-			} else if (arguments.processObject.getOrderItemTypeSystemCode() eq "oitDeposit") {
-				newOrderItem.setOrderItemType( getTypeService().getTypeBySystemCode('oitDeposit') );
-			}
-
+			
+			//<---Replace condition with single common method.--->
+			newOrderItem = addOrderItemStrategy.populateOrderItem(newOrderItem);
+			
 			// Setup child items for a bundle
 			//Need to also check child order items for child order items.
 			if( arguments.processObject.getSku().getBaseProductType() == 'productBundle' ) {
@@ -318,7 +216,6 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 						populateChildOrderItems(newOrderItem,childOrderItem,childOrderItemData,arguments.order,orderFulfillment);
 					}
 				}
-
 			}
 
 			// Setup the Sku / Quantity / Price details
