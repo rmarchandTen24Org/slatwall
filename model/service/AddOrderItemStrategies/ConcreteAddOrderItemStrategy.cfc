@@ -162,10 +162,6 @@ component  displayname="ConcreteAddOrderItemStrategy" hint="Encapsulates Add Ord
 		return orderItem;
 	}
 	
-	public boolean function getRequiresFulfillment(){
-		return variables.requiresFulfillment;
-	}
-	
 	/** Accessors */
 	public void function setOrderItemType(string orderItemType){
 		variables.orderItemtype = arguments.orderItemType;
@@ -179,4 +175,7 @@ component  displayname="ConcreteAddOrderItemStrategy" hint="Encapsulates Add Ord
 	public any function getOrderFulfillment(){
 		return variables.orderFulfillment;
 	} 
+	public boolean function getRequiresFulfillment(){
+		return variables.requiresFulfillment;
+	}
 }

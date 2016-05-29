@@ -202,12 +202,12 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 			// Create a new Order Item
 			var newOrderItem = this.newOrderItem();
 
-			//<---Replace condition with single common method.--->
+			//now setup the new orderitem according to the types requirements.
 			newOrderItem = addOrderItemStrategy.setupOrderItem(newOrderItem);
 			
 		}
-		
-		//Handle Recipients
+		//Handle Special Cases
+		//--Recipients
         var recipients = arguments.processObject.getRecipients();
 		if(!isNull(recipients) && arguments.processObject.getSku().isGiftCardSku()){
 	        for(var i=1; i<=ArrayLen(recipients);i++){
@@ -224,7 +224,7 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 			}
 
 		}
-		//Handle Events
+		//--Events
 		// If this is an event then we need to attach accounts and registrations to match the quantity of the order item.
 		if(arguments.processObject.getSku().getBaseProductType() == "event" && !isNull(arguments.processObject.getRegistrants())) {
 
