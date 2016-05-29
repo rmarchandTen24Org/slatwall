@@ -157,4 +157,8 @@ component  displayname="ConcreteAddOrderItemStrategy" hint="Encapsulates Add Ord
 		
 		return orderItem;
 	}
+	
+	public boolean function getRequiresFulfillment(){
+		return variables.requiresFulfillment;
+	}
 }

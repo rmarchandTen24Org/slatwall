@@ -1,4 +1,4 @@
-component  displayname="OrderFulfillmentShippingStrategy" hint="Encapsulates Add Order Item Fulfillment Logic for this type item" output="false" accessors="true" implements="IAddOrderItemStrategy"
+component  displayname="OrderFulfillmentShippingStrategy" hint="Encapsulates Add Order Item Fulfillment Logic for this type item" output="false" accessors="true" implements="IOrderFulfillmentStrategy"
 {
 	property any processObject;
 	property any orderFulfillment;
