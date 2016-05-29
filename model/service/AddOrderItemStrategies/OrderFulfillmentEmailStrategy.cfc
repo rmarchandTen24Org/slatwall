@@ -1,4 +1,4 @@
-component  displayname="OrderFulfillmentEmailStrategy" hint="Encapsulates Order Fulfillment Strategy" output="false" implements="IOrderFulfillmentStrategy" extends="Slatwall.org.hibachi.hibachiService" initmethod="OrderFulfillmentEmailStrategy" 
+component  displayname="OrderFulfillmentEmailStrategy" hint="Encapsulates Order Fulfillment Strategy" output="false" implements="IOrderFulfillmentStrategy" extends="Slatwall.org.hibachi.hibachiService" initmethod="OrderFulfillmentEmailStrategy" accessors="true"    
 {
 	property any processObject;
 	property any orderFulfillment;
