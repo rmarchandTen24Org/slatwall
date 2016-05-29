@@ -51,7 +51,7 @@ component extends="HibachiService" accessors="true" output="false" {
 	property name="inventoryDAO" type="any";
 	property name="skuService" type="any";
 	
-	// entity will be one of StockReceiverItem, StockPhysicalItem, StrockAdjustmentDeliveryItem, VendorOrderDeliveryItem, OrderDeliveryItem
+	// entity will be one of StockReceiverItem, StrockAdjustmentDeliveryItem, VendorOrderDeliveryItem, OrderDeliveryItem
 	public void function createInventory(required any entity) {
 		var createInventoryStrategy = getCreateInventoryStrategyDelegate(arguments.entity.entityName);
 		createInventoryStrategy.create();
@@ -78,7 +78,7 @@ component extends="HibachiService" accessors="true" output="false" {
 				break;
 			}
 			default: {
-				throw("You are trying to create an inventory record for an entity that is not one of the 5 entities that manage inventory.  Those entities are: StockReceiverItem, StockPhysicalItem, StrockAdjustmentDeliveryItem, VendorOrderDeliveryItem, OrderDeliveryItem");
+				throw("You are trying to create an inventory record for an entity that is not one of the 5 entities that manage inventory.  Those entities are: StockReceiverItem, StrockAdjustmentDeliveryItem, VendorOrderDeliveryItem, OrderDeliveryItem");
 			}
 		}
 	}
