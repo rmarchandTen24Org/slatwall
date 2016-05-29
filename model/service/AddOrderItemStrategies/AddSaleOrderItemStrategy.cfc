@@ -1,8 +1,8 @@
 component  displayname="AddSaleOrderItemStrategy" hint="Encapsulates Add Order Item Logic for Sale Type Items" output="false" accessors="true" implements="IAddOrderItemStrategy" extends="ConcreteAddOrderItemStrategy" initmethod="AddSaleOrderItemStrategy"   
 {
-	
+	/** CTOR */
 	public any function AddSaleOrderItemStrategy(any order, any processObject){
-		super(order, processObject);
+		super.ConcreteAddOrderItemStrategy(order, processObject);
 		super.setOrderItemType("oitSale");
 	}
 	

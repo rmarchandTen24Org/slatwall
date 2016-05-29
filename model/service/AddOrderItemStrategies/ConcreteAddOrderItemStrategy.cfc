@@ -1,4 +1,4 @@
-component  displayname="ConcreteAddOrderItemStrategy" hint="Encapsulates Add Order Item Logic for This Type Item" output="false" accessors="true" implements="IAddOrderItemStrategy" initmethod="ConcreteAddOrderItemStrategy" 
+component  displayname="ConcreteAddOrderItemStrategy" hint="Encapsulates Add Order Item Logic for This Type Item" output="false" accessors="true" implements="IAddOrderItemStrategy" extends="Slatwall.org.hibachi.hibachiService"  initmethod="ConcreteAddOrderItemStrategy" 
 {
 	property boolean skuExistsOnFulfillment;
 	property any foundOrderItem;
@@ -44,7 +44,7 @@ component  displayname="ConcreteAddOrderItemStrategy" hint="Encapsulates Add Ord
 			if(!isNull(fulfillmentMethod)) {
 				
 				// Setup a new order fulfillment
-				var orderFulfillment = this.newOrderFulfillment();
+				var orderFulfillment = getService("OrderService").newOrderFulfillment();
 				
 				orderFulfillment.setFulfillmentMethod( fulfillmentMethod );
 				orderFulfillment.setCurrencyCode( getOrder().getCurrencyCode() );
@@ -57,7 +57,7 @@ component  displayname="ConcreteAddOrderItemStrategy" hint="Encapsulates Add Ord
 				orderFulfillment = fulfillmentStrategy.populateFulfillmentProperty();
 				
 				//Save the fulfillment
-				orderFulfillment = this.saveOrderFulfillment( orderFulfillment );
+				orderFulfillment = getService("OrderService").saveOrderFulfillment( orderFulfillment );
                 
                 //Set the local orderFulfillment
                 setOrderFulfillment(orderFulfillment);
@@ -114,7 +114,7 @@ component  displayname="ConcreteAddOrderItemStrategy" hint="Encapsulates Add Ord
 		if( getProcessObject().getSku().getBaseProductType() == 'productBundle' ) {
 			if(arraylen(getProcessObject().getChildOrderItems())){
 				for(var childOrderItemData in getProcessObject().getChildOrderItems()) {
-					var childOrderItem = this.newOrderItem();
+					var childOrderItem = getService("OrderService").newOrderItem();
 					getService("OrderService").populateChildOrderItems(orderItem, childOrderItem, childOrderItemData, getOrder(), getOrderFulfillment());
 				}
 			}
@@ -148,7 +148,7 @@ component  displayname="ConcreteAddOrderItemStrategy" hint="Encapsulates Add Ord
 			}
 
 			// Save the new order items
-			orderItem = this.saveOrderItem( orderItem );
+			orderItem = getService("OrderService").saveOrderItem( orderItem );
 
 			if(orderItem.hasErrors()) {
 				getOrder().addError('addOrderItem', orderItem.getErrors());
@@ -160,5 +160,13 @@ component  displayname="ConcreteAddOrderItemStrategy" hint="Encapsulates Add Ord
 	
 	public boolean function getRequiresFulfillment(){
 		return variables.requiresFulfillment;
+	}
+	
+	/** Accessors */
+	public void function setOrderItemType(string orderItemType){
+		variables.orderItemtype = arguments.orderItemType;
+	}
+	public string function getOrderItemType(){
+		return variables.orderItemtype;
 	}
 }

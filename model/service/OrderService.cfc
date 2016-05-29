@@ -193,7 +193,7 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 		
 		//Returns the specific strategy for this orderItem Type System code. The strategies encapsulate all the service logic and setup the fulfillments, orderReturns etc.
 		var addOrderItemStrategy = new Slatwall.model.service.AddOrderItemStrategies.AddOrderItemStrategyDelegate(order, processObject);
-		writeDump(var=addOrderItemStrategy, top=2);abort;
+		
 		// If this is a Sale/deposit Order Item then we need to setup the fulfillment, if return setup orderReturn etc...
 		addOrderItemStrategy.setup();
 
@@ -204,7 +204,7 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 
 			//<---Replace condition with single common method.--->
 			newOrderItem = addOrderItemStrategy.setupOrderItem(newOrderItem);
-			
+			writeDump(var=newOrderItem, top=2);abort;
 		}
 		
 		//Handle Recipients

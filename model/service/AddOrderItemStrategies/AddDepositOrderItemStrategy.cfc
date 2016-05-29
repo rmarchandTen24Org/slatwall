@@ -3,7 +3,7 @@ component  displayname="AddDepositOrderItemStrategy" hint="Encapsulates Add Orde
 	/** This class extends the concrete implmentation of the addOrderItemStrategy.
 	*/
 	public any function AddDepositOrderItemStrategy(any order, any processObject){
-		super(order, processObject);
+		super.ConcreteAddOrderItemStrategy(order, processObject);
 		super.setOrderItemType("oitDeposit");
 	}
 	
