@@ -202,59 +202,13 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 			// Create a new Order Item
 			var newOrderItem = this.newOrderItem();
 
-			// Set Header Info
-			
 			//<---Replace condition with single common method.--->
 			newOrderItem = addOrderItemStrategy.setupOrderItem(newOrderItem);
 			
-			// Setup child items for a bundle
-			if( arguments.processObject().getSku().getBaseProductType() == 'productBundle' ) {
-				if(arraylen(arguments.processObject().getChildOrderItems())){
-					for(var childOrderItemData in arguments.processObject().getChildOrderItems()) {
-						var childOrderItem = this.orderItem();
-						getService("OrderService").populateChildOrderItems(orderItem, childOrderItem, childOrderItemData, getOrder(), getOrderFulfillment());
-					}
-				}
-			}
-	
-			// Setup the Sku / Quantity / Price details
-			orderItem.setSku( arguments.processObject.getSku() );
-			orderItem.setCurrencyCode( arguments.order.getCurrencyCode() );
-			orderItem.setQuantity( arguments.processObject.getQuantity() );
-			orderItem.setSkuPrice( arguments.processObject.getSku().getPriceByCurrencyCode( arguments.order.getCurrencyCode() ) );
-			
-			// If the sku is allowed to have a user defined price OR the current account has permissions to edit price
-			if(
-				(
-					(!isNull(newOrderItem.getSku().getUserDefinedPriceFlag()) && newOrderItem.getSku().getUserDefinedPriceFlag())
-					  ||
-					(getHibachiScope().getLoggedInAsAdminFlag() && getHibachiAuthenticationService().authenticateEntityPropertyCrudByAccount(crudType='update', entityName='orderItem', propertyName='price', account=getHibachiScope().getAccount()))
-				) && isNumeric(arguments.processObject.getPrice()) ) {
-				newOrderItem.setPrice( arguments.processObject.getPrice() );
-			} else {
-				newOrderItem.setPrice( arguments.processObject.getSku().getPriceByCurrencyCode( arguments.order.getCurrencyCode() ) );
-			}
-
-			// If a stock was passed in assign it to this new item
-			if( !isNull(arguments.processObject.getStock()) ) {
-				newOrderItem.setStock( arguments.processObject.getStock() );
-			}
-
-			// If attributeValues were passed in set them
-			if( !isNull(arguments.processObject.getAttributeValuesByCodeStruct()) ) {
-				for(var attributeCode in arguments.processObject.getAttributeValuesByCodeStruct() ) {
-					newOrderItem.setAttributeValue( attributeCode, arguments.processObject.getAttributeValuesByCodeStruct()[attributeCode] );
-				}
-			}
-
-			// Save the new order items
-			newOrderItem = this.saveOrderItem( newOrderItem );
-
-			if(newOrderItem.hasErrors()) {
-				arguments.order.addError('addOrderItem', newOrderItem.getErrors());
-			}
 		}
-
+		
+		
+		//Handle Recipients
         var recipients = arguments.processObject.getRecipients();
 		if(!isNull(recipients) && arguments.processObject.getSku().isGiftCardSku()){
 	        for(var i=1; i<=ArrayLen(recipients);i++){
@@ -271,7 +225,6 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 			}
 
 		}
-
 
 		// If this is an event then we need to attach accounts and registrations to match the quantity of the order item.
 		if(arguments.processObject.getSku().getBaseProductType() == "event" && !isNull(arguments.processObject.getRegistrants())) {

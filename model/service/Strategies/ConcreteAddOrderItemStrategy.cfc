@@ -106,9 +106,55 @@ component  displayname="ConcreteAddOrderItemStrategy" hint="Encapsulates Add Ord
 	/** Populates the passed in orderItem with data specific to this type.
 	*/
 	public any function setupOrderItem(any orderItem){
+		//if you require a fulfillment, it should be set on the extending class in this same method.
 		orderItem.setOrder( getOrder() );
 		orderItem.setPublicRemoteID( getProcessObject().getPublicRemoteID() );
-		orderItem.setOrderItemType( getOrderItemType() );
+		
+		// Setup child items for a bundle
+		if( getProcessObject().getSku().getBaseProductType() == 'productBundle' ) {
+			if(arraylen(getProcessObject().getChildOrderItems())){
+				for(var childOrderItemData in getProcessObject().getChildOrderItems()) {
+					var childOrderItem = this.newOrderItem();
+					getService("OrderService").populateChildOrderItems(orderItem, childOrderItem, childOrderItemData, getOrder(), getOrderFulfillment());
+				}
+			}
+		}
+	
+		// Setup the Sku / Quantity / Price details
+		orderItem.setSku( getProcessObject().getSku() );
+		orderItem.setCurrencyCode( getOrder().getCurrencyCode() );
+		orderItem.setQuantity( getProcessObject().getQuantity() );
+		orderItem.setSkuPrice( getProcessObject().getSku().getPriceByCurrencyCode( getOrder().getCurrencyCode() ) );
+		
+			// If the sku is allowed to have a user defined price OR the current account has permissions to edit price
+			if(((!isNull(orderItem.getSku().getUserDefinedPriceFlag()) && orderItem.getSku().getUserDefinedPriceFlag())||
+					(getHibachiScope().getLoggedInAsAdminFlag() && getHibachiAuthenticationService().authenticateEntityPropertyCrudByAccount(crudType='update', entityName='orderItem', propertyName='price', account=getHibachiScope().getAccount()))
+				) && isNumeric(getProcessObject().getPrice()) ) {
+				orderItem.setPrice( getProcessObject().getPrice() );
+			} else {
+				orderItem.setPrice( getProcessObject().getSku().getPriceByCurrencyCode( getOrder().getCurrencyCode() ) );
+			}
+
+			// If a stock was passed in assign it to this new item
+			if( !isNull(getProcessObject().getStock()) ) {
+				orderItem.setStock( getProcessObject().getStock() );
+			}
+
+			// If attributeValues were passed in set them
+			if( !isNull(getProcessObject().getAttributeValuesByCodeStruct()) ) {
+				for(var attributeCode in getProcessObject().getAttributeValuesByCodeStruct() ) {
+					orderItem.setAttributeValue( attributeCode, getProcessObject().getAttributeValuesByCodeStruct()[attributeCode] );
+				}
+			}
+
+			// Save the new order items
+			orderItem = this.saveOrderItem( orderItem );
+
+			if(orderItem.hasErrors()) {
+				getOrder().addError('addOrderItem', orderItem.getErrors());
+			}
+		
+		
 		return orderItem;
 	}
 }

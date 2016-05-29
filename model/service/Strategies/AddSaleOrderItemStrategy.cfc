@@ -21,8 +21,8 @@ component  displayname="AddSaleOrderItemStrategy" hint="Encapsulates Add Order I
 	 * base class because not all of them share a fulfillment;
 	*/
 	public any function setupOrderItem(any orderItem){
-		super.setupOrderItem(orderItem);
 		orderItem.setOrderFulfillment(super.getOrderFulfillment());
 		orderItem.setOrderItemType( getService("TypeService").getTypeBySystemCode(super.getOrderItemType()) );
+		super.setupOrderItem(orderItem);
 	}
 }

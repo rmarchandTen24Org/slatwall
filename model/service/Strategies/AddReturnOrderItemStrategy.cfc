@@ -1,4 +1,4 @@
-component  displayname="AddReturnOrderItemStrategy" hint="Encapsulates Add Order Item Logic for Sale Type Items" output="false" accessors="true" implements="IAddOrderItemStrategy"
+component  displayname="AddReturnOrderItemStrategy" hint="Encapsulates Add Order Item Logic for Sale Type Items" output="false" accessors="true" implements="IAddOrderItemStrategy" extends="ConcreteAddOrderItemStrategy"   
 {
 
 	property boolean requiresFulfillment;
@@ -41,6 +41,7 @@ component  displayname="AddReturnOrderItemStrategy" hint="Encapsulates Add Order
 		orderItem.setPublicRemoteID( getProcessObject().getPublicRemoteID() );
 		orderItem.setReturnOrder( getReturnOrder() );
 		orderItem.setOrderItemType( getService("TypeService").getTypeBySystemCode(getOrderItemType()));
+		super.setupOrderItem(orderItem);
 		return orderItem;
 	}	
 }
