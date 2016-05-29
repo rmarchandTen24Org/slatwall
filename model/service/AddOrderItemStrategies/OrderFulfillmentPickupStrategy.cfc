@@ -8,7 +8,7 @@ component  displayname="OrderFulfillmentPickupStrategy" hint="Encapsulates Add O
 		setProcessObject(arguments.processObject);
 	}
 	
-	public any function populateOrderFulfillmentProperty(){
+	public any function populateFulfillmentProperty(){
 		// Check for a pickupLocationID
 		if(!isNull(getProcessObject().getPickupLocationID()) && len(getProcessObject().getPickupLocationID())) {
 	
