@@ -717,6 +717,7 @@ component displayname="Order Fulfillment" entityname="SlatwallOrderFulfillment" 
 			case "shipping": return new Slatwall.model.service.AddOrderItemStrategies.orderFulfillmentShippingStrategy(this, data); break;
 			case "pickup": return new Slatwall.model.service.AddOrderItemStrategies.orderFulfillmentPickupStrategy(this, data); break;
 			case "email": return new Slatwall.model.service.AddOrderItemStrategies.orderFulfillmentEmailStrategy(this, data); break;
+			case "auto": return new Slatwall.model.service.AddOrderItemStrategies.orderFulfillmentAutoStrategy(this, data); break;
 			default:
 				arguments.data.addError('fulfillmentMethodType', rbKey('validate.processOrder_addOrderitem.orderFulfillmentID.noValidFulfillmentMethodType'));
 		}
