@@ -1,17 +1,18 @@
 component  displayname="OrderFulfillmentEmailStrategy" hint="Encapsulates Order Fulfillment Strategy" output="false" implements="IOrderFulfillmentStrategy"
 {
+	property any processObject;
+	property any orderFulfillment;
 	
 	public any function OrderFulfillmentEmailStrategy(any orderFulfillment, any processObject){
-		variables.orderFulfillment = arguments.orderFulfillment;
-		variables.processObject = arguments.processObject;
+		setOrderFulfillment(arguments.orderFulfillment);
+		setProcessObject(arguments.processObject);
 	}
-	
 	
 	public any function populateFulfillmentProperty(){
 		// Check for an email address
-		if(!isNull(variables.processObject.getEmailAddress()) && len(variables.processObject.getEmailAddress())) {
-			variables.orderFulfillment.setEmailAddress( variables.processObject.getEmailAddress() );
+		if(!isNull(getProcessObject().getEmailAddress()) && len(getProcessObject().getEmailAddress())) {
+			getOrderFulfillment().setEmailAddress( getProcessObject().getEmailAddress() );
 		}
-		return variables.orderFulfillment;
+		return getOrderFulfillment();
 	}
 }

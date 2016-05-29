@@ -1,22 +1,25 @@
 component  displayname="OrderFulfillmentPickupStrategy" hint="Encapsulates Add Order Item Logic for Sale Type Items" output="false" implements="IAddOrderItemStrategy"
 {
+	property any processObject;
+	property any orderFulfillment;
+	
 	public any function OrderFulfillmentPickupStrategy(any orderFulfillment, any processObject){
-		variables.orderFulfillment = arguments.orderFulfillment;
-		variables.processObject = arguments.processObject;
+		setOrderFulfillment(arguments.orderFulfillment);
+		setProcessObject(arguments.processObject);
 	}
 	
 	public any function populateOrderFulfillmentProperty(){
 		// Check for a pickupLocationID
-		if(!isNull(variables.processObject.getPickupLocationID()) && len(variables.processObject.getPickupLocationID())) {
+		if(!isNull(getProcessObject().getPickupLocationID()) && len(getProcessObject().getPickupLocationID())) {
 	
 			// Find the pickup location
-			var pickupLocation = getLocationService().getLocation(variables.processObject.getPickupLocationID());
+			var pickupLocation = getLocationService().getLocation(getProcessObject().getPickupLocationID());
 	
 			// if found set in the orderFulfillment
 			if(!isNull(pickupLocation)) {
-				variables.orderFulfillment.setPickupLocation(pickupLocation);
+				getOrderFulfillment().setPickupLocation(pickupLocation);
 			}
 		}
-		return variables.orderFulfillment;
+		return getOrderFulfillment();
 	}
 }
