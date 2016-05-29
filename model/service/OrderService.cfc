@@ -191,7 +191,7 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 			arguments.order.setCurrencyCode( arguments.processObject.getCurrencyCode() );
 		}
 		
-		//Returns the specific strategy for this orderItem Type System code. The strategies encapsulate all the service logic.
+		//Returns the specific strategy for this orderItem Type System code. The strategies encapsulate all the service logic and setup the fulfillments, orderReturns etc.
 		var addOrderItemStrategy = new AddOrderItemStrategyDelegate(order, processObject);
 		
 		// If this is a Sale/deposit Order Item then we need to setup the fulfillment, if return setup orderReturn etc...
@@ -215,8 +215,8 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 				var recipientProcessObject = arguments.order.getProcessObject("addOrderItemGiftRecipient");
 				var recipient = this.newOrderItemGiftRecipient();
 				recipient = this.saveOrderItemGiftRecipient(recipient.populate(recipients[i]));
-				if(foundItem){
-					recipientProcessObject.setOrderItem(foundOrderItem);
+				if(addOrderItemStrategy.isSkuOnFulfillment()){
+					recipientProcessObject.setOrderItem(addOrderItemStrategy.getFoundOrderItem());
 				} else {
 					recipientProcessObject.setOrderItem(newOrderItem);
 				}
@@ -225,7 +225,7 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 			}
 
 		}
-
+		//Handle Events
 		// If this is an event then we need to attach accounts and registrations to match the quantity of the order item.
 		if(arguments.processObject.getSku().getBaseProductType() == "event" && !isNull(arguments.processObject.getRegistrants())) {
 
