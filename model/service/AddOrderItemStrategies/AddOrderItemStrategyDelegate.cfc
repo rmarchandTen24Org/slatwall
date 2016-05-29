@@ -1,18 +1,21 @@
-component  displayname="AddOrderItemStrategyDelegate" hint="Returns a new orderItemStrategy depending on type" output="false"
+component  displayname="AddOrderItemStrategyDelegate" hint="Returns a new orderItemStrategy depending on type" output="false" accessors="true"   
 {
-	public any function AddOrderItemStrategyDelegate(any order, any data){
+	property any processObject;
+	property any order;
+	
+	public any function AddOrderItemStrategyDelegate(any order, any processObject){
 		//figure out the type of orderItem. 
-		variables.order = arguments.order;
-		variables.data = arguments.data;
-		return getAddOrderItemStrategy(data);
+		setOrder(arguments.order);
+		setProcessObject(arguments.processObject);
+		return getAddOrderItemStrategy();
 	}
 	
 	public any function getAddOrderItemStrategy(){
-		switch (getData().getOrderItemTypeSystemCode())
-			case "oitSale": return new AddSaleOrderItemStrategy(getOrder(), getData());
-			case "oitDeposit": return new AddDepositOrderItemStrategy(getOrder(), getData());
-			case "oitReturn": return new AddReturnOrderItemStrategy(getOrder(), getData());
-			default:
-				arguments.data.addError('OrderItemTypeSystemCode', rbKey('validate.processOrder_addOrderitem.orderItemTypeSystemcode.noValidOrderItemSystemCodeType'));
+		switch (getProcessObject().getOrderItemTypeSystemCode()){
+			case "oitSale": return new AddSaleOrderItemStrategy(getOrder(), getData()); break;
+			case "oitDeposit": return new AddDepositOrderItemStrategy(getOrder(), getData()); break;
+			case "oitReturn": return new AddReturnOrderItemStrategy(getOrder(), getData()); break;
+			default: arguments.data.addError('OrderItemTypeSystemCode', rbKey('validate.processOrder_addOrderitem.orderItemTypeSystemcode.noValidOrderItemSystemCodeType'));
+		}
 	}
 }
