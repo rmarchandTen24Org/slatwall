@@ -7,7 +7,7 @@ component  displayname="CreateInventoryOrderDeliveryItemStrategy" hint="Encapsul
 		setEntity(arguments.entity);
 	}
 	
-	public any function create(entity){
+	public any function create(){
 		if(getEntity().getStock().getSku().setting("skuTrackInventoryFlag")) {
 
 			// Dynamically do a makeupBundledSkus call, if this is a bundle sku, the setting is enabled to do this dynamically, and we have QOH < whats needed

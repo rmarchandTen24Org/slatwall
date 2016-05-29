@@ -7,7 +7,7 @@ component  displayname="CreateInventoryStockRecieverStrategy" hint="Encapsulates
 		setEntity(arguments.entity);
 	}
 	
-	public any function create(entity){
+	public any function create(){
 		if(getEntity().getStock().getSku().setting("skuTrackInventoryFlag")) {		
 			// Dynamically do a breakupBundledSkus call, if this is an order return, a bundle sku, the setting is enabled to do this dynamically
 			if(getEntity().getStockReceiver().getReceiverType() eq 'orderItem' 
