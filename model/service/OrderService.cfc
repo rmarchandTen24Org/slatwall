@@ -207,23 +207,6 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 			//<---Replace condition with single common method.--->
 			newOrderItem = addOrderItemStrategy.populateOrderItem(newOrderItem);
 			
-			// Setup child items for a bundle
-			//Need to also check child order items for child order items.
-			if( arguments.processObject.getSku().getBaseProductType() == 'productBundle' ) {
-				if(arraylen(arguments.processObject.getChildOrderItems())){
-					for(var childOrderItemData in arguments.processObject.getChildOrderItems()) {
-						var childOrderItem = this.newOrderItem();
-						populateChildOrderItems(newOrderItem,childOrderItem,childOrderItemData,arguments.order,orderFulfillment);
-					}
-				}
-			}
-
-			// Setup the Sku / Quantity / Price details
-			newOrderItem.setSku( arguments.processObject.getSku() );
-			newOrderItem.setCurrencyCode( arguments.order.getCurrencyCode() );
-			newOrderItem.setQuantity( arguments.processObject.getQuantity() );
-			newOrderItem.setSkuPrice( arguments.processObject.getSku().getPriceByCurrencyCode( arguments.order.getCurrencyCode() ) );
-
 			// If the sku is allowed to have a user defined price OR the current account has permissions to edit price
 			if(
 				(

@@ -106,9 +106,26 @@ component  displayname="ConcreteAddOrderItemStrategy" hint="Encapsulates Add Ord
 	
 	/** Populates the passed in orderItem with data specific to this type.
 	*/
-	public any function populateNewOrderItem(any orderItem){
+	public any function populateOrderItem(any orderItem){
 		orderItem.setOrder( getOrder() );
 		orderItem.setPublicRemoteID( getProcessObject().getPublicRemoteID() );
 		orderItem.setOrderItemType( getOrderItemType() );
+		
+		// Setup child items for a bundle
+		if( getProcessObject().getSku().getBaseProductType() == 'productBundle' ) {
+			if(arraylen(getProcessObject().getChildOrderItems())){
+				for(var childOrderItemData in getProcessObject().getChildOrderItems()) {
+					var childOrderItem = this.orderItem();
+					getService("OrderService").populateChildOrderItems(orderItem, childOrderItem, childOrderItemData, getOrder(), getOrderFulfillment());
+				}
+			}
+		}
+
+		// Setup the Sku / Quantity / Price details
+		orderItem.setSku( arguments.processObject.getSku() );
+		orderItem.setCurrencyCode( arguments.order.getCurrencyCode() );
+		orderItem.setQuantity( arguments.processObject.getQuantity() );
+		orderItem.setSkuPrice( arguments.processObject.getSku().getPriceByCurrencyCode( arguments.order.getCurrencyCode() ) );
+		return orderItem;
 	}
 }
