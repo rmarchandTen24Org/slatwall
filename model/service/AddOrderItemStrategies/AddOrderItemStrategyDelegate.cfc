@@ -13,9 +13,9 @@ component  displayname="AddOrderItemStrategyDelegate" hint="Returns a new orderI
 	
 	public any function getAddOrderItemStrategy(){
 		switch (getProcessObject().getOrderItemTypeSystemCode()){
-			case "oitSale": return new Slatwall.model.service.AddOrderItemStrategies.AddSaleOrderItemStrategy(getOrder(), getData()); break;
-			case "oitDeposit": return new Slatwall.model.service.AddOrderItemStrategies.AddDepositOrderItemStrategy(getOrder(), getData()); break;
-			case "oitReturn": return new Slatwall.model.service.AddOrderItemStrategies.AddReturnOrderItemStrategy(getOrder(), getData()); break;
+			case "oitSale": return new Slatwall.model.service.AddOrderItemStrategies.AddSaleOrderItemStrategy(getOrder(), getProcessObject()); break;
+			case "oitDeposit": return new Slatwall.model.service.AddOrderItemStrategies.AddDepositOrderItemStrategy(getOrder(), getProcessObject()); break;
+			case "oitReturn": return new Slatwall.model.service.AddOrderItemStrategies.AddReturnOrderItemStrategy(getOrder(), getProcessObject()); break;
 				default: arguments.data.addError('OrderItemTypeSystemCode', rbKey('validate.processOrder_addOrderitem.orderItemTypeSystemcode.noValidOrderItemSystemCodeType'));
 		}
 	}
