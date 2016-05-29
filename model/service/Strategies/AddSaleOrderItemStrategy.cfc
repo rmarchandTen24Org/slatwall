@@ -17,10 +17,11 @@ component  displayname="AddSaleOrderItemStrategy" hint="Encapsulates Add Order I
 		return super.isSkuOnFulfillment();
 	}
 	
-	/** Populates the passed in orderItem with data specific to this type.
+	/** Populates the passed in orderItem with data specific to this type. Note: Fulfillment does not get setup in the 
+	 * base class because not all of them share a fulfillment;
 	*/
-	public any function populateNewOrderItem(any orderItem){
-		super.populateNewOrderItem(orderItem);
+	public any function setupOrderItem(any orderItem){
+		super.setupOrderItem(orderItem);
 		orderItem.setOrderFulfillment(super.getOrderFulfillment());
 		orderItem.setOrderItemType( getService("TypeService").getTypeBySystemCode(super.getOrderItemType()) );
 	}

@@ -191,10 +191,10 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 			arguments.order.setCurrencyCode( arguments.processObject.getCurrencyCode() );
 		}
 		
-		//Returns the specific strategy for this orderItem System code. The strategies encapsulate all the service logic.
+		//Returns the specific strategy for this orderItem Type System code. The strategies encapsulate all the service logic.
 		var addOrderItemStrategy = new AddOrderItemStrategyDelegate(order, processObject);
 		
-		// If this is a Sale Order Item then we need to setup the fulfillment, if return setup orderReturn etc...
+		// If this is a Sale/deposit Order Item then we need to setup the fulfillment, if return setup orderReturn etc...
 		addOrderItemStrategy.setup();
 
 		// If we didn't already find the item in an orderFulfillment, then we can add it here.
@@ -205,7 +205,23 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 			// Set Header Info
 			
 			//<---Replace condition with single common method.--->
-			newOrderItem = addOrderItemStrategy.populateOrderItem(newOrderItem);
+			newOrderItem = addOrderItemStrategy.setupOrderItem(newOrderItem);
+			
+			// Setup child items for a bundle
+			if( arguments.processObject().getSku().getBaseProductType() == 'productBundle' ) {
+				if(arraylen(arguments.processObject().getChildOrderItems())){
+					for(var childOrderItemData in arguments.processObject().getChildOrderItems()) {
+						var childOrderItem = this.orderItem();
+						getService("OrderService").populateChildOrderItems(orderItem, childOrderItem, childOrderItemData, getOrder(), getOrderFulfillment());
+					}
+				}
+			}
+	
+			// Setup the Sku / Quantity / Price details
+			orderItem.setSku( arguments.processObject.getSku() );
+			orderItem.setCurrencyCode( arguments.order.getCurrencyCode() );
+			orderItem.setQuantity( arguments.processObject.getQuantity() );
+			orderItem.setSkuPrice( arguments.processObject.getSku().getPriceByCurrencyCode( arguments.order.getCurrencyCode() ) );
 			
 			// If the sku is allowed to have a user defined price OR the current account has permissions to edit price
 			if(
@@ -400,13 +416,8 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 						eventRegistration = getEventRegistrationService().saveEventRegistration( eventRegistration );
 
 					}
-
-
 				}
-
-
 			}
-
 		}
 
 		// Call save order to place in the hibernate session and re-calculate all of the totals

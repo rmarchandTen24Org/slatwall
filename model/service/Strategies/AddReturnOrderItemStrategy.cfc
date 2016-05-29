@@ -5,6 +5,7 @@ component  displayname="AddReturnOrderItemStrategy" hint="Encapsulates Add Order
 	property any order;
 	property any processObject;
 	property any returnOrder;
+	property string orderItemType;
 	
 	public any function AddReturnOrderItemStrategy(any order, any processObject){
 		setOrder(arguments.order);
@@ -13,7 +14,8 @@ component  displayname="AddReturnOrderItemStrategy" hint="Encapsulates Add Order
 		setOrderItemType("oitReturn");
 	}
 	
-	/** For return orders, we need to setup the returnOrder instead of the order fulfillment */
+	/** @Override Setup to create orderReturn instead of fulfillment. 
+		For return orders, we need to setup the returnOrder instead of the order fulfillment */
 	public any function setup(){
 		// First see if we can use an existing order return
 		var orderReturn = getProcessObject().getOrderReturn();
@@ -34,11 +36,11 @@ component  displayname="AddReturnOrderItemStrategy" hint="Encapsulates Add Order
 	
 	/** Populates the passed in orderItem with data specific to this type.
 	*/
-	public any function populateOrderItem(any orderItem){
+	public any function setupOrderItem(any orderItem){
 		orderItem.setOrder( getOrder() );
 		orderItem.setPublicRemoteID( getProcessObject().getPublicRemoteID() );
 		orderItem.setReturnOrder( getReturnOrder() );
-		orderItem.setOrderItemType( getService("TypeService").getTypeBySystemCode(setOrderItemType("oitReturn")));
+		orderItem.setOrderItemType( getService("TypeService").getTypeBySystemCode(getOrderItemType()));
 		return orderItem;
 	}	
 }

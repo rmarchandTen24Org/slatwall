@@ -2,5 +2,5 @@ interface displayname="IAddOrderItemStrategy" hint="This prototype determines wh
 {
 	public boolean function requiresFulfillment();
 	public any function setup();
-	public any function populateOrderItem();
+	public any function setupOrderItem();
 }

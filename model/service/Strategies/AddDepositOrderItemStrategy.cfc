@@ -20,8 +20,8 @@ component  displayname="AddDepositOrderItemStrategy" hint="Encapsulates Add Orde
 	
 	/** Populates the passed in orderItem with data specific to this type.
 	*/
-	public any function populateNewOrderItem(any orderItem){
-		super.populateNewOrderItem(orderItem);
+	public any function setupOrderItem(any orderItem){
+		super.setupOrderItem(orderItem);
 		arguments.orderItem.setOrderItemType( getService("TypeService").getTypeBySystemCode(super.getOrderItemType()) );
 	}
 }
