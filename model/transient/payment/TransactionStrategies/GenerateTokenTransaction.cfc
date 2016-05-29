@@ -62,4 +62,11 @@ component displayname="GenerateTokenTransaction" implements="Slatwall.model.tran
 			setResponseBean(super.handleResponseErrors(getResponseBean(), getResponseData()));
 		}
 	}
+	public any function setActivePublicKey(any key){
+		super.setActivePublicKey(key);
+	}
+	
+	public any function setActiveSecretKey(any key){
+		super.setActiveSecretKey(key);
+	}
 }

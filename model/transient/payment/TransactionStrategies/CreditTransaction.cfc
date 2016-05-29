@@ -68,4 +68,11 @@ component displayname="CreditTransaction" implements="Slatwall.model.transient.p
 		}
 		return getResponseBean();
 	}
+	public any function setActivePublicKey(any key){
+		super.setActivePublicKey(key);
+	}
+	
+	public any function setActiveSecretKey(any key){
+		super.setActiveSecretKey(key);
+	}
 }

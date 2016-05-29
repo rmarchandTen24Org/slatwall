@@ -54,4 +54,11 @@ component displayname="ChargePreAuthorizationTransaction" implements="Slatwall.m
 		}
 		return getResponseBean();
 	}
+	public any function setActivePublicKey(any key){
+		super.setActivePublicKey(key);
+	}
+	
+	public any function setActiveSecretKey(any key){
+		super.setActiveSecretKey(key);
+	}
 }

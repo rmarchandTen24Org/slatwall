@@ -90,4 +90,11 @@ component displayname="AuthorizeAndChargeTransaction" implements="Slatwall.model
 		}
 		return getResponseBean();
 	}
+	public any function setActivePublicKey(any key){
+		super.setActivePublicKey(key);
+	}
+	
+	public any function setActiveSecretKey(any key){
+		super.setActiveSecretKey(key);
+	}
 }
