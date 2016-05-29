@@ -41,7 +41,7 @@ component  displayname="AddReturnOrderItemStrategy" hint="Encapsulates Add Order
 		orderItem.setPublicRemoteID( getProcessObject().getPublicRemoteID() );
 		orderItem.setReturnOrder( getReturnOrder() );
 		orderItem.setOrderItemType( getService("TypeService").getTypeBySystemCode(getOrderItemType()));
-		super.setupOrderItem(orderItem);
+		orderItem = super.setupOrderItem(orderItem);
 		return orderItem;
 	}	
 }

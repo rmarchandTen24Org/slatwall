@@ -1,4 +1,4 @@
-component  displayname="OrderFulfillmentPickupStrategy" hint="Encapsulates Add Order Item Logic for Sale Type Items" output="false" implements="IOrderFulfillmentStrategy" extend="Slatwall.org.hibachi.hibachiService" initmethod="OrderFulfillmentPickupStrategy" 
+component  displayname="OrderFulfillmentPickupStrategy" hint="Encapsulates Add Order Item Logic for Sale Type Items" output="false" implements="IOrderFulfillmentStrategy" extends="Slatwall.org.hibachi.hibachiService" initmethod="OrderFulfillmentPickupStrategy" 
 {
 	property any processObject;
 	property any orderFulfillment;

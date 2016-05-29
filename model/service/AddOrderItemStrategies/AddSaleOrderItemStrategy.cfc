@@ -23,6 +23,7 @@ component  displayname="AddSaleOrderItemStrategy" hint="Encapsulates Add Order I
 	public any function setupOrderItem(any orderItem){
 		orderItem.setOrderFulfillment(super.getOrderFulfillment());
 		orderItem.setOrderItemType( getService("TypeService").getTypeBySystemCode(super.getOrderItemType()) );
-		super.setupOrderItem(orderItem);
+		orderItem = super.setupOrderItem(orderItem);
+		return orderItem;
 	}
 }

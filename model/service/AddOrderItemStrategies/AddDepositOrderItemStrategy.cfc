@@ -22,6 +22,7 @@ component  displayname="AddDepositOrderItemStrategy" hint="Encapsulates Add Orde
 	*/
 	public any function setupOrderItem(any orderItem){
 		arguments.orderItem.setOrderItemType( getService("TypeService").getTypeBySystemCode(super.getOrderItemType()) );
-		super.setupOrderItem(orderItem);
+		orderItem = super.setupOrderItem(orderItem);
+		return orderItem;
 	}
 }

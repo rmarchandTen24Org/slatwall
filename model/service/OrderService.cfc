@@ -198,13 +198,13 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 		addOrderItemStrategy.setup();
 
 		// If we didn't already find the item in an orderFulfillment, then we can add it here.
-		if(addOrderItemStrategy.requiresFulfillment() && !addOrderItemStrategy.isSkuOnFulfillment() && !arguments.order.hasErrors()) {
+		if(addOrderItemStrategy.getRequiresFulfillment() && !addOrderItemStrategy.isSkuOnFulfillment() && !arguments.order.hasErrors()) {
 			// Create a new Order Item
 			var newOrderItem = this.newOrderItem();
 
 			//<---Replace condition with single common method.--->
 			newOrderItem = addOrderItemStrategy.setupOrderItem(newOrderItem);
-			writeDump(var=newOrderItem, top=2);abort;
+			
 		}
 		
 		//Handle Recipients

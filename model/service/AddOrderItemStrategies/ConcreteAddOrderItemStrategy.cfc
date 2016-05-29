@@ -20,11 +20,16 @@ component  displayname="ConcreteAddOrderItemStrategy" hint="Encapsulates Add Ord
 		// First check if we can use an existing order fulfillment
 		var orderFulfillment = getProcessObject().getOrderFulfillment();
 		
+		if (!isNull(orderFulfillment)){
+			setOrderFulfillment(orderFulfillment);
+		}
+		
 		// Next if orderFulfillment is still null, then we can check the order to see if there is already an orderFulfillment
 		if(isNull(orderFulfillment) && ( isNull(getProcessObject().getOrderFulfillmentID()) || getProcessObject().getOrderFulfillmentID() != 'new' ) && arrayLen(getOrder().getOrderFulfillments())) {
 			for(var f=1; f<=arrayLen(getOrder().getOrderFulfillments()); f++) {
 				if(listFindNoCase(getProcessObject().getSku().setting('skuEligibleFulfillmentMethods'), getOrder().getOrderFulfillments()[f].getFulfillmentMethod().getFulfillmentMethodID()) ) {
 					var orderFulfillment = getOrder().getOrderFulfillments()[f];
+					setOrderFulfillment(orderFulfillment);
 					break;
 				}
 			}
@@ -56,11 +61,11 @@ component  displayname="ConcreteAddOrderItemStrategy" hint="Encapsulates Add Ord
 				//Setup Fulfillment Method Specific Values - such as email, shipping address, or pickup location.
 				orderFulfillment = fulfillmentStrategy.populateFulfillmentProperty();
 				
-				//Save the fulfillment
-				orderFulfillment = getService("OrderService").saveOrderFulfillment( orderFulfillment );
-                
-                //Set the local orderFulfillment
+				//Set the local orderFulfillment
                 setOrderFulfillment(orderFulfillment);
+				
+				//Save the fulfillment
+				getService("OrderService").saveOrderFulfillment( orderFulfillment );
                 
                 //check the fulfillment and display errors if needed.
                 if (orderFulfillment.hasErrors()){
@@ -93,7 +98,7 @@ component  displayname="ConcreteAddOrderItemStrategy" hint="Encapsulates Add Ord
 	 * This function checks for a sku on an fulfillment. If found, it sets the foundOrderItem property to the found orderItem.
 	 */
 	public any function isSkuOnFulfillment(){
-		for(var orderItem in orderFulfillment.getOrderFulfillmentItems()){
+		for(var orderItem in getOrderFulfillment().getOrderFulfillmentItems()){
 			// If the sku, price, attributes & stock all match then just increase the quantity
 			if(getProcessObject().matchesOrderItem( orderItem )){
 				setFoundOrderItem(orderItem);
@@ -128,7 +133,7 @@ component  displayname="ConcreteAddOrderItemStrategy" hint="Encapsulates Add Ord
 		
 			// If the sku is allowed to have a user defined price OR the current account has permissions to edit price
 			if(((!isNull(orderItem.getSku().getUserDefinedPriceFlag()) && orderItem.getSku().getUserDefinedPriceFlag())||
-					(getHibachiScope().getLoggedInAsAdminFlag() && getHibachiAuthenticationService().authenticateEntityPropertyCrudByAccount(crudType='update', entityName='orderItem', propertyName='price', account=getHibachiScope().getAccount()))
+					(getHibachiScope().getLoggedInAsAdminFlag() && getService('HibachiAuthenticationService').authenticateEntityPropertyCrudByAccount(crudType='update', entityName='orderItem', propertyName='price', account=getHibachiScope().getAccount()))
 				) && isNumeric(getProcessObject().getPrice()) ) {
 				orderItem.setPrice( getProcessObject().getPrice() );
 			} else {
@@ -154,7 +159,6 @@ component  displayname="ConcreteAddOrderItemStrategy" hint="Encapsulates Add Ord
 				getOrder().addError('addOrderItem', orderItem.getErrors());
 			}
 		
-		
 		return orderItem;
 	}
 	
@@ -169,4 +173,10 @@ component  displayname="ConcreteAddOrderItemStrategy" hint="Encapsulates Add Ord
 	public string function getOrderItemType(){
 		return variables.orderItemtype;
 	}
+	public void function setOrderFulfillment(any orderFulfillment){
+		variables.orderFulfillment = arguments.orderFulfillment;
+	}
+	public any function getOrderFulfillment(){
+		return variables.orderFulfillment;
+	} 
 }

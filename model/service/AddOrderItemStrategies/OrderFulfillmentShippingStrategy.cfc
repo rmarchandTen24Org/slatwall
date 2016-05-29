@@ -1,4 +1,4 @@
-component  displayname="OrderFulfillmentShippingStrategy" hint="Encapsulates Add Order Item Fulfillment Logic for this type item" output="false" accessors="true" extend="Slatwall.org.hibachi.hibachiService" implements="IOrderFulfillmentStrategy" initmethod="OrderFulfillmentShippingStrategy" 
+component  displayname="OrderFulfillmentShippingStrategy" hint="Encapsulates Add Order Item Fulfillment Logic for this type item" output="false" accessors="true" extends="Slatwall.org.hibachi.hibachiService" implements="IOrderFulfillmentStrategy" initmethod="OrderFulfillmentShippingStrategy" 
 {
 	property any processObject;
 	property any orderFulfillment;
