@@ -53,87 +53,34 @@ component extends="HibachiService" accessors="true" output="false" {
 	
 	// entity will be one of StockReceiverItem, StockPhysicalItem, StrockAdjustmentDeliveryItem, VendorOrderDeliveryItem, OrderDeliveryItem
 	public void function createInventory(required any entity) {
+		var createInventoryStrategy = getCreateInventoryStrategyDelegate(arguments.entity.entityName);
+		createInventoryStrategy.create();
 		
-		switch(arguments.entity.getEntityName()) {
+	}
+	
+	//Returns the proper strategy depending on type.
+	public any function getCreateInventoryStrategyDelegate(any entity, any type){
+		switch(arguments.type) {
 			case "SlatwallStockReceiverItem": {
-
-				if(arguments.entity.getStock().getSku().setting("skuTrackInventoryFlag")) {
-					
-					// Dynamically do a breakupBundledSkus call, if this is an order return, a bundle sku, the setting is enabled to do this dynamically
-					if(arguments.entity.getStockReceiver().getReceiverType() eq 'orderItem' 
-						&& ( !isNull(arguments.entity.getStock().getSku().getBundleFlag()) && arguments.entity.getStock().getSku().getBundleFlag() )
-						&& arguments.entity.getStock().getSku().setting("skuBundleAutoBreakupInventoryOnReturnFlag")) {
-
-						var processData = {
-							locationID=arguments.entity.getStock().getLocation().getLocationID(),
-							quantity=arguments.entity.getQuantity()
-						};
-						
-						getSkuService().processSku(arguments.entity.getStock().getSku(), processData, 'breakupBundledSkus');
-						
-					}
-
-					var inventory = this.newInventory();
-					inventory.setQuantityIn(arguments.entity.getQuantity());
-					inventory.setStock(arguments.entity.getStock());
-					inventory.setStockReceiverItem(arguments.entity);
-					getHibachiDAO().save( inventory );
-					
-				}
-				
+				return new Slatwall.model.service.CreateInventoryStrategies.CreateInventoryStockRecieverStrategy(getEntity());
 				break;
 			}
 			case "SlatwallOrderDeliveryItem": {
-				if(arguments.entity.getStock().getSku().setting("skuTrackInventoryFlag")) {
-
-					// Dynamically do a makeupBundledSkus call, if this is a bundle sku, the setting is enabled to do this dynamically, and we have QOH < whats needed
-					if(!isNull(arguments.entity.getStock().getSku().getBundleFlag())
-						&& ( !isNull(arguments.entity.getStock().getSku().getBundleFlag()) && arguments.entity.getStock().getSku().getBundleFlag() )
-						&& arguments.entity.getStock().getSku().setting("skuBundleAutoMakeupInventoryOnSaleFlag") 
-						&& arguments.entity.getStock().getQuantity("QOH") - arguments.entity.getQuantity() < 0) {
-							
-						var processData = {
-							locationID=arguments.entity.getStock().getLocation().getLocationID(),
-							quantity=arguments.entity.getStock().getQuantity("QOH") - arguments.entity.getQuantity()
-						};
-						
-						getSkuService().processSku(arguments.entity.getStock().getSku(), processData, 'makeupBundledSkus');
-					}
-					
-					var inventory = this.newInventory();
-					inventory.setQuantityOut( arguments.entity.getQuantity() );
-					inventory.setStock( arguments.entity.getStock() );
-					inventory.setOrderDeliveryItem( arguments.entity );
-					getHibachiDAO().save( inventory );	
-					
-				}
+				return new Slatwall.model.service.CreateInventoryStrategies.CreateInventoryOrderDeliveryStrategy(getEntity());
 				break;
 			}
 			case "SlatwallVendorOrderDeliveryItem": {
-				if(arguments.entity.getStock().getSku().setting("skuTrackInventoryFlag")) {
-					var inventory = this.newInventory();
-					inventory.setQuantityOut(arguments.entity.getQuantity());
-					inventory.setStock(arguments.entity.getStock());
-					inventory.setVendorOrderDeliveryItem(arguments.entity);
-					getHibachiDAO().save( inventory );
-				}
+				return new Slatwall.model.service.CreateInventoryStrategies.CreateInventoryVendorOrderDeliveryItemStrategy(getEntity());
 				break;
 			}
 			case "SlatwallStockAdjustmentDeliveryItem": {
-				if(arguments.entity.getStock().getSku().setting("skuTrackInventoryFlag")) {
-					var inventory = this.newInventory();
-					inventory.setQuantityOut(arguments.entity.getQuantity());
-					inventory.setStock(arguments.entity.getStock());
-					inventory.setStockAdjustmentDeliveryItem(arguments.entity);
-					getHibachiDAO().save( inventory );
-				}
+				return new Slatwall.model.service.CreateInventoryStrategies.CreateInventoryStockAdjustmentOrderDeliveryItemStrategy(getEntity());
 				break;
 			}
 			default: {
 				throw("You are trying to create an inventory record for an entity that is not one of the 5 entities that manage inventory.  Those entities are: StockReceiverItem, StockPhysicalItem, StrockAdjustmentDeliveryItem, VendorOrderDeliveryItem, OrderDeliveryItem");
 			}
 		}
-		
 	}
 	
 	// Quantity On Hand
