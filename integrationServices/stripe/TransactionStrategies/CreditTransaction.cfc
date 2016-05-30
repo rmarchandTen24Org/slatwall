@@ -23,7 +23,7 @@ component displayname="CreditTransaction" implements="Slatwall.integrationServic
 		var refundRequest = new http();
 		refundRequest.setMethod("post");
 		refundRequest.setCharset("utf-8");
-		refundRequest.setUrl("#setting('apiUrl')#/#setting('apiVersion')#/charges/#chargeID#/refund");
+		refundRequest.setUrl("#super.setting('apiUrl')#/#super.setting('apiVersion')#/charges/#chargeID#/refund");
 		refundRequest.addParam(type="header", name="authorization", value="bearer #super.getActiveSecretKey()#");
 		refundRequest.addParam(type="formfield", name="amount", value="#amountCredited#"); // amount as integer (eg. eliminate cents)
 		

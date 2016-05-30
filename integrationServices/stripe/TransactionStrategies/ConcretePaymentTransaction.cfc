@@ -1,4 +1,4 @@
-component displayname="ConcretePaymentTransaction" implements="Slatwall.integrationServices.stripe.TransactionStrategies.IPaymentTransaction" hint="Represents a payment transaction" initmethod="ConcretePaymentTransaction" output="false" accessors="true" 
+component displayname="ConcretePaymentTransaction" implements="Slatwall.integrationServices.stripe.TransactionStrategies.IPaymentTransaction" hint="Represents a payment transaction" initmethod="ConcretePaymentTransaction" output="false" accessors="true" extends="Slatwall.integrationServices.BasePayment" 
 {
 	/** FIELDS */
 	property any requestBean;

@@ -22,7 +22,7 @@ component displayname="ChargePreAuthorizationTransaction" implements="Slatwall.i
 		var chargeRequest = new http();
 		chargeRequest.setMethod("post");
 		chargeRequest.setCharset("utf-8");
-		chargeRequest.setUrl("#setting('apiUrl')#/#setting('apiVersion')#/charges/#chargeID#/capture");
+		chargeRequest.setUrl("#super.setting('apiUrl')#/#super.setting('apiVersion')#/charges/#chargeID#/capture");
 		chargeRequest.addParam(type="header", name="authorization", value="bearer #super.getActiveSecretKey()#");
 		// api allows for an optional override of authorized transaction amount (amount can be lesser or equal to authorized charge but not greater)
 		chargeRequest.addParam(type="formfield", name="amount", value="#int(requestBean.getTransactionAmount() * 100)#"); // amount as integer (eg. eliminate cents)

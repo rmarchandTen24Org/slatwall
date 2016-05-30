@@ -24,19 +24,19 @@ component displayname="GenerateTokenTransaction" implements="Slatwall.integratio
 		createTokenRequest.setMethod("post");
 		createTokenRequest.setCharset("utf-8");
 		
-		if (setting("generateTokenBehavior") == "deferred")
+		if (super.setting("generateTokenBehavior") == "deferred")
 		{
 			// automatically creates a Stripe customer and stores default credit card
 			// allows card to be authorized at any time (deferred long term)
-			createTokenRequest.setUrl("#setting('apiUrl')#/#setting('apiVersion')#/customers");
+			createTokenRequest.setUrl("#super.setting('apiUrl')#/#super.setting('apiVersion')#/customers");
 			createTokenRequest.addParam(type="header", name="authorization", value="bearer #super.getActiveSecretKey()#");
 			createTokenRequest.addParam(type="formfield", name="email", value="#getRequestBean().getAccountPrimaryEmailAddress()#");
 			createTokenRequest.addParam(type="formfield", name="description", value="#generateDescription(getRequestBean())#");
 		}
-		else if (setting("generateTokenBehavior") == "immediate")
+		else if (super.setting("generateTokenBehavior") == "immediate")
 		{
 			// creates a temporary short-lived "one-time use" token to be used for authorization (immediate near term)
-			createTokenRequest.setUrl("#setting('apiUrl')#/#setting('apiVersion')#/tokens");
+			createTokenRequest.setUrl("#super.setting('apiUrl')#/#super.setting('apiVersion')#/tokens");
 			createTokenRequest.addParam(type="header", name="authorization", value="bearer #super.getActivePublicKey()#");
 		}
 		

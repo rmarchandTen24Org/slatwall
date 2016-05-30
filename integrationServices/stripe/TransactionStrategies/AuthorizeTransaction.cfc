@@ -20,7 +20,7 @@ component displayname="AuthorizeTransaction" implements="Slatwall.integrationSer
 		var authorizeChargeRequest = new http();
 		authorizeChargeRequest.setMethod("post");
 		authorizeChargeRequest.setCharset("utf-8");
-		authorizeChargeRequest.setUrl("#setting('apiUrl')#/#setting('apiVersion')#/charges");
+		authorizeChargeRequest.setUrl("#super.setting('apiUrl')#/#super.setting('apiVersion')#/charges");
 		
 		
 		if(!isNull(getRequestBean().getProviderToken())) {
