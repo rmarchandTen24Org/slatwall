@@ -1,4 +1,4 @@
-interface  hint="Represents a payment transaction" output="false"
+interface  hint="Represents a payment transaction"
 {
 	/** Handles making the api call specific to the transaction type. */
 	public any function processPaymentTransaction();
