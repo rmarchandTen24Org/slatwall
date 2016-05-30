@@ -1,4 +1,4 @@
-component displayname="CreditTransaction" implements="Slatwall.model.transient.payment.TransactionStrategies.IPaymentTransaction.cfc" hint="Represents a payment transaction" initmethod="CreditTransaction" output="false" accessors="true" 
+component displayname="CreditTransaction" implements="Slatwall.integrationServices.stripe.TransactionStrategies.IPaymentTransaction" hint="Represents a payment transaction" initmethod="CreditTransaction" output="false" accessors="true" 
 {
 	/** FIELDS */
 	property any requestBean;

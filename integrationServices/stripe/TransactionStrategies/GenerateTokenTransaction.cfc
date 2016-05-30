@@ -1,4 +1,4 @@
-component displayname="GenerateTokenTransaction" implements="Slatwall.model.transient.payment.TransactionStrategies.IPaymentTransaction.cfc" hint="Represents a payment transaction" initmethod="GenerateTokenTransaction" output="false" accessors="true" extends="ConcretePaymentTransaction"   
+component displayname="GenerateTokenTransaction" implements="Slatwall.integrationServices.stripe.TransactionStrategies.IPaymentTransaction" hint="Represents a payment transaction" initmethod="GenerateTokenTransaction" output="false" accessors="true" extends="ConcretePaymentTransaction"   
 {
 	/** FIELDS */
 	property any requestBean;

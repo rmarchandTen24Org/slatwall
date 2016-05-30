@@ -1,4 +1,4 @@
-component displayname="AuthorizeAndChargeTransaction" implements="Slatwall.model.transient.payment.TransactionStrategies.IPaymentTransaction.cfc" hint="Represents a payment transaction" initmethod="AuthorizeAndChargeTransaction" output="false" accessors="true" extends="ConcretePaymentTransaction"    
+component displayname="AuthorizeAndChargeTransaction" implements="Slatwall.integrationServices.stripe.TransactionStrategies.IPaymentTransaction" hint="Represents a payment transaction" initmethod="AuthorizeAndChargeTransaction" output="false" accessors="true" extends="ConcretePaymentTransaction"    
 {
 	/** FIELDS */
 	property any requestBean;

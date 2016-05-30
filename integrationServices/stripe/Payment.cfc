@@ -78,9 +78,15 @@ component accessors="true" output="false" displayname="Stripe" implements="Slatw
 			activeSecretKey = setting("liveSecretKey");
 		}
 		
+		//Get the specific transaction for this type
 		var paymentTransactionStrategy = new Slatwall.integrationServices.stripe.TransactionStrategies.PaymentTransactionDelegate(requestBean.getTransactionType(), requestBean, responseBean);
+		
+		//Set the public and secret keys.
 		paymentTransactionStrategy.setActivePublicKey(activePublicKey);
+		
 		paymentTransactionStrategy.setActiveSecretKey(activeSecretKey);
+		
+		//Process the transaction and return the return
 		responseBean = paymentTransactionStrategy.processPaymentTransaction();
 		
 		return responseBean;
