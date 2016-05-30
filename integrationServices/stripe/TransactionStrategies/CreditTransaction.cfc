@@ -9,7 +9,7 @@ component displayname="CreditTransaction" implements="Slatwall.integrationServic
 	/** CTOR */
 	public any function CreditTransaction(any requestBean, any responseBean){
 		setRequestBean(arguments.requestBean);
-		setResponseBean(arguments.rresponseBean);
+		setResponseBean(arguments.responseBean);
 		setRequestData({});
 		setResponseData({});
 	}

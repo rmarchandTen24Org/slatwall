@@ -10,7 +10,7 @@ component displayname="ChargePreAuthorizationTransaction" implements="Slatwall.i
 	public any function ChargePreAuthorizationTransaction(any requestBean, any responseBean){
 		super.concretePaymentTransaction(requestBean, responseBean);
 		setRequestBean(arguments.requestBean);
-		setResponseBean(arguments.rresponseBean);
+		setResponseBean(arguments.responseBean);
 		setRequestData({});
 		setResponseData({});
 	}

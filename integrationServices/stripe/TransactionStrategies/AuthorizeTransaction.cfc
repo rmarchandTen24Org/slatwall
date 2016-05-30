@@ -10,7 +10,7 @@ component displayname="AuthorizeTransaction" implements="Slatwall.integrationSer
 	public any function AuthorizeTransaction(any requestBean, any responseBean){
 		super.concretePaymentTransaction(requestBean, responseBean);
 		setRequestBean(arguments.requestBean);
-		setResponseBean(arguments.rresponseBean);
+		setResponseBean(arguments.responseBean);
 		setRequestData({});
 		setResponseData({});
 	}

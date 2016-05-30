@@ -10,7 +10,7 @@ component displayname="GenerateTokenTransaction" implements="Slatwall.integratio
 	public any function GenerateTokenTransaction(any requestBean, any responseBean){
 		super.concretePaymentTransaction(requestBean, responseBean);
 		setRequestBean(arguments.requestBean);
-		setResponseBean(arguments.rresponseBean);
+		setResponseBean(arguments.responseBean);
 		setRequestData({});
 		setResponseData({});
 	}
