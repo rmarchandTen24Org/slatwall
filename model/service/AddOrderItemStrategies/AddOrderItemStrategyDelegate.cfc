@@ -16,7 +16,7 @@ component  displayname="AddOrderItemStrategyDelegate" hint="Returns a new orderI
 			case "oitSale": return new Slatwall.model.service.AddOrderItemStrategies.AddSaleOrderItemStrategy(getOrder(), getProcessObject()); break;
 			case "oitDeposit": return new Slatwall.model.service.AddOrderItemStrategies.AddDepositOrderItemStrategy(getOrder(), getProcessObject()); break;
 			case "oitReturn": return new Slatwall.model.service.AddOrderItemStrategies.AddReturnOrderItemStrategy(getOrder(), getProcessObject()); break;
-			default: arguments.data.addError('OrderItemTypeSystemCode', rbKey('validate.processOrder_addOrderitem.orderItemTypeSystemcode.noValidOrderItemSystemCodeType'));
+				default: arguments.data.addError('OrderItemTypeSystemCode', rbKey('validate.processOrder_addOrderitem.orderItemTypeSystemcode.noValidOrderItemSystemCodeType'));
 		}
 	}
 }

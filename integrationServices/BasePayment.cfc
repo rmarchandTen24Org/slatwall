@@ -74,12 +74,7 @@ component extends="Slatwall.org.Hibachi.HibachiObject" {
 	
 	// @hint helper function to return a Setting
 	public any function setting(required string settingName, array filterEntities=[], formatValue=false) {
-		writeDump(var=settingName);
-		writeDump(var=filterEntities);
-		writeDump(var=formatValue);
-		writeDump(var=getIntegration().getSettings());
 		if(structKeyExists(getIntegration().getSettings(), arguments.settingName)) {
-			writeDump(getService("settingService").getSettingValue(settingName="integration#getPackageName()##arguments.settingName#", object=this, filterEntities=arguments.filterEntities, formatValue=arguments.formatValue);
 			return getService("settingService").getSettingValue(settingName="integration#getPackageName()##arguments.settingName#", object=this, filterEntities=arguments.filterEntities, formatValue=arguments.formatValue);	
 		}
 		return getService("settingService").getSettingValue(settingName=arguments.settingName, object=this, filterEntities=arguments.filterEntities, formatValue=arguments.formatValue);
