@@ -24,7 +24,7 @@ component  displayname="OrderFulfillmentShippingStrategy" hint="Encapsulates Add
 			}
 			if(!isNull(fullAddressErrors) && !fullAddressErrors.hasErrors()) {
 				// First we need to persist the address from the processObject
-				getAddressService().saveAddress( getProcessObject().getShippingAddress() );
+				getService("AddressService").saveAddress( getProcessObject().getShippingAddress() );
 
 				// If we are supposed to save the new address, then we can do that here
 				if(getProcessObject().getSaveShippingAccountAddressFlag() && !isNull(getOrderFulfillment().getOrder().getAccount()) ) {
