@@ -8,7 +8,8 @@ component  displayname="CreateInventoryStockRecieverStrategy" hint="Encapsulates
 	}
 	
 	public any function create(){
-		if(getEntity().getStock().getSku().setting("skuTrackInventoryFlag")) {		
+		
+		if(!isNull(getEntity()) && !isNull(getEntity().getStock()) && !isNull(getEntity().getStock().getSku()) && getEntity().getStock().getSku().setting("skuTrackInventoryFlag")) {		
 			// Dynamically do a breakupBundledSkus call, if this is an order return, a bundle sku, the setting is enabled to do this dynamically
 			if(getEntity().getStockReceiver().getReceiverType() eq 'orderItem' 
 				&& ( !isNull(getEntity().getStock().getSku().getBundleFlag()) && getEntity().getStock().getSku().getBundleFlag() )
@@ -19,22 +20,25 @@ component  displayname="CreateInventoryStockRecieverStrategy" hint="Encapsulates
 					quantity=getEntity().getQuantity()
 				};
 				
-				getSkuService().processSku(getEntity().getStock().getSku(), processData, 'breakupBundledSkus');
+				getService("SkuService").processSku(getEntity().getStock().getSku(), processData, 'breakupBundledSkus');
 				
 			}
 
-			var inventory = this.newInventory();
+			var inventory = getService("InventoryService").newInventory();
 			inventory.setQuantityIn(getEntity().getQuantity());
 			inventory.setStock(getEntity().getStock());
 			inventory.setStockReceiverItem(getEntity());
-			getHibachiDAO().save( inventory );
+			getService("InventoryService").save( inventory );
 			
 		}
 	}
 	
 	
 	public any function getEntity(){
-		return variables.entity;
+		if (!isNull(variables.entity)){
+			return variables.entity;
+		}
+		return;
 	} 
 	
 	public any function setEntity(any entity){

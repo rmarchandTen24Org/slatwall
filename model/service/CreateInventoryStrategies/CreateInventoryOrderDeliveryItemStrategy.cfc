@@ -8,6 +8,7 @@ component  displayname="CreateInventoryOrderDeliveryItemStrategy" hint="Encapsul
 	}
 	
 	public any function create(){
+		
 		if(getEntity().getStock().getSku().setting("skuTrackInventoryFlag")) {
 
 			// Dynamically do a makeupBundledSkus call, if this is a bundle sku, the setting is enabled to do this dynamically, and we have QOH < whats needed
@@ -21,14 +22,14 @@ component  displayname="CreateInventoryOrderDeliveryItemStrategy" hint="Encapsul
 					quantity=getEntity().getStock().getQuantity("QOH") - getEntity().getQuantity()
 				};
 				
-				getSkuService().processSku(getEntity().getStock().getSku(), processData, 'makeupBundledSkus');
+				getService("SkuService").processSku(getEntity().getStock().getSku(), processData, 'makeupBundledSkus');
 			}
 			
-			var inventory = this.newInventory();
+			var inventory = getService("InventoryService").newInventory();
 			inventory.setQuantityOut( getEntity().getQuantity() );
 			inventory.setStock( getEntity().getStock() );
 			inventory.setOrderDeliveryItem( getEntity() );
-			getHibachiDAO().save( inventory );	
+			getService("InventoryService").save( inventory );	
 			
 		}
 	}
