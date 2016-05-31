@@ -19,9 +19,10 @@ component  displayname="OrderFulfillmentShippingStrategy" hint="Encapsulates Add
 		// Otherwise try to setup a new shipping address
 		} else {
 			// Check to see if the new shipping address passes full validation.
-			fullAddressErrors = getHibachiValidationService().validate( getProcessObject().getShippingAddress(), 'full', false );
-
-			if(!fullAddressErrors.hasErrors()) {
+			if (!isNull(getProcessObject().getShippingAddress())){
+				var fullAddressErrors = getService("HibachiValidationService").validate( getProcessObject().getShippingAddress(), 'full', false );
+			}
+			if(!isNull(fullAddressErrors) && !fullAddressErrors.hasErrors()) {
 				// First we need to persist the address from the processObject
 				getAddressService().saveAddress( getProcessObject().getShippingAddress() );
 
