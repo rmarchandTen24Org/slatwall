@@ -316,8 +316,47 @@ var subscriptionUsageData = {
 		assert(!isNull(result));	
 		
 	}
-   
-}	
+	
+ //  public function getMostRecentOrderTest(){
+//   	var subscriptionUsageData = {
+//			subscriptionUsageID=""
+//			
+//			};
+//	var subscriptionUsage=createPersistedTestEntity('subscriptionUsage', subscriptionUsageData);
+//   var subscriptionOrderItemData = {
+//			subscriptionOrderItemID=""
+//			
+//		};
+//	var subscriptionOrderItem= createPersistedTestEntity('subscriptionOrderItem',subscriptionOrderItemData);
+//	var orderItemData ={
+//			orderItemID=""
+//			};
+//	var smartlist = request.slatwallscope.getProductSmartList();
+	//request.debug(smartlist.getRecordsCount());
+	
+//};
+//var orderItem= createPersistedTestEntity('orderItem',orderItemData);
+//
+//
+//		request.debug(orderItem);
+//
+//}
 
-
+public function getSubscriptionOrderItemNameTest() {
+var subscriptionUsageData = {
+			subscriptionUsageID="",
+			subscriptionOrderItems=[
+				{
+					subscriptionOrderItemID=""
+				}
+			],
+			intialProduct={
+				productName="uh"
+			}
+			};
+	var subscriptionUsage=createPersistedTestEntity('subscriptionUsage', subscriptionUsageData);
+		var result=subscriptionUsage.getSubscriptionOrderItemName();
+		request.debug(result);
+		assertEquals(result,"uh");
+}}
  
