@@ -358,5 +358,33 @@ var subscriptionUsageData = {
 		var result=subscriptionUsage.getSubscriptionOrderItemName();
 		request.debug(result);
 		assertEquals(result,"uh");
-}}
+}
+public function getCurrentStatusTest(){
+	var subscriptionUsageData = {
+		subscriptionUsageID=""
+	};
+	var subscriptionUsage= createPersistedTestEntity('subscriptionUsage',subscriptionUsageData);
+	var result=subscriptionUsage.getCurrentStatus();
+	request.debug(result);
+}
+public function getMostRecentSubscriptionOrderItemTest(){
+	var subscriptionUsageData = {
+		subscriptionUsageID="",
+		subscriptionOrderItems=[
+			   {
+					subscriptionOrderItemID=" ", 
+					remoteID="Sunny"
+				},
+				{
+					subscriptionOrderItemID=" ", 
+					remoteID="Sunny1"
+				}
+			]
+		};
+	var subscriptionUsage=createPersistedTestEntity('subscriptionUsage',subscriptionUsageData);
+	var result= subscriptionUsage.getMostRecentSubscriptionOrderItem();
+	assertTrue(result.getRemoteID() == 'Sunny', "Wrong Subscription Order Item dude");
+   }
+}
+
  
