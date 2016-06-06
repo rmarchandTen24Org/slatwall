@@ -93,9 +93,9 @@ component extends="Slatwall.meta.tests.unit.entity.SlatwallEntityTestBase" {
 				}
 			]
 		};
-	var subscriptionUsage= createTestEntity('subscriptionUsage', subscriptionUsageData);
-	var result= subscriptionUsage.getTotalNumberOfSubscriptionOrderItems();
-	assertEquals(result,2); //assert the number of subscription order items
+		var subscriptionUsage= createTestEntity('subscriptionUsage', subscriptionUsageData);
+		var result= subscriptionUsage.getTotalNumberOfSubscriptionOrderItems();
+		assertEquals(result,2); //assert the number of subscription order items
 	}
 	public void function getUseRenewalSkuTest(){
 		var subscriptionUsageData={
@@ -217,7 +217,7 @@ component extends="Slatwall.meta.tests.unit.entity.SlatwallEntityTestBase" {
 	    assert(!isNull(result));		
 	}
 	
-public void function getOrderTest()
+	public void function getOrderTest()
 	{
 	var subscriptionUsageData = {
 			subscriptionUsageID=""
@@ -342,7 +342,7 @@ var subscriptionUsageData = {
 //
 //}
 
-public function getSubscriptionOrderItemNameTest() {
+public void function getSubscriptionOrderItemNameTest() {
 var subscriptionUsageData = {
 			subscriptionUsageID="",
 			subscriptionOrderItems=[
@@ -359,7 +359,7 @@ var subscriptionUsageData = {
 		request.debug(result);
 		assertEquals(result,"uh");
 }
-public function getCurrentStatusTest(){
+public void function getCurrentStatusTest(){
 	var subscriptionUsageData = {
 		subscriptionUsageID=""
 	};
@@ -367,24 +367,158 @@ public function getCurrentStatusTest(){
 	var result=subscriptionUsage.getCurrentStatus();
 	request.debug(result);
 }
-public function getMostRecentSubscriptionOrderItemTest(){
+public void function getMostRecentSubscriptionOrderItemTest(){
 	var subscriptionUsageData = {
 		subscriptionUsageID="",
 		subscriptionOrderItems=[
-			   {
-					subscriptionOrderItemID=" ", 
-					remoteID="Sunny"
-				},
-				{
-					subscriptionOrderItemID=" ", 
-					remoteID="Sunny1"
-				}
-			]
-		};
+		   {
+				subscriptionOrderItemID=" ", 
+				remoteID="Sunny"
+			},
+			{
+				subscriptionOrderItemID=" ", 
+				remoteID="Sunny1"
+			}
+		]
+	};
 	var subscriptionUsage=createPersistedTestEntity('subscriptionUsage',subscriptionUsageData);
 	var result= subscriptionUsage.getMostRecentSubscriptionOrderItem();
 	assertTrue(result.getRemoteID() == 'Sunny', "Wrong Subscription Order Item dude");
    }
+   
+   public void function getMostRecentOrderItemTest(){
+   		var orderItemData = {
+			orderItemID=""
+		};
+		var orderItem = createPersistedTestEntity('orderItem',orderItemData);
+   	
+   		var subscriptionOrderItemData={
+			subscriptionOrderItemID="",
+			orderItem={
+				orderItemID=orderItem.getOrderItemID()
+			}
+		};
+		var subscriptionOrderItem = createPersistedTestEntity('subscriptionOrderItem',subscriptionOrderItemData);
+   	
+   		var orderItem2Data = {
+			orderItemID=""
+		};
+		var orderItem2 = createPersistedTestEntity('orderItem',orderItem2Data);
+		
+		var subscriptionOrderItem2Data={
+			subscriptionOrderItemID="",
+			orderItem={
+				orderItemID=orderItem2.getOrderItemID()
+			}
+			
+		};
+		var subscriptionOrderItem2 = createPersistedTestEntity('subscriptionOrderItem',subscriptionOrderItem2Data);
+   		
+		var subscriptionUsageData = {
+			subscriptionUsageID="",
+			subscriptionOrderItems=[
+			   	{
+			   		subscriptionOrderItemID=subscriptionOrderItem.getSubscriptionOrderItemID()
+			   	},
+			   	{
+			   		subscriptionOrderItemID=subscriptionOrderItem2.getSubscriptionOrderItemID()
+			   	}
+			]
+		};
+		var subscriptionUsage=createPersistedTestEntity('subscriptionUsage', subscriptionUsageData);
+		request.debug(subscriptionUsage.getSubscriptionOrderItems()[1].getSubscriptionOrderItemID());
+		 
+		var result= subscriptionUsage.getMostRecentOrderItem();
+		assertTrue(result.getorderItemID()==orderItem.getOrderItemID());
+ 	}
+ 	
+/*public void function getMostRecentOrderTest(){
+ 		var subscriptionUsageData= {
+ 			subscriptionUsageID="",
+ 			subscriptionOrderItem=[
+ 			{
+ 			subscriptionOrderItemID="",
+ 			 orderItem ={
+			 orderItemID="",
+			 order={
+				orderID="",
+				currencyCode="USD"
+			       }
+			            } 
+ 				
+ 			},
+ 			{
+ 			subscriptionOrderItemID="",
+ 			 orderItem ={
+			 orderItemID="",
+			 
+			 order={
+				orderID="",
+				currencyCode="EUR"
+			       }
+			            } 
+ 			}
+ 			
+ 		  ]
+ 		};
+ 	var subscriptionUsage=createPersistedTestEntity('subscriptionUsage',subscriptionUsageData);
+	var answer= subscriptionUsage.getMostRecentOrder();
+	assert(isNull(answer));
+	//assertTrue(answer == 'USD');
+ 	}*/
+ 	
+ 	
+	public void function getMostRecentOrderTest(){
+		var orderData={
+			orderID=""
+		};
+		var order=createPersistedTestEntity('order',orderData);
+		var orderItemData={
+			orderItemID="",
+			order={
+				orderID=order.getOrderID()
+			}
+		};
+		var orderItem=createPersistedTestEntity('orderItem',orderItemData);
+		var subscriptionOrderItemData={
+			subscriptionOrderItemID="",
+			orderItem={
+				orderItemID= orderItem.getOrderItemID()
+			}
+		};
+		var subscriptionOrderItem=createPersistedTestEntity('subscriptionOrderItem',subscriptionOrderItemData);
+		var orderData2={
+			orderID=""
+		};
+		var order2=createPersistedTestEntity('order',orderData2);
+		var orderItemData2={
+			orderItemID="",
+			order2={
+				orderID=order2.getOrderID()
+			}
+		};
+		var orderItem2=createPersistedTestEntity('orderItem',orderItemData2);
+		var subscriptionOrderItemData2={
+			subscriptionOrderItemID="",
+			orderItem2={
+				orderItemID= orderItem2.getOrderItemID()
+			}
+		};
+		var subscriptionOrderItem2=createPersistedTestEntity('subscriptionOrderItem',subscriptionOrderItemData2);
+		var subscriptionUsageData = {
+			subscriptionUsageID="",
+			subscriptionOrderItems=[
+			   	{
+			   		subscriptionOrderItemID=subscriptionOrderItem.getSubscriptionOrderItemID()
+			   	},
+			   	{
+			   		subscriptionOrderItemID=subscriptionOrderItem2.getSubscriptionOrderItemID()
+			   	}
+			]
+		};
+		var subscriptionUsage=createPersistedTestEntity('subscriptionUsage', subscriptionUsageData);
+		var result= subscriptionUsage.getMostRecentOrder();
+		assertTrue(result.getorderID()==order.getOrderID());
+	}
 }
-
  
