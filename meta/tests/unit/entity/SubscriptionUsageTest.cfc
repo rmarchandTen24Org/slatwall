@@ -214,7 +214,8 @@ component extends="Slatwall.meta.tests.unit.entity.SlatwallEntityTestBase" {
 		
 		var result=subscriptionUsage.getInitialOrderItem();	
 	
-	    assert(!isNull(result));		
+	    assert(!isNull(result));
+	    assertTrue(result.getCurrencyCode()=='USD');	
 	}
 	
 	public void function getOrderTest()
