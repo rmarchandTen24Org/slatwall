@@ -307,7 +307,7 @@ component output="false" accessors="true" extends="HibachiService" {
 	}
 	
 	//even though void return type it still makes changes to the collectionConfigStuct
-	private void function addColumnsToCollectionConfigStructByPropertyIdentifierList(required any collectionEntity, required string propertyIdentifierList){
+	private void function addColumnsToCollectionConfigStructByPropertyIdentifierList(required any collectionEntity, required string propertyIdentifierList, boolean enforceAuthorization=true){
 		var collectionConfigStruct = arguments.collectionEntity.getCollectionConfigStruct();
 		if(structKeyExists(collectionConfigStruct,'columns')){
 			var columnsArray = collectionConfigStruct.columns;
@@ -318,7 +318,7 @@ component output="false" accessors="true" extends="HibachiService" {
 		var propertyIdentifiersArray = ListToArray(arguments.propertyIdentifierList);
 		for(propertyIdentifierItem in propertyIdentifiersArray){
 			if(
-				getHibachiScope().authenticateCollectionPropertyIdentifier('read', this, propertyIdentifierItem)
+				!arguments.enforceAuthorization || getHibachiScope().authenticateCollectionPropertyIdentifier('read', this, propertyIdentifierItem)
 			){
 				columnStruct = {
 					propertyIdentifier = "#propertyIdentifierItem#"
@@ -438,7 +438,7 @@ component output="false" accessors="true" extends="HibachiService" {
 		return collectionConfigStruct;
 	}
 	
-	public any function getAPIResponseForEntityName(required string entityName, required struct collectionOptions){
+	public any function getAPIResponseForEntityName(required string entityName, required struct collectionOptions, boolean enforceAuthorization=true){
 		
 		var collectionEntity = getTransientCollectionByEntityName(arguments.entityName,arguments.collectionOptions);
 		var collectionConfigStruct = collectionEntity.getCollectionConfigStruct();
@@ -451,7 +451,7 @@ component output="false" accessors="true" extends="HibachiService" {
 		if(!structKeyExists(collectionConfigStruct,'isDistinct')){
 			collectionConfigStruct.isDistinct = false;
 		}
-		return getAPIResponseForCollection(collectionEntity,arguments.collectionOptions);
+		return getAPIResponseForCollection(collectionEntity,arguments.collectionOptions,arguments.enforceAuthorization);
 	}
 	
 	public any function getAPIResponseForBasicEntityWithID(required string entityName, required string entityID, required struct collectionOptions){
@@ -515,7 +515,7 @@ component output="false" accessors="true" extends="HibachiService" {
 			}
 
 			if(structKeyExists(arguments.collectionOptions,'propertyIdentifiersList') && len(arguments.collectionOptions.propertyIdentifiersList)){
-				addColumnsToCollectionConfigStructByPropertyIdentifierList(arguments.collectionEntity,arguments.collectionOptions.propertyIdentifiersList);
+				addColumnsToCollectionConfigStructByPropertyIdentifierList(arguments.collectionEntity,arguments.collectionOptions.propertyIdentifiersList,arguments.enforceAuthorization);
 				var collectionPropertyIdentifiers = [];
 			}else{
 				var collectionPropertyIdentifiers = getPropertyIdentifierArray(collectionEntity.getCollectionObject());
@@ -538,6 +538,25 @@ component output="false" accessors="true" extends="HibachiService" {
 		
 			if(structKeyExists(arguments.collectionOptions,'joinsConfig') && len(arguments.collectionOptions.joinsConfig)){
 				collectionEntity.getCollectionConfigStruct().joins = deserializeJson(arguments.collectionOptions.joinsConfig);
+
+				for(var currentJoin = 1; currentJoin <= arraylen(collectionEntity.getCollectionConfigStruct().joins); currentJoin++){
+
+					var currentJoinParts = ListToArray(collectionEntity.getCollectionConfigStruct().joins[currentJoin]['associationName'], '.');
+					var current_object = getService('hibachiService').getPropertiesStructByEntityName(arguments.collectionEntity.getCollectionObject());
+
+					for (var i = 1; i <= arraylen(currentJoinParts); i++) {
+						if(structKeyExists(current_object, currentJoinParts[i]) && structKeyExists(current_object[currentJoinParts[i]], 'cfc')){
+							if(structKeyExists(current_object[currentJoinParts[i]], 'singularname')){
+								collectionEntity.setHasManyRelationFilter(true);
+								break;
+							}
+							current_object = getService('hibachiService').getPropertiesStructByEntityName(current_object[currentJoinParts[i]]['cfc']);
+						}
+					}
+					if(collectionEntity.getHasManyRelationFilter()){
+						break;
+					}
+				}
 			}
 
 			if(structKeyExists(arguments.collectionOptions,'orderByConfig') && len(arguments.collectionOptions.orderByConfig)){
@@ -569,7 +588,6 @@ component output="false" accessors="true" extends="HibachiService" {
 					var piAlias = Replace(Replace(column.propertyIdentifier,'.','_','all'),collectionEntity.getCollectionConfigStruct().baseEntityAlias&'_','');
 					if(!ArrayFind(collectionPropertyIdentifiers,piAlias)){
 						ArrayAppend(collectionPropertyIdentifiers,piAlias);
-						arrayDelete(	collectionPropertyIdentifiers, Replace(column.propertyIdentifier,collectionEntity.getCollectionConfigStruct().baseEntityAlias&'.',''));
 					}
 					//add all aggregates by alias
 					if(structKeyExists(column,'aggregate')){
