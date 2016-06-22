@@ -186,7 +186,7 @@ component output="false" accessors="true" extends="HibachiTransient" {
 	
 	public any function getSession() {
 		if(!structKeyExists(variables, "session")) {
-			getService("hibachiSessionService").setPropperSession();
+			getService("hibachiSessionService").setProperSession();
 		}
 		return variables.session;
 	}
@@ -248,6 +248,10 @@ component output="false" accessors="true" extends="HibachiTransient" {
 	}
 	
 	// ========================== HELPER DELIGATION METHODS ===============================
+	
+	public string function hibachiHTMLEditFormat(required string html){
+		return getService('hibachiUtilityService').hibachiHTMLEditFormat(arguments.html);
+	}
 	
 	// @hint helper function to return the RB Key from RB Factory in any component
 	public string function rbKey(required string key, struct replaceStringData) {

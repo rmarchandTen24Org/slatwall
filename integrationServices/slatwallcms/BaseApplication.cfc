@@ -105,7 +105,23 @@ component extends="Slatwall.org.Hibachi.Hibachi"{
 		var templatePath = site.getApp().getAppRootPath() & '/' & site.getSiteCode() & '/templates/';
 		var contentPath = '';
 		var templateBody = '';
-
+		if(!isNull(site.getResetSettingCache()) && site.getResetSettingCache()){
+			arguments.slatwallScope.getService('hibachiCacheService').resetCachedByPrefix('content');	
+			var cacheList = "globalURLKeyBrand,
+				globalURLKeyProduct,
+				globalURLKeyProductType,
+				productDisplayTemplate,
+				productTypeDisplayTemplate,
+				brandDisplayTemplate"
+			;
+			var cacheArray = listToArray(cacheList);
+			for(var cacheItem in cacheArray){
+				arguments.slatwallScope.getService('hibachiCacheService').resetCachedKey(cache);
+			}
+			site.setResetSettingCache(false);
+		}
+		
+		
 		if(!isNull(arguments.entityURL)){
 			var isBrandURLKey = arguments.slatwallScope.setting('globalURLKeyBrand') == arguments.entityURL;
 			var isProductURLKey = arguments.slatwallScope.setting('globalURLKeyProduct') == arguments.entityURL;
@@ -180,7 +196,8 @@ component extends="Slatwall.org.Hibachi.Hibachi"{
 			arguments.slatwallScope.setContent(content);
 		}
 		var $ = getApplicationScope(argumentCollection=arguments);
-		savecontent variable="templateData"{
+		request.context.fw = arguments.slatwallScope.getApplicationValue("application");
+		savecontent variable="local.templateData"{
 			include "#contentPath#";
 		}
 		templateBody = arguments.slatwallScope.getService('hibachiUtilityService').replaceStringTemplate(arguments.slatwallScope.getService('hibachiUtilityService').replaceStringEvaluateTemplate(templateData),arguments.slatwallScope.getContent());
@@ -225,12 +242,23 @@ component extends="Slatwall.org.Hibachi.Hibachi"{
 		}
 	}
 
+	/** Returns the content given a urlTitle or the default content if no urlTitle is given. */
+    public any function getContentByUrlTitlePath(urlTitlePath){
+
+        var currentSite = getHibachiScope().getCurrentRequestSite();
+
+        if (!isNull(arguments.urlTitlePath) && !isNull(currentSite)){
+            var contentEntity = getHibachiScope().getService("ContentService").getContentBySiteIDAndUrlTitlePath(currentSite.getSiteID(),arguments.urlTitlePath);
+            return contentEntity;
+        }
+    }
+
 	public string function dspForm(
 		required string formCode,
 		string sRedirectUrl
 	){
-		var newFormResponse = getHibachiScope().getService('formService').newFormResponse();
-		var requestedForm = getHibachiScope().getService('formService').getFormByFormCode(arguments.formCode);
+		request.context.newFormResponse = getHibachiScope().getService('formService').newFormResponse();
+		request.context.requestedForm = getHibachiScope().getService('formService').getFormByFormCode(arguments.formCode);
 		var currentSite = getHibachiScope().getService('siteService').getCurrentRequestSite();
 		var specificFormTemplateFileName = "form_"  & formCode & ".cfm";
 		var defaultFormTemplateFileName = "slatwall-form.cfm";
@@ -278,7 +306,7 @@ component extends="Slatwall.org.Hibachi.Hibachi"{
 	){
 		//if content id does not exist then get home
 		if(!len(arguments.startContentID)){
-			var currentSite = getHibachiScope().getService('siteService').getCurrentRequestSite();
+			var currentSite = getHibachiScope().getCurrentRequestSite();
 			arguments.content = getHibachiScope().getService('contentService').getDefaultContentBySite(currentSite);
 		}else{
 			arguments.content = getHibachiScope().getService('contentService').getContent(arguments.startContentId);
@@ -294,7 +322,7 @@ component extends="Slatwall.org.Hibachi.Hibachi"{
 
 
 		//var firstLevelItems = arguments.content.getChildContents();
-		savecontent variable="navHTML"{
+		savecontent variable="local.navHTML"{
 			include 'templates/navtemplate.cfm';
 		};
 		return navHTML;

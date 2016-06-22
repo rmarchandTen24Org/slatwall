@@ -191,6 +191,11 @@ Notes:
 		<cfset var aaCount = ormExecuteQuery("SELECT count(aa.accountAuthenticationID) FROM #getApplicationKey()#AccountAuthentication aa") />
 		<cfreturn aaCount[1] gt 0 />
 	</cffunction>
+	
+	<cffunction name="getAccountExists" returntype="any" access="public">
+		<cfset var accountCount = ormExecuteQuery("Select count(a.accountID) FROM #getApplicationKey()#Account a") />
+		<cfreturn accountCount[1] gt 0 />
+	</cffunction>
 
 	<cffunction name="getAccountWithAuthenticationByEmailAddress" returntype="any" access="public">
 		<cfargument name="emailAddress" required="true" type="string" />
@@ -204,7 +209,14 @@ Notes:
 	<cffunction name="getPasswordResetAccountAuthentication">
 		<cfargument name="accountID" type="string" required="true" />
 
-		<cfset var accountAuthentication = ormExecuteQuery("SELECT aa FROM #getApplicationKey()#AccountAuthentication aa LEFT JOIN aa.integration i WHERE aa.account.accountID = :accountID and aa.expirationDateTime >= :now and aa.password is null and i.integrationID is null ORDER BY aa.expirationDateTime desc", {accountID=arguments.accountID, now=now()}, true, {maxresults=1}) />
+		<cfset var accountAuthentication = ormExecuteQuery("
+			SELECT aa FROM #getApplicationKey()#AccountAuthentication 
+			aa LEFT JOIN aa.integration i WHERE aa.account.accountID = :accountID 
+										and aa.expirationDateTime >= :now 
+										and aa.password is null 
+										and i.integrationID is null 
+			ORDER BY aa.expirationDateTime desc
+			", {accountID=arguments.accountID, now=now()}, true, {maxresults=1}) />
 
 		<cfif !isNull(accountAuthentication)>
 			<cfreturn accountAuthentication />

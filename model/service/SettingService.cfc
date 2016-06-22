@@ -196,6 +196,8 @@ component extends="HibachiService" output="false" accessors="true" {
 			globalPublicAutoLogoutMinutes = {fieldtype="text", defaultValue=30, validate={dataType="numeric", required=true}},
 			globalForceCreditCardOverSSL = {fieldtype="yesno",defaultValue=1},
 			globalAllowedOutsideRedirectSites = {fieldtype="text"},
+			globalFileTypeWhiteList = {fieldtype="text", defaultValue="pdf,zip,xml,txt,csv,xls,doc,jpeg,jpg,png,gif"},
+			globalMIMETypeWhiteList = {fieldtype="text", defaultValue="image/jpeg,image/png,image/gif,text/csv,application/pdf,application/rss+xml,application/msword,application/zip,text/plain,application/vnd.ms-excel,"},
 			globalAdminDomainNames = {fieldtype="text"},
 			globalClientSecret = {fieldtype="text",defaultValue="#createUUID()#"},
 			globalDisplayIntegrationProcessingErrors = {fieldtype="yesno", defaultValue=1},
@@ -236,7 +238,8 @@ component extends="HibachiService" output="false" accessors="true" {
 			siteForgotPasswordEmailTemplate = {fieldType="select", defaultValue="dbb327e796334dee73fb9d8fd801df91"},
 			siteVerifyAccountEmailAddressEmailTemplate = {fieldType="select", defaultValue="61d29dd9f6ca76d9e352caf55500b458"},
 			siteOrderOrigin = {fieldType="select"},
-
+            siteMissingImagePath = {fieldType="text", defaultValue="/assets/images/missingimage.jpg"},
+			
 			// Shipping Method
 			shippingMethodQualifiedRateSelection = {fieldType="select", defaultValue="lowest"},
 
@@ -888,6 +891,23 @@ component extends="HibachiService" output="false" accessors="true" {
 			// If calculation is needed, then we should do it
 			if(listFindNoCase("skuAllowBackorderFlag,skuAllowPreorderFlag,skuQATSIncludesQNROROFlag,skuQATSIncludesQNROVOFlag,skuQATSIncludesQNROSAFlag,skuTrackInventoryFlag", arguments.entity.getSettingName())) {
 				updateStockCalculated();
+			}
+			//reset cache by site
+			if(
+				listFindNoCase("
+					globalURLKeyBrand,
+					globalURLKeyProduct,
+					globalURLKeyProductType,
+					productDisplayTemplate,
+					productTypeDisplayTemplate,
+					brandDisplayTemplate", 
+					arguments.entity.getSettingName()
+				) || 
+				left(arguments.entity.getSettingName(),7) == 'content'
+			){
+				for(var site in getSiteService().getSiteSmartList().getRecords()){
+					site.setResetSettingCache(true);
+				}
 			}
 		}
 

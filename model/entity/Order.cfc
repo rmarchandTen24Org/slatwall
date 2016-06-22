@@ -815,6 +815,31 @@ component displayname="Order" entityname="SlatwallOrder" table="SwOrder" persist
 		return promotionCodeList;
 	}
 
+	public array function getAllAppliedPromotions() {
+		if(!structKeyExists(variables, "allAppliedPromotions")) {
+			var allAppliedPromotionCollection = getService("promotionService").newCollection().setup("PromotionApplied");
+			allAppliedPromotionCollection.addFilter('order.orderID', getOrderID(), "=");
+			allAppliedPromotionCollection.addFilter('orderItem.order.orderID', getOrderID(), "=", "OR");
+			allAppliedPromotionCollection.addFilter('orderFulfillment.order.orderID', getOrderID(), "=", "OR");
+			allAppliedPromotionCollection.setDisplayProperties("appliedType,promotionAppliedID,promotion.promotionID,promotion.promotionName");
+			var allAppliedPromotions = allAppliedPromotionCollection.getRecords();
+			// get all the promotion codes applied and attached it to applied Promotion Struct
+			var appliedPromotionCodes = getPromotionCodes();
+			for(var appliedPromotion in allAppliedPromotions) {
+				appliedPromotion["promotionCode"] = "";
+				appliedPromotion["promotionCodeID"] = "";
+				for(var appliedPromotionCode in appliedPromotionCodes) {
+					if(appliedPromotionCode.getPromotion().getPromotionID() == appliedPromotion.promotion_promotionID) {
+						appliedPromotion["promotionCode"] = appliedPromotionCode.getPromotionCode();
+						appliedPromotion["promotionCodeID"] = appliedPromotionCode.getPromotionCodeID();
+					}
+				}
+			}
+			variables.allAppliedPromotions = allAppliedPromotions;
+		}
+		return variables.allAppliedPromotions;
+	}
+
 	public numeric function getDeliveredItemsPaymentAmountUnreceived() {
 		var received = getPaymentAmountReceivedTotal();
 		var amountDelivered = 0;
@@ -1223,24 +1248,54 @@ component displayname="Order" entityname="SlatwallOrder" table="SwOrder" persist
 
 	// ==================  END:  Overridden Methods ========================
 
-	public any function hasSavableOrderPaymentForSubscription(){
-		//Check if there is subscription with autopay flag without order payment with account payment method.
+	public boolean function hasSubscriptionWithAutoPay(){
 		var hasSubscriptionWithAutoPay = false;
-		var hasOrderPaymentWithAccountPaymentMethod = false;
-
 		for (var orderItem in getOrderItems()){
-			if (orderItem.getSku().getBaseProductType() == "subscription" && !isNull(orderItem.getSku().getSubscriptionTerm().getAutoPayFlag()) && orderItem.getSku().getSubscriptionTerm().getAutoPayFlag()){
+			if (orderItem.getSku().getBaseProductType() == "subscription"
+				&& !isNull(orderItem.getSku().getSubscriptionTerm().getAutoPayFlag())
+				&& orderItem.getSku().getSubscriptionTerm().getAutoPayFlag()
+			){
 				hasSubscriptionWithAutoPay = true;
+				break;
+			}
+		}
+		return hasSubscriptionWithAutoPay;
+	}
 
-				for (orderPayment in getOrderPayments()){
-					if (!isNull(orderPayment.getAccountPaymentMethod())){
-						hasOrderPaymentWithAccountPaymentMethod = true;
-					}
-				}
+	public boolean function hasSavableOrderPaymentAndSubscriptionWithAutoPay(){
+		return this.hasSubscriptionWithAutoPay() && this.hasOrderPaymentWithSavablePaymentMethod();
+	}
+
+
+	public boolean function hasOrderPaymentWithSavablePaymentMethod(){
+		var hasOrderPaymentWithSavablePaymentMethod = false;
+
+		for (orderPayment in getOrderPayments()){
+			if (!isNull(orderPayment.getAccountPaymentMethod())
+				|| (
+					orderPayment.getStatusCode() == 'opstActive'
+					&& !isNull(orderPayment.getPaymentMethod())
+					&& !isNull(orderPayment.getPaymentMethod().getAllowSaveFlag())
+					&& orderPayment.getPaymentMethod().getAllowSaveFlag()
+				)
+			){
+				hasOrderPaymentWithSavablePaymentMethod = true;
+				break;
 			}
 		}
 
-		return hasSubscriptionWithAutoPay && !hasOrderPaymentWithAccountPaymentMethod;
+		return hasOrderPaymentWithSavablePaymentMethod;
+	}
+
+	public boolean function hasSavedAccountPaymentMethod(){
+		var savedAccountPaymentMethod = false;
+		for (orderPayment in getOrderPayments()){
+			if (!isNull(orderPayment.getAccountPaymentMethod())){
+				savedAccountPaymentMethod = true;
+				break;
+			}
+		}
+		return savedAccountPaymentMethod;
 	}
 
 	// =================== START: ORM Event Hooks  =========================

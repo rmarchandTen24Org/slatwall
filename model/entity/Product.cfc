@@ -113,7 +113,6 @@ component displayname="Product" entityname="SlatwallProduct" table="SwProduct" p
 	property name="baseProductType" type="string" persistent="false";
 	property name="brandName" type="string" persistent="false";
 	property name="brandOptions" type="array" persistent="false";
-	property name="redemptionAmountTypeOptions" type="array" persistent="false";
 	property name="bundleSkusSmartList" persistent="false";
 	property name="estimatedReceivalDetails" type="struct" persistent="false";
 	property name="eventConflictExistsFlag" type="boolean" persistent="false";
@@ -146,15 +145,27 @@ component displayname="Product" entityname="SlatwallProduct" table="SwProduct" p
 
 	public any function getAvailableForPurchaseFlag() {
 		if(!structKeyExists(variables, "availableToPurchaseFlag")) {
-			// If purchase dates are null OR now() is between purchase start and end dates then this product is available for purchase
-			if(	( isNull(this.getPurchaseStartDateTime()) && isNull(this.getPurchaseStartDateTime()) )
-				|| ( !isNull(this.getPurchaseStartDateTime()) && !isNull(this.getPurchaseStartDateTime()) && dateCompare(now(),this.getPurchaseStartDateTime(),"s") == 1 && dateCompare(now(),this.getPurchaseEndDateTime(),"s") == -1 ) )
-			{
+			// If purchase start dates not existed, or before now(), the start date is valid
+			// If purchase end   date  not existed, or after  now(), the end   date is valid
+			if ( 
+					(
+						isNull(this.getPurchaseStartDateTime())
+						||
+						( !isNull(this.getPurchaseStartDateTime()) && dateCompare(now(),this.getPurchaseStartDateTime(),"s") == 1 )					 
+					)
+					&&
+					(
+						isNull(this.getPurchaseEndDateTime())
+						||
+						( !isNull(this.getPurchaseEndDateTime()) && dateCompare(now(),this.getPurchaseEndDateTime(),"s") == -1 )					 
+					) 
+			) {
 				variables.availableToPurchaseFlag = true;
 			} else {
 				variables.availableToPurchaseFlag = false;
-			}
+			}				
 		}
+
 		return variables.availableToPurchaseFlag;
 	}
 
@@ -205,6 +216,7 @@ component displayname="Product" entityname="SlatwallProduct" table="SwProduct" p
 		}
 		return count;
 	}
+
 
     public any function getSubscriptionSkuSmartList(){
     	if(!structKeyExists(variables, "subscriptionSkuSmartList")){
@@ -262,7 +274,7 @@ component displayname="Product" entityname="SlatwallProduct" table="SwProduct" p
 	// Non-Persistent Helpers
 
 	public boolean function getAllowAddOptionGroupFlag() {
- 		return arrayLen(getSkus()) eq 1 || getOptionGroupCount() gt 0;
+ 		return this.getOptionGroupCount() gt 0 || this.getSkusCount() eq 1;
  	}
 
 	public string function getPageIDs() {
@@ -475,7 +487,7 @@ component displayname="Product" entityname="SlatwallProduct" table="SwProduct" p
 	public any function getSkuOptionDetails(string selectedOptionIDList="") {
 
 		// Setup return structure
-		var skuOptionDetials = {};
+		var skuOptionDetails = {};
 
 		// Get all the skus for this product with options fetched
 		var skus = getService("skuService").getProductSkus(product=this, sorted=false, fetchOptions=true);
@@ -521,18 +533,18 @@ component displayname="Product" entityname="SlatwallProduct" table="SwProduct" p
 				var ogCode = option.getOptionGroup().getOptionGroupCode();
 
 				// Create a struct for this optionGroup if it doesn't exist
-				if(!structKeyExists(skuOptionDetials, ogCode)) {
-					skuOptionDetials[ ogCode ] = {};
-					skuOptionDetials[ ogCode ][ "options" ] = [];
-					skuOptionDetials[ ogCode ][ "optionGroupName" ] = option.getOptionGroup().getOptionGroupName();
-					skuOptionDetials[ ogCode ][ "optionGroupCode" ] = option.getOptionGroup().getOptionGroupCode();
-					skuOptionDetials[ ogCode ][ "optionGroupID" ] = option.getOptionGroup().getOptionGroupID();
-					skuOptionDetials[ ogCode ][ "sortOrder" ] = option.getOptionGroup().getSortOrder();
+				if(!structKeyExists(skuOptionDetails, ogCode)) {
+					skuOptionDetails[ ogCode ] = {};
+					skuOptionDetails[ ogCode ][ "options" ] = [];
+					skuOptionDetails[ ogCode ][ "optionGroupName" ] = option.getOptionGroup().getOptionGroupName();
+					skuOptionDetails[ ogCode ][ "optionGroupCode" ] = option.getOptionGroup().getOptionGroupCode();
+					skuOptionDetails[ ogCode ][ "optionGroupID" ] = option.getOptionGroup().getOptionGroupID();
+					skuOptionDetails[ ogCode ][ "sortOrder" ] = option.getOptionGroup().getSortOrder();
 				}
 
 				// Create a struct for this option if one doesn't exist
 				var existingOptionFound = false;
-				for(var existingOption in skuOptionDetials[ ogCode ][ "options" ]) {
+				for(var existingOption in skuOptionDetails[ ogCode ][ "options" ]) {
 					if( existingOption.optionID == option.getOptionID() ) {
 						existingOption['totalQATS'] += sku.getQuantity("QATS");
 						if(allSelectedInSku) {
@@ -549,18 +561,21 @@ component displayname="Product" entityname="SlatwallProduct" table="SwProduct" p
 					newOption['optionName'] = option.getOptionName();
 					newOption['name'] = option.getOptionName();
 					newOption['value'] = option.getOptionID();
+					newOption['sortOrder'] = option.getSortOrder();
 					newOption['totalQATS'] = sku.getQuantity("QATS");
 					newOption['selectedQATS'] = 0;
 					if(allSelectedInSku) {
 						newOption['selectedQATS'] = sku.getQuantity("QATS");
 					}
-					arrayAppend(skuOptionDetials[ ogCode ].options, newOption);
+					arrayAppend(skuOptionDetails[ ogCode ].options, newOption);
 				}
 			}
-
+		}
+		for(var ogCode in skuOptionDetails){
+			skuOptionDetails[ ogCode ].options = getService("HibachiUtilityService").structArraySort(skuOptionDetails[ ogCode ].options, "sortOrder");
 		}
 
-		return skuOptionDetials;
+		return skuOptionDetails;
 	}
 
 	public struct function getCrumbData(required string path, required string siteID, required array baseCrumbArray) {
@@ -705,22 +720,32 @@ component displayname="Product" entityname="SlatwallProduct" table="SwProduct" p
 		if(!structKeyExists(variables, "defaultProductImageFiles")) {
 			variables.defaultProductImageFiles = [];
 
-			var sl = getService("skuService").getSkuSmartList();
-			sl.addFilter('product.productID', getProductID());
+			var sl = getService('skuService').getSkuSmartList();
+			sl.addSelect('skuID','skuID');
+			sl.addSelect('imageFile','imageFile');
+			sl.addSelect('product.productType.productTypeIDPath','productTypeIDPath');
+			sl.addFilter('imageFile','NOT NULL');
+			sl.addFilter('product.productID',getProductID());
 			sl.setSelectDistinctFlag( true );
-			var records = sl.getRecords();
+			var skusStructs = sl.getRecords();
 
-			for(var record in records) {
-				if(!isNull(record.getImageFile())) {
-					arrayIndex = ArrayFind(variables.defaultProductImageFiles, function(struct){
-						return struct.ImageFile == record.getImageFile();
-					});
-					if(arrayIndex == 0){
-						var imageFileStruct = {};
-						imageFileStruct['imageFile'] = record.getImageFile();
-						imageFileStruct['skuDefinition'] = record.getSkuDefinition();
-						arrayAppend(variables.defaultProductImageFiles, imageFileStruct);
+			for(var sku in skusStructs) {
+				var imageAlreadyIncluded = false;
+				for(var image in variables.defaultProductImageFiles){
+					if(image.imageFile == sku['imageFile']){
+						imageAlreadyIncluded = true;
 					}
+				}
+
+				if(!imageAlreadyIncluded){
+					var imageFileStruct = {};
+					imageFileStruct['imageFile'] = sku['imageFile'];
+					
+					imageFileStruct['skuDefinition'] = getService('skuService').getSkuDefinitionBySkuIDAndBaseProductTypeID(
+						sku['skuID'],
+						listFirst(sku['productTypeIDPath'])
+					);
+					arrayAppend(variables.defaultProductImageFiles, imageFileStruct);
 				}
 			}
 		}
@@ -804,11 +829,14 @@ component displayname="Product" entityname="SlatwallProduct" table="SwProduct" p
 			return getDefaultSku().getCurrencyCode();
 		}
 	}
+	
+	
 
 	public any function getEventConflictExistsFlag() {
 		if( structKeyExists(variables, "eventConflictExistsFlag") ) {
 			return variables.eventConflictExistsFlag;
 		} else {
+			
 			variables.eventConflictExistsFlag = false;
 			for(sku in getSkus()) {
 				if(sku.getEventConflictExistsFlag()) {

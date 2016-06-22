@@ -175,14 +175,12 @@ component output="false" accessors="true" extends="Slatwall.org.Hibachi.HibachiC
 		if(rc.process) {
 			logHibachi("Update Called", true);
 
-			if(rc.branchType eq "standard") {
-				getUpdateService().update(branch=rc.updateBranch);
-			} else if (rc.branchType eq "custom") {
-				getUpdateService().update(branch=rc.customBranch);
-			}
+			getUpdateService().update(branch=rc.updateBranch);
 
 			logHibachi("Update Finished, Now Calling Reload", true);
+
 			rc.$.slatwall.showMessageKey("admin.main.update_success");
+			
 			getFW().redirect(action="admin:main.default", preserve="messages", queryString="#getApplicationValue('applicationReloadKey')#=#getApplicationValue('applicationReloadPassword')#&#getApplicationValue('applicationUpdateKey')#=#getApplicationValue('applicationUpdatePassword')#");
 		}
 
@@ -308,7 +306,7 @@ component output="false" accessors="true" extends="Slatwall.org.Hibachi.HibachiC
 		param name="arguments.rc.rbLocale" default="";
 		param name="arguments.rc.redirectURL" default="";
 
-		arguments.rc.$.slatwall.getSession().setRBLocale(htmlEditFormat(arguments.rc.rbLocale));
+		arguments.rc.$.slatwall.getSession().setRBLocale(hibachiHTMLEditFormat(arguments.rc.rbLocale));
 		arguments.rc.$.slatwall.setPersistSessionFlag( true );
 
 		getFW().redirectExact( rc.redirectURL );
@@ -344,4 +342,3 @@ component output="false" accessors="true" extends="Slatwall.org.Hibachi.HibachiC
 	}
 
 }
-
