@@ -268,7 +268,7 @@ component extends="Slatwall.meta.tests.unit.entity.SlatwallEntityTestBase" {
 	    assert(!isNull(result));		
 	}
 	
-public void function getInitialSubscriptionOrderItemTest(){
+/*public void function getInitialSubscriptionOrderItemTest(){
 	
 var subscriptionUsageData = {
 			subscriptionUsageID=""
@@ -316,7 +316,7 @@ var subscriptionUsageData = {
 		request.debug(result);
 		assert(!isNull(result));	
 		
-	}
+	}*/
 	
  //  public function getMostRecentOrderTest(){
 //   	var subscriptionUsageData = {
@@ -343,7 +343,7 @@ var subscriptionUsageData = {
 //
 //}
 
-public void function getSubscriptionOrderItemNameTest() {
+/*public void function getSubscriptionOrderItemNameTest() {
 var subscriptionUsageData = {
 			subscriptionUsageID="",
 			subscriptionOrderItems=[
@@ -366,8 +366,9 @@ public void function getCurrentStatusTest(){
 	};
 	var subscriptionUsage= createPersistedTestEntity('subscriptionUsage',subscriptionUsageData);
 	var result=subscriptionUsage.getCurrentStatus();
+	assertTrue(result);
 	request.debug(result);
-}
+}*/
 public void function getMostRecentSubscriptionOrderItemTest(){
 	var subscriptionUsageData = {
 		subscriptionUsageID="",
