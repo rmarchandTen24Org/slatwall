@@ -1565,9 +1565,8 @@ table tr th .glyphicon {
   white-space: nowrap;
 }
 .s-body-nav .s-header-info ul {
-  font-size: 10px;
+  font-size: 11px;
   margin-bottom: 0px;
-  margin-top: 5px;
   min-height: 12px;
 }
 .s-body-nav .s-header-info ul li a {
@@ -1584,8 +1583,9 @@ table tr th .glyphicon {
   content: '\f105';
   padding-right: 0px !important;
   padding-left: 0px !important;
-  margin-left: 12px;
   color: #b3b3b3;
+  position: relative;
+  left: 5px;
 }
 .s-body-nav .s-header-info li:last-child:after {
   content: '';
@@ -3375,11 +3375,13 @@ table .s-table-header .table-section a.s-hint {
   border-bottom: 2px solid #e7eaec;
   padding: 0px 0px 9px 0px;
   border-right: 0px;
+  display: flex;
+  align-items: center;
 }
 .s-body-nav .navbar h1 {
   padding: 0px;
   margin: 0px;
-  margin-top: 14px;
+  margin-top: 10px;
   font-size: 18px;
   font-weight: normal;
   vertical-align: middle;
