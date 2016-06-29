@@ -77,7 +77,7 @@ component displayname="CampaignActivity" entityname="SlatwallCampaignActivity" t
 	// Related Object Properties (many-to-one)
 	property name="parentCampaignActivity" cfc="CampaignActivity" fieldtype="many-to-one" fkcolumn="parentCampaignActivityID";
 	property name="campaign" cfc="Campaign" fieldtype="many-to-one" fkcolumn="campaignID";
-	property name="marketingEmailTemplate" cfc="mMrketingEmailTemplate" fieldtype="many-to-one" fkcolumn="marketingEmailTemplateID";
+	property name="marketingEmailTemplate" cfc="MarketingEmailTemplate" fieldtype="many-to-one" fkcolumn="marketingEmailTemplateID";
 
 	// Related Object Properties (one-to-many)
 	property name="childCampaignActivities" singularname="childCampaignActivity" cfc="CampaignActivity" type="array" fieldtype="one-to-many" fkcolumn="parentCampaignActivityID" cascade="all-delete-orphan" inverse="true";
