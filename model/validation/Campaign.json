@@ -1,0 +1,6 @@
+{
+  "contexts":	["save","edit","delete"],
+  "properties":{
+    "campaignName":         [{"contexts":"save","required":true}]
+  }
+}

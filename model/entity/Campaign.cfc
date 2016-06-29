@@ -51,7 +51,7 @@ component displayname="Campaign" entityname="SlatwallCampaign" table="SwCampaign
 	// Persistent Properties
 	property name="campaignID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
 	property name="campaignName" ormtype="string";
-	property name="campaignDescription" ormtype="string" length="4000" hb_formFieldType="wysiwyg";
+	property name="campaignDescription" ormtype="string" length="4000" hb_formFieldType="textarea";
 	property name="collectionConfig" ormtype="string" length="8000" hb_auditable="false" hb_formFieldType="json";
 	property name="activeFlag" ormtype="boolean";
 
