@@ -48,14 +48,10 @@ Notes:
 */
 component displayname="MarketingEmailTemplate" entityname="SlatwallMarketingEmailTemplate" table="SwMarketingEmailTemplate" persistent="true" accessors="true" extends="HibachiEntity" cacheuse="transactional" hb_permission="this" {
 
-// Persistent Properties
+	// Persistent Properties
 	property name="marketingEmailTemplateID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
-
 	property name="emailName" hb_populateEnabled="public" ormtype="string";
-	property name="emailFrom" hb_populateEnabled="public" ormtype="string";
-	property name="emailFromLabel" hb_populateEnabled="public" ormtype="string";
 	property name="emailSubject" hb_populateEnabled="public" ormtype="string";
-	property name="emailReplyTo" hb_populateEnabled="public" ormtype="string";
 	property name="emailBodyHTML" hb_populateEnabled="public" ormtype="string" hb_auditable="false";
 	property name="emailBodyText" hb_populateEnabled="public" ormtype="string" hb_auditable="false";
 
