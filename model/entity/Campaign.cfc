@@ -52,12 +52,21 @@ component displayname="Campaign" entityname="SlatwallCampaign" table="SwCampaign
 	property name="campaignID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
 	property name="campaignName" ormtype="string";
 	property name="campaignDescription" ormtype="string" length="4000" hb_formFieldType="wysiwyg";
+	property name="collectionConfig" ormtype="string" length="8000" hb_auditable="false" hb_formFieldType="json";
 	property name="activeFlag" ormtype="boolean";
 
 	property name="defaultFromName" ormtype="string";
 	property name="defaultFromEmail" ormtype="string";
 	property name="defaultReplyTo" ormtype="string";
 
+	// Related Object Properties (many-to-one)
+
+	// Related Object Properties (one-to-many)
+	property name="campaignActivities" singularname="campaignActivity" fieldType="one-to-many" type="array" fkColumn="campaignID" cfc="CampaignActivity" inverse="true" cascade="all-delete-orphan";
+
+	// Related Object Properties (many-to-many - owner)
+
+	// Related Object Properties (many-to-many - inverse)
 
 	// Remote properties
 	property name="remoteID" ormtype="string" hint="Only used when integrated with a remote system";
