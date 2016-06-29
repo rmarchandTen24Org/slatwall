@@ -46,35 +46,23 @@
 Notes:
 
 */
-component displayname="CampaignActivity" entityname="SlatwallCampaignActivity" table="SwCampaignActivity" persistent="true" accessors="true" extends="HibachiEntity" cacheuse="transactional" hb_permission="this" hb_parentPropertyName="parentCampaignActivity" hb_childPropertyName="childCampaignActivities"{
+component displayname="MarketingEmailTemplate" entityname="SlatwallMarketingEmailTemplate" table="SwMarketingEmailTemplate" persistent="true" accessors="true" extends="HibachiEntity" cacheuse="transactional" hb_permission="this" {
 
-	// Persistent Properties
-	property name="campaignActivityID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
-	property name="campaignActivityIDPath" ormtype="string" length="4000";
-	property name="campaignActivityName" ormtype="string";
-	property name="campaignActivityDescription" ormtype="string" length="4000" hb_formFieldType="wysiwyg";
-	property name="collectionConfig" ormtype="string" length="8000" hb_auditable="false" hb_formFieldType="json";
+// Persistent Properties
+	property name="marketingEmailTemplateID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
 
-	property name="emailSubject" ormtype="string";
-	property name="emailFromName" ormtype="string";
-	property name="emailFromEmail" ormtype="string";
-	property name="emailReplyTo" ormtype="string";
-	property name="emailStyle" ormtype="string";
-	property name="emailBodyHTML" ormtype="string" hb_auditable="false";
-	property name="emailBodyText" ormtype="string" hb_auditable="false";
-	property name="emailSendDateTime" ormtype="timestamp";
-
-	property name="send24EmailID" ormtype="string";
-	property name="send24BroadcastID" ormType="string";
-
+	property name="emailName" hb_populateEnabled="public" ormtype="string";
+	property name="emailFrom" hb_populateEnabled="public" ormtype="string";
+	property name="emailFromLabel" hb_populateEnabled="public" ormtype="string";
+	property name="emailSubject" hb_populateEnabled="public" ormtype="string";
+	property name="emailReplyTo" hb_populateEnabled="public" ormtype="string";
+	property name="emailBodyHTML" hb_populateEnabled="public" ormtype="string" hb_auditable="false";
+	property name="emailBodyText" hb_populateEnabled="public" ormtype="string" hb_auditable="false";
 
 	// Related Object Properties (many-to-one)
-	property name="parentCampaignActivity" cfc="CampaignActivity" fieldtype="many-to-one" fkcolumn="parentCampaignActivityID";
-	property name="campaign" cfc="Campaign" fieldtype="many-to-one" fkcolumn="campaignID";
-	property name="marketingEmailTemplate" cfc="mMrketingEmailTemplate" fieldtype="many-to-one" fkcolumn="marketingEmailTemplateID";
 
 	// Related Object Properties (one-to-many)
-	property name="childCampaignActivities" singularname="childCampaignActivity" cfc="CampaignActivity" type="array" fieldtype="one-to-many" fkcolumn="parentCampaignActivityID" cascade="all-delete-orphan" inverse="true";
+	property name="campaignActivities" singularname="campaignActivity" fieldType="one-to-many" type="array" fkColumn="campaignID" cfc="CampaignActivity" inverse="true" cascade="all-delete-orphan";
 
 	// Related Object Properties (many-to-many - owner)
 
@@ -90,6 +78,8 @@ component displayname="CampaignActivity" entityname="SlatwallCampaignActivity" t
 	property name="modifiedByAccountID" hb_populateEnabled="false" ormtype="string";
 
 	// Non-Persistent Properties
+
+
 
 
 	// ============ START: Non-Persistent Property Methods =================
