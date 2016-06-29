@@ -50,25 +50,27 @@ Notes:
 <cfimport prefix="hb" taglib="../../../org/Hibachi/HibachiTags" />
 
 
-<cfparam name="rc.campaignSmartList" type="any" />
+<cfparam name="rc.campaign" type="any">
+<cfparam name="rc.edit" type="boolean">
 
 <cfoutput>
-
-    <hb:HibachiEntityActionBar type="listing" object="#rc.campaignSmartList#"></hb:HibachiEntityActionBar>
-
-	<sw-listing-display
-			data-collection="'Campaign'"
-			data-record-detail-action="entity.detailCampaign"
-			data-record-edit-action="entity.editCampaign"
-            is-angular-route="false">
-        <sw-listing-column data-property-identifier="activeFlag" ></sw-listing-column>
-        <sw-listing-column data-property-identifier="campaignDescription" ></sw-listing-column>
-        <sw-listing-column data-property-identifier="campaignName" ></sw-listing-column>
-	</sw-listing-display>
-
-
-
-
-
-
+    <hb:HibachiEntityDetailForm object="#rc.campaign#" edit="#rc.edit#" sRedirectAction="admin:entity.editcampaign">
+        <hb:HibachiEntityActionBar type="detail" object="#rc.campaign#" />
+		<hb:HibachiPropertyRow>
+			<hb:HibachiPropertyList>
+		        <hb:HibachiPropertyDisplay object="#rc.campaign#" property="campaignName" edit="#rc.edit#"/>
+		        <hb:HibachiPropertyDisplay object="#rc.campaign#" property="campaignDescription" edit="#rc.edit#"/>
+		        <hb:HibachiPropertyDisplay object="#rc.campaign#" property="activeFlag" edit="#rc.edit#"/>
+			</hb:HibachiPropertyList>
+		</hb:HibachiPropertyRow>
+		<h4>Messaging Defaults</h4>
+		<hb:HibachiPropertyRow>
+			<hb:HibachiPropertyList>
+		        <hb:HibachiPropertyDisplay object="#rc.campaign#" property="defaultFromName" edit="#rc.edit#"/>
+		        <hb:HibachiPropertyDisplay object="#rc.campaign#" property="defaultFromEmail" edit="#rc.edit#"/>
+		        <hb:HibachiPropertyDisplay object="#rc.campaign#" property="defaultReplyTo" edit="#rc.edit#"/>
+			</hb:HibachiPropertyList>
+		</hb:HibachiPropertyRow>
+	</hb:HibachiEntityDetailForm>
 </cfoutput>
+
