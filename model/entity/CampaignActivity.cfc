@@ -64,8 +64,14 @@ component displayname="CampaignActivity" entityname="SlatwallCampaignActivity" t
 	property name="emailBodyText" ormtype="string" hb_auditable="false";
 	property name="emailSendDateTime" ormtype="timestamp";
 
-	property name="send24EmailID" ormtype="string";
-	property name="send24BroadcastID" ormType="string";
+	property name="send24EmailID" ormtype="integer";
+	property name="send24BroadcastID" ormType="integer";
+
+	property name="totalEmailOpen" ormtype="integer";
+	property name="totalEmailClick" ormtype="integer";
+	property name="totalEmailBounce" ormtype="integer";
+	property name="totalEmailUnsubscribe" ormtype="integer";
+	property name="totalEmailRecipient" ormtype="integer";
 
 
 	// Related Object Properties (many-to-one)
