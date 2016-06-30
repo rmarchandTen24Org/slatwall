@@ -250,11 +250,18 @@
                                 <div class="col-md-6 s-header-info">
                                     
                                     <h1 class="actionbar-title">
-                                        <span>Activity</span>
+                                        Activity
                                     </h1>
                                     <ul class="list-unstyled list-inline">
                                         <li><a href="">Thank You Cleveland </a></li>
-                                        <li>Marketing E-Mail</li>
+                                        <li>
+                                            <div class="s-select-wrapper s-select-xs">
+                                                <select class="form-control input-xs">
+                                                    <option value="">Marketing E-Mail</option>
+                                                    <option value="">Sales Email</option>
+                                                </select>
+                                            </div>
+                                        </li>
                                     </ul>
                                 </div>
                                 <div class="col-md-6">
@@ -284,21 +291,61 @@
                         <div class="row">
                             
                             <div class="col-md-2">
-                                <div class="panel info-box">
-                                   <div class="row row-table">
-                                      <div class="col-xs-4 text-center bg-green pv-lg" style="background-color: #428bca;color: #fff;">
-                                         <!-- See formats: https://docs.angularjs.org/api/ng/filter/date-->
-                                         <div class="text-sm">June</div>
-                                         <div class="s-large">27</div>
-                                      </div>
-                                      <div class="col-xs-8 pv-lg">
-                                         <div class="text-uppercase text-sm">Monday</div>
-                                         <div class="s-large">5:31<span class="text-muted text-sm">PM</span></div>
+                                <div class="panel info-box s-date s-sent">
+                                   <div class="row-table">
+                                       <div class="s-status">
+                                           Sent
+                                       </div>
+                                      <div class="s-content">
+                                          <div class="s-text-sm">Monday 5:14pm</div>
+                                          <div class="s-date">June 27, 2016</div>
                                       </div>
                                    </div>
                                 </div>
+                                <!-- <div class="panel info-box s-date s-draft">
+                                   <div class="row-table">
+                                       <div class="s-status">
+                                           Draft
+                                       </div>
+                                      <div class="s-content">
+                                          <button class="btn btn-sm">Send Activity</button>
+                                      </div>
+                                   </div>
+                                </div> -->
                             </div>
-                        
+                        <style>
+                            .info-box.s-date .s-status {
+                                padding: 2px 2px 2px 15px;
+                                font-size: 12px;
+                                background: #367db9;
+                                color: #fff;
+                            }
+                            .info-box.s-date.s-sent .s-status {
+                                background: #43A047;
+                                color: #fff;
+                            }
+                            .info-box.s-date.s-draft .s-status {
+                                background: #FFC107;
+                                color: #fff;
+                            }
+                            .info-box.s-date .s-content {
+                                padding: 5px 5px 5px 15px;
+                                background: #428bca;
+                                color: #d9edf7;
+                            }
+                            .info-box.s-date.s-sent .s-content {
+                                background: #4CAF50;
+                                color: #E8F5E9;
+                            }
+                            .info-box.s-date.s-draft .s-content {
+                                background: #fbcc3e;
+                                color: #fff;
+                            }
+                            .info-box.s-date .s-content .s-date {
+                                font-size: 14px;
+                                line-height: 17px;
+                            }
+                        </style>
                             <!-- <div class="col-md-3">
                                 <div class="row">
                                     
@@ -615,9 +662,19 @@
                                                         <input type="text" class="form-control s-search" name="" placeholder="Search...">
                                                         <buttom class="btn btn-xs btn-default s-add-search-param">Add this filter</buttom>
                                                     </span>
+                                                    <div class="input-group-btn s-action" style="padding-left: 5px;">
+                                                        <button class="btn btn-sm"><i class="fa fa-download" aria-hidden="true"></i></button>
+                                                    </div>
                                                 </div>
                                             </div>
-                                            
+                                            <style>
+                                                .s-search-wrapper .input-group .input-group-btn.s-action {
+                                                    padding-left: 5px;
+                                                }
+                                                .s-search-wrapper .input-group .input-group-btn.s-action button {
+                                                    border-radius: 2px !important;
+                                                }
+                                            </style>
                                         </div>
                                         
                                         <div class="table-responsive">
@@ -735,6 +792,9 @@
                                                         <input type="text" class="form-control s-search" name="" placeholder="Search...">
                                                         <buttom class="btn btn-xs btn-default s-add-search-param">Add this filter</buttom>
                                                     </span>
+                                                    <div class="input-group-btn s-action" style="padding-left: 5px;">
+                                                        <button class="btn btn-sm"><i class="fa fa-download" aria-hidden="true"></i></button>
+                                                    </div>
                                                 </div>
                                             </div>
                                             
@@ -831,6 +891,9 @@
                                                         <input type="text" class="form-control s-search" name="" placeholder="Search...">
                                                         <buttom class="btn btn-xs btn-default s-add-search-param">Add this filter</buttom>
                                                     </span>
+                                                    <div class="input-group-btn s-action" style="padding-left: 5px;">
+                                                        <button class="btn btn-sm"><i class="fa fa-download" aria-hidden="true"></i></button>
+                                                    </div>
                                                 </div>
                                             </div>
                                             
@@ -949,6 +1012,9 @@
                                                         <input type="text" class="form-control s-search" name="" placeholder="Search...">
                                                         <buttom class="btn btn-xs btn-default s-add-search-param">Add this filter</buttom>
                                                     </span>
+                                                    <div class="input-group-btn s-action" style="padding-left: 5px;">
+                                                        <button class="btn btn-sm"><i class="fa fa-download" aria-hidden="true"></i></button>
+                                                    </div>
                                                 </div>
                                             </div>
                                             
@@ -1067,6 +1133,9 @@
                                                         <input type="text" class="form-control s-search" name="" placeholder="Search...">
                                                         <buttom class="btn btn-xs btn-default s-add-search-param">Add this filter</buttom>
                                                     </span>
+                                                    <div class="input-group-btn s-action" style="padding-left: 5px;">
+                                                        <button class="btn btn-sm"><i class="fa fa-download" aria-hidden="true"></i></button>
+                                                    </div>
                                                 </div>
                                             </div>
                                             
@@ -1765,22 +1834,9 @@
         </style>
         <style media="screen">
             
-            .pv-lg {
-                padding-top: 5px!important;
-                padding-bottom: 5px!important;
-                
-            }
-            .pv-lg now {
-                margin-left: -6px;
-            }
-            .row-table {
-                display: table;
-                table-layout: fixed;
-                height: 100%;
-                width: 100%;
-                margin: 0;
-            }
-            .text-sm {
+            
+        
+            .s-text-sm {
                 font-size: 10px;
             }
         </style> 

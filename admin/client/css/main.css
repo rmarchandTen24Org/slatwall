@@ -2974,6 +2974,11 @@ table .s-table-header .table-section a.s-hint {
   position: absolute;
   margin-top: -23px;
   margin-left: -16px;
+  color: #aaa;
+}
+.s-select-wrapper.s-select-xs:after {
+  margin-top: -14px;
+  font-size: 10px;
 }
 .s-select-wrapper select::-ms-expand {
   /* for IE 11 */
@@ -3388,6 +3393,13 @@ table .s-table-header .table-section a.s-hint {
 }
 .s-body-nav .navbar .btn-toolbar {
   margin-top: 10px;
+}
+.s-body-nav .navbar .s-header-info ul {
+  font-size: 12px;
+}
+.s-body-nav .navbar .s-header-info ul li select {
+  margin-bottom: -2px;
+  border-color: #eee;
 }
 .row.s-pannel-control {
   text-align: right;
