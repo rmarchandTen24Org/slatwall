@@ -250,10 +250,10 @@
                                 <div class="col-md-6 s-header-info">
                                     
                                     <h1 class="actionbar-title">
-                                        Marketing E-Mail
+                                        <span>Activity</span>
                                     </h1>
                                     <ul class="list-unstyled list-inline">
-                                        <li><a href="">Campaign: Thank You Cleveland </a></li>
+                                        <li><a href="">Thank You Cleveland </a></li>
                                         <li>Marketing E-Mail</li>
                                     </ul>
                                 </div>
@@ -288,18 +288,17 @@
                                    <div class="row row-table">
                                       <div class="col-xs-4 text-center bg-green pv-lg" style="background-color: #428bca;color: #fff;">
                                          <!-- See formats: https://docs.angularjs.org/api/ng/filter/date-->
-                                         <now format="MMMM" class="text-sm">June</now>
-                                         <now format="d" class="h2 mt0">27</now>
+                                         <div class="text-sm">June</div>
+                                         <div class="s-large">27</div>
                                       </div>
                                       <div class="col-xs-8 pv-lg">
-                                         <now format="EEEE" class="text-uppercase text-sm">Monday</now><br/>
-                                         <now format="h:mm" class="h2 mt0">5:31</now>
-                                         <now format="a" class="text-muted text-sm">PM</now>
+                                         <div class="text-uppercase text-sm">Monday</div>
+                                         <div class="s-large">5:31<span class="text-muted text-sm">PM</span></div>
                                       </div>
                                    </div>
                                 </div>
                             </div>
-                         
+                        
                             <!-- <div class="col-md-3">
                                 <div class="row">
                                     
@@ -1725,7 +1724,7 @@
                 margin: 0px;
             }
             .info-box .info-box-stats p {
-                font-size: 28px;
+                font-size: 24px;
                 margin-bottom: 0px;
                 color: #374051;
                 font-weight: 300;
@@ -1784,6 +1783,13 @@
             .text-sm {
                 font-size: 10px;
             }
-        </style>   
+        </style> 
+        <style>
+           .info-box .s-large {
+               font-size: 28px;
+               margin-bottom: 0px;
+               font-weight: 300;
+           }
+        </style>  
     </body>
 </html>
