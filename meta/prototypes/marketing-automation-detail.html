@@ -267,6 +267,8 @@
                                 <div class="col-md-6">
                                     <div class="btn-toolbar">
                                         <div class="btn-group btn-group-sm">
+                                            <button data-slideout="j-activity-info" class="btn btn-default s-slide-btn" style="margin-right: 8px;"><i class="fa fa-info-circle" aria-hidden="true"></i> Info</button>
+                                            <button data-slideout="j-broadcast-reporting" class="btn btn-default s-slide-btn" style="margin-right: 8px;"><i class="fa fa-bar-chart" aria-hidden="true"></i> Reporting</button>
                                             <!-- <a title="Products" class="adminentitylistproduct btn btn-default" target="_self" href="/Slatwall/?slatAction=entity.listproduct"><i class="glyphicon glyphicon-arrow-left"></i> Back to Campaign</a>  -->
                                             <!-- <button class="btn dropdown-toggle btn-default" data-toggle="dropdown"><i class="icon-list-alt"></i> Actions <span class="caret"></span></button>
                                             <ul class="dropdown-menu pull-right">
@@ -290,17 +292,112 @@
                         
                         <div class="row">
                             
-                            <div class="col-md-2">
-                                <div class="panel info-box s-date s-sent">
-                                   <div class="row-table">
-                                       <div class="s-status">
-                                           Sent
-                                       </div>
-                                      <div class="s-content">
-                                          <div class="s-text-sm">Monday 5:14pm</div>
-                                          <div class="s-date">June 27, 2016</div>
-                                      </div>
-                                   </div>
+                            <div class="col-md-3">
+                                <div class="panel info-box s-date-time">
+                                    
+                                    <style>
+                                        .s-date-time .s-date {
+                                            font-size: 14px;
+                                            color: #000;
+                                        }
+                                        .s-date-time .s-state {
+                                            background: #ddd;
+                                            padding-right: 0px;
+                                            text-align: center;
+                                        }
+                                        .s-date-time .s-state.s-complete {
+                                            background: #5CB85C;
+                                        }
+                                        .s-date-time .s-state.s-pending {
+                                            background: #428bca;
+                                        }
+                                        .s-date-time .s-state.s-alert {
+                                            background: #FFC107;
+                                        }
+                                        .s-date-time svg {
+                                            margin-top: 19px;
+                                        }
+                                    </style>
+                                    <div class="row">
+                                        <div class="row-height">
+                                            <div class="col-xs-3 col-sm-height s-state s-complete" role="button" data-toggle="popover" data-trigger="hover" title="Status" data-content="This activity has been sent out and is currently active">
+                                                <div class="inside inside-full-height">
+                                                    <div class="content">
+                                                        <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" class="nc-icon outline" x="0px" y="0px" width="28px" height="28px" viewBox="0 0 32 32">
+                                                            <g transform="translate(0, 0)">
+                                                                <polygon fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-miterlimit="10" points="12,27 2,17 6,13   12,19 26,5 30,9 " stroke-linejoin="round"/>
+                                                            </g>
+                                                        </svg>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-xs-9 col-sm-height col-sm-top">
+                                                <div class="inside inside-full-height">
+                                                    <div class="content panel-body">
+                                                        <div class="s-text-sm">Monday 5:14pm</div>
+                                                        <div class="s-date">June 27, 2016</div>  
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
+                                    <!-- <div class="row">
+                                        <div class="row-height">
+                                            <div class="col-xs-3 col-sm-height s-state s-alert" role="button" data-toggle="popover" data-trigger="hover" title="Status" data-content="This activity has not been sent out.">
+                                                <div class="inside inside-full-height">
+                                                    <div class="content">
+                                                        <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" class="nc-icon outline" x="0px" y="0px" width="28px" height="28px" viewBox="0 0 32 32">
+                                                            <g transform="translate(0, 0)">
+                                                            <circle fill="none" stroke="#ffffff" stroke-width="2" stroke-linecap="round" stroke-miterlimit="10" cx="16" cy="16" r="15" stroke-linejoin="round"/>
+                                                            <circle data-color="color-2" fill="none" stroke="#ffffff" stroke-width="2" stroke-linecap="round" stroke-miterlimit="10" cx="16" cy="24" r="2" stroke-linejoin="round"/>
+                                                            <line data-color="color-2" fill="none" stroke="#ffffff" stroke-width="2" stroke-linecap="round" stroke-miterlimit="10" x1="16" y1="6" x2="16" y2="18" stroke-linejoin="round"/>
+                                                            </g>
+                                                        </svg>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-xs-9 col-sm-height col-sm-top">
+                                                <div class="inside inside-full-height">
+                                                    <div class="content panel-body">
+                                                        <div class="s-text-sm">--</div>
+                                                        <div class="s-date">Not Sent</div>  
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div> -->
+                                    
+                                    <!-- <div class="row">
+                                        <div class="row-height">
+                                            <div class="col-xs-3 col-sm-height s-state s-pending" role="button" data-toggle="popover" data-trigger="hover" title="Status" data-content="This activity has been compleated and is going to be sent out on July 4, 2016.">
+                                                <div class="inside inside-full-height">
+                                                    <div class="content">
+                                                        <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" class="nc-icon outline" x="0px" y="0px" width="28px" height="28px" viewBox="0 0 32 32">
+                                                            <g transform="translate(0, 0)">
+                                                                <line data-cap="butt" data-color="color-2" fill="none" stroke="#fffff" stroke-width="2" stroke-miterlimit="10" x1="16" y1="1" x2="16" y2="6" stroke-linejoin="round" stroke-linecap="round"/>
+                                                                <line data-cap="butt" data-color="color-2" fill="none" stroke="#ffffff" stroke-width="2" stroke-miterlimit="10" x1="31" y1="16" x2="26" y2="16" stroke-linejoin="round" stroke-linecap="round"/>
+                                                                <line data-cap="butt" data-color="color-2" fill="none" stroke="#ffffff" stroke-width="2" stroke-miterlimit="10" x1="16" y1="31" x2="16" y2="26" stroke-linejoin="round" stroke-linecap="round"/>
+                                                                <line data-cap="butt" data-color="color-2" fill="none" stroke="#ffffff" stroke-width="2" stroke-miterlimit="10" x1="1" y1="16" x2="6" y2="16" stroke-linejoin="round" stroke-linecap="round"/>
+                                                                <circle fill="none" stroke="#ffffff" stroke-width="2" stroke-linecap="round" stroke-miterlimit="10" cx="16" cy="16" r="15" stroke-linejoin="round"/>
+                                                                <polyline data-color="color-2" fill="none" stroke="#ffffff" stroke-width="2" stroke-linecap="round" stroke-miterlimit="10" points="  10,8 16,16 22,16 " stroke-linejoin="round"/>
+                                                            </g>
+                                                        </svg>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-xs-9 col-sm-height col-sm-top">
+                                                <div class="inside inside-full-height">
+                                                    <div class="content panel-body">
+                                                        <div class="s-text-sm">Monday 5:14pm</div>
+                                                        <div class="s-date">July 4, 2016</div>  
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div> -->
+
+                                    
                                 </div>
                                 <!-- <div class="panel info-box s-date s-draft">
                                    <div class="row-table">
@@ -314,7 +411,7 @@
                                 </div> -->
                             </div>
                         <style>
-                            .info-box.s-date .s-status {
+                            /*.info-box.s-date .s-status {
                                 padding: 2px 2px 2px 15px;
                                 font-size: 12px;
                                 background: #367db9;
@@ -344,7 +441,7 @@
                             .info-box.s-date .s-content .s-date {
                                 font-size: 14px;
                                 line-height: 17px;
-                            }
+                            }*/
                         </style>
                             <!-- <div class="col-md-3">
                                 <div class="row">
@@ -386,32 +483,8 @@
                                 </div>
                                 
                             </div> -->
-                            <div class="col-md-3">
-                                
-                                <div class="panel info-box panel-white">
-                                    <div class="panel-body">
-                                        <h5 class="s-content-title">
-                                            Lists
-                                        </h5>
-                                        <ul class="list-unstyled s-zero-bottom">
-                                            <li><a href="##">Fans of Cleveland List</a> (1500)</li>
-                                        </ul>
-                                        <div class="info-box-icon">
-                                            <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" class="nc-icon outline" x="0px" y="0px" width="22px" height="22px" viewBox="0 0 32 32">   
-                                                <g transform="translate(0, 0)">
-                                                    <line data-color="color-2" fill="none" stroke="#aaaaaa" stroke-width="2" stroke-linecap="round" stroke-miterlimit="10" x1="13" y1="5" x2="30" y2="5" stroke-linejoin="round"/>
-                                                    <line data-color="color-2" fill="none" stroke="#aaaaaa" stroke-width="2" stroke-linecap="round" stroke-miterlimit="10" x1="13" y1="16" x2="30" y2="16" stroke-linejoin="round"/>
-                                                    <line data-color="color-2" fill="none" stroke="#aaaaaa" stroke-width="2" stroke-linecap="round" stroke-miterlimit="10" x1="13" y1="27" x2="30" y2="27" stroke-linejoin="round"/>
-                                                    <rect x="2" y="2" fill="none" stroke="#aaaaaa" stroke-width="2" stroke-linecap="round" stroke-miterlimit="10" width="6" height="6" stroke-linejoin="round"/>
-                                                    <rect x="2" y="13" fill="none" stroke="#aaaaaa" stroke-width="2" stroke-linecap="round" stroke-miterlimit="10" width="6" height="6" stroke-linejoin="round"/>
-                                                    <rect x="2" y="24" fill="none" stroke="#aaaaaa" stroke-width="2" stroke-linecap="round" stroke-miterlimit="10" width="6" height="6" stroke-linejoin="round"/>
-                                                </g>
-                                            </svg>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-md-7">
+                            
+                            <div class="col-md-9">
                                 
                                 <div class="panel info-box panel-white">
                                     <div class="panel-body">
@@ -624,6 +697,9 @@
                                             <a href="#j-sent" role="tab" data-toggle="tab" aria-controls="sent" aria-expanded="true">Sent (1,200)</a>
                                         </li>
                                         <li role="presentation">
+                                            <a href="#j-lists" role="tab" data-toggle="tab" aria-controls="lists">Lists (2)</a>
+                                        </li>
+                                        <li role="presentation">
                                             <a href="#j-clicks" role="tab" data-toggle="tab" aria-controls="clicks">Clicks (75)</a>
                                         </li>
                                         <li role="presentation">
@@ -767,6 +843,122 @@
                                         
                                     </div>
                                     <!-- ///Sent Tab -->
+                                    <!-- Lists Tab -->
+                                    <div role="tabpanel" class="tab-pane" id="j-lists">
+                                        <div class="row s-table-inner-nav ">
+                                            
+                                            <div class="s-search-wrapper">
+                                                <div class="input-group">
+                                                    <div class="input-group-btn search-panel">
+                                                        <button type="button" class="btn btn-sm btn-default dropdown-toggle" data-toggle="dropdown">
+                                                        <span>All</span> <span class="caret"></span>
+                                                        </button>
+                                                        <ul class="dropdown-menu" role="menu">
+                                                            <li><a href="#">Price</a></li>
+                                                            <li><a href="#">Qty. Max</a></li>
+                                                            <li><a href="#">Qty. Min</a></li>
+                                                            <li><a href="#">Currency</a></li>
+                                                            <li><a href="#">Price Group</a></li>
+                                                            <li><a href="#">Sku Definition </a></li>
+                                                            <li><a href="#">SKU Code</a></li>
+                                                        </ul>
+                                                    </div>
+                                                    <span class="s-search">
+                                                        <input type="text" class="form-control s-search" name="" placeholder="Search...">
+                                                        <buttom class="btn btn-xs btn-default s-add-search-param">Add this filter</buttom>
+                                                    </span>
+                                                    <div class="input-group-btn s-action" style="padding-left: 5px;">
+                                                        <button class="btn btn-sm"><i class="fa fa-download" aria-hidden="true"></i></button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        
+                                        <div class="table-responsive">
+                                            <table class="table table-bordered s-detail-content-table">
+                                                <thead>
+                                                    <tr>
+                                                        <th>
+                                                            <span>Name</span>
+                                                            <a href="#" class="s-sort-arrows">
+                                                                <svg class="nc-icon outline" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="20px" height="20px" viewBox="0 0 64 64">
+                                                                    <g transform="translate(0.5, 0.5)"> 
+                                                                        <polygon class="s-ascending" fill="#aaaaaa" stroke="#aaaaaa" stroke-width="3" stroke-linecap="square" stroke-miterlimit="10" points="20,26 44,26 32,12 " stroke-linejoin="round"></polygon> 
+                                                                        <polygon class="s-descending" fill="#aaaaaa" stroke="#aaaaaa" stroke-width="3" stroke-linecap="square" stroke-miterlimit="10" points="44,38 20,38 32,52 " stroke-linejoin="round"></polygon> 
+                                                                    </g>
+                                                                </svg>
+                                                            </a>
+                                                        </th>
+                                                        <th>
+                                                            <span>Size</span>
+                                                            <a href="#" class="s-sort-arrows">
+                                                                <svg class="nc-icon outline" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="20px" height="20px" viewBox="0 0 64 64">
+                                                                    <g transform="translate(0.5, 0.5)"> 
+                                                                        <polygon class="s-ascending" fill="#aaaaaa" stroke="#aaaaaa" stroke-width="3" stroke-linecap="square" stroke-miterlimit="10" points="20,26 44,26 32,12 " stroke-linejoin="round"></polygon> 
+                                                                        <polygon class="s-descending" fill="#aaaaaa" stroke="#aaaaaa" stroke-width="3" stroke-linecap="square" stroke-miterlimit="10" points="44,38 20,38 32,52 " stroke-linejoin="round"></polygon> 
+                                                                    </g>
+                                                                </svg>
+                                                            </a>
+                                                        </th>
+                                                        <th>
+                                                            <span>Type</span>
+                                                            <a href="#" class="s-sort-arrows">
+                                                                <svg class="nc-icon outline" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="20px" height="20px" viewBox="0 0 64 64">
+                                                                    <g transform="translate(0.5, 0.5)"> 
+                                                                        <polygon class="s-ascending" fill="#aaaaaa" stroke="#aaaaaa" stroke-width="3" stroke-linecap="square" stroke-miterlimit="10" points="20,26 44,26 32,12 " stroke-linejoin="round"></polygon> 
+                                                                        <polygon class="s-descending" fill="#aaaaaa" stroke="#aaaaaa" stroke-width="3" stroke-linecap="square" stroke-miterlimit="10" points="44,38 20,38 32,52 " stroke-linejoin="round"></polygon> 
+                                                                    </g>
+                                                                </svg>
+                                                            </a>
+                                                        </th>
+                                                        <th class="s-actions">
+                                                            
+                                                        </th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>    
+                                                    <tr>
+                                                        <td>Fans of Cleveland</td>
+                                                        <td>1200</td>
+                                                        <td>Locked</td>
+                                                        <td class="s-actions">
+                                                            <a href="##" title="" class="btn btn-default btn-xs" target="_self">
+                                                                <i class="fa fa-eye"></i>
+                                                            </a> 
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>Fans of Cleveland - Opens</td>
+                                                        <td>200</td>
+                                                        <td>Open</td>
+                                                        <td class="s-actions">
+                                                            <a href="##" title="" class="btn btn-default btn-xs" target="_self">
+                                                                <i class="fa fa-eye"></i>
+                                                            </a> 
+                                                        </td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                        
+                                        <div class="j-pagination-remove-this" data-tableid="LD9D579B9FCC280BDD7D9FBA9C0B5186CF">
+                                            <ul class="pagination paginationpages12">
+                                                <li><a href="#" class="paging-show-toggle">Show <span class="details">(1 - 10 of 113)</span></a></li>
+                                                <li><a href="#" class="show-option" data-show="10" style="display: none;">10</a></li>
+                                                <li><a href="#" class="show-option" data-show="25" style="display: none;">25</a></li>
+                                                <li><a href="#" class="show-option" data-show="50" style="display: none;">50</a></li>
+                                                <li><a href="#" class="show-option" data-show="100" style="display: none;">100</a></li>
+                                                <li><a href="#" class="show-option" data-show="500" style="display: none;">500</a></li>
+                                                <li><a href="#" class="show-option" data-show="ALL" style="display: none;">ALL</a></li>
+                                                <li class="disabled"><a href="#" class="page-option prev">«</a></li>
+                                                <li class="active"><a href="#" class="listing-pager page-option" data-page="1">1</a></li>
+                                                <li><a href="#" class="listing-pager page-option" data-page="2">2</a></li>
+                                                <li><a href="#" class="listing-pager page-option" data-page="3">3</a></li>
+                                            </ul>
+                                        </div>
+                                        
+                                    </div>
+                                    <!-- ///Lists Tab -->
                                     <!-- Clicks Tab -->
                                     <div role="tabpanel" class="tab-pane" id="j-clicks">
                                         
@@ -1167,6 +1359,9 @@
                                                                 </svg>
                                                             </a>
                                                         </th>
+                                                        <th>
+                                                            <span>Money Spent</span>
+                                                        </th>
                                                         <th class="s-actions">
                                                             
                                                         </th>
@@ -1176,6 +1371,7 @@
                                                     <tr>
                                                         <td>James Earl</td>
                                                         <td>jamesearl@gmail.com</td>
+                                                        <td>$567.34</td>
                                                         <td class="s-actions">
                                                             <a href="##" title="" class="btn btn-default btn-xs" target="_self">
                                                                 <i class="fa fa-eye"></i>
@@ -1185,6 +1381,7 @@
                                                     <tr>
                                                         <td>Bob Bobert</td>
                                                         <td>bobbobert@yahoo.com</td>
+                                                        <td>$245.45</td>
                                                         <td class="s-actions">
                                                             <a href="##" title="" class="btn btn-default btn-xs" target="_self">
                                                                 <i class="fa fa-eye"></i>
@@ -1194,6 +1391,7 @@
                                                     <tr>
                                                         <td>Pat Genson</td>
                                                         <td>patgenson@fasol.com</td>
+                                                        <td>$4,345.45</td>
                                                         <td class="s-actions">
                                                             <a href="##" title="" class="btn btn-default btn-xs" target="_self">
                                                                 <i class="fa fa-eye"></i>
@@ -1203,6 +1401,7 @@
                                                     <tr>
                                                         <td>Ham Burger</td>
                                                         <td>hamburger@gmail.com</td>
+                                                        <td>$12.34</td>
                                                         <td class="s-actions">
                                                             <a href="##" title="" class="btn btn-default btn-xs" target="_self">
                                                                 <i class="fa fa-eye"></i>
@@ -1654,7 +1853,205 @@
             </div>
         </div>
         
+        <div class="s-slide-panel from-right s-slide-sm" id="j-activity-info">
+    		<header class="s-slide-panel-header">
+    			<h4>Activity Info</h4>
+                <button class="btn btn-success pull-right" id="j-delete-example-save" style="display: none;">Save</button>
+                <button class="btn btn-primary pull-right" id="j-delete-example-edit">Edit</button>
+    			<a href="#0" class="s-slide-panel-close">Close</a>
+    		</header>
+
+    		<div class="s-slide-panel-container">
+                <div class="s-loader-wrapper">
+                    <div class="s-animated-loader"></div>
+                </div>
+    			<div class="s-slide-panel-content">
+    				<div class="row">
+    				    <div class="col-md-12">
+                            
+                            <div class="form-group">
+                                <label for="name">Name</label>
+                                <p>Marketing Email</p>
+                                <input style="display:none;"type="email" class="form-control" id="name" value="Marketing Email">
+                            </div>
+
+                            <div class="form-group">
+                                <label for="description">Description</label>
+                                <p>Aenean lacinia bibendum nulla sed consectetur. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Cras justo odio, dapibus ac facilisis in, egestas eget quam. Aenean eu leo quam. Pellentesque ornare sem lacinia quam venenatis vestibulum. Etiam porta sem malesuada magna mollis euismod.</p>
+                                <textarea style="display:none;" class="form-control" name="description" rows="8" cols="40">Aenean lacinia bibendum nulla sed consectetur. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Cras justo odio, dapibus ac facilisis in, egestas eget quam. Aenean eu leo quam. Pellentesque ornare sem lacinia quam venenatis vestibulum. Etiam porta sem malesuada magna mollis euismod.</textarea>  
+                            </div>
+    				    </div>
+    				</div>
+    			</div>
+    		</div>
+    	</div>
         
+        <div class="s-slide-panel from-right s-slide-md" id="j-broadcast-reporting">
+    		<header class="s-slide-panel-header">
+    			<h4>Broadcast Reporting</h4>
+                <button class="btn btn-default pull-right" id="j-delete-example-save">
+                    <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" class="nc-icon outline" x="0px" y="0px" width="14px" height="14px" viewBox="0 0 32 32">
+                        <g transform="translate(0, 0)">
+                        <line data-cap="butt" fill="none" stroke="#666666" stroke-width="2" stroke-miterlimit="10" x1="31" y1="22" x2="1" y2="22" stroke-linejoin="round" stroke-linecap="round"/>
+                        <line data-cap="butt" data-color="color-2" fill="none" stroke="#666666" stroke-width="2" stroke-miterlimit="10" x1="16" y1="2" x2="16" y2="15" stroke-linejoin="round" stroke-linecap="round"/>
+                        <polyline fill="none" stroke="#666666" stroke-width="2" stroke-linecap="round" stroke-miterlimit="10" points="24,11 25,11   31,22 31,30 1,30 1,22 7,11 8,11 " stroke-linejoin="round"/>
+                        <polyline data-color="color-2" fill="none" stroke="#666666" stroke-width="2" stroke-linecap="round" stroke-miterlimit="10" points="  20,11 16,15 12,11 " stroke-linejoin="round"/>
+                        <line data-color="color-2" fill="none" stroke="#666666" stroke-width="2" stroke-linecap="round" stroke-miterlimit="10" x1="26" y1="26" x2="22" y2="26" stroke-linejoin="round"/>
+                        </g>
+                    </svg>
+                </button>
+    			<a href="#j-broadcast-reporting" class="s-slide-panel-close">Close</a>
+    		</header>
+
+    		<div class="s-slide-panel-container">
+                <div class="s-loader-wrapper">
+                    <div class="s-animated-loader"></div>
+                </div>
+    			<div class="s-slide-panel-content s-list-style">
+    				
+                    <div class="table-responsive">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>
+                                        Date
+                                    </th>
+                                    <th>
+                                        Type
+                                    </th>
+                                    <th>
+                                        Account
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>
+                                        July 8, 2016 12:30am
+                                    </td>
+                                    <td>
+                                        Bounce
+                                    </td>
+                                    <td>
+                                        <a href="##">jamesjohnson@gmail.com</a>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        July 5, 2016 2:54am
+                                    </td>
+                                    <td>
+                                        Open
+                                    </td>
+                                    <td>
+                                        <a href="##">peterpan@yahoo.com</a>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        June 25, 2016 4:23am
+                                    </td>
+                                    <td>
+                                        Sale
+                                    </td>
+                                    <td>
+                                        <a href="##">bobjenga@goldcars.com</a>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        June 4, 2016 12:30am
+                                    </td>
+                                    <td>
+                                        Bounce
+                                    </td>
+                                    <td>
+                                        <a href="##">samsampster@yahoo.com</a>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <button class="btn btn-white s-load-more">Load Next 10 of 233</button>
+                    </div>
+                    
+    			</div>
+    		</div>
+    	</div>
+        
+        
+        <style>
+            .s-slide-panel .table-responsive {
+                padding: 0px 20px;
+            }
+            .s-slide-panel .table {
+                background: none;
+            }
+            .s-slide-panel .table tr {
+                    border-bottom: 1px solid #ddd;
+            }
+            .s-slide-panel .s-load-more {
+                width: 100%;
+                margin-top: 10px;
+            }
+            .s-slide-panel label {
+                margin-bottom: 0px;
+                font-size: 14px;
+                color: #000;
+            }
+        </style>
+        <script>
+            (function(){
+            	//open the lateral panel
+            	$('.s-slide-btn').on('click', function(event){
+                    event.preventDefault()
+                    var getName = $(this).attr('data-slideout');
+            		$('#' + getName).addClass('is-visible');
+            	});
+            	//close the lateral panel
+            	$('.s-slide-panel').on('click', function(event){
+            		if( $(event.target).is('.s-slide-panel') || $(event.target).is('.s-slide-panel-close') ) { 
+            			$('.s-slide-panel').removeClass('is-visible');
+            			event.preventDefault();
+            		}
+            	});
+            })()
+        </script>
+        <script>
+            (function(){
+                
+            
+                $('#j-delete-example-edit').click(function(){
+                    $(this).hide();
+                    $(this).closest('.s-slide-panel').find('textarea').show();
+                    $(this).closest('.s-slide-panel').find('input').show();
+                    $(this).closest('.s-slide-panel').find('p').hide();
+                    $(this).siblings('#j-delete-example-save').show();
+                });
+                    
+                
+                
+                $('#j-delete-example-save').click(function(){
+                    var $this = $(this);
+                    $('.s-loader-wrapper').show();
+                    $($this).addClass('disabled');
+                    
+                    setTimeout(
+                      function() 
+                      {
+                          $($this).removeClass('disabled');    
+                          $('.s-loader-wrapper').hide();
+                          
+                          $($this).hide();
+                            $($this).closest('.s-slide-panel').find('textarea').hide();
+                            $($this).closest('.s-slide-panel').find('input').hide();
+                            $($this).closest('.s-slide-panel').find('p').show();
+                            $($this).siblings('#j-delete-example-edit').show();
+                          
+                      }, 2000);
+                });
+            }());
+            
+        </script>
         <script>
             //Remove this
             $(window).bind("load", function() {
@@ -1785,6 +2182,7 @@
             }
             .info-box .s-content-title {
                 font-weight: 600;
+                color: #000;
             }
             .info-box .info-box-stats {
                 float: left;
@@ -1847,5 +2245,469 @@
                font-weight: 300;
            }
         </style>  
+        
+
+        <style>
+        /* -------------------------------- 
+
+Primary style
+
+-------------------------------- */
+
+
+.s-slide-panel *::after, .s-slide-panel *::before, .s-slide-panel::after, .s-slide-panel::before {
+  content: '';
+}
+/* -------------------------------- 
+
+xnugget info 
+
+-------------------------------- */
+.s-slide-nugget-info {
+  display: block;
+  font-family: "Droid Serif", serif;
+  color: #fff;
+  margin: 20px auto 0;
+  font-size: 12px;
+  font-size: 0.75rem;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  width: 120px;
+  position: relative;
+}
+.s-slide-nugget-info::after {
+  position: absolute;
+  display: inline-block;
+  top: 16px;
+  left: 50%;
+  -webkit-transform: translateX(-50%);
+  -moz-transform: translateX(-50%);
+  -ms-transform: translateX(-50%);
+  -o-transform: translateX(-50%);
+  transform: translateX(-50%);
+  height: 1px;
+  width: 0%;
+  background-color: white;
+  -webkit-transition: all 0.2s;
+  -moz-transition: all 0.2s;
+  transition: all 0.2s;
+}
+.s-slide-nugget-info:hover::after {
+  width: 100%;
+}
+
+/* -------------------------------- 
+
+xcarbonads 
+
+-------------------------------- */
+
+
+/* -------------------------------- 
+
+Main components 
+
+-------------------------------- */
+html, body {
+  height: 100%;
+}
+
+.s-slide-main-content {
+  text-align: center;
+}
+.s-slide-main-content h1 {
+  font-size: 20px;
+  font-size: 1.25rem;
+  color: #64788c;
+  padding: 4em 0;
+}
+.s-slide-main-content .s-slide-btn {
+  position: relative;
+  display: inline-block;
+  padding: 1em 2em;
+  background-color: #89ba2c;
+  color: #ffffff;
+  font-weight: bold;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  border-radius: 50em;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.5), 0 0 5px rgba(0, 0, 0, 0.1);
+  -webkit-transition: all 0.2s;
+  -moz-transition: all 0.2s;
+  transition: all 0.2s;
+}
+.no-touch .s-slide-main-content .s-slide-btn:hover {
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.5), 0 0 20px rgba(0, 0, 0, 0.3);
+}
+@media only screen and (min-width: 1170px) {
+  .s-slide-main-content h1 {
+    font-size: 32px;
+    font-size: 2rem;
+  }
+}
+
+.s-slide-panel {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 100%;
+  visibility: hidden;
+  -webkit-transition: visibility 0s 0.6s;
+  -moz-transition: visibility 0s 0.6s;
+  transition: visibility 0s 0.6s;
+  z-index: 4000;
+}
+.s-slide-panel::after {
+  /* overlay layer */
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: transparent;
+  cursor: pointer;
+  -webkit-transition: background 0.3s 0.3s;
+  -moz-transition: background 0.3s 0.3s;
+  transition: background 0.3s 0.3s;
+}
+.s-slide-panel.is-visible {
+  visibility: visible;
+  -webkit-transition: visibility 0s 0s;
+  -moz-transition: visibility 0s 0s;
+  transition: visibility 0s 0s;
+}
+.s-slide-panel.is-visible::after {
+  background: rgba(0, 0, 0, 0.6);
+  -webkit-transition: background 0.3s 0s;
+  -moz-transition: background 0.3s 0s;
+  transition: background 0.3s 0s;
+}
+.s-slide-panel.is-visible .s-slide-panel-close::before {
+  -webkit-animation: s-slide-close-1 0.6s 0.3s;
+  -moz-animation: s-slide-close-1 0.6s 0.3s;
+  animation: s-slide-close-1 0.6s 0.3s;
+}
+.s-slide-panel.is-visible .s-slide-panel-close::after {
+  -webkit-animation: s-slide-close-2 0.6s 0.3s;
+  -moz-animation: s-slide-close-2 0.6s 0.3s;
+  animation: s-slide-close-2 0.6s 0.3s;
+}
+
+@-webkit-keyframes s-slide-close-1 {
+  0%, 50% {
+    -webkit-transform: rotate(0);
+  }
+  100% {
+    -webkit-transform: rotate(45deg);
+  }
+}
+@-moz-keyframes s-slide-close-1 {
+  0%, 50% {
+    -moz-transform: rotate(0);
+  }
+  100% {
+    -moz-transform: rotate(45deg);
+  }
+}
+@keyframes s-slide-close-1 {
+  0%, 50% {
+    -webkit-transform: rotate(0);
+    -moz-transform: rotate(0);
+    -ms-transform: rotate(0);
+    -o-transform: rotate(0);
+    transform: rotate(0);
+  }
+  100% {
+    -webkit-transform: rotate(45deg);
+    -moz-transform: rotate(45deg);
+    -ms-transform: rotate(45deg);
+    -o-transform: rotate(45deg);
+    transform: rotate(45deg);
+  }
+}
+@-webkit-keyframes s-slide-close-2 {
+  0%, 50% {
+    -webkit-transform: rotate(0);
+  }
+  100% {
+    -webkit-transform: rotate(-45deg);
+  }
+}
+@-moz-keyframes s-slide-close-2 {
+  0%, 50% {
+    -moz-transform: rotate(0);
+  }
+  100% {
+    -moz-transform: rotate(-45deg);
+  }
+}
+@keyframes s-slide-close-2 {
+  0%, 50% {
+    -webkit-transform: rotate(0);
+    -moz-transform: rotate(0);
+    -ms-transform: rotate(0);
+    -o-transform: rotate(0);
+    transform: rotate(0);
+  }
+  100% {
+    -webkit-transform: rotate(-45deg);
+    -moz-transform: rotate(-45deg);
+    -ms-transform: rotate(-45deg);
+    -o-transform: rotate(-45deg);
+    transform: rotate(-45deg);
+  }
+}
+.s-slide-panel-header {
+  position: fixed;
+  width: 90%;
+  height: 50px;
+  line-height: 50px;
+  background: rgba(255, 255, 255, 0.96);
+  z-index: 2;
+  box-shadow: 0 1px 1px rgba(0, 0, 0, 0.08);
+  -webkit-transition: top 0.3s 0s;
+  -moz-transition: top 0.3s 0s;
+  transition: top 0.3s 0s;
+}
+.s-slide-panel.s-slide-sm .s-slide-panel-header {
+    width: 40%;
+}
+.s-slide-panel.s-slide-md .s-slide-panel-header {
+    width: 60%;
+}
+.s-slide-panel-header button {
+    margin-top: 10px;
+    opacity: 0;
+}
+.s-slide-panel.is-visible .s-slide-panel-header button {
+    opacity: 1;
+}
+.s-slide-panel-header h1 {
+  font-weight: bold;
+  color: #89ba2c;
+  padding-left: 5%;
+}
+.from-right .s-slide-panel-header, .from-left .s-slide-panel-header {
+  top: -50px;
+}
+.from-right .s-slide-panel-header {
+  right: 0;
+}
+.from-left .s-slide-panel-header {
+  left: 0;
+}
+.is-visible .s-slide-panel-header {
+  top: 0;
+  -webkit-transition: top 0.3s 0.3s;
+  -moz-transition: top 0.3s 0.3s;
+  transition: top 0.3s 0.3s;
+padding: 0px 15px;
+}
+.s-slide-panel-header h4 {
+    margin-top: 16px;
+    display: inline-block;
+    opacity: 0;
+    -webkit-transition: opacity 0.3s out;
+    -moz-transition: opacity 0.3s out;
+    transition: opacity 0.3s out;
+}
+.is-visible .s-slide-panel-header h4 {
+    opacity: 1;
+    
+}
+.s-slide-panel-close {
+    position: absolute;
+  top: 0px;
+  left: -60px;
+  height: 100%;
+  width: 60px;
+  display: inline-block;
+  overflow: hidden;
+  text-indent: 100%;
+  white-space: nowrap;
+  background: #fff;
+  border-bottom-left-radius: 2px;
+}
+
+.s-slide-panel-close::before, .s-slide-panel-close::after {
+  /* close icon created in CSS */
+  position: absolute;
+  top: 22px;
+  left: 20px;
+  height: 3px;
+  width: 20px;
+  background-color: #424f5c;
+  /* this fixes a bug where pseudo elements are slighty off position */
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
+}
+.s-slide-panel-close:hover {
+    background: #DA5757;
+}
+.s-slide-panel-close:hover:after,.s-slide-panel-close:hover:before {
+    background:#fff;
+}
+.s-slide-panel-close::before {
+  -webkit-transform: rotate(45deg);
+  -moz-transform: rotate(45deg);
+  -ms-transform: rotate(45deg);
+  -o-transform: rotate(45deg);
+  transform: rotate(45deg);
+}
+.s-slide-panel-close::after {
+  -webkit-transform: rotate(-45deg);
+  -moz-transform: rotate(-45deg);
+  -ms-transform: rotate(-45deg);
+  -o-transform: rotate(-45deg);
+  transform: rotate(-45deg);
+}
+.no-touch .s-slide-panel-close:hover {
+  background-color: #424f5c;
+}
+.no-touch .s-slide-panel-close:hover::before, .no-touch .s-slide-panel-close:hover::after {
+  background-color: #ffffff;
+  -webkit-transition-property: -webkit-transform;
+  -moz-transition-property: -moz-transform;
+  transition-property: transform;
+  -webkit-transition-duration: 0.3s;
+  -moz-transition-duration: 0.3s;
+  transition-duration: 0.3s;
+}
+.no-touch .s-slide-panel-close:hover::before {
+  -webkit-transform: rotate(220deg);
+  -moz-transform: rotate(220deg);
+  -ms-transform: rotate(220deg);
+  -o-transform: rotate(220deg);
+  transform: rotate(220deg);
+}
+.no-touch .s-slide-panel-close:hover::after {
+  -webkit-transform: rotate(135deg);
+  -moz-transform: rotate(135deg);
+  -ms-transform: rotate(135deg);
+  -o-transform: rotate(135deg);
+  transform: rotate(135deg);
+}
+
+.s-slide-panel-container {
+  position: fixed;
+  width: 90%;
+  height: 100%;
+  top: 0;
+  background: #f7f7f7;
+  z-index: 1;
+  -webkit-transition-property: -webkit-transform;
+  -moz-transition-property: -moz-transform;
+  transition-property: transform;
+  -webkit-transition-duration: 0.3s;
+  -moz-transition-duration: 0.3s;
+  transition-duration: 0.3s;
+  -webkit-transition-delay: 0.3s;
+  -moz-transition-delay: 0.3s;
+  transition-delay: 0.3s;
+}
+.s-slide-panel.s-slide-sm .s-slide-panel-container {
+    width: 40%;
+}
+.s-slide-panel.s-slide-md .s-slide-panel-container {
+    width: 60%;
+}
+.from-right .s-slide-panel-container {
+  right: 0;
+  -webkit-transform: translate3d(100%, 0, 0);
+  -moz-transform: translate3d(100%, 0, 0);
+  -ms-transform: translate3d(100%, 0, 0);
+  -o-transform: translate3d(100%, 0, 0);
+  transform: translate3d(100%, 0, 0);
+}
+.from-left .s-slide-panel-container {
+  left: 0;
+  -webkit-transform: translate3d(-100%, 0, 0);
+  -moz-transform: translate3d(-100%, 0, 0);
+  -ms-transform: translate3d(-100%, 0, 0);
+  -o-transform: translate3d(-100%, 0, 0);
+  transform: translate3d(-100%, 0, 0);
+}
+.is-visible .s-slide-panel-container {
+  -webkit-transform: translate3d(0, 0, 0);
+  -moz-transform: translate3d(0, 0, 0);
+  -ms-transform: translate3d(0, 0, 0);
+  -o-transform: translate3d(0, 0, 0);
+  transform: translate3d(0, 0, 0);
+  -webkit-transition-delay: 0s;
+  -moz-transition-delay: 0s;
+  transition-delay: 0s;
+}
+
+
+.s-slide-panel-content {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  padding: 70px 4vw;
+  overflow: auto;
+  /* smooth scrolling on touch devices */
+  -webkit-overflow-scrolling: touch;
+}
+.s-slide-panel-content.s-list-style {
+    padding: 50px 0px;
+}
+.s-slide-panel-content.s-list-style ul li {
+    border-bottom: 1px solid #eee;
+    padding: 10px;
+}
+/*Conponent: Loader*/
+.s-loader-wrapper {
+    height: 100%;
+    position: relative;
+    z-index: 2000;
+    background: rgba(255,255,255,0.7);
+    display: none;
+}
+.s-animated-loader {
+    margin: 40px auto 0;
+    width: 75px;
+    height: 75px;
+    border-radius: 50%;
+    border: solid 10px rgba(43,81,100, .5);
+    border-top-color: rgba(43,81,100, 1);
+    -webkit-animation: loadingSpin 1s infinite linear;
+    -moz-animation: loadingSpin 1s infinite linear;
+    animation: loadingSpin 1s infinite linear;
+    top: 29%;
+    position: relative;
+}
+@-webkit-keyframes loadingSpin {
+    100% {
+    -webkit-transform: rotate(360deg);
+    }
+}
+@-moz-keyframes loadingSpin {
+    100% {
+        transform: rotate(360deg);
+    }
+}
+@keyframes loadingSpin {
+    100% {
+        transform: rotate(360deg);
+    }
+}
+.s-loading-icon-fullwidth {
+    position: fixed;
+    top: 40%;
+    left: calc(50% + 90px);
+    z-index: 3000;
+}
+@media (max-width: 1199px) {
+    .s-loading-icon-fullwidth {
+        left: calc(50% - 35px);
+    }
+}
+
+
+        </style>
     </body>
+    
 </html>
