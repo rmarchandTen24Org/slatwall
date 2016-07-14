@@ -690,9 +690,6 @@
                                                                 .s-search-wrapper .input-group .input-group-btn.s-action {
                                                                     padding-left: 5px;
                                                                 }
-                                                                .s-search-wrapper .input-group .input-group-btn.s-action button {
-                                                                    border-radius: 2px !important;
-                                                                }
                                                             </style>
                                                         </div>
                                                         
@@ -789,7 +786,7 @@
                                                     <!-- Clicks Tab -->
                                                     <div role="tabpanel" class="tab-pane" id="j-clicks">
                                                         
-                                                        <div class="row s-table-inner-nav">
+                                                        <div class="row s-table-inner-nav ">
                                                             
                                                             <div class="s-search-wrapper">
                                                                 <div class="input-group">
@@ -807,22 +804,58 @@
                                                                             <li><a href="#">SKU Code</a></li>
                                                                         </ul>
                                                                     </div>
+                                                                    
+                                                                    <style>
+                                                                        .s-header-btn-group  {
+                                                                            display: inline-block;
+                                                                            margin-left: 5px;
+                                                                        }
+                                                                        .s-header-btn-group > button.btn {
+                                                                            border-top-right-radius: 0px !important;
+                                                                            border-bottom-right-radius: 0px !important;
+                                                                            border-top-left-radius: 0px !important;
+                                                                            border-bottom-left-radius: 0px !important;
+                                                                            margin-right: -1px;
+                                                                        }
+                                                                        .s-header-btn-group > button.btn:last-child {
+                                                                            border-top-right-radius: 2px !important;
+                                                                            border-bottom-right-radius: 2px !important;
+                                                                            margin-right: 0px;
+                                                                        }
+                                                                        .s-header-btn-group > button.btn:first-child {
+                                                                            border-top-left-radius: 2px !important;
+                                                                            border-bottom-left-radius: 2px !important;
+                                                                        }
+                                                                        .s-header-btn-group > button.btn.s-selected {
+                                                                            background-color: #e6e6e6;
+                                                                            border-color: #d1d1d1;
+                                                                            color: #5E5E5E;
+                                                                            pointer-events: none;
+                                                                            color: #aaa;
+                                                                            -webkit-box-shadow: inset 0px 0px 3px 0px rgba(0,0,0,0.13);
+                                                                            -moz-box-shadow: inset 0px 0px 3px 0px rgba(0,0,0,0.13);
+                                                                            box-shadow: inset 0px 0px 3px 0px rgba(0,0,0,0.13);
+                                                                        }
+                                                                    </style>
                                                                     <span class="s-search">
                                                                         <input type="text" class="form-control s-search" name="" placeholder="Search...">
                                                                         <buttom class="btn btn-xs btn-default s-add-search-param">Add this filter</buttom>
                                                                     </span>
                                                                     <div class="input-group-btn s-action" style="padding-left: 5px;">
-                                                                        <button class="btn btn-default btn-sm">Show Clicks By User</button>
-                                                                    </div>
-                                                                    <div class="input-group-btn s-action" style="padding-left: 5px;">
                                                                         <button class="btn btn-default btn-sm"><i class="fa fa-download" aria-hidden="true"></i></button>
+                                                                        
+                                                                        <div class="s-header-btn-group">
+                                                                            <button type="button" class="btn btn-default btn-sm s-selected" id="j-example-only-link-link">Links</button>
+                                                                            <button type="button" class="btn btn-default btn-sm" id="j-example-only-user-link">Users</button>
+                                                                        </div>
+                                                                        
                                                                     </div>
                                                                 </div>
                                                             </div>
                                                             
                                                         </div>
                                                         
-                                                        <div class="table-responsive">
+                                                        <div class="table-responsive" id="j-example-only-link">
                                                             <table class="table table-bordered s-detail-content-table">
                                                                 <thead>
                                                                     <tr>
@@ -871,46 +904,12 @@
                                                             </table>
                                                         </div>
                                                         
-                                                        
-                                                        <div class="row s-table-inner-nav">
-                                                            
-                                                            <div class="s-search-wrapper">
-                                                                <div class="input-group">
-                                                                    <div class="input-group-btn search-panel">
-                                                                        <button type="button" class="btn btn-sm btn-default dropdown-toggle" data-toggle="dropdown">
-                                                                        <span>All</span> <span class="caret"></span>
-                                                                        </button>
-                                                                        <ul class="dropdown-menu" role="menu">
-                                                                            <li><a href="#">Price</a></li>
-                                                                            <li><a href="#">Qty. Max</a></li>
-                                                                            <li><a href="#">Qty. Min</a></li>
-                                                                            <li><a href="#">Currency</a></li>
-                                                                            <li><a href="#">Price Group</a></li>
-                                                                            <li><a href="#">Sku Definition </a></li>
-                                                                            <li><a href="#">SKU Code</a></li>
-                                                                        </ul>
-                                                                    </div>
-                                                                    <span class="s-search">
-                                                                        <input type="text" class="form-control s-search" name="" placeholder="Search...">
-                                                                        <buttom class="btn btn-xs btn-default s-add-search-param">Add this filter</buttom>
-                                                                    </span>
-                                                                    <div class="input-group-btn s-action" style="padding-left: 5px;">
-                                                                        <button class="btn btn-default btn-sm">Show Clicks By User</button>
-                                                                    </div>
-                                                                    <div class="input-group-btn s-action" style="padding-left: 5px;">
-                                                                        <button class="btn btn-default btn-sm"><i class="fa fa-download" aria-hidden="true"></i></button>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                            
-                                                        </div>
-                                                        
-                                                        <div class="table-responsive">
+                                                        <div class="table-responsive" id="j-example-only-user" style="display:none;">
                                                             <table class="table table-bordered s-detail-content-table">
                                                                 <thead>
                                                                     <tr>
                                                                         <th>
-                                                                            <span>Links</span>
+                                                                            <span>E-Mail</span>
                                                                             <a href="#" class="s-sort-arrows">
                                                                                 <svg class="nc-icon outline" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="20px" height="20px" viewBox="0 0 64 64">
                                                                                     <g transform="translate(0.5, 0.5)"> 
@@ -935,20 +934,20 @@
                                                                 </thead>
                                                                 <tbody>    
                                                                     <tr>
-                                                                        <td>www.gombospecial.com</td>
-                                                                        <td>2</td>
+                                                                        <td>rogerjames@hfd.com</td>
+                                                                        <td>5</td>
                                                                     </tr>
                                                                     <tr>
-                                                                        <td>www.veggiepatty.com</td>
-                                                                        <td>8</td>
+                                                                        <td>samsamster@gmail.com</td>
+                                                                        <td>1</td>
                                                                     </tr>
                                                                     <tr>
-                                                                        <td>www.stoogo.com</td>
-                                                                        <td>6</td>
+                                                                        <td>josejesus@yahoo.com</td>
+                                                                        <td>1</td>
                                                                     </tr>
                                                                     <tr>
-                                                                        <td>www.gombospecial.com/contact-us</td>
-                                                                        <td>11</td>
+                                                                        <td>markmathews@bingsurfboards.com</td>
+                                                                        <td>3</td>
                                                                     </tr>
                                                                 </tbody>
                                                             </table>
@@ -2373,6 +2372,17 @@
                 color: #000;
             }
         </style>
+        <script>
+            (function(){
+                $('.s-header-btn-group button').click(function(){
+                    var getID = $(this).attr('id');
+                    $('#j-example-only-link-link').toggleClass('s-selected');
+                    $('#j-example-only-user-link').toggleClass('s-selected');
+                    $('#j-example-only-link').toggle();
+                    $('#j-example-only-user').toggle();
+                });
+            }())
+        </script>
         <script>
             (function(){
             	//open the lateral panel
