@@ -1,0 +1,11 @@
+
+{
+  "Unit Tests": {
+    "coverage": {
+      "/home/ubuntu/indiegogo/file1.rb": [null, 1, 1, 1, 0, 0, 0, null, 1, null, 1, 1, null],
+      "/home/ubuntu/indiegogo/lib/file2.rb": [1, 1, 2, null, null, 1, 38, 38, null, null],
+      "/home/ubuntu/indiegogo/lib/file3.rb": [1, 1, 18, null, 18, null, 0, null, 8, null, 20],
+    },
+    "timestamp": 1427502570
+  }
+}

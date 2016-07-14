@@ -64,6 +64,9 @@ test:
 
     # Run Unit Tests
     - sudo lxc-attach -n "$(docker inspect --format '{{.Id}}' slatwallci_slatwallweb_1)" -- ant -f /var/www/meta/tests/build.xml runUnitTests
+  post:
+    - mkdir $CIRCLE_ARTIFACTS/json_output
+    - mv ./sample.json $CIRCLE_ARTIFACTS/json_output
 
 deployment:
 
