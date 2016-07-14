@@ -434,49 +434,38 @@
                                 <div class="tab-content">
                                     <!--- Dashboard content area --->
                                     <div class="tab-pane active" id="dashboard">
-                                        
-                                        
                                         <div class="row">
-                                            
                                             <div class="col-md-12">
-                                                
                                                 <div class="panel info-box panel-white">
                                                     <div class="panel-body">
                                                         <div class="row">
-                                                            <div class="col-md-7">
-                                                                
-                                                                <div class="s-content-body">
-                                                                    <h5 class="s-content-title" style="display:inline-block">
-                                                                        Create Follow Up:
-                                                                    </h5> You can create new activities based on your current email list or a new emails list.
+                                                            <div class="row-height">
+                                                                <div class="col-md-7 col-height col-middle">
+                                                                    <div class="s-content-body">
+                                                                        <h5 class="s-content-title" style="display:inline-block">
+                                                                            Create Follow Up:
+                                                                        </h5> You can create new activities based on your current email list or a new emails list.
+                                                                    </div>
                                                                 </div>
-                                                            </div>
-                                                            <div class="col-md-5">
-                                                                <div class="input-group">
-                                                                    <select class="form-control input-sm">
-                                                                        <option value="" selected>Same list follow up</option>
-                                                                        <option value="">Follow up to openers (103)</option>
-                                                                        <option value="">Non-bounces follow up</option>
-                                                                        <option value="">Custom follow up</option>
-                                                                    </select>            
-                                                                    <span class="input-group-btn">
-                                                                        <button class="btn btn-primary" style="border-radius: 2px;margin-left: 5px;" type="button">Create Next Activity</button>
-                                                                    </span>
+                                                                <div class="col-md-5 col-height col-middle">
+                                                                    <div class="input-group">
+                                                                        <select class="form-control input-sm">
+                                                                            <option value="" selected>Same list follow up</option>
+                                                                            <option value="">Follow up to openers (103)</option>
+                                                                            <option value="">Non-bounces follow up</option>
+                                                                            <option value="">Custom follow up</option>
+                                                                        </select>            
+                                                                        <span class="input-group-btn">
+                                                                            <button class="btn btn-primary" style="border-radius: 2px;margin-left: 5px;" type="button">Create Next Activity</button>
+                                                                        </span>
+                                                                    </div>
                                                                 </div>
                                                             </div>
                                                         </div>
                                                     </div>
                                                 </div>
-                                                
-                                                
-                                            </div>
-                                            
-                                            
-                                        </div>
-                                        
-                                        
-                                        
-                                          
+                                            </div>    
+                                        </div>      
                                         <div class="row">
                                             <div class="col-md-2 col-sm-4">
                                                 <div class="panel info-box panel-white">
@@ -662,6 +651,9 @@
                                                         <li role="presentation">
                                                             <a href="#j-transactions" role="tab" data-toggle="tab" aria-controls="transactions">Transactions (2)</a>
                                                         </li>
+                                                        <li role="presentation">
+                                                            <a href="#j-reporting" role="tab" data-toggle="tab" aria-controls="transactions">Broadcast Reporting (2)</a>
+                                                        </li>
                                                     </ul>
                                                 </div>
                                                 <div class="tab-content">
@@ -797,7 +789,7 @@
                                                     <!-- Clicks Tab -->
                                                     <div role="tabpanel" class="tab-pane" id="j-clicks">
                                                         
-                                                        <div class="row s-table-inner-nav ">
+                                                        <div class="row s-table-inner-nav">
                                                             
                                                             <div class="s-search-wrapper">
                                                                 <div class="input-group">
@@ -819,6 +811,92 @@
                                                                         <input type="text" class="form-control s-search" name="" placeholder="Search...">
                                                                         <buttom class="btn btn-xs btn-default s-add-search-param">Add this filter</buttom>
                                                                     </span>
+                                                                    <div class="input-group-btn s-action" style="padding-left: 5px;">
+                                                                        <button class="btn btn-default btn-sm">Show Clicks By User</button>
+                                                                    </div>
+                                                                    <div class="input-group-btn s-action" style="padding-left: 5px;">
+                                                                        <button class="btn btn-default btn-sm"><i class="fa fa-download" aria-hidden="true"></i></button>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            
+                                                        </div>
+                                                        
+                                                        <div class="table-responsive">
+                                                            <table class="table table-bordered s-detail-content-table">
+                                                                <thead>
+                                                                    <tr>
+                                                                        <th>
+                                                                            <span>Links</span>
+                                                                            <a href="#" class="s-sort-arrows">
+                                                                                <svg class="nc-icon outline" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="20px" height="20px" viewBox="0 0 64 64">
+                                                                                    <g transform="translate(0.5, 0.5)"> 
+                                                                                        <polygon class="s-ascending" fill="#aaaaaa" stroke="#aaaaaa" stroke-width="3" stroke-linecap="square" stroke-miterlimit="10" points="20,26 44,26 32,12 " stroke-linejoin="round"></polygon> 
+                                                                                        <polygon class="s-descending" fill="#aaaaaa" stroke="#aaaaaa" stroke-width="3" stroke-linecap="square" stroke-miterlimit="10" points="44,38 20,38 32,52 " stroke-linejoin="round"></polygon> 
+                                                                                    </g>
+                                                                                </svg>
+                                                                            </a>
+                                                                        </th>
+                                                                        <th>
+                                                                            <span>Count</span>
+                                                                            <a href="#" class="s-sort-arrows">
+                                                                                <svg class="nc-icon outline" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="20px" height="20px" viewBox="0 0 64 64">
+                                                                                    <g transform="translate(0.5, 0.5)"> 
+                                                                                        <polygon class="s-ascending" fill="#aaaaaa" stroke="#aaaaaa" stroke-width="3" stroke-linecap="square" stroke-miterlimit="10" points="20,26 44,26 32,12 " stroke-linejoin="round"></polygon> 
+                                                                                        <polygon class="s-descending" fill="#aaaaaa" stroke="#aaaaaa" stroke-width="3" stroke-linecap="square" stroke-miterlimit="10" points="44,38 20,38 32,52 " stroke-linejoin="round"></polygon> 
+                                                                                    </g>
+                                                                                </svg>
+                                                                            </a>
+                                                                        </th>
+                                                                    </tr>
+                                                                </thead>
+                                                                <tbody>    
+                                                                    <tr>
+                                                                        <td>www.gombospecial.com</td>
+                                                                        <td>2</td>
+                                                                    </tr>
+                                                                    <tr>
+                                                                        <td>www.veggiepatty.com</td>
+                                                                        <td>8</td>
+                                                                    </tr>
+                                                                    <tr>
+                                                                        <td>www.stoogo.com</td>
+                                                                        <td>6</td>
+                                                                    </tr>
+                                                                    <tr>
+                                                                        <td>www.gombospecial.com/contact-us</td>
+                                                                        <td>11</td>
+                                                                    </tr>
+                                                                </tbody>
+                                                            </table>
+                                                        </div>
+                                                        
+                                                        
+                                                        <div class="row s-table-inner-nav">
+                                                            
+                                                            <div class="s-search-wrapper">
+                                                                <div class="input-group">
+                                                                    <div class="input-group-btn search-panel">
+                                                                        <button type="button" class="btn btn-sm btn-default dropdown-toggle" data-toggle="dropdown">
+                                                                        <span>All</span> <span class="caret"></span>
+                                                                        </button>
+                                                                        <ul class="dropdown-menu" role="menu">
+                                                                            <li><a href="#">Price</a></li>
+                                                                            <li><a href="#">Qty. Max</a></li>
+                                                                            <li><a href="#">Qty. Min</a></li>
+                                                                            <li><a href="#">Currency</a></li>
+                                                                            <li><a href="#">Price Group</a></li>
+                                                                            <li><a href="#">Sku Definition </a></li>
+                                                                            <li><a href="#">SKU Code</a></li>
+                                                                        </ul>
+                                                                    </div>
+                                                                    <span class="s-search">
+                                                                        <input type="text" class="form-control s-search" name="" placeholder="Search...">
+                                                                        <buttom class="btn btn-xs btn-default s-add-search-param">Add this filter</buttom>
+                                                                    </span>
+                                                                    <div class="input-group-btn s-action" style="padding-left: 5px;">
+                                                                        <button class="btn btn-default btn-sm">Show Clicks By User</button>
+                                                                    </div>
                                                                     <div class="input-group-btn s-action" style="padding-left: 5px;">
                                                                         <button class="btn btn-default btn-sm"><i class="fa fa-download" aria-hidden="true"></i></button>
                                                                     </div>
@@ -1136,7 +1214,7 @@
                                                         </div>
                                                     </div>
                                                     <!-- ///Opens Tab -->
-                                                    <!-- Opens Tab -->
+                                                    <!-- transactions Tab -->
                                                     <div role="tabpanel" class="tab-pane" id="j-transactions">
                                                         <div class="row s-table-inner-nav ">
                                                             
@@ -1263,7 +1341,188 @@
                                                             </ul>
                                                         </div>
                                                     </div>
-                                                    <!-- ///Opens Tab -->
+                                                    <!-- ///transactions Tab -->
+                                                    <!-- Broadcast Reporting Tab -->
+                                                    <div role="tabpanel" class="tab-pane" id="j-reporting">
+                                                        <div class="row s-table-inner-nav ">
+                                                            
+                                                            <div class="s-search-wrapper">
+                                                                <div class="input-group">
+                                                                    <div class="input-group-btn search-panel">
+                                                                        <button type="button" class="btn btn-sm btn-default dropdown-toggle" data-toggle="dropdown">
+                                                                        <span>All</span> <span class="caret"></span>
+                                                                        </button>
+                                                                        <ul class="dropdown-menu" role="menu">
+                                                                            <li><a href="#">Price</a></li>
+                                                                            <li><a href="#">Qty. Max</a></li>
+                                                                            <li><a href="#">Qty. Min</a></li>
+                                                                            <li><a href="#">Currency</a></li>
+                                                                            <li><a href="#">Price Group</a></li>
+                                                                            <li><a href="#">Sku Definition </a></li>
+                                                                            <li><a href="#">SKU Code</a></li>
+                                                                        </ul>
+                                                                    </div>
+                                                                    <span class="s-search">
+                                                                        <input type="text" class="form-control s-search" name="" placeholder="Search...">
+                                                                        <buttom class="btn btn-xs btn-default s-add-search-param">Add this filter</buttom>
+                                                                    </span>
+                                                                    <div class="input-group-btn s-action" style="padding-left: 5px;">
+                                                                        <button class="btn btn-default btn-sm"><i class="fa fa-download" aria-hidden="true"></i></button>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            
+                                                        </div>
+                                                        
+                                                        <div class="table-responsive">
+                                                            <table class="table table-bordered s-detail-content-table">
+                                                                <thead>
+                                                                    <tr>
+                                                                        <th>
+                                                                            <span>Date</span>
+                                                                            <a href="#" class="s-sort-arrows">
+                                                                                <svg class="nc-icon outline" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="20px" height="20px" viewBox="0 0 64 64">
+                                                                                    <g transform="translate(0.5, 0.5)"> 
+                                                                                        <polygon class="s-ascending" fill="#aaaaaa" stroke="#aaaaaa" stroke-width="3" stroke-linecap="square" stroke-miterlimit="10" points="20,26 44,26 32,12 " stroke-linejoin="round"></polygon> 
+                                                                                        <polygon class="s-descending" fill="#aaaaaa" stroke="#aaaaaa" stroke-width="3" stroke-linecap="square" stroke-miterlimit="10" points="44,38 20,38 32,52 " stroke-linejoin="round"></polygon> 
+                                                                                    </g>
+                                                                                </svg>
+                                                                            </a>
+                                                                        </th>
+                                                                        <th>
+                                                                            <span>Email</span>
+                                                                            <a href="#" class="s-sort-arrows">
+                                                                                <svg class="nc-icon outline" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="20px" height="20px" viewBox="0 0 64 64">
+                                                                                    <g transform="translate(0.5, 0.5)"> 
+                                                                                        <polygon class="s-ascending" fill="#aaaaaa" stroke="#aaaaaa" stroke-width="3" stroke-linecap="square" stroke-miterlimit="10" points="20,26 44,26 32,12 " stroke-linejoin="round"></polygon> 
+                                                                                        <polygon class="s-descending" fill="#aaaaaa" stroke="#aaaaaa" stroke-width="3" stroke-linecap="square" stroke-miterlimit="10" points="44,38 20,38 32,52 " stroke-linejoin="round"></polygon> 
+                                                                                    </g>
+                                                                                </svg>
+                                                                            </a>
+                                                                        </th>
+                                                                        <th>
+                                                                            <span>Sent</span>
+                                                                            <a href="#" class="s-sort-arrows">
+                                                                                <svg class="nc-icon outline" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="20px" height="20px" viewBox="0 0 64 64">
+                                                                                    <g transform="translate(0.5, 0.5)"> 
+                                                                                        <polygon class="s-ascending" fill="#aaaaaa" stroke="#aaaaaa" stroke-width="3" stroke-linecap="square" stroke-miterlimit="10" points="20,26 44,26 32,12 " stroke-linejoin="round"></polygon> 
+                                                                                        <polygon class="s-descending" fill="#aaaaaa" stroke="#aaaaaa" stroke-width="3" stroke-linecap="square" stroke-miterlimit="10" points="44,38 20,38 32,52 " stroke-linejoin="round"></polygon> 
+                                                                                    </g>
+                                                                                </svg>
+                                                                            </a>
+                                                                        </th>
+                                                                        <th>
+                                                                            <span>Bounced</span>
+                                                                            <a href="#" class="s-sort-arrows">
+                                                                                <svg class="nc-icon outline" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="20px" height="20px" viewBox="0 0 64 64">
+                                                                                    <g transform="translate(0.5, 0.5)"> 
+                                                                                        <polygon class="s-ascending" fill="#aaaaaa" stroke="#aaaaaa" stroke-width="3" stroke-linecap="square" stroke-miterlimit="10" points="20,26 44,26 32,12 " stroke-linejoin="round"></polygon> 
+                                                                                        <polygon class="s-descending" fill="#aaaaaa" stroke="#aaaaaa" stroke-width="3" stroke-linecap="square" stroke-miterlimit="10" points="44,38 20,38 32,52 " stroke-linejoin="round"></polygon> 
+                                                                                    </g>
+                                                                                </svg>
+                                                                            </a>
+                                                                        </th>
+                                                                        <th>
+                                                                            <span>Opens</span>
+                                                                            <a href="#" class="s-sort-arrows">
+                                                                                <svg class="nc-icon outline" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="20px" height="20px" viewBox="0 0 64 64">
+                                                                                    <g transform="translate(0.5, 0.5)"> 
+                                                                                        <polygon class="s-ascending" fill="#aaaaaa" stroke="#aaaaaa" stroke-width="3" stroke-linecap="square" stroke-miterlimit="10" points="20,26 44,26 32,12 " stroke-linejoin="round"></polygon> 
+                                                                                        <polygon class="s-descending" fill="#aaaaaa" stroke="#aaaaaa" stroke-width="3" stroke-linecap="square" stroke-miterlimit="10" points="44,38 20,38 32,52 " stroke-linejoin="round"></polygon> 
+                                                                                    </g>
+                                                                                </svg>
+                                                                            </a>
+                                                                        </th>
+                                                                        <th>
+                                                                            <span>Clicks</span>
+                                                                            <a href="#" class="s-sort-arrows">
+                                                                                <svg class="nc-icon outline" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="20px" height="20px" viewBox="0 0 64 64">
+                                                                                    <g transform="translate(0.5, 0.5)"> 
+                                                                                        <polygon class="s-ascending" fill="#aaaaaa" stroke="#aaaaaa" stroke-width="3" stroke-linecap="square" stroke-miterlimit="10" points="20,26 44,26 32,12 " stroke-linejoin="round"></polygon> 
+                                                                                        <polygon class="s-descending" fill="#aaaaaa" stroke="#aaaaaa" stroke-width="3" stroke-linecap="square" stroke-miterlimit="10" points="44,38 20,38 32,52 " stroke-linejoin="round"></polygon> 
+                                                                                    </g>
+                                                                                </svg>
+                                                                            </a>
+                                                                        </th>
+                                                                        <th>
+                                                                            <span>Transactions</span>
+                                                                            <a href="#" class="s-sort-arrows">
+                                                                                <svg class="nc-icon outline" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="20px" height="20px" viewBox="0 0 64 64">
+                                                                                    <g transform="translate(0.5, 0.5)"> 
+                                                                                        <polygon class="s-ascending" fill="#aaaaaa" stroke="#aaaaaa" stroke-width="3" stroke-linecap="square" stroke-miterlimit="10" points="20,26 44,26 32,12 " stroke-linejoin="round"></polygon> 
+                                                                                        <polygon class="s-descending" fill="#aaaaaa" stroke="#aaaaaa" stroke-width="3" stroke-linecap="square" stroke-miterlimit="10" points="44,38 20,38 32,52 " stroke-linejoin="round"></polygon> 
+                                                                                    </g>
+                                                                                </svg>
+                                                                            </a>
+                                                                        </th>
+                                                                        <th>
+                                                                            <span>Revenue</span>
+                                                                            <a href="#" class="s-sort-arrows">
+                                                                                <svg class="nc-icon outline" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="20px" height="20px" viewBox="0 0 64 64">
+                                                                                    <g transform="translate(0.5, 0.5)"> 
+                                                                                        <polygon class="s-ascending" fill="#aaaaaa" stroke="#aaaaaa" stroke-width="3" stroke-linecap="square" stroke-miterlimit="10" points="20,26 44,26 32,12 " stroke-linejoin="round"></polygon> 
+                                                                                        <polygon class="s-descending" fill="#aaaaaa" stroke="#aaaaaa" stroke-width="3" stroke-linecap="square" stroke-miterlimit="10" points="44,38 20,38 32,52 " stroke-linejoin="round"></polygon> 
+                                                                                    </g>
+                                                                                </svg>
+                                                                            </a>
+                                                                        </th>
+                                                                        <th class="s-actions">
+                                                                            
+                                                                        </th>
+                                                                    </tr>
+                                                                </thead>
+                                                                <tbody>    
+                                                                    <tr>
+                                                                        <td>July 8,2016</td>
+                                                                        <td>Thanks You for Visiting Cleveland - Follow Up</td>
+                                                                        <td>1,200</td>
+                                                                        <td>120 (10%)</td>
+                                                                        <td>180 (15%)</td>
+                                                                        <td>60 (5%)</td>
+                                                                        <td>15</td>
+                                                                        <td>$3,150.00</td>
+                                                                        <td class="s-actions">
+                                                                            <a href="##" title="" class="btn btn-default btn-xs" target="_self">
+                                                                                <i class="fa fa-eye"></i>
+                                                                            </a> 
+                                                                        </td>
+                                                                    </tr>
+                                                                    <tr>
+                                                                        <td>July 1,2016</td>
+                                                                        <td>Thanks You for Visiting Cleveland - Follow Up</td>
+                                                                        <td>1,800</td>
+                                                                        <td>120 (10%)</td>
+                                                                        <td>180 (15%)</td>
+                                                                        <td>60 (5%)</td>
+                                                                        <td>20</td>
+                                                                        <td>$250.00</td>
+                                                                        <td class="s-actions">
+                                                                            <a href="##" title="" class="btn btn-default btn-xs" target="_self">
+                                                                                <i class="fa fa-eye"></i>
+                                                                            </a> 
+                                                                        </td>
+                                                                    </tr>
+                                                                </tbody>
+                                                            </table>
+                                                        </div>
+                                                        
+                                                        <div class="j-pagination-remove-this" data-tableid="LD9D579B9FCC280BDD7D9FBA9C0B5186CF">
+                                                            <ul class="pagination paginationpages12">
+                                                                <li><a href="#" class="paging-show-toggle">Show <span class="details">(1 - 10 of 113)</span></a></li>
+                                                                <li><a href="#" class="show-option" data-show="10" style="display: none;">10</a></li>
+                                                                <li><a href="#" class="show-option" data-show="25" style="display: none;">25</a></li>
+                                                                <li><a href="#" class="show-option" data-show="50" style="display: none;">50</a></li>
+                                                                <li><a href="#" class="show-option" data-show="100" style="display: none;">100</a></li>
+                                                                <li><a href="#" class="show-option" data-show="500" style="display: none;">500</a></li>
+                                                                <li><a href="#" class="show-option" data-show="ALL" style="display: none;">ALL</a></li>
+                                                                <li class="disabled"><a href="#" class="page-option prev">«</a></li>
+                                                                <li class="active"><a href="#" class="listing-pager page-option" data-page="1">1</a></li>
+                                                                <li><a href="#" class="listing-pager page-option" data-page="2">2</a></li>
+                                                                <li><a href="#" class="listing-pager page-option" data-page="3">3</a></li>
+                                                            </ul>
+                                                        </div>
+                                                    </div>
+                                                    <!-- ///Broadcast Reporting Tab -->
                                                 </div>
                                             </div>
                                         </content>
