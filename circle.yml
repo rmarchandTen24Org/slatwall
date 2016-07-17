@@ -64,7 +64,9 @@ test:
 
     # Run Unit Tests
     - sudo lxc-attach -n "$(docker inspect --format '{{.Id}}' slatwallci_slatwallweb_1)" -- ant -f /var/www/meta/tests/build.xml runUnitTests
- 
+ 	- mkdir $CIRCLE_TEST_REPORTS/json_output
+    - mv ./sample.json $CIRCLE_TEST_REPORTS/json_output
+ 	 
 deployment:
 
   # As long as this build passed, we can commit JS builds, Version #, and do downstream merging when necessary
