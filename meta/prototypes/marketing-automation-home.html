@@ -324,28 +324,28 @@
                                                     
                                                         <div class="panel-body">
                                                             <div class="row">
-                                                                <div class="row-height">
-                                                                    <div class="col-md-6 col-height col-middle">
-                                                                        <div class="s-content-body">
-                                                                            <h5 class="s-content-title" style="display:inline-block">
-                                                                                Create Activity:
-                                                                            </h5> You can create new activities based on your current email list or a new emails list.
-                                                                        </div>
-                                                                    </div>
-                                                                    <div class="col-md-6 col-height col-middle">
-                                                                        <div class="input-group">
-                                                                            <!-- <select class="form-control input-sm">
-                                                                                <option value="" selected="">Same list follow up</option>
-                                                                                <option value="">Follow up to openers (103)</option>
-                                                                                <option value="">Non-bounces follow up</option>
-                                                                                <option value="">Custom follow up</option>
-                                                                            </select>             -->
-                                                                            <span class="input-group-btn pull-right">
-                                                                                <button class="btn btn-primary" style="border-radius: 2px;margin-left: 5px;" type="button">Create Next Activity</button>
-                                                                            </span>
-                                                                        </div>
+                                                                
+                                                                <div class="col-md-6">
+                                                                    <div class="s-content-body">
+                                                                        <h5 class="s-content-title" style="display:inline-block">
+                                                                            Create Activity:
+                                                                        </h5> You can create new activities based on your current email list or a new emails list.
                                                                     </div>
                                                                 </div>
+                                                                <div class="col-md-6">
+                                                                    <div class="input-group">
+                                                                        <!-- <select class="form-control input-sm">
+                                                                            <option value="" selected="">Same list follow up</option>
+                                                                            <option value="">Follow up to openers (103)</option>
+                                                                            <option value="">Non-bounces follow up</option>
+                                                                            <option value="">Custom follow up</option>
+                                                                        </select>             -->
+                                                                        <span class="input-group-btn pull-right">
+                                                                            <button class="btn btn-primary" style="border-radius: 2px;margin-left: 5px;" type="button">Create Next Activity</button>
+                                                                        </span>
+                                                                    </div>
+                                                                </div>
+                                                                
                                                             </div>
                                                         </div>
                                                     </div>
@@ -516,7 +516,7 @@
                                                 <div class="row s-tabs">
                                                     <ul class="nav nav-tabs" role="tablist">
                                                         <li role="presentation" class="active">
-                                                            <a href="#j-reporting" role="tab" data-toggle="tab" aria-controls="transactions" aria-expanded="true">Broadcast Reporting (2)</a>
+                                                            <a href="#j-reporting" role="tab" data-toggle="tab" aria-controls="transactions" aria-expanded="true">Sent History (2)</a>
                                                         </li>
                                                     </ul>
                                                 </div>
@@ -712,10 +712,10 @@
                                     </div>
                                     
                                     
-                                    <div class="tab-pane" id="activity-content">
-                                        <h4>Activities</h4>
+                                    <div class="tab-pane s-background-pane" id="activity-content">
+                                        <h4 class="s-title">Activities</h4>
                                         <content class="s-body-box">
-                                            <div class="s-tab-table">
+                                            
                                                 <div class="tab-content">
                                                     <!-- Lists Tab -->
                                                     <div role="tabpanel" class="tab-pane active" id="j-lists">
@@ -858,15 +858,15 @@
                                                     </div>
                                                     <!-- ///Lists Tab -->
                                                 </div>
-                                            </div>
+                                            
                                         </content>
                                     
                                     </div>
                                     
-                                    <div class="tab-pane" id="list-content">
-                                        <h4>Lists</h4>
+                                    <div class="tab-pane s-background-pane" id="list-content">
+                                        <h4 class="s-title">Lists</h4>
                                         <content class="s-body-box">
-                                            <div class="s-tab-table">
+                                            
                                                 <div class="tab-content">
                                                     <!-- Lists Tab -->
                                                     <div role="tabpanel" class="tab-pane active" id="j-lists">
@@ -938,8 +938,8 @@
                                                                             <a href="##" title="" class="btn btn-default btn-xs" target="_self">
                                                                                 <i class="fa fa-eye"></i>
                                                                             </a> 
-                                                                            <a href="##" title="" class="btn btn-default btn-xs" target="_self">
-                                                                                <i class="fa fa-envelope" aria-hidden="true"></i>
+                                                                            <a href="##" title="" class="btn btn-default btn-xs" target="_self" data-placement="left" data-toggle="popover" data-trigger="hover" data-content="Use this list to create a new activity">
+                                                                                <i class="fa fa-plus" aria-hidden="true"></i>
                                                                             </a> 
                                                                         </td>
                                                                     </tr>
@@ -950,8 +950,9 @@
                                                                             <a href="##" title="" class="btn btn-default btn-xs" target="_self">
                                                                                 <i class="fa fa-eye"></i>
                                                                             </a> 
-                                                                            <a href="##" title="" class="btn btn-default btn-xs" target="_self">
-                                                                                <i class="fa fa-envelope" aria-hidden="true"></i>
+                                                                            
+                                                                            <a href="##" title="" class="btn btn-default btn-xs" target="_self" data-placement="left" data-toggle="popover" data-trigger="hover" data-content="Use this list to create a new activity">
+                                                                                <i class="fa fa-plus" aria-hidden="true"></i>
                                                                             </a> 
                                                                         </td>
                                                                     </tr>
@@ -978,7 +979,7 @@
                                                     </div>
                                                     <!-- ///Lists Tab -->
                                                 </div>
-                                            </div>
+                                            
                                         </content>
                                     
                                     </div>
@@ -1456,19 +1457,6 @@
                     <div class="s-animated-loader"></div>
                 </div>
                 
-                <style>
-                    .s-slide-panel-content .s-item-comments .s-comment-item {
-                        border-bottom: 1px solid #ddd;
-                        padding-bottom: 5px;
-                        margin-bottom: 15px;
-                    }
-                    .s-slide-panel-content .s-item-comments .s-comment-item textarea {
-                        margin-bottom: 5px;
-                    }
-                    .s-slide-panel-content .s-item-comments .s-comment-item .s-actions {
-                        float: right;
-                    }
-                </style>
     			<div class="s-slide-panel-content">
     				<div class="row">
     				    <div class="col-md-12">
