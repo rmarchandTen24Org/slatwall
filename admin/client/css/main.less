@@ -484,7 +484,7 @@ a:hover {color: @link-color-hover;text-decoration:none;}
 .table-responsive {width:100%;overflow:auto;display: block;width: 100%;margin-bottom: 0px !important;}
 .table-responsive tr.s-disabled .s-table-checkbox label {display: none;}
 .table-responsive.s-loading {opacity: 0.3;pointer-events: none;}
-.table-responsive .s-system-table th {font-size: 14px;}
+.table-responsive.s-system-table th {font-size: 14px;}
 
 table th {font-weight: 600;}
 .table-responsive .s-table-checkbox {width: 40px;text-align: left;position: relative;vertical-align: top !important;}
@@ -539,6 +539,9 @@ table th {font-weight: 600;}
 .table-responsive .s-levels .s-levels-wrapper {position: relative;}
 .table-responsive .s-levels .s-levels-wrapper i.s-listing-arrow {position: absolute;left: -15px;}
 .table-responsive .s-toggle-panels {text-align: center;}
+
+.table-responsive .s-default-table thead {background: #f7f7f7;}
+.table-responsive .s-default-table tbody {background: #fff;}
 
 .s-tab-table {border: 1px solid #e6e6e6;padding: 10px;background-color: #fff;border-radius: 4px;overflow: hidden;}
 .s-tab-table .s-tabs {background: #F7F7F7;margin-left: -10px;margin-right: -10px;margin-top: -10px;border: none;padding: 0px;}
@@ -1010,7 +1013,7 @@ table .s-table-header .table-section a.s-hint {float:none;margin-left:10px;}
 .s-checkbox input[type=checkbox]:disabled + label:before{background-color:@black-5;cursor:not-allowed;}
 .s-property .s-checkbox {display: inline-block;margin-right: 15px;padding-top: 7px;}
 .s-property .s-checkbox label {font-family: @font-family-regular;}
-.radio {margin-top:0px !important;margin-bottom:5px;margin-right: 20px;display: inline-block;padding-top:5px !important;}
+.radio {padding-left: 0px;margin-top:0px !important;margin-bottom:5px;margin-right: 20px;display: inline-block;padding-top:5px !important;}
 .radio.s-vertical {width: 100%;}
 .radio > label{color: #999;display:inline-block;position:relative;margin-left:2px;font-weight:normal !important;padding-left:0px;font-family: @font-family-regular;}
 .radio > label:before{content:"";display:inline-block;position:absolute;width:17px;height:17px;left:0;border:1px solid @black-20;.border-radius(50%);background-color:@white;-webkit-transition:border .15s ease-in-out;-o-transition:border .15s ease-in-out;transition:border .15s ease-in-out;position: relative;left: -3px;top: 3px;}
@@ -2308,7 +2311,7 @@ padding: 0px 15px;
         left: calc(50% - 35px);
     }
 }
-.s-slide-panel .s-slide-panel-header *::after, .s-slide-panel .s-slide-panel-header *::before, .s-slide-panel::after, .s-slide-panel::before {
+.s-slide-panel .s-slide-panel-header .s-slide-panel-close::after, .s-slide-panel .s-slide-panel-header .s-slide-panel-close::before, .s-slide-panel::after, .s-slide-panel::before {
   content: '';
 }
 
@@ -3496,12 +3499,16 @@ table.s-detail-content-table tbody tr.s-done {
 	-webkit-box-shadow: 0 1px 1px rgba(0,0,0,.05);
 	box-shadow: 0 1px 1px rgba(0,0,0,.05);
 }
+.s-split-wrapper .s-slip-page label {
+	margin-bottom: 0px;
+	font-size: 14px;
+	color: #000;
+}
 .s-split-wrapper .s-slip-page .tab-content .tab-pane.s-background-pane .well {
 	background: #f7f7f7;
 }
 .s-split-wrapper .s-slip-page .tab-pane h4.s-title {
 	margin-top: 0px;
-    font-size: 14px;
     border-bottom: 1px solid #eee;
     padding-bottom: 5px;
     margin-bottom: 15px;
@@ -3594,7 +3601,7 @@ table.s-detail-content-table tbody tr.s-done {
 	margin-bottom: 5px;
 	margin-top: 20px;
 }
-.s-slide-panel .table-responsive {
+.s-slide-panel .table-responsive.s-system-table {
 	padding: 0px 20px;
 }
 .s-slide-panel .table {
@@ -3683,6 +3690,9 @@ table.s-detail-content-table tbody tr.s-done {
    font-size: 28px;
    margin-bottom: 0px;
    font-weight: 300;
+}
+.s-slide-panel.s-steps-slide-panel .s-slide-panel-content {
+	padding-top: 120px;
 }
 .s-slide-panel-content .s-item-comments .s-comment-item {
 	border-bottom: 1px solid #ddd;

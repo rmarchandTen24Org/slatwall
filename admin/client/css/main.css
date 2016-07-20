@@ -485,7 +485,7 @@ a:hover {
   opacity: 0.3;
   pointer-events: none;
 }
-.table-responsive .s-system-table th {
+.table-responsive.s-system-table th {
   font-size: 14px;
 }
 table th {
@@ -680,6 +680,12 @@ table th {
 }
 .table-responsive .s-toggle-panels {
   text-align: center;
+}
+.table-responsive .s-default-table thead {
+  background: #f7f7f7;
+}
+.table-responsive .s-default-table tbody {
+  background: #fff;
 }
 .s-tab-table {
   border: 1px solid #e6e6e6;
@@ -2593,6 +2599,7 @@ table .s-table-header .table-section a.s-hint {
   font-family: "open_sansregular", Helvetica, Arial, sans-serif;
 }
 .radio {
+  padding-left: 0px;
   margin-top: 0px !important;
   margin-bottom: 5px;
   margin-right: 20px;
@@ -5834,8 +5841,8 @@ a.disabled > i.hibachi-ui-radio-checked {
     left: calc(15%);
   }
 }
-.s-slide-panel .s-slide-panel-header *::after,
-.s-slide-panel .s-slide-panel-header *::before,
+.s-slide-panel .s-slide-panel-header .s-slide-panel-close::after,
+.s-slide-panel .s-slide-panel-header .s-slide-panel-close::before,
 .s-slide-panel::after,
 .s-slide-panel::before {
   content: '';
@@ -7524,12 +7531,16 @@ table.s-detail-content-table tbody tr.s-done {
   -webkit-box-shadow: 0 1px 1px rgba(0, 0, 0, 0.05);
   box-shadow: 0 1px 1px rgba(0, 0, 0, 0.05);
 }
+.s-split-wrapper .s-slip-page label {
+  margin-bottom: 0px;
+  font-size: 14px;
+  color: #000;
+}
 .s-split-wrapper .s-slip-page .tab-content .tab-pane.s-background-pane .well {
   background: #f7f7f7;
 }
 .s-split-wrapper .s-slip-page .tab-pane h4.s-title {
   margin-top: 0px;
-  font-size: 14px;
   border-bottom: 1px solid #eee;
   padding-bottom: 5px;
   margin-bottom: 15px;
@@ -7621,7 +7632,7 @@ table.s-detail-content-table tbody tr.s-done {
   margin-bottom: 5px;
   margin-top: 20px;
 }
-.s-slide-panel .table-responsive {
+.s-slide-panel .table-responsive.s-system-table {
   padding: 0px 20px;
 }
 .s-slide-panel .table {
@@ -7709,6 +7720,9 @@ table.s-detail-content-table tbody tr.s-done {
   font-size: 28px;
   margin-bottom: 0px;
   font-weight: 300;
+}
+.s-slide-panel.s-steps-slide-panel .s-slide-panel-content {
+  padding-top: 120px;
 }
 .s-slide-panel-content .s-item-comments .s-comment-item {
   border-bottom: 1px solid #ddd;
