@@ -1445,7 +1445,7 @@
     		</div>
     	</div>
         
-        <div class="s-slide-panel from-right s-steps-slide-panel is-visible" id="j-create-email">
+        <div class="s-slide-panel from-right s-steps-slide-panel" id="j-create-email">
     		<header class="s-slide-panel-header">
     			<h4>Create New Marketing E-Mail</h4>
     			<a href="#0" class="s-slide-panel-close">Close</a>
@@ -1453,13 +1453,14 @@
                     <div class="col-md-12">
                         <button class="btn btn-no-style s-back"><i class="fa fa-angle-left" aria-hidden="true"></i> Back</button>
                         <ul class="list-inline list-unstyled">
-                            <li class="s-selected"><button class="btn btn-no-style">Details</button></li>
-                            <li><button class="btn btn-no-style">Email Setup</button></li>
-                            <li><button class="btn btn-no-style">Messaging</button></li>
-                            <li><button class="btn btn-no-style">List</button></li>
-                            <li><button class="btn btn-no-style">Schedule & Send</button></li>
+                            <li><button class="btn btn-no-style">Details</button></li>
+                            <li class="s-selected"><button class="btn btn-no-style s-disabled">Email Setup</button></li>
+                            <li><button class="btn btn-no-style s-disabled">Messaging</button></li>
+                            <li><button class="btn btn-no-style s-disabled">List</button></li>
+                            <li><button class="btn btn-no-style s-disabled">Schedule & Send</button></li>
                         </ul>
                         <button class="btn btn-no-style s-next">Next <i class="fa fa-angle-right" aria-hidden="true"></i></button>
+                        <!-- <button class="btn btn-success s-next">Save</button> -->
                     </div>
                 </div>
     		</header>
@@ -1521,26 +1522,9 @@
                         <div class="col-md-12">
                             <div class="form-group">
                                 <div class="radio s-vertical">
-                                    <input type="radio" name="broadcast-schedule" id="broadcast-schedule" value="1" checked="checked">
-                                    <label for="broadcast-schedule">
-                                        Select Existing Template
-                                    </label>
-                                </div>
-                                <div class="row">
-                                    <div class="col-md-4">
-                                        <select name="" id="" class="form-control">
-                                            <option value="" disabled selected>-select-</option>
-                                            <option value="">Opiton 1</option>
-                                            <option value="">Opiton 2</option>
-                                        </select>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <div class="radio s-vertical">
                                     <input type="radio" name="broadcast-schedule" id="broadcast-schedule-copy" value="1">
                                     <label for="broadcast-schedule-copy">
-                                        Copy From Existing Template
+                                        Style
                                     </label>
                                 </div>
                                 <div class="row">
@@ -1794,7 +1778,7 @@
                                         </div>
                                     </div>
                                 </div>
-                                <button type="button" class="btn btn-large btn-block btn-success">Schedule & Send</button>
+                                <button type="button" class="btn btn-large btn-block btn-success">Save & Send</button>
                             </div>
                         </div>
                     </div>
@@ -1825,17 +1809,21 @@
             .s-steps-wrapper ul li {
                 font-size: 14px;
             }
-            .s-steps-wrapper ul li button {
+            .s-steps-wrapper ul li button.btn-no-style {
                 margin:0px;
-                color: #eee;
+                color: #dedede;
                 font-size: 14px;
             }
-            .s-steps-wrapper ul li.s-selected button {
+            .s-steps-wrapper ul li.s-selected button.btn-no-style {
                 color: #fff;
                 pointer-events: none;
                 font-weight: 600;
             }
-            .s-steps-wrapper ul li button:hover {
+            .s-steps-wrapper ul li button.btn-no-style:hover {
+                color: #fff;
+                font-size: 14px;
+            }
+            .s-steps-wrapper ul li button.btn-no-style:focus, .s-steps-wrapper ul li button.btn-no-style:active {
                 color: #fff;
                 font-size: 14px;
             }
@@ -1845,7 +1833,7 @@
                 padding-left: 12px;
                 position: relative;
                 bottom: -2px;
-                color: #eee;
+                color: #dedede;
             }
             .s-steps-wrapper ul li:last-child:after {
                 content: "" !important;
@@ -1855,7 +1843,7 @@
                 font-size: 14px;
                 color: #fff;
             }
-            .s-steps-wrapper .s-back:hover, .s-steps-wrapper .s-next:hover {
+            .s-steps-wrapper .btn-no-style.s-back:hover, .s-steps-wrapper .btn-no-style.s-next:hover {
                 background: #666;
             }
             .s-steps-wrapper .s-back {
@@ -1958,8 +1946,8 @@
                 </div>
     			<div class="s-slide-panel-content s-list-style">
     				
-                    <div class="table-responsive">
-                        <table class="table s-system-table">
+                    <div class="table-responsive s-system-table">
+                        <table class="table">
                             <thead>
                                 <tr>
                                     <th colspan="3">
@@ -2003,7 +1991,7 @@
                                 </tr>
                             </tbody>
                         </table>
-                        <div class="j-pagination-remove-this" data-tableid="LD9D579B9FCC280BDD7D9FBA9C0B5186CF">
+                        <div>
                             <ul class="pagination paginationpages12">
                                 <li><a href="#" class="paging-show-toggle">Show <span class="details">(1 - 10 of 113)</span></a></li>
                                 <li><a href="#" class="show-option" data-show="10" style="display: none;">10</a></li>
