@@ -7524,6 +7524,9 @@ table.s-detail-content-table tbody tr.s-done {
   -webkit-box-shadow: 0 1px 1px rgba(0, 0, 0, 0.05);
   box-shadow: 0 1px 1px rgba(0, 0, 0, 0.05);
 }
+.s-split-wrapper .s-slip-page .tab-content .tab-pane.s-background-pane .well {
+  background: #f7f7f7;
+}
 .s-split-wrapper .s-slip-page .tab-pane h4.s-title {
   margin-top: 0px;
   font-size: 14px;
