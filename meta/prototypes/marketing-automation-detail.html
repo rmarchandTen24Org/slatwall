@@ -1448,11 +1448,11 @@
                                         <div class="s-header">
                                             <h4 class="s-title">Messaging</h4>
                                         </div>
-                                        <div class="form-group">
+                                        <!-- <div class="form-group">
                                             <div class="radio s-vertical">
                                                 <input type="radio" name="broadcast-schedule" id="broadcast-schedule" value="1" checked="checked">
                                                 <label for="broadcast-schedule">
-                                                    Select Existing Template
+                                                    Select Template
                                                 </label>
                                             </div>
                                             <div class="row">
@@ -1464,12 +1464,70 @@
                                                     </select>
                                                 </div>
                                             </div>
+                                            
+                                            
+                                        </div> -->
+                                        
+                                        <div class="form-group">
+                                            <div class="radio s-vertical">
+                                                <input type="radio" name="broadcast-schedule" id="broadcast-schedule-new" value="1">
+                                                <label for="broadcast-schedule-new">
+                                                    Create HTML Email
+                                                </label>  
+                                            </div>
+                                            <br/>
+                                            <div class="row">
+                                                <div class="col-md-12 s-wys-nav">
+
+                                                  <div class="btn-group" role="group">
+                                                      <button type="button" class="btn btn-white btn-sm">Preview HTML</button>
+                                                      <button type="button" class="btn btn-white btn-sm">Preview Text</button>
+                                                  </div>
+                                                </div>
+
+                                                <div class="col-md-12">
+                                                  <img src="/meta/prototypes/images/wysiwyg.jpg" class="s-responsive-image" alt="">        
+                                                </div>
+                                            </div>
                                         </div>
+                                        
+                                        <div class="form-group">
+                                            <div class="radio s-vertical">
+                                                <input type="radio" name="broadcast-schedule" id="broadcast-schedule-new" value="1">
+                                                <label for="broadcast-schedule-new">
+                                                    Create Plain Text Email
+                                                </label>  
+                                            </div>
+                                            <br/>
+                                            <div class="row">
+                                                <div class="col-md-3 s-wys-nav">
+                                                    <select name="" id="" class="form-control input-sm">
+                                                        <option value="" disabled selected>-select template-</option>
+                                                        <option value="">Opiton 1</option>
+                                                        <option value="">Opiton 2</option>
+                                                    </select> 
+                                                </div>
+                                                <div class="col-md-9 s-wys-nav">
+                                                    
+                                                    <div class="btn-group" role="group">
+                                                        <button type="button" class="btn btn-white btn-sm">Preview HTML</button>
+                                                        <button type="button" class="btn btn-white btn-sm">Preview Text</button>
+                                                    </div>
+                                                </div>
+
+                                                <div class="col-md-12">
+                                                    <div class="form-group">
+                                                        <textarea class="form-control" rows="8" cols="" placeholder="add message here..."></textarea>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        
                                         <div class="form-group">
                                             <div class="radio s-vertical">
                                                 <input type="radio" name="broadcast-schedule" id="broadcast-schedule-copy" value="1">
                                                 <label for="broadcast-schedule-copy">
-                                                    Copy From Existing Template
+                                                    Copy Email From Existing Mailing
                                                 </label>
                                             </div>
                                             <div class="row">
@@ -1496,28 +1554,7 @@
                                                 </div>
                                             </div>
                                         </div>
-                                        <div class="form-group">
-                                            <div class="radio s-vertical">
-                                                <input type="radio" name="broadcast-schedule" id="broadcast-schedule-new" value="1">
-                                                <label for="broadcast-schedule-new">
-                                                    Create New Template
-                                                </label>  
-                                            </div>
-                                            <br/>
-                                            <div class="row">
-                                                <!-- <div class="col-md-12 s-wys-nav">
-
-                                                  <div class="btn-group" role="group">
-                                                      <button type="button" class="btn btn-white btn-sm">Preview HTML</button>
-                                                      <button type="button" class="btn btn-white btn-sm">Preview Text</button>
-                                                  </div>
-                                                </div> -->
-
-                                                <div class="col-md-12">
-                                                  <img src="/meta/prototypes/images/wysiwyg.jpg" class="s-responsive-image" alt="">        
-                                                </div>
-                                            </div>
-                                        </div>
+                                        
                                     </div>
                                     
                                     <div class="tab-pane s-background-pane" id="email-setup-content">
@@ -2303,7 +2340,7 @@
                                 </tr>
                             </tbody>
                         </table>
-                        <div class="j-pagination-remove-this" data-tableid="LD9D579B9FCC280BDD7D9FBA9C0B5186CF" style="margin-left: 15px;">
+                        <div class="j-pagination-remove-this" data-tableid="LD9D579B9FCC280BDD7D9FBA9C0B5186CF">
                             <ul class="pagination paginationpages12">
                                 <li><a href="#" class="paging-show-toggle">Show <span class="details">(1 - 10 of 113)</span></a></li>
                                 <li><a href="#" class="show-option" data-show="10" style="display: none;">10</a></li>
