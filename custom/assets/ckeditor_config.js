@@ -28,4 +28,5 @@
     config.allowedContent = true;
     config.extraAllowedContent = 'p(*)[*]{*};div(*)[*]{*};li(*)[*]{*};ul(*)[*]{*}';
     CKEDITOR.dtd.$removeEmpty.i = 0;
+    
 };
