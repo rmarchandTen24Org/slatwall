@@ -804,7 +804,7 @@
                                                                 <tbody>    
                                                                     <tr>
                                                                         <td>Thank You - Retry Email</td>
-                                                                        <td>07/30/16 - 8:00 AM</td>
+                                                                        <td class="s-sent">Sent: 07/30/16 - 8:00 AM</td>
                                                                         <td>Returning Customer</td>
                                                                         <td>100</td>
                                                                         <td class="s-actions">
@@ -814,10 +814,21 @@
                                                                         </td>
                                                                     </tr>
                                                                     <tr>
-                                                                        <td>Vist Us Again</td>
-                                                                        <td>Results</td>
+                                                                        <td>No Thank You - Retry Email</td>
+                                                                        <td class="s-pending">Pending</td>
                                                                         <td>Returning Customer</td>
-                                                                        <td>250</td>
+                                                                        <td>100</td>
+                                                                        <td class="s-actions">
+                                                                            <a href="##" title="" class="btn btn-default btn-xs" target="_self">
+                                                                                <i class="fa fa-eye"></i>
+                                                                            </a> 
+                                                                        </td>
+                                                                    </tr>
+                                                                    <tr>
+                                                                        <td>Don't Vist Us Again</td>
+                                                                        <td class="s-ready">Scheduled: 07/30/16 - 8:00 AM</td>
+                                                                        <td>Returning Customer</td>
+                                                                        <td>2</td>
                                                                         <td class="s-actions">
                                                                             <a href="##" title="" class="btn btn-default btn-xs" target="_self">
                                                                                 <i class="fa fa-eye"></i>
@@ -826,7 +837,7 @@
                                                                     </tr>
                                                                     <tr>
                                                                         <td>Come Back - 10% Off</td>
-                                                                        <td>Ready To Send</td>
+                                                                        <td class="s-ready-send">Ready To Send</td>
                                                                         <td>Returning Customer - 2</td>
                                                                         <td>250</td>
                                                                         <td class="s-actions">
@@ -1448,16 +1459,17 @@
         <div class="s-slide-panel from-right s-steps-slide-panel" id="j-create-email">
     		<header class="s-slide-panel-header">
     			<h4>Create New Marketing E-Mail</h4>
+                <button class="btn btn-white pull-right">Save Without Sending</button>
     			<a href="#0" class="s-slide-panel-close">Close</a>
                 <div class="row s-steps-wrapper">
                     <div class="col-md-12">
                         <button class="btn btn-no-style s-back"><i class="fa fa-angle-left" aria-hidden="true"></i> Back</button>
                         <ul class="list-inline list-unstyled">
-                            <li><button class="btn btn-no-style">Details</button></li>
-                            <li class="s-selected"><button class="btn btn-no-style s-disabled">Email Setup</button></li>
-                            <li><button class="btn btn-no-style s-disabled">Messaging</button></li>
-                            <li><button class="btn btn-no-style s-disabled">List</button></li>
-                            <li><button class="btn btn-no-style s-disabled">Schedule & Send</button></li>
+                            <li class="s-selected" data-content="j-step-details"><button class="btn btn-no-style">Details</button></li>
+                            <li data-content="j-step-email"><button class="btn btn-no-style">Email Setup</button></li>
+                            <li data-content="j-step-messaging"><button class="btn btn-no-style">Messaging</button></li>
+                            <li data-content="j-step-list"><button class="btn btn-no-style">List</button></li>
+                            <li data-content="j-step-schedule"><button class="btn btn-no-style">Schedule & Send</button></li>
                         </ul>
                         <button class="btn btn-no-style s-next">Next <i class="fa fa-angle-right" aria-hidden="true"></i></button>
                         <!-- <button class="btn btn-success s-next">Save</button> -->
@@ -1470,7 +1482,7 @@
                 </div>
                 
     			<div class="s-slide-panel-content">
-                    
+                   
                     <!--- DETAILS --->
                     <div class="row s-step-content" id="j-step-details">
                         <div class="col-md-12">
@@ -1487,7 +1499,7 @@
                     <!--- //DETAILS --->
                     
                     <!--- EMAIL SETUP --->
-                    <div class="row s-step-content" id="j-step-details">
+                    <div class="row s-step-content" id="j-step-email">
                         
                         <div class="col-md-6">
                             <div class="form-group">
@@ -1518,94 +1530,266 @@
                     <!--- //EMAIL SETUP --->
                     
                     <!--- MESSAGING --->
-                    <div class="row s-step-content" id="j-step-details">
+                    <div class="row s-step-content" id="j-step-messaging">
                         <div class="col-md-12">
-                            <div class="form-group">
-                                <div class="radio s-vertical">
-                                    <input type="radio" name="broadcast-schedule" id="broadcast-schedule-copy" value="1">
-                                    <label for="broadcast-schedule-copy">
-                                        Style
-                                    </label>
-                                </div>
-                                <div class="row">
-                                    <div class="col-md-4">
-                                        <select name="" id="" class="form-control">
-                                            <option value="" disabled selected>-select-</option>
-                                            <option value="">Opiton 1</option>
-                                            <option value="">Opiton 2</option>
-                                        </select>  
-                                    </div>
-                                </div>
-                                <br/>
-                                <div class="row">
-                                    <!-- <div class="col-md-12 s-wys-nav">
-
-                                      <div class="btn-group" role="group">
-                                          <button type="button" class="btn btn-white btn-sm">Preview HTML</button>
-                                          <button type="button" class="btn btn-white btn-sm">Preview Text</button>
-                                      </div>
-                                    </div> -->
-
-                                    <div class="col-md-12">
-                                      <img src="/meta/prototypes/images/wysiwyg.jpg" class="s-responsive-image" alt="">        
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="form-group">
+                            
+                            <div class="form-group s-radio-content">
                                 <div class="radio s-vertical">
                                     <input type="radio" name="broadcast-schedule" id="broadcast-schedule-new" value="1">
                                     <label for="broadcast-schedule-new">
-                                        Create New Template
+                                        Create HTML Email
                                     </label>  
                                 </div>
-                                <br/>
+                                <br>
                                 <div class="row">
-                                    <!-- <div class="col-md-12 s-wys-nav">
+                                    <div class="col-md-4 s-wys-nav">
 
-                                      <div class="btn-group" role="group">
-                                          <button type="button" class="btn btn-white btn-sm">Preview HTML</button>
-                                          <button type="button" class="btn btn-white btn-sm">Preview Text</button>
-                                      </div>
-                                    </div> -->
+                                        <div class="s-select-wrapper s-titled-select-wrapper s-template">
+                                            <span>Template:</span>
+                                            <select class="form-control input-sm">
+                                                <option value="" disabled="" selected="">-select-</option>
+                                                <option value="name">template one</option>
+                                                <option value="name">template two</option>
+                                                <option value="name">template three</option>
+                                            </select>
+                                        </div>
+                                        
+                                    </div>
+                                    <div class="col-md-8 s-wys-nav">
 
+                                        <div class="btn-group" role="group">
+                                            <button type="button" class="btn btn-white btn-sm">Preview HTML</button>
+                                            <button type="button" class="btn btn-white btn-sm">Preview Text</button>
+                                        </div>
+                                        
+                                    </div>
                                     <div class="col-md-12">
                                       <img src="/meta/prototypes/images/wysiwyg.jpg" class="s-responsive-image" alt="">        
                                     </div>
                                 </div>
                             </div>
+                            
+                            <div class="form-group s-radio-content">
+                                <div class="radio s-vertical">
+                                    <input type="radio" name="broadcast-schedule" id="create-plain-text" value="1">
+                                    <label for="create-plain-text">
+                                        Create Plain Text Email
+                                    </label>  
+                                </div>
+                                <br>
+                                <div class="row">
+                                    <div class="col-md-4 s-wys-nav">
+
+                                        <div class="s-select-wrapper s-titled-select-wrapper s-template">
+                                            <span>Template:</span>
+                                            <select class="form-control input-sm">
+                                                <option value="" disabled="" selected="">-select-</option>
+                                                <option value="name">template one</option>
+                                                <option value="name">template two</option>
+                                                <option value="name">template three</option>
+                                            </select>
+                                        </div>
+                                        
+                                    </div>
+                                    <div class="col-md-8 s-wys-nav">
+
+                                        <div class="btn-group" role="group">
+                                            <button type="button" class="btn btn-white btn-sm">Preview HTML</button>
+                                            <button type="button" class="btn btn-white btn-sm">Preview Text</button>
+                                        </div>
+                                        
+                                    </div>
+
+                                    <div class="col-md-12">
+                                        <div class="form-group">
+                                            <textarea class="form-control" rows="8" cols="" placeholder="add message here..."></textarea>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="form-group s-radio-content">
+                                <div class="radio s-vertical">
+                                    <input type="radio" name="broadcast-schedule" id="broadcast-schedule-copy" value="1">
+                                    <label for="broadcast-schedule-copy">
+                                        Create Email From Existing Mailing
+                                    </label>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-12">
+
+                                        <div class="row s-table-inner-nav ">
+                                            
+                                            <div class="s-search-wrapper">
+                                                <div class="input-group">
+                                                    <div class="input-group-btn search-panel">
+                                                        <button type="button" class="btn btn-sm btn-default dropdown-toggle" data-toggle="dropdown">
+                                                        <span>All</span> <span class="caret"></span>
+                                                        </button>
+                                                        <ul class="dropdown-menu" role="menu">
+                                                            <li><a href="#">Price</a></li>
+                                                            <li><a href="#">Qty. Max</a></li>
+                                                            <li><a href="#">Qty. Min</a></li>
+                                                            <li><a href="#">Currency</a></li>
+                                                            <li><a href="#">Price Group</a></li>
+                                                            <li><a href="#">Sku Definition </a></li>
+                                                            <li><a href="#">SKU Code</a></li>
+                                                        </ul>
+                                                    </div>
+                                                    <div class="s-search">
+                                                        <input type="text" class="form-control s-search" name="" placeholder="Search...">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            
+                                        </div>
+                                        
+                                        <div class="table-responsive">
+                                            <table class="table table-bordered s-default-table">
+                                                <thead>
+                                                    <tr>
+                                                        <th class="s-table-checkbox">
+                                                            
+                                                        </th>
+                                                        <th>
+                                                            <span>E-Mail Title</span>
+                                                            <a href="#" class="s-sort-arrows">
+                                                                <svg class="nc-icon outline" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="20px" height="20px" viewBox="0 0 64 64">
+                                                                    <g transform="translate(0.5, 0.5)"> 
+                                                                        <polygon class="s-ascending" fill="#aaaaaa" stroke="#aaaaaa" stroke-width="3" stroke-linecap="square" stroke-miterlimit="10" points="20,26 44,26 32,12 " stroke-linejoin="round"></polygon> 
+                                                                        <polygon class="s-descending" fill="#aaaaaa" stroke="#aaaaaa" stroke-width="3" stroke-linecap="square" stroke-miterlimit="10" points="44,38 20,38 32,52 " stroke-linejoin="round"></polygon> 
+                                                                    </g>
+                                                                </svg>
+                                                            </a>
+                                                        </th>
+                                                        <th>
+                                                            <span>Subject</span>
+                                                            <a href="#" class="s-sort-arrows">
+                                                                <svg class="nc-icon outline" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="20px" height="20px" viewBox="0 0 64 64">
+                                                                    <g transform="translate(0.5, 0.5)"> 
+                                                                        <polygon class="s-ascending" fill="#aaaaaa" stroke="#aaaaaa" stroke-width="3" stroke-linecap="square" stroke-miterlimit="10" points="20,26 44,26 32,12 " stroke-linejoin="round"></polygon> 
+                                                                        <polygon class="s-descending" fill="#aaaaaa" stroke="#aaaaaa" stroke-width="3" stroke-linecap="square" stroke-miterlimit="10" points="44,38 20,38 32,52 " stroke-linejoin="round"></polygon> 
+                                                                    </g>
+                                                                </svg>
+                                                            </a>
+                                                        </th>
+                                                        <th>
+                                                            <span>Campaign</span>
+                                                            <a href="#" class="s-sort-arrows">
+                                                                <svg class="nc-icon outline" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="20px" height="20px" viewBox="0 0 64 64">
+                                                                    <g transform="translate(0.5, 0.5)"> 
+                                                                        <polygon class="s-ascending" fill="#aaaaaa" stroke="#aaaaaa" stroke-width="3" stroke-linecap="square" stroke-miterlimit="10" points="20,26 44,26 32,12 " stroke-linejoin="round"></polygon> 
+                                                                        <polygon class="s-descending" fill="#aaaaaa" stroke="#aaaaaa" stroke-width="3" stroke-linecap="square" stroke-miterlimit="10" points="44,38 20,38 32,52 " stroke-linejoin="round"></polygon> 
+                                                                    </g>
+                                                                </svg>
+                                                            </a>
+                                                        </th>
+                                                        <th class="s-actions">
+                                                            
+                                                        </th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>    
+                                                    <tr>
+                                                        <td class="s-table-checkbox">
+                                                            <div class="radio">
+                                                                <input type="radio" name="email-templates" id="temp-1" value="1">
+                                                                <label for="temp-1"></label>
+                                                            </div>
+                                                        </td>
+                                                        <td>Thank You - Retry Email</td>
+                                                        <td>"Welcome"</td>
+                                                        <td>Thank You Campaign</td>
+                                                        <td class="s-no-wrap">
+                                                            <a href="##" title="" class="btn btn-white btn-xs" target="_self">
+                                                                <i class="fa fa-eye"></i> HTML
+                                                            </a> 
+                                                            <a href="##" title="" class="btn btn-white btn-xs" target="_self">
+                                                                <i class="fa fa-eye"></i> Text
+                                                            </a> 
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td class="s-table-checkbox">
+                                                            <div class="radio">
+                                                                <input type="radio" name="email-templates" id="temp-2" value="1">
+                                                                <label for="temp-2"></label>
+                                                            </div>
+                                                        </td>
+                                                        <td>Visit Us Again</td>
+                                                        <td>"Come Back to Us"</td>
+                                                        <td>Abandoned Cart Campaign</td>
+                                                        <td class="s-no-wrap">
+                                                            <a href="##" title="" class="btn btn-white btn-xs" target="_self">
+                                                                <i class="fa fa-eye"></i> HTML
+                                                            </a> 
+                                                            <a href="##" title="" class="btn btn-white btn-xs" target="_self">
+                                                                <i class="fa fa-eye"></i> Text
+                                                            </a> 
+                                                        </td>
+                                                    </tr>
+                                                    
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                        
+                                        <div class="j-pagination-remove-this" data-tableid="LD9D579B9FCC280BDD7D9FBA9C0B5186CF">
+                                            <ul class="pagination paginationpages12">
+                                                <li><a href="#" class="paging-show-toggle">Show <span class="details">(1 - 10 of 113)</span></a></li>
+                                                <li><a href="#" class="show-option" data-show="10" style="display: none;">10</a></li>
+                                                <li><a href="#" class="show-option" data-show="25" style="display: none;">25</a></li>
+                                                <li><a href="#" class="show-option" data-show="50" style="display: none;">50</a></li>
+                                                <li><a href="#" class="show-option" data-show="100" style="display: none;">100</a></li>
+                                                <li><a href="#" class="show-option" data-show="500" style="display: none;">500</a></li>
+                                                <li><a href="#" class="show-option" data-show="ALL" style="display: none;">ALL</a></li>
+                                                <li class="disabled"><a href="#" class="page-option prev">«</a></li>
+                                                <li class="active"><a href="#" class="listing-pager page-option" data-page="1">1</a></li>
+                                                <li><a href="#" class="listing-pager page-option" data-page="2">2</a></li>
+                                                <li><a href="#" class="listing-pager page-option" data-page="3">3</a></li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                            </div>
+                            
                         </div>
                     </div>
                     <!--- //MESSAGING --->
                     
                     <!--- LIST --->
-                    <div class="row s-step-content" id="j-step-details">
+                    <div class="row s-step-content" id="j-step-list">
                         <div class="col-md-12">
                             <div class="row s-table-inner-nav ">
-                                
+                                                            
                                 <div class="s-search-wrapper">
+                                
                                     <div class="input-group">
                                         <div class="input-group-btn search-panel">
-                                            <button type="button" class="btn btn-sm btn-default dropdown-toggle" data-toggle="dropdown">
+                                            <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
                                             <span>All</span> <span class="caret"></span>
                                             </button>
                                             <ul class="dropdown-menu" role="menu">
-                                                <li><a href="#">Price</a></li>
-                                                <li><a href="#">Qty. Max</a></li>
-                                                <li><a href="#">Qty. Min</a></li>
-                                                <li><a href="#">Currency</a></li>
-                                                <li><a href="#">Price Group</a></li>
-                                                <li><a href="#">Sku Definition </a></li>
-                                                <li><a href="#">SKU Code</a></li>
+                                                <li><a href="#">Name</a></li>
+                                                <li><a href="#">Size</a></li>
+                                                <li><a href="#">Type</a></li>
                                             </ul>
                                         </div>
-                                        <span class="s-search">
-                                            <input type="text" class="form-control s-search" name="" placeholder="Search...">
-                                            <buttom class="btn btn-xs btn-default s-add-search-param">Add this filter</buttom>
+                                        <span class="s-search s-add">
+                                            <input type="text" class="form-control input-sm" name="" placeholder="Search &amp; assign list..." style="padding-left: 30px;">
+                                            <div class="dropdown s-search-results-wrapper s-selectable" style="display: none;">
+    									        <ul class="dropdown-menu">
+                                                    <li class="s-selected"><a href="##">Fans of Cleveland <span class="s-right-content">1200</span></a></li>
+    									            <li class="s-selected"><a href="##">Fans of Cleveland - Opens <span class="s-right-content">200</span></a></li>
+                                                    <li><a href="##">Fans of Cleveland - Not Opened <span class="s-right-content">20</span></a></li>
+    									        </ul>
+    									    </div>
                                         </span>
                                         <div class="input-group-btn s-action" style="padding-left: 5px;">
-                                            <button class="btn btn-grey btn-sm"><i class="fa fa-download" aria-hidden="true"></i></button>
+                                            <button class="btn btn-grey"><i class="fa fa-download" aria-hidden="true"></i></button>
                                         </div>
                                     </div>
+                                    
                                 </div>
                             </div>
                             
@@ -1696,10 +1880,9 @@
                     <!--- //LIST --->
                     
                     <!--- SCHEDULE --->
-                    <div class="row s-step-content" id="j-step-details">
-                        <div class="col-md-12">
-                            <div class="form-group">
-                                <label for="broadcast-schedule">Broadcast Schedule</label>
+                    <div class="row s-step-content" id="j-step-schedule">
+                        <div class="col-sm-6">
+                            <div class="form-group s-radio-content">
                                 <div class="radio s-vertical">
                 					<input type="radio" name="broadcast-schedule" id="j-immediately" class="" value="1" checked="checked">
                 					<label for="j-immediately">
@@ -1707,33 +1890,39 @@
                 					</label>
                 				</div>
                             </div>
-                            <div class="form-group">
+                            <div class="form-group s-radio-content">
                                 <div class="radio s-vertical">
                 					<input type="radio" name="broadcast-schedule" id="j-schedule-date" class="" value="1">
                 					<label for="j-schedule-date">
-                						Schedule on Specific Date & Time
+                						Schedule on Specific Date &amp; Time
                 					</label>
                                 </div>
                                 <div class="row">
                                     <div class="col-md-4">
-                                        <input type="datetime" class="form-control" placeholder="Select Date/Time...">
+                                        <input type="datetime" class="form-control input-sm" placeholder="Select Date/Time...">
                                     </div>
                                 </div>
                             </div>
-                            <div class="form-group">    
+                            <div class="form-group s-radio-content">    
                                 <div class="radio s-vertical">
                 					<input type="radio" name="broadcast-schedule" id="j-ongoing" class="" value="1">
                 					<label for="j-ongoing">
-                						Ongoing / Recurring Send (<a href="##">Create New Schedule</a>)
+                						Ongoing / Recurring Send
                 					</label>
                                 </div>
                                 <div class="row">
-                                    <div class="col-md-4">
-                                        <select class="form-control">
-                                            <option value="" selected disabled>-Select-</option>
-                                            <option value="">Custom 1</option>
-                                            <option value="">Custom 2</option>
+                                    <div class="col-xs-5">
+                                        <select class="form-control input-sm">
+                                            <option value="" selected="" disabled="">-Select Schedule-</option>
+                                            <option value="">Schedule 1</option>
+                                            <option value="">Schedule 2</option>
                                         </select>
+                                    </div>
+                                    <div class="col-xs-1 s-no-wrap" style="font-weight: 600;margin-top: 7px;margin-left: -6px;">
+                                        -or-
+                                    </div>
+                                    <div class="col-xs-6">
+                                        <button type="button" class="btn btn-white btn-block">Create New Schedule</button>
                                     </div>
                                 </div>
                                 <div class="col-xs-12  s-add-filter collapse in" id="j-create-new-trigger" aria-expanded="true">
@@ -1774,13 +1963,23 @@
                                                 </div>
                                             </div>
                                             <button type="button" class="btn btn-large btn-block btn-primary">Save Schedule</button>
-                                            <br/>
+                                            <br>
                                         </div>
                                     </div>
                                 </div>
-                                <button type="button" class="btn btn-large btn-block btn-success">Save & Send</button>
+                                <button type="button" class="btn btn-large btn-block btn-success">Schedule &amp; Send</button>
                             </div>
                         </div>
+                        <div class="col-sm-4 pull-right">
+                            <div class="well">
+                                <div class="form-group">
+                                    <label for="">Send Test Email</label>
+                                    <input type="email" class="form-control" placeholder="email">
+                                </div>
+                                <button type="button" class="btn btn-large btn-block btn-dgrey">Send Test Email</button>
+                            </div>
+                        </div>
+                    
                     </div>
                     <!--- //SCHEDULE --->
                     
@@ -1788,75 +1987,6 @@
     		</div>
     	</div>
         
-        <style>
-        
-            
-        
-            .s-steps-wrapper {
-                background: #aaa;
-                color: #fff;
-                text-align: center;
-                margin-top: -3px;
-                position: relative;
-                opacity: 0;
-            }
-            .s-slide-panel.is-visible .s-steps-wrapper {
-                opacity: 1;
-            }
-            .s-steps-wrapper ul {
-                margin-bottom: 0px;
-            }
-            .s-steps-wrapper ul li {
-                font-size: 14px;
-            }
-            .s-steps-wrapper ul li button.btn-no-style {
-                margin:0px;
-                color: #dedede;
-                font-size: 14px;
-            }
-            .s-steps-wrapper ul li.s-selected button.btn-no-style {
-                color: #fff;
-                pointer-events: none;
-                font-weight: 600;
-            }
-            .s-steps-wrapper ul li button.btn-no-style:hover {
-                color: #fff;
-                font-size: 14px;
-            }
-            .s-steps-wrapper ul li button.btn-no-style:focus, .s-steps-wrapper ul li button.btn-no-style:active {
-                color: #fff;
-                font-size: 14px;
-            }
-            .s-steps-wrapper ul li:after {
-                content: "\f105" !important;
-                font-family: "FontAwesome";
-                padding-left: 12px;
-                position: relative;
-                bottom: -2px;
-                color: #dedede;
-            }
-            .s-steps-wrapper ul li:last-child:after {
-                content: "" !important;
-                padding: 0px;
-            }
-            .s-steps-wrapper .s-back, .s-steps-wrapper .s-next {
-                font-size: 14px;
-                color: #fff;
-            }
-            .s-steps-wrapper .btn-no-style.s-back:hover, .s-steps-wrapper .btn-no-style.s-next:hover {
-                background: #666;
-            }
-            .s-steps-wrapper .s-back {
-                position: absolute;
-                left: 10px;
-                top: 0px;
-            }
-            .s-steps-wrapper .s-next {
-                position: absolute;
-                right: 10px;
-                top: 0px;
-            }
-        </style>
         <div class="s-slide-panel from-right s-slide-sm" id="j-comments">
     		<header class="s-slide-panel-header">
     			<h4>Comments (2)</h4>
@@ -2287,6 +2417,30 @@
                     });
                 }
                 $('.s-input-table-cell li').attr('data-currency');
+            });
+        </script>
+        <script>
+            (function(){
+                $('.s-slide-panel-content .s-step-content').hide();
+                $('#j-step-details').show();
+                $('.s-steps-wrapper ul li').click(function(){
+                    var getDataContent = $(this).attr('data-content');
+                    $('.s-slide-panel-content .s-step-content').hide();
+                    $('#' + getDataContent).show();
+                });
+                
+            }());
+        </script> 
+        <script>
+            $('.s-search.s-add input').keyup(function() { 
+                
+                var inputLen = $(this).val().length;
+                
+                if(inputLen > 0){
+                    $(this).parent().find('.s-search-results-wrapper').show();
+                }else{
+                    $(this).parent().find('.s-search-results-wrapper').hide();
+                }
             });
         </script>
         

@@ -832,6 +832,8 @@ table tr th .glyphicon {vertical-align:text-top;}
 .dropdown-menu .search-filter, .dropdown-menu .range-filter {margin-right:15px;margin-left:15px;margin-bottom:5px;}
 
 .form-group {margin-bottom:10px;}
+.form-group.s-radio-content {margin-left: 24px;}
+.form-group.s-radio-content > .radio {margin-left: -24px;}
 .form-group .s-optional {color: @black-30;font-size: 10px;position: relative;top: -1px;}
 input:focus, textarea:focus, select:focus {-webkit-box-shadow: none !important;box-shadow: none !important;}
 
@@ -1242,7 +1244,7 @@ table .s-table-header .table-section a.s-hint {float:none;margin-left:10px;}
 .s-page-content-wrapper .s-detail-notifications {background-color: #ECF6FF;padding: 6px 15px;border: 1px solid #DDD;border-bottom: 0px;}
 .s-detail-notifications.s-take-action {    color: #8a6d3b;background-color: #fcf8e3 !important;border-color: #faebcc;}
 
-.s-search-wrapper .input-group .input-group-btn.s-action {padding-left: 5px;vertical-align: top;}
+.s-search-wrapper .input-group .input-group-btn.s-action {padding-left: 5px;vertical-align: top;vertical-align: top;}
 .s-search-wrapper .input-group .input-group-btn.s-action .btn {border-radius: 2px;}
 .s-search-wrapper .input-group .s-search {border-bottom-right-radius: 2px;border-top-right-radius: 2px;height: 30px;}
 .s-search-wrapper .s-search {position: relative;position: relative;display: inline-block;width: 100%;}
@@ -3440,28 +3442,28 @@ table.s-detail-content-table tbody tr.s-done {
 .s-detail-content-table .s-item-list .s-qty {
     font-weight: 600;
 }
-.s-warning {
+.s-detail-content-wrapper .s-warning {
     color: #8a6d3b;
     background-color: #fcf8e3;
     border: 1px solid #faebcc;
     padding: 2px 8px;
     border-radius: 4px;
 }
-.s-danger {
+.s-detail-content-wrapper .s-danger {
     color: #a94442;
     background-color: #f2dede;
     border: 1px solid #ebccd1;
     padding: 2px 8px;
     border-radius: 4px;
 }
-.s-success {
+.s-detail-content-wrapper .s-success {
     color: #3c763d;
     background-color: #dff0d8;
     border: 1px solid #d6e9c6;
     padding: 2px 8px;
     border-radius: 4px;
 }
-.s-ready {
+.s-detail-content-wrapper .s-ready {
     color: #666;
     background-color: #EEE;
     border: 1px solid #CCC;
@@ -3511,6 +3513,18 @@ table.s-detail-content-table tbody tr.s-done {
 }
 .s-status-bar.s-sent {
 	border-color: #bdf3bd;
+}
+.s-status-bar.s-ready .s-info .s-title {
+	color: #428bca;
+}
+.s-status-bar.s-ready {
+	border-color: #428bca;
+}
+.s-status-bar.s-scheduled .s-info .s-title {
+	color: #428bca;
+}
+.s-status-bar.s-scheduled {
+	border-color: #428bca;
 }
 .s-split-wrapper {
 	margin-top: -20px;
@@ -3746,6 +3760,82 @@ table.s-detail-content-table tbody tr.s-done {
 }
 .s-slide-panel-content .s-item-comments .s-comment-item .s-actions {
 	float: right;
+}
+.s-detail-content-table tbody tr td.s-ready {
+	color: #428bca;
+}
+.s-detail-content-table tbody tr td.s-sent {
+	color: #39c13a;
+}
+.s-detail-content-table tbody tr td.s-pending {
+	color: #ffc107;
+}
+
+//Steps Layout
+.s-steps-wrapper {
+	background: #428bca;
+	color: #fff;
+	text-align: center;
+	margin-top: -3px;
+	position: relative;
+	opacity: 0;
+}
+.s-slide-panel.is-visible .s-steps-wrapper {
+	opacity: 1;
+}
+.s-steps-wrapper ul {
+	margin-bottom: 0px;
+}
+.s-steps-wrapper ul li {
+	font-size: 14px;
+}
+.s-steps-wrapper ul li button.btn-no-style {
+	margin:0px;
+	color: #dedede;
+	font-size: 14px;
+}
+.s-steps-wrapper ul li.s-selected button.btn-no-style {
+	color: #fff;
+	pointer-events: none;
+	font-weight: 600;
+}
+.s-steps-wrapper ul li button.btn-no-style:hover {
+	color: #fff;
+	font-size: 14px;
+}
+.s-steps-wrapper ul li button.btn-no-style:focus, .s-steps-wrapper ul li button.btn-no-style:active {
+	color: #fff;
+	font-size: 14px;
+}
+.s-steps-wrapper ul li:after {
+	content: "\f105" !important;
+	font-family: "FontAwesome";
+	padding-left: 12px;
+	position: relative;
+	bottom: -2px;
+	color: #dedede;
+}
+.s-steps-wrapper ul li:last-child:after {
+	content: "" !important;
+	padding: 0px;
+}
+.s-steps-wrapper .s-back, .s-steps-wrapper .s-next {
+	font-size: 14px;
+	color: #fff;
+}
+.s-steps-wrapper .btn-no-style.s-back:hover, .s-steps-wrapper .btn-no-style.s-next:hover {
+	background: #fff;
+	color: #428bca;
+}
+.s-steps-wrapper .s-back {
+	position: absolute;
+	left: 10px;
+	top: 0px;
+}
+.s-steps-wrapper .s-next {
+	position: absolute;
+	right: 10px;
+	top: 0px;
 }
 
 //
