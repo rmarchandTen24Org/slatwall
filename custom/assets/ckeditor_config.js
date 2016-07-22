@@ -25,4 +25,7 @@
 	 * Use the below option to change the tags that are allowed within the editor.
 	 */
 	//config.extraAllowedContent = 'span;ul;li;table;td;style;*[id];*(*);*{*}';
+    config.allowedContent = true;
+    config.extraAllowedContent = 'p(*)[*]{*};div(*)[*]{*};li(*)[*]{*};ul(*)[*]{*}';
+    CKEDITOR.dtd.$removeEmpty.i = 0;
 };
