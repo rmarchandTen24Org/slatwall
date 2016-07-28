@@ -65,6 +65,8 @@ component output="false" accessors="true" extends="Slatwall.org.Hibachi.HibachiC
 	property name="loyaltyService" type="any";
 	property name="typeService" type="any";
 
+	property name="campaignActivityService" type="any";
+
 	this.publicMethods='';
 
 	this.anyAdminMethods='';
@@ -393,5 +395,11 @@ component output="false" accessors="true" extends="Slatwall.org.Hibachi.HibachiC
 
 		super.genericSaveMethod('TaskSchedule',rc);
 	}
+
+	//public void function listCampaign(required struct rc){
+//
+		//writeDump(getCampaignActivityService().mergeCampaignActivitiesCollectionConfig('402828c656224162015632800be2017a,402828c6562241620156328b8623017c')); abort;
+	//}
+
 
 }

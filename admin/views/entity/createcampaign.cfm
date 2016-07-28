@@ -62,6 +62,12 @@ Notes:
 			    <hb:HibachiPropertyDisplay object="#rc.campaign#" property="campaignDescription" edit="#rc.edit#"/>
 			</hb:HibachiPropertyList>
 		</hb:HibachiPropertyRow>
+
+	    <sw-listing-display data-collection="'Account'" data-name="account" collection-config-input="collectionConfig">
+	        <sw-listing-column data-property-identifier="primaryEmailAddress.emailAddress"></sw-listing-column>
+	        <sw-listing-column data-property-identifier="lastName"></sw-listing-column>
+	        <sw-listing-column data-property-identifier="firstName"></sw-listing-column>
+	    </sw-listing-display>
 	</hb:HibachiEntityDetailForm>
 </cfoutput>
 

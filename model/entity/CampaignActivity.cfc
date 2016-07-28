@@ -63,6 +63,7 @@ component displayname="CampaignActivity" entityname="SlatwallCampaignActivity" t
 	property name="emailBodyHTML" ormtype="string" hb_auditable="false";
 	property name="emailBodyText" ormtype="string" hb_auditable="false";
 	property name="emailSendDateTime" ormtype="timestamp";
+	property name="runningFlag" ormtype="boolean" hb_formatType="yesno";
 
 	property name="send24EmailID" ormtype="integer";
 	property name="send24BroadcastID" ormType="integer";

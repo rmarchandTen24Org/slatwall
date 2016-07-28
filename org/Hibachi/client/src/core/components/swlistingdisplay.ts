@@ -67,6 +67,8 @@ class SWListingDisplayController{
     public name;
     public pageShow;
 
+    public collectionConfigValue = "";
+
     //@ngInject
     constructor(
         public $scope,
@@ -229,7 +231,7 @@ class SWListingDisplayController{
 
     private setupDefaultGetCollection = () =>{
         this.collectionPromise = this.collectionConfig.getEntity();
-
+        this.collectionConfigValue = angular.toJson(this.collectionConfig.getCollectionConfig());
         return ()=>{
             this.collectionConfig.setCurrentPage(this.paginator.getCurrentPage());
             this.collectionConfig.setPageShow(this.paginator.getPageShow());
@@ -240,6 +242,7 @@ class SWListingDisplayController{
                 //this.setupColumns();
                 this.collectionData.pageRecords = this.collectionData.pageRecords || this.collectionData.records;
                 this.paginator.setPageRecordsInfo(this.collectionData);
+                this.collectionConfigValue = angular.toJson(this.collectionConfig.getCollectionConfig());
             });
         };
     };
@@ -857,6 +860,7 @@ class SWListingDisplay implements ng.IDirective{
 
             showPagination:"@?",
             pageShow:"@?",
+            collectionConfigInput:"@?"
 
     };
     public controller=SWListingDisplayController;
