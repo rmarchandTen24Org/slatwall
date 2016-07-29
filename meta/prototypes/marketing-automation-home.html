@@ -1459,7 +1459,7 @@
         <div class="s-slide-panel from-right s-steps-slide-panel" id="j-create-email">
     		<header class="s-slide-panel-header">
     			<h4>Create New Marketing E-Mail</h4>
-                <button class="btn btn-white pull-right">Save Without Sending</button>
+                <button class="btn btn-white pull-right">Save</button>
     			<a href="#0" class="s-slide-panel-close">Close</a>
                 <div class="row s-steps-wrapper">
                     <div class="col-md-12">
@@ -1537,74 +1537,84 @@
                                 <div class="radio s-vertical">
                                     <input type="radio" name="broadcast-schedule" id="broadcast-schedule-new" value="1">
                                     <label for="broadcast-schedule-new">
-                                        Create HTML Email
+                                        Create New Email
                                     </label>  
                                 </div>
-                                <br>
+                                <br/>
                                 <div class="row">
-                                    <div class="col-md-4 s-wys-nav">
-
-                                        <div class="s-select-wrapper s-titled-select-wrapper s-template">
-                                            <span>Template:</span>
-                                            <select class="form-control input-sm">
-                                                <option value="" disabled="" selected="">-select-</option>
-                                                <option value="name">template one</option>
-                                                <option value="name">template two</option>
-                                                <option value="name">template three</option>
-                                            </select>
-                                        </div>
-                                        
-                                    </div>
-                                    <div class="col-md-8 s-wys-nav">
-
-                                        <div class="btn-group" role="group">
-                                            <button type="button" class="btn btn-white btn-sm">Preview HTML</button>
-                                            <button type="button" class="btn btn-white btn-sm">Preview Text</button>
-                                        </div>
-                                        
-                                    </div>
-                                    <div class="col-md-12">
-                                      <img src="/meta/prototypes/images/wysiwyg.jpg" class="s-responsive-image" alt="">        
-                                    </div>
-                                </div>
-                            </div>
                             
-                            <div class="form-group s-radio-content">
-                                <div class="radio s-vertical">
-                                    <input type="radio" name="broadcast-schedule" id="create-plain-text" value="1">
-                                    <label for="create-plain-text">
-                                        Create Plain Text Email
-                                    </label>  
-                                </div>
-                                <br>
-                                <div class="row">
-                                    <div class="col-md-4 s-wys-nav">
-
-                                        <div class="s-select-wrapper s-titled-select-wrapper s-template">
-                                            <span>Template:</span>
-                                            <select class="form-control input-sm">
-                                                <option value="" disabled="" selected="">-select-</option>
-                                                <option value="name">template one</option>
-                                                <option value="name">template two</option>
-                                                <option value="name">template three</option>
-                                            </select>
-                                        </div>
-                                        
-                                    </div>
-                                    <div class="col-md-8 s-wys-nav">
-
-                                        <div class="btn-group" role="group">
-                                            <button type="button" class="btn btn-white btn-sm">Preview HTML</button>
-                                            <button type="button" class="btn btn-white btn-sm">Preview Text</button>
-                                        </div>
-                                        
-                                    </div>
-
                                     <div class="col-md-12">
-                                        <div class="form-group">
-                                            <textarea class="form-control" rows="8" cols="" placeholder="add message here..."></textarea>
+                                        <div class="s-tab-table">
+                                            <div class="row s-tabs">
+                                                <ul class="nav nav-tabs" role="tablist">
+                                                    <li role="presentation" class="active">
+                                                        <a href="#j-html" role="tab" data-toggle="tab" aria-controls="sent" aria-expanded="true">HTML</a>
+                                                    </li>
+                                                    <li role="presentation" class="">
+                                                        <a href="#j-plain-text" role="tab" data-toggle="tab" aria-controls="sent" aria-expanded="true">Plain Text</a>
+                                                    </li>
+                                                </ul>
+                                            </div>
+                                            <div class="tab-content">
+                                                <!-- html Tab -->
+                                                <div role="tabpanel" class="tab-pane active" id="j-html">
+                                                    <div class="row">
+                                                        <div class="col-md-4 s-wys-nav">
+
+                                                            <div class="s-select-wrapper s-titled-select-wrapper s-template">
+                                                                <span>Template:</span>
+                                                                <select class="form-control input-sm">
+                                                                    <option value="" disabled="" selected="">-select-</option>
+                                                                    <option value="name">template one</option>
+                                                                    <option value="name">template two</option>
+                                                                    <option value="name">template three</option>
+                                                                </select>
+                                                            </div>
+                                                            
+                                                        </div>
+                                                        <div class="col-md-8 s-wys-nav">
+
+                                                            <div class="btn-group" role="group">
+                                                                <button type="button" class="btn btn-white btn-sm">Preview HTML</button>
+                                                                <button type="button" class="btn btn-white btn-sm">Preview Text</button>
+                                                            </div>
+                                                            
+                                                        </div>
+                                                        <div class="col-md-12">
+                                                          <img src="/meta/prototypes/images/wysiwyg.jpg" class="s-responsive-image" alt="">        
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <!-- ///html Tab -->
+                                                <!-- plain text Tab -->
+                                                <div role="tabpanel" class="tab-pane" id="j-plain-text">
+                                                    <div class="row">
+                                                        <div class="col-md-4 s-wys-nav">
+                                                            
+                                                        </div>
+                                                        <div class="col-md-8 s-wys-nav">
+
+                                                            <div class="btn-group" role="group">
+                                                                <button type="button" class="btn btn-white btn-sm">Preview HTML</button>
+                                                                <button type="button" class="btn btn-white btn-sm">Preview Text</button>
+                                                            </div>
+                                                            
+                                                        </div>
+
+                                                        <div class="col-md-12">
+                                                            <div class="form-group">
+                                                                <textarea class="form-control" rows="8" cols="" placeholder="add message here..."></textarea>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    
+                                                </div>
+                                                <!-- ///plain text Tab -->
+                                                
+                                            </div>
                                         </div>
                                     </div>
+
                                 </div>
                             </div>
                             
@@ -1612,13 +1622,13 @@
                                 <div class="radio s-vertical">
                                     <input type="radio" name="broadcast-schedule" id="broadcast-schedule-copy" value="1">
                                     <label for="broadcast-schedule-copy">
-                                        Create Email From Existing Mailing
+                                        Copy Email From Existing Mailings
                                     </label>
                                 </div>
-                                <div class="row">
+                                <div class="row" id="remove-this-email-options">
                                     <div class="col-md-12">
 
-                                        <div class="row s-table-inner-nav ">
+                                        <div class="row s-table-inner-nav">
                                             
                                             <div class="s-search-wrapper">
                                                 <div class="input-group">
@@ -1750,7 +1760,83 @@
                                         </div>
                                     </div>
                                 </div>
-                                
+                                <div class="row" id="remove-this-show-email">
+                                    <div class="col-md-12">
+                                        <a href="#" id="remove-this-back-to-emails-btn"><i class="fa fa-angle-double-left" aria-hidden="true"></i> Back To Existing Mails</a>
+                                    </div>
+                                    <div class="col-md-12">
+                                        <div class="s-tab-table">
+                                            <div class="row s-tabs">
+                                                <ul class="nav nav-tabs" role="tablist">
+                                                    <li role="presentation" class="active">
+                                                        <a href="#j-html" role="tab" data-toggle="tab" aria-controls="sent" aria-expanded="true">HTML</a>
+                                                    </li>
+                                                    <li role="presentation" class="">
+                                                        <a href="#j-plain-text" role="tab" data-toggle="tab" aria-controls="sent" aria-expanded="true">Plain Text</a>
+                                                    </li>
+                                                </ul>
+                                            </div>
+                                            <div class="tab-content">
+                                                <!-- html Tab -->
+                                                <div role="tabpanel" class="tab-pane active" id="j-html">
+                                                    <div class="row">
+                                                        <div class="col-md-4 s-wys-nav">
+
+                                                            <div class="s-select-wrapper s-titled-select-wrapper s-template">
+                                                                <span>Template:</span>
+                                                                <select class="form-control input-sm">
+                                                                    <option value="" disabled="" selected="">-select-</option>
+                                                                    <option value="name">template one</option>
+                                                                    <option value="name">template two</option>
+                                                                    <option value="name">template three</option>
+                                                                </select>
+                                                            </div>
+                                                            
+                                                        </div>
+                                                        <div class="col-md-8 s-wys-nav">
+
+                                                            <div class="btn-group" role="group">
+                                                                <button type="button" class="btn btn-white btn-sm">Preview HTML</button>
+                                                                <button type="button" class="btn btn-white btn-sm">Preview Text</button>
+                                                            </div>
+                                                            
+                                                        </div>
+                                                        <div class="col-md-12">
+                                                          <img src="/meta/prototypes/images/wysiwyg.jpg" class="s-responsive-image" alt="">        
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <!-- ///html Tab -->
+                                                <!-- plain text Tab -->
+                                                <div role="tabpanel" class="tab-pane" id="j-plain-text">
+                                                    <div class="row">
+                                                        <div class="col-md-4 s-wys-nav">
+                                                            
+                                                        </div>
+                                                        <div class="col-md-8 s-wys-nav">
+
+                                                            <div class="btn-group" role="group">
+                                                                <button type="button" class="btn btn-white btn-sm">Preview HTML</button>
+                                                                <button type="button" class="btn btn-white btn-sm">Preview Text</button>
+                                                            </div>
+                                                            
+                                                        </div>
+
+                                                        <div class="col-md-12">
+                                                            <div class="form-group">
+                                                                <textarea class="form-control" rows="8" cols="" placeholder="add message here..."></textarea>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    
+                                                </div>
+                                                <!-- ///plain text Tab -->
+                                                
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                </div>
                             </div>
                             
                         </div>
@@ -1760,13 +1846,13 @@
                     <!--- LIST --->
                     <div class="row s-step-content" id="j-step-list">
                         <div class="col-md-12">
+                            
                             <div class="row s-table-inner-nav ">
-                                                            
-                                <div class="s-search-wrapper">
                                 
+                                <div class="s-search-wrapper">
                                     <div class="input-group">
                                         <div class="input-group-btn search-panel">
-                                            <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+                                            <button type="button" class="btn btn-sm btn-default dropdown-toggle" data-toggle="dropdown">
                                             <span>All</span> <span class="caret"></span>
                                             </button>
                                             <ul class="dropdown-menu" role="menu">
@@ -1775,28 +1861,27 @@
                                                 <li><a href="#">Type</a></li>
                                             </ul>
                                         </div>
-                                        <span class="s-search s-add">
-                                            <input type="text" class="form-control input-sm" name="" placeholder="Search &amp; assign list..." style="padding-left: 30px;">
-                                            <div class="dropdown s-search-results-wrapper s-selectable" style="display: none;">
-    									        <ul class="dropdown-menu">
-                                                    <li class="s-selected"><a href="##">Fans of Cleveland <span class="s-right-content">1200</span></a></li>
-    									            <li class="s-selected"><a href="##">Fans of Cleveland - Opens <span class="s-right-content">200</span></a></li>
-                                                    <li><a href="##">Fans of Cleveland - Not Opened <span class="s-right-content">20</span></a></li>
-    									        </ul>
-    									    </div>
-                                        </span>
-                                        <div class="input-group-btn s-action" style="padding-left: 5px;">
-                                            <button class="btn btn-grey"><i class="fa fa-download" aria-hidden="true"></i></button>
+                                        <div class="s-search">
+                                            <input type="text" class="form-control s-search" name="" placeholder="Search...">
                                         </div>
+                                        <!-- <div class="input-group-btn s-action" style="padding-left: 5px;">
+                                            <button class="btn btn-default btn-sm"><i class="fa fa-download" aria-hidden="true"></i></button>
+                                        </div> -->
                                     </div>
-                                    
                                 </div>
+                                
                             </div>
                             
                             <div class="table-responsive">
                                 <table class="table table-bordered s-default-table">
                                     <thead>
                                         <tr>
+                                            <th class="s-table-checkbox">
+                                                <div style="margin: 0px; padding: 0px;" class="s-checkbox">
+                                                    <input type="checkbox" id="" name="" value="">
+                                                    <label for=""></label>
+                                                </div>
+                                            </th>
                                             <th>
                                                 <span>Name</span>
                                                 <a href="#" class="s-sort-arrows">
@@ -1820,7 +1905,12 @@
                                                 </a>
                                             </th>
                                             <th>
-                                                <span>Type</span>
+                                                <span data-toggle="popover" data-trigger="hover" data-placement="top" title="List Types" data-content="
+                                                <ul>
+                                                    <li>Open list are list that may change over a period of time.</li>
+                                                    <li>Locked lists are list that will not change.</li>
+                                                </ul>
+                                                ">Type <i class="fa fa-info-circle" aria-hidden="true"></i></span>
                                                 <a href="#" class="s-sort-arrows">
                                                     <svg class="nc-icon outline" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="20px" height="20px" viewBox="0 0 64 64">
                                                         <g transform="translate(0.5, 0.5)"> 
@@ -1837,6 +1927,12 @@
                                     </thead>
                                     <tbody>    
                                         <tr>
+                                            <td class="s-table-checkbox">
+                                                <div style="margin: 0px; padding: 0px;" class="s-checkbox">
+                                                    <input type="checkbox" id="" name="" value="">
+                                                    <label for=""></label>
+                                                </div>
+                                            </td>
                                             <td>Fans of Cleveland</td>
                                             <td>1200</td>
                                             <td>Locked</td>
@@ -1847,6 +1943,12 @@
                                             </td>
                                         </tr>
                                         <tr>
+                                            <td class="s-table-checkbox">
+                                                <div style="margin: 0px; padding: 0px;" class="s-checkbox">
+                                                    <input type="checkbox" id="" name="" value="">
+                                                    <label for=""></label>
+                                                </div>
+                                            </td>
                                             <td>Fans of Cleveland - Opens</td>
                                             <td>200</td>
                                             <td>Open</td>
@@ -1875,6 +1977,7 @@
                                     <li><a href="#" class="listing-pager page-option" data-page="3">3</a></li>
                                 </ul>
                             </div>
+                            
                         </div>
                     </div>
                     <!--- //LIST --->
@@ -2443,7 +2546,21 @@
                 }
             });
         </script>
-        
+        <script>
+            (function(){
+                $('#remove-this-show-email').hide();
+                $('#remove-this-email-options').click(function(){
+                    $(this).hide();
+                    $('#remove-this-show-email').show();
+                })
+                
+                $('#remove-this-back-to-emails-btn').click(function(){
+                    $('#remove-this-email-options').show();
+                    $('#remove-this-show-email').hide();
+                })
+                
+            }())
+        </script>
     </body>
     
 </html>
