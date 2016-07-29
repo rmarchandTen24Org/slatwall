@@ -56,7 +56,6 @@ component extends="mxunit.framework.TestCase" output="false" {
 
 		// Setup Components
 		variables.slatwallFW1Application = createObject("component", "Slatwall.Application");
-
 		super.beforeTests();
 	}
 
@@ -261,7 +260,7 @@ component extends="mxunit.framework.TestCase" output="false" {
 	private string function generateRandomString(minLength, maxLength) {
 		var chars = "abcdefghijklmnopqrstuvwxyz -_";
 		chars &= ucase(chars);
-		var upper = minLength + round(rand()*maxLength);
+		var upper = minLength + round(rand()*(maxLength - minLength));
 
 		var returnString = "";
 		for(var i=1; i<=upper; i++ ) {

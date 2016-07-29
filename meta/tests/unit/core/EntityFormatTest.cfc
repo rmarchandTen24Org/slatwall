@@ -412,9 +412,9 @@ component extends="Slatwall.meta.tests.unit.SlatwallUnitTestBase" {
 					&& !structKeyExists(property,'allowcascade')
 				   ) {
 					criminalsMessage &= "entityName=#entityName# propertyName=#property.name#, <br>";
-				}	
-							
-			}			
+				}
+
+			}
 		}
 		
 		assert(

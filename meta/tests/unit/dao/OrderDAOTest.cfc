@@ -50,13 +50,12 @@ component extends="Slatwall.meta.tests.unit.SlatwallUnitTestBase" {
 		super.setup();
 
 		variables.dao = request.slatwallScope.getDAO("orderDAO");
-		variables.mockOrderService = new Slatwall.meta.tests.unit.mockOrderService();
+		variables.orderMockService = new Slatwall.meta.tests.unit.OrderMockService();
 	}
 
 	public void function inst_ok() {
-//		request.debug(variables.mockOrderService);
-//		variables.mockOrderService.getMockData();
-		assert(isObject(variables.dao));
+//		assert(verifyOneToManyAssoc(order,orderitems),'failed to associate');
+//		assert(isObject(variables.dao));
 	}
 
 	//getPeerOrderPaymentNullAmountExistsFlag()
@@ -100,27 +99,13 @@ component extends="Slatwall.meta.tests.unit.SlatwallUnitTestBase" {
 		assertFalse(variables.dao.getPeerOrderPaymentNullAmountExistsFlag(order2.getOrderId(), order2.getOrderPayments()[1].getOrderPaymentID()));
 	}
 	
-	private any function createMockOrderReturn(numeric fulfillAmount) {
-		var orderReturnData = {
-			orderReturnID = ''
-		};
-		if(!isNull(arguments.fulfillAmount)) {
-			orderReturnData.fulfillmentRefundAmount = arguments.fulfillAmount;
-		}
-		return createPersistedTestEntity('OrderReturn', orderReturnData);
-	}
-	private any function createMockOrder() {
-		var orderData = {
-			orderID = ''
-		};
-		return createPersistedTestEntity('Order', orderData);
-	}
+	
 	public void function getPreviouslyReturnedFulfillmentTotalTest() {
-		var mockOrderReturn1 = createMockOrderReturn(100);
-		var mockOrderReturn2 = createMockOrderReturn(10);
-		var mockOrderReturn3 = createMockOrderReturn();
+		var mockOrderReturn1 = variables.orderMockService.createOrderReturn(100);
+		var mockOrderReturn2 = variables.orderMockService.createOrderReturn(10);
+		var mockOrderReturn3 = variables.orderMockService.createOrderReturn();
 		
-		var mockParentOrder = createMockOrder();
+		var mockParentOrder = variables.orderMockService.createOrder();
 		
 		var orderData = {
 			orderID = '',
@@ -139,7 +124,7 @@ component extends="Slatwall.meta.tests.unit.SlatwallUnitTestBase" {
 				}
 			]
 		};
-		var mockOrder = createPersistedTEstEntity('Order', orderData);
+		var mockOrder = createPersistedTestEntity('Order', orderData);
 		
 		//Testing the orderReturn without fulfillmentReturnAmount
 		var result = variables.dao.getPreviouslyReturnedFulfillmentTotal(mockParentOrder.getOrderID());
@@ -150,6 +135,18 @@ component extends="Slatwall.meta.tests.unit.SlatwallUnitTestBase" {
 		assertEquals(0, resultInvalidArgu);
 		
 		
+	}
+	
+	public void function test() {
+		var siteData = {
+			siteID=''
+		};
+		var mockSite = createPersistedTestEntity('Site', siteData);
+		mockOrderReturn1 = variables.orderMockService.createOrder(	
+			{
+				orderTypeID = '444df2df9f923d6c6fd0942a466e84cc',//otSaleOrder
+				orderCreatedSiteID = mockSite.getSiteID()
+			}																);
 	}
 
 
