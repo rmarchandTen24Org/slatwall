@@ -52,60 +52,216 @@ component  extends="Slatwall.meta.tests.unit.SlatwallUnitTestBase"{
 	}
 	
 	
-	
-	private any function createBasicOrder (struct orderData) {
+	public any function createOrder( struct orderData ){
+		var mockOrder = variables.mockService.createBasicMockEntity('Order', arguments.orderData);
+
+		for(var property in request.slatwallScope.getService('HibachiService').getPropertiesByEntityName('Order')){
+			
+			//if property was not defined and hb_populateTestData=true or not defined then make generic mock data
+			if(structKeyExists(property,'fieldType') && findNoCase('attribute', property.name) == 0) {
+				
+				if(property.fieldType == 'many-to-one') {
+					if(structKeyExists(arguments.orderData, property.name)){
+						mockOrder = createToOneAssociation(mockOrder, property.name, arguments.orderData[property.name]);
+					} else {
+						mockOrder = createToOneAssociation(mockOrder, property.name);
+					}
+				}else if(property.fieldType == 'many-to-many' || property.fieldType == 'one-to-many') {
+					request.debug(property.name);
+					if(structKeyExists(arguments.orderData, property.name)){
+						mockOrder = createToManyAssociation(mockOrder, property.name, arguments.orderData[property.name]);
+					} else {
+						mockOrder = createToManyAssociation(mockOrder, property.name);
+					}
+				}
+				
+			}
+		}
 		
+		return mockOrder;
 	}
 	
-	
-	
-	public any function createOrder( struct orderData ){
-		var mockOrder = variables.mockService.createBasicMockEntity('Order', orderData);
-		var oData = {
-			orderItem = 'lala'
-		};
-		request.debug(oData['orderItem']);
-		for(var property in request.slatwallScope.getService('HibachiService').getPropertiesByEntityName(entityName)){
-			//if property was not defined and hb_populateTestData=true or not defined then make generic mock data
-			if(structKeyExists(property,'fieldType')){
-				if(property.fieldType == 'many-to-one') {
-					if(!structKeyExists(arguments.orderData,property.name)){
-						mockOrder = variables.mockService.createManyToOneAssociation(mockOrder,"#property.name#", arguments[#properety.name#]);
+	/**
+	*  Only works for many-to-one and one-to-one associtions
+	*/
+	public any function createToOneAssociation(required any entityObject, required string propertyName, any structValueEntity) {
+		
+		//Verify the cfc value
+		var Property = request.slatwallScope.getService("hibachiService").getPropertyByEntityNameAndPropertyName('#entityObject.getClassName()#', arguments.propertyName);
+		if(!structKeyExists(Property, "cfc")) {
+			throw('#entityObject.getClassName()#.#propertyName# property does not have cfc value');
+		}
+		var assnEntityName = Property.cfc;
+		
+		//Type properties
+		if(assnEntityName == 'type') {
+			if(arguments.propertyName == 'orderType') {
+				if(structKeyexists(arguments, 'structValueEntity')) {
+					entityObject.setOrderType(arguments.structValueEntity);
+				} else {
+					var typeOptionArray = variables.mockService.createMockTypeWithinOptions(arguments.entityObject, arguments.propertyName);
+					if(arrayLen(typeOptionArray)) {
+						entityObject.setOrderType(variables.mockService.createMockTypeWithinOptions(arguments.entityObject, arguments.propertyName)[1]);//otSaleOrder
+					} else {
+						throw("The function createMockTypeWithinOptions() in mockService returns empty");
 					}
 				}
 			}
-		}
-		
-		if(structKeyExists(property,'fieldType')){
-			if(property.fieldType == 'one-to-many'){
-				
-			}else if(property.fieldType == 'many-to-one'){
-				createManyToOneAssociation(mockOrder,"set#property.name#");
+			if(arguments.propertyName == 'orderStatusType') {
+				if(!structKeyexists(arguments,'structValueEntity')) {
+					entityObject.setOrderStatusType(variables.mockService.createMockType('444df2b498de93b4b33001593e96f4be'));//ostNotPlaced
+				} else {
+					entityObject.setOrderStatusType(arguments.structValueEntity);
+				}
+			}				
+		}else {
+			//If no orderData.propertyValue passed in, create the entity automatically
+			if(!structKeyexists(arguments,'structValueEntity')) {
+				var createEntityMethodName = "createMock" & assnEntityName;
+				if(structKeyExists(this,'#createEntityMethodName#')) {
+					var createEntityMethod = this[createEntityMethodName];
+					var tempEntity = createEntityMethod();
+				} else {
+					var tempEntity = variables.mockService.createMockMissingEntity(assnEntityName);
+				}
+
+				arguments.structValueEntity = tempEntity;
 			}
+			//Set Association
+			var methodName = 'set#arguments.propertyName#';
+			arguments.entityObject.invokeMethod(methodName=methodName,methodArguments = { 1=arguments.structValueEntity });
 		}
-		//Many-to-one properties
-		if (!isNull(arguments.orderCreatedSiteID)) {
-			mockOrder = createManyToOneAssociation(mockOrder, 'orderCreatedSite', arguments.orderCreatedSiteID);
-			variables.mockService.VerifyRel(mockOrder, 'orderCreatedSite');
-		}
+		variables.mockService.verifyRel(arguments.entityObject, arguments.propertyName);
+		return arguments.entityObject;
 		
-		
-		
-		
-//		//Type-involved properties
-//		if(!isNull(arguments.orderTypeID)) {
-//			if(len(arguments.orderTypeID)) {
-//				orderData.orderType = {
-//					typeID = arguments.orderTypeID
-//				};
-//			} else {
-//				orderData.orderType = getTypeService().getType(  );
-//			}
-//		}
-		
-		var resultOrder = createPersistedTestEntity('Order', orderData);
-		return resultOrder;
 	}
+	
+	/**
+	*  Only works on many-to-many and one-to-many associtions
+	*/
+	public any function createToManyAssociation(required any entityObject, required string propertyName, array propertyValue=[]) {
+		
+		//Verify the cfc value
+		var thisProperty = request.slatwallScope.getService("hibachiService").getPropertyByEntityNameAndPropertyName('#entityObject.getClassName()#', arguments.propertyName);
+		if(!structKeyExists(thisProperty, "cfc")) {
+			throw('#entityObject.getClassName()#.#propertyName# property does not have cfc value');
+		}
+		var assnEntityName = thisProperty.cfc;
+		
+		//If no orderData.propertyValue passed in, create the entity automatically
+		if(!arrayLen(arguments.propertyValue)) {
+			var createEntityMethodName = "createMock" & assnEntityName;
+			if(structKeyExists(this,'#createEntityMethodName#')) {
+				var createEntityMethod = this[createEntityMethodName];
+				var tempEntity = createEntityMethod();
+			} else {
+				var tempEntity = variables.mockService.createMockMissingEntity(assnEntityName);
+			}			
+			arguments.propertyValue[1] = tempEntity;
+		}
+
+		//Set Association, propertyValue is an array of entities
+		for (var oneValue in arguments.propertyValue) {
+			var methodName = 'add#thisProperty.singularname#';
+			arguments.entityObject.invokeMethod(methodName = methodName, methodArguments = {1 = oneValue});
+		}
+		
+		variables.mockService.verifyRel(arguments.entityObject, arguments.propertyName);
+		return entityObject;
+		
+	}
+
+	
+	//--------------------------Mock Entity not fully created --------
+/*	public any function createMockAccount() {
+		var accountData = {
+			accountID = ''
+		};
+		return createPersistedTestEntity('Account', accountData);
+	}
+	
+	public any function createMockAccountAddress() {
+		var accountAddressData = {
+			accountAddressID = ''
+		};
+		return createPersistedTestEntity('accountAddress', accountAddressData);
+	}
+	
+	public any function createMockAddress() {
+		var addressData = {
+			addressID = ''
+		};
+		return createPersistedTestEntity('Address', addressData);
+	}
+	
+	public any function createMockLocation() {
+		var locationData = {
+			locationID = ''
+		};
+		return createPersistedTestEntity('Location', locationData);
+	}
+	
+	public any function createMockOrderOrigin() {
+		var orderOriginData = {
+			orderOriginID = ''
+		};
+		return createPersistedTestEntity('OrderOrigin', orderOriginData);
+	}
+	
+	public any function createMockOrder() {
+		var orderData = {
+			orderID = ''
+		};
+		return createPersistedTestEntity('Order', orderData);
+	}
+	public any function createMockPromotionCode() {
+		var promotionCodeData = {
+			promotionCodeID = ''
+		};
+		return createPersistedTestEntity('PromotionCode', promotionCodeData);
+	}
+	
+	public any function createMockOrderItem() {
+		var orderItemData = {
+			orderItemID = ''
+		};
+		return createPersistedTestEntity('OrderItem', orderItemData);
+	}
+	public any function createMockPromotionApplied() {
+		var PromotionAppliedData = {
+			PromotionAppliedID = ''
+		};
+		return createPersistedTestEntity('PromotionApplied',PromotionAppliedData);
+	}
+	
+	public any function createMockOrderDelivery() {
+		var orderDeliveryData = {
+			orderDeliveryID = ''
+		};
+		return createPersistedTestEntity('OrderDelivery', orderDeliveryData);
+	}
+	
+	public any function createMockOrderFulfillment() {
+		var orderFulfillmentData = {
+			orderFulfillmentID = ''
+		};
+		return createPersistedTestEntity('orderFulfillment', orderFulfillmentData);
+	}
+	
+	public any function createMockOrderPayment() {
+		var orderPaymentData = {
+			orderPaymentID = ''
+		};
+		return createPersistedTestEntity('OrderPayment', orderPaymentData);
+	}
+	
+	public any function createMockorderReturn() {
+		var orderReturnData = {
+			orderReturnID = ''
+		};
+		return createPersistedTestEntity('orderReturn', orderReturnData);
+	}
+*/	
 	
 	public any function createOrderReturn(numeric fulfillAmount) {
 		var orderReturnData = {
@@ -117,10 +273,18 @@ component  extends="Slatwall.meta.tests.unit.SlatwallUnitTestBase"{
 		return createPersistedTestEntity('OrderReturn', orderReturnData);
 	}
 	
+	
+	public any function createMockStockReceiver() {
+		var data = {
+			stockReceiverID = '',
+			receiverType = 'LALA'
+		};
+		return createPersistedTestEntity('StockReceiver', data);
+	}
 	/**
 	* Create a simple Site entity
 	*/
-	private any function createMockSite() {
+	public any function createMockSite() {
 		var siteData = {
 			siteID = ''
 		};
