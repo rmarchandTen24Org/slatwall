@@ -46,14 +46,34 @@
 Notes:
 
 */
-component  extends="Slatwall.meta.tests.unit.SlatwallUnitTestBase"{
+component  extends="Slatwall.meta.tests.unit.MockService"{
 	public void function init(){
-		variables.mockService = new Slatwall.meta.tests.unit.MockService(); 
+		
 	}
 	
+	// ============  Default data and settings  ==============
+	public array function skipMockingWhitelist(required string entityname) {
+		if(arguments.entityname == 'Order') {
+			return ['orderNumber', //Won't be created if not placed
+					'createdDateTime', 'createdByAccountID', 'modifiedDateTime', 'modifiedByAccountID'//Audit Properties
+				   ];
+		}
+		throw("WriteList not found with entity #arguments.entityName#");
+	}
 	
-	public any function createOrder( struct orderData ){
-		var mockOrder = variables.mockService.createBasicMockEntity('Order', arguments.orderData);
+	public any function returnDefaultTypeByPropertyName(required string propertyName) {
+		var tempOrder = createMockMissingEntity('order');
+		if(arguments.propertyName == 'orderType') {
+			return returnTypeBySystemCode(tempOrder, 'orderType', 'otSalesOrder');
+		}
+		if(arguments.propertyName == 'orderStatusType') {
+			return returnTypeBySystemCode(tempOrder, 'orderStatusType', 'ostNotPlaced');
+		}
+	}
+	
+	//================== Mocking Functions ======================
+	public any function createCompleteMockOrder( struct orderData ){
+		var mockOrder = createBasicMockEntity('Order', arguments.orderData, skipMockingWhitelist('order'));
 
 		for(var property in request.slatwallScope.getService('HibachiService').getPropertiesByEntityName('Order')){
 			
@@ -81,95 +101,11 @@ component  extends="Slatwall.meta.tests.unit.SlatwallUnitTestBase"{
 		return mockOrder;
 	}
 	
-	/**
-	*  Only works for many-to-one and one-to-one associtions
-	*/
-	public any function createToOneAssociation(required any entityObject, required string propertyName, any structValueEntity) {
-		
-		//Verify the cfc value
-		var Property = request.slatwallScope.getService("hibachiService").getPropertyByEntityNameAndPropertyName('#entityObject.getClassName()#', arguments.propertyName);
-		if(!structKeyExists(Property, "cfc")) {
-			throw('#entityObject.getClassName()#.#propertyName# property does not have cfc value');
-		}
-		var assnEntityName = Property.cfc;
-		
-		//Type properties
-		if(assnEntityName == 'type') {
-			if(arguments.propertyName == 'orderType') {
-				if(structKeyexists(arguments, 'structValueEntity')) {
-					entityObject.setOrderType(arguments.structValueEntity);
-				} else {
-					var typeOptionArray = variables.mockService.createMockTypeWithinOptions(arguments.entityObject, arguments.propertyName);
-					if(arrayLen(typeOptionArray)) {
-						entityObject.setOrderType(variables.mockService.createMockTypeWithinOptions(arguments.entityObject, arguments.propertyName)[1]);//otSaleOrder
-					} else {
-						throw("The function createMockTypeWithinOptions() in mockService returns empty");
-					}
-				}
-			}
-			if(arguments.propertyName == 'orderStatusType') {
-				if(!structKeyexists(arguments,'structValueEntity')) {
-					entityObject.setOrderStatusType(variables.mockService.createMockType('444df2b498de93b4b33001593e96f4be'));//ostNotPlaced
-				} else {
-					entityObject.setOrderStatusType(arguments.structValueEntity);
-				}
-			}				
-		}else {
-			//If no orderData.propertyValue passed in, create the entity automatically
-			if(!structKeyexists(arguments,'structValueEntity')) {
-				var createEntityMethodName = "createMock" & assnEntityName;
-				if(structKeyExists(this,'#createEntityMethodName#')) {
-					var createEntityMethod = this[createEntityMethodName];
-					var tempEntity = createEntityMethod();
-				} else {
-					var tempEntity = variables.mockService.createMockMissingEntity(assnEntityName);
-				}
-
-				arguments.structValueEntity = tempEntity;
-			}
-			//Set Association
-			var methodName = 'set#arguments.propertyName#';
-			arguments.entityObject.invokeMethod(methodName=methodName,methodArguments = { 1=arguments.structValueEntity });
-		}
-		variables.mockService.verifyRel(arguments.entityObject, arguments.propertyName);
-		return arguments.entityObject;
+	public any function createElementalMockOrder (struct orderData) {
 		
 	}
 	
-	/**
-	*  Only works on many-to-many and one-to-many associtions
-	*/
-	public any function createToManyAssociation(required any entityObject, required string propertyName, array propertyValue=[]) {
-		
-		//Verify the cfc value
-		var thisProperty = request.slatwallScope.getService("hibachiService").getPropertyByEntityNameAndPropertyName('#entityObject.getClassName()#', arguments.propertyName);
-		if(!structKeyExists(thisProperty, "cfc")) {
-			throw('#entityObject.getClassName()#.#propertyName# property does not have cfc value');
-		}
-		var assnEntityName = thisProperty.cfc;
-		
-		//If no orderData.propertyValue passed in, create the entity automatically
-		if(!arrayLen(arguments.propertyValue)) {
-			var createEntityMethodName = "createMock" & assnEntityName;
-			if(structKeyExists(this,'#createEntityMethodName#')) {
-				var createEntityMethod = this[createEntityMethodName];
-				var tempEntity = createEntityMethod();
-			} else {
-				var tempEntity = variables.mockService.createMockMissingEntity(assnEntityName);
-			}			
-			arguments.propertyValue[1] = tempEntity;
-		}
-
-		//Set Association, propertyValue is an array of entities
-		for (var oneValue in arguments.propertyValue) {
-			var methodName = 'add#thisProperty.singularname#';
-			arguments.entityObject.invokeMethod(methodName = methodName, methodArguments = {1 = oneValue});
-		}
-		
-		variables.mockService.verifyRel(arguments.entityObject, arguments.propertyName);
-		return entityObject;
-		
-	}
+	
 
 	
 	//--------------------------Mock Entity not fully created --------
@@ -263,6 +199,7 @@ component  extends="Slatwall.meta.tests.unit.SlatwallUnitTestBase"{
 	}
 */	
 	
+	//=============== Some special entities createMockXXX ===================
 	public any function createOrderReturn(numeric fulfillAmount) {
 		var orderReturnData = {
 			orderReturnID = ''
@@ -272,22 +209,12 @@ component  extends="Slatwall.meta.tests.unit.SlatwallUnitTestBase"{
 		}
 		return createPersistedTestEntity('OrderReturn', orderReturnData);
 	}
-	
-	
+
 	public any function createMockStockReceiver() {
 		var data = {
 			stockReceiverID = '',
 			receiverType = 'LALA'
 		};
 		return createPersistedTestEntity('StockReceiver', data);
-	}
-	/**
-	* Create a simple Site entity
-	*/
-	public any function createMockSite() {
-		var siteData = {
-			siteID = ''
-		};
-		return createPersistedTestEntity('Site', siteData);
 	}
 }

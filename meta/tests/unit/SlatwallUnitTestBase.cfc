@@ -48,8 +48,8 @@ Notes:
 */
 component extends="mxunit.framework.TestCase" output="false" {
 
-	variables.debugArray = [];
-	variables.persistentEntities = [];
+//	variables.debugArray = [];
+//	variables.persistentEntities = [];
 
 	// BEFORE ALL TESTS IN THIS SUITE
 	public void function beforeTests(){
@@ -69,6 +69,18 @@ component extends="mxunit.framework.TestCase" output="false" {
 		variables.debugArray = [];
 		variables.persistentEntities = [];
 		variables.files = [];
+		
+		//default get mock service if a specific is not specified
+		
+		var metaData = getMetaData(this);
+		request.debug(metadata);
+		if(struckeyExists(metaData,'hb_mockService')){
+			variables.mockService = createObject('component',"Slatwall.meta.tests.unit.#metaData.hb_mockService#"); 
+		}else{
+			variables.mockService = new Slatwall.meta.tests.unit.mockService;
+		}
+		
+		//Use data from mockService
 	}
 
 	// AFTER EACH TEST
@@ -286,6 +298,30 @@ component extends="mxunit.framework.TestCase" output="false" {
 
 	private string function generateRandomDecimal(minVal, maxVal) {
 		return 3.45;
+	}
+	
+	private string function createBasicMockEntity(required string entityName, struct arguData, array whitelist) {
+		var entityData = variables.mockService.createBasicMockData(arguments.collection);
+		return createPersistedTestEntity(arguments.entityName, entityData);
+	}
+
+	private any function createSimpleMockEntityByEntityName(required string entityName) {
+		var primaryIDPropertyName = request.slatwallScope.getService('hibachiservice').getPrimaryIDPropertyNameByEntityName(arguments.entityName);
+		if(arguments.entityName == 'State'){
+			//TODO: Combination Primary ID may throw errors. 
+		}
+		var data = {};
+		data[primaryIDPropertyName] = "";
+		
+		var resultEntity = createPersistedTestEntity(arguments.entityName, data);
+		return resultEntity;
+	}
+	
+	private any function returnTypeByID(required string typeID) {
+		var typeData = {
+			typeID = arguments.typeID
+		};
+		return createPersistedTestEntity('Type', typeData);
 	}
 
 }

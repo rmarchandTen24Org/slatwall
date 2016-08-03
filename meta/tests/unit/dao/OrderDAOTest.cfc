@@ -51,6 +51,7 @@ component extends="Slatwall.meta.tests.unit.SlatwallUnitTestBase" {
 
 		variables.dao = request.slatwallScope.getDAO("orderDAO");
 		variables.orderMockService = new Slatwall.meta.tests.unit.OrderMockService();
+		variables.mockService = new Slatwall.meta.tests.unit.MockService();
 	}
 
 	public void function inst_ok() {
@@ -105,7 +106,7 @@ component extends="Slatwall.meta.tests.unit.SlatwallUnitTestBase" {
 		var mockOrderReturn2 = variables.orderMockService.createOrderReturn(10);
 		var mockOrderReturn3 = variables.orderMockService.createOrderReturn();
 		
-		var mockParentOrder = variables.orderMockService.createOrder();
+		var mockParentOrder = variables.mockService.createMockMissingEntity('Order');
 		
 		var orderData = {
 			orderID = '',
@@ -137,16 +138,18 @@ component extends="Slatwall.meta.tests.unit.SlatwallUnitTestBase" {
 		
 	}
 	
-	public void function test() {
-		var siteData = {
-			siteID=''
-		};
-		var mockSite = createPersistedTestEntity('Site', siteData);
-		mockOrderReturn1 = variables.orderMockService.createOrder(	
-			{
-				orderTypeID = '444df2df9f923d6c6fd0942a466e84cc',//otSaleOrder
-				orderCreatedSiteID = mockSite.getSiteID()
-			}																);
+	private void function test() {
+		
+		var mockSite = variables.orderMockService.createMockSite();
+		var mockAccount = variables.mockService.createMockMissingEntity('Account');
+		
+		var mockOrderReturn1 = variables.orderMockService.createOrder(	
+			{	
+				account = mockAccount,
+				orderCreatedSite = mockSite
+			}																
+		);
+		//request.debug(mockOrderReturn1.getorderStatusType().getSystemCode());
 	}
 
 
