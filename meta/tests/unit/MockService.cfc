@@ -46,7 +46,7 @@
 Notes:
 
 */
-component {
+component extends="Slatwall.meta.tests.unit.SlatwallUnitTestBase" hb_mockService="OrderMockService"{
 	
 	public void function init(){
 		
@@ -82,7 +82,6 @@ component {
 			}
 
 		}
-		
 	}
 	
 	public struct function createBasicMockData(required string entityName, struct arguData, array whitelist ) {
@@ -126,7 +125,7 @@ component {
 	/**
 	*  Only works for many-to-one and one-to-one associtions
 	*/
-	public any function createToOneAssnOnMissingObject(required any entityObject, required string propertyName) {
+	public any function createToOneAssnOnMissingObject(required any entityObject) {
 		
 		//Verify the cfc value
 		var Property = request.slatwallScope.getService("hibachiService").getPropertyByEntityNameAndPropertyName('#entityObject.getClassName()#', arguments.propertyName);
@@ -135,22 +134,18 @@ component {
 		}
 		var assnEntityName = Property.cfc;
 		
-		//If no orderData.propertyValue passed in, create the entity automatically
-		if(!structKeyExists(arguments, 'structValueEntity')) {
-			if (assnEntityName == 'type') {
-				arguments.structValueEntity = returnDefaultTypeByPropertyName(arguments.propertyName);
+		if (assnEntityName == 'type') {
+			arguments.structValueEntity = returnDefaultTypeByPropertyName(arguments.propertyName);
+		} else {
+			var createEntityMethodName = "createMock" & assnEntityName;
+			if(structKeyExists(this,'#createEntityMethodName#')) {//Yuqing: calls functions in other files
+				var createEntityMethod = this[createEntityMethodName];
+				var tempEntity = createEntityMethod();
 			} else {
-				var createEntityMethodName = "createMock" & assnEntityName;
-				if(structKeyExists(this,'#createEntityMethodName#')) {//Yuqing: calls functions in other files
-					var createEntityMethod = this[createEntityMethodName];
-					var tempEntity = createEntityMethod();
-				} else {
-					request.debug("On missing entity");
-					var tempEntity = createSimpleMockEntityByEntityName(assnEntityName);//Yuqing: calls functions in other files
-				}
-				arguments.structValueEntity = tempEntity;
+				request.debug("On missing entity");
+				var tempEntity = createSimpleMockEntityByEntityName(assnEntityName);//Yuqing: calls functions in other files
 			}
-			
+			arguments.structValueEntity = tempEntity;
 		}
 		
 		//Set Association
@@ -162,9 +157,9 @@ component {
 		
 	}
 	/**
-	*  Only works for many-to-one and one-to-one associtions
+	*  Only works for many-to-one and one-to-one associtions with related entity passed in
 	*/
-	public any function createToOneAssn(required any entityObject, required string propertyName, any structValueEntity) {
+	public any function createToOneAssociation(required any entityObject, required string propertyName, required any relatedEntity) {
 		
 		//Verify the cfc value
 		var Property = request.slatwallScope.getService("hibachiService").getPropertyByEntityNameAndPropertyName('#entityObject.getClassName()#', arguments.propertyName);
@@ -173,31 +168,12 @@ component {
 		}
 		var assnEntityName = Property.cfc;
 		
-		//If no orderData.propertyValue passed in, create the entity automatically
-		if(!structKeyExists(arguments, 'structValueEntity')) {
-			if (assnEntityName == 'type') {
-				arguments.structValueEntity = returnDefaultTypeByPropertyName(arguments.propertyName);
-			} else {
-				var createEntityMethodName = "createMock" & assnEntityName;
-				if(structKeyExists(this,'#createEntityMethodName#')) {//Yuqing: calls functions in other files
-					var createEntityMethod = this[createEntityMethodName];
-					var tempEntity = createEntityMethod();
-				} else {
-					request.debug("On missing entity");
-					var tempEntity = createSimpleMockEntityByEntityName(assnEntityName);//Yuqing: calls functions in other files
-				}
-				arguments.structValueEntity = tempEntity;
-			}
-			
-		}
-		
 		//Set Association
 		var methodName = 'set#arguments.propertyName#';
 		arguments.entityObject.invokeMethod(methodName=methodName,methodArguments = { 1=arguments.structValueEntity });
 		
 		verifyRel(arguments.entityObject, arguments.propertyName);
-		return arguments.entityObject;
-		
+		return arguments.entityObject;	
 	}
 	
 	
@@ -205,7 +181,7 @@ component {
 	/**
 	*  Only works on many-to-many and one-to-many associtions
 	*/
-	public any function createToManyAssociation(required any entityObject, required string propertyName, array propertyValue=[]) {
+	public any function createToManyAssnOnMissingObject(required any entityObject) {
 		
 		//Verify the cfc value
 		var thisProperty = request.slatwallScope.getService("hibachiService").getPropertyByEntityNameAndPropertyName('#entityObject.getClassName()#', arguments.propertyName);
@@ -214,17 +190,14 @@ component {
 		}
 		var assnEntityName = thisProperty.cfc;
 		
-		//If no orderData.propertyValue passed in, create the entity automatically
-		if(!arrayLen(arguments.propertyValue)) {
-			var createEntityMethodName = "createMock" & assnEntityName;
-			if(structKeyExists(this,'#createEntityMethodName#')) {
-				var createEntityMethod = this[createEntityMethodName];
-				var tempEntity = createEntityMethod();
-			} else {
-				var tempEntity = createSimpleMockEntityByEntityName(assnEntityName);
-			}			
-			arguments.propertyValue[1] = tempEntity;
-		}
+		var createEntityMethodName = "createMock" & assnEntityName;
+		if(structKeyExists(this,'#createEntityMethodName#')) {
+			var createEntityMethod = this[createEntityMethodName];
+			var tempEntity = createEntityMethod();
+		} else {
+			var tempEntity = createSimpleMockEntityByEntityName(assnEntityName);
+		}			
+		arguments.propertyValue[1] = tempEntity;
 
 		//Set Association, propertyValue is an array of entities
 		for (var oneValue in arguments.propertyValue) {
@@ -233,7 +206,30 @@ component {
 		}
 		
 		verifyRel(arguments.entityObject, arguments.propertyName);
-		return entityObject;
+		return arguments.entityObject;
+		
+	}
+		
+	/**
+	*  Only works on many-to-many and one-to-many associtions with array of entites passed
+	*/
+	public any function createToManyAssociation(required any entityObject, required string propertyName, required array propertyValue=[]) {
+		
+		//Verify the cfc value
+		var thisProperty = request.slatwallScope.getService("hibachiService").getPropertyByEntityNameAndPropertyName('#arguments.entityObject.getClassName()#', arguments.propertyName);
+		if(!structKeyExists(thisProperty, "cfc")) {
+			throw('#entityObject.getClassName()#.#propertyName# property does not have cfc value');
+		}
+		var assnEntityName = thisProperty.cfc;
+		
+		//Set Association, propertyValue is an array of entities
+		for (var oneValue in arguments.propertyValue) {
+			var methodName = 'add#thisProperty.singularname#';
+			arguments.entityObject.invokeMethod(methodName = methodName, methodArguments = {1 = oneValue});
+		}
+		
+		verifyRel(arguments.entityObject, arguments.propertyName);
+		return arguments.entityObject;
 		
 	}
 	
@@ -249,71 +245,5 @@ component {
 		}
 	}
 	
-//	public any function createPersistedTestEntity( required string entityName, struct data={}, boolean createRandomData=false, boolean persist=true, boolean saveWithService=false ) {
-//		return createTestEntity(argumentcollection=arguments);
-//	}
-//	
-//	public void function createTestFile (required string fileSourceLocalAbsolutePath, required string relativeFileDestination) {
-//
-//		var absoluteDest = expandPath('/Slatwall') & arguments.relativeFileDestination;
-//		
-//		//create the destination directory if necessary
-//		if (DirectoryExists(GetDirectoryFromPath(absoluteDest))) {
-//			fileCopy(arguments.fileSourceLocalAbsolutePath, absoluteDest);
-//		} else {
-//			DirectoryCreate(GetDirectoryFromPath(absoluteDest));
-//			fileCopy(arguments.fileSourceLocalAbsolutePath, absoluteDest);
-//		}
-//		
-//		// Add the filePath to the files array
-//		arrayAppend(variables.files, absoluteDest);
-//	}
-//
-//	public any function createTestEntity( required string entityName, struct data={}, boolean createRandomData=false, boolean persist=false, boolean saveWithService=false ) {
-//		// Create the new Entity
-//		var newEntity = request.slatwallScope.newEntity( arguments.entityName );
-//
-//		var arguments.data = createTestEntityData( newEntity, arguments.data, arguments.createRandomData );
-//		
-//		return newEntity;
-//	}
-//
-//	public struct function createTestEntityData( required any entity, struct data={}, boolean createRandomData=false) {
-//
-//		if(arguments.createRandomData) {
-//			for(var property in entity.getProperties()) {
-//
-//				if( !structKeyExists(arguments.data, property.name) ) {
-//
-//					if(property.name eq "activeFlag") {
-//						arguments.data.activeFlag = 1;
-//
-//					} else if (propertyIsPersistentColumn(property)) {
-//
-//						if(propertyIsString(property)) {
-//							arguments.data[ property.name ] = generateRandomString(1, 100);
-//
-//						} else if (propertyIsInteger(property)) {
-//							arguments.data[ property.name ] = generateRandomInteger(0, 1000);
-//
-//						} else if (propertyIsDate(property)) {
-//							arguments.data[ property.name ] = generateRandomDate();
-//
-//						} else if (propertyIsDateTime(property)) {
-//							arguments.data[ property.name ] = generateRandomDateTime();
-//
-//						} else if (propertyIsDecimal(property)) {
-//							arguments.data[ property.name ] = generateRandomDecimal(0, 1000);
-//
-//						}
-//
-//					}
-//				}
-//			}
-//		}
-//
-//		return arguments.data;
-//	}
-	
-	
+
 }

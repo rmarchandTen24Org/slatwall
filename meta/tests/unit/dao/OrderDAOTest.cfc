@@ -149,7 +149,6 @@ component extends="Slatwall.meta.tests.unit.SlatwallUnitTestBase" {
 				orderCreatedSite = mockSite
 			}																
 		);
-		//request.debug(mockOrderReturn1.getorderStatusType().getSystemCode());
 	}
 
 
