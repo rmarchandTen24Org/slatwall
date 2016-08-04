@@ -126,7 +126,7 @@ component {
 	/**
 	*  Only works for many-to-one and one-to-one associtions
 	*/
-	public any function createToOneAssociation(required any entityObject, required string propertyName, any structValueEntity) {
+	public any function createToOneAssnOnMissingObject(required any entityObject, required string propertyName) {
 		
 		//Verify the cfc value
 		var Property = request.slatwallScope.getService("hibachiService").getPropertyByEntityNameAndPropertyName('#entityObject.getClassName()#', arguments.propertyName);
@@ -152,6 +152,7 @@ component {
 			}
 			
 		}
+		
 		//Set Association
 		var methodName = 'set#arguments.propertyName#';
 		arguments.entityObject.invokeMethod(methodName=methodName,methodArguments = { 1=arguments.structValueEntity });
@@ -160,6 +161,46 @@ component {
 		return arguments.entityObject;
 		
 	}
+	/**
+	*  Only works for many-to-one and one-to-one associtions
+	*/
+	public any function createToOneAssn(required any entityObject, required string propertyName, any structValueEntity) {
+		
+		//Verify the cfc value
+		var Property = request.slatwallScope.getService("hibachiService").getPropertyByEntityNameAndPropertyName('#entityObject.getClassName()#', arguments.propertyName);
+		if(!structKeyExists(Property, "cfc")) {
+			throw('#entityObject.getClassName()#.#propertyName# property does not have cfc value');
+		}
+		var assnEntityName = Property.cfc;
+		
+		//If no orderData.propertyValue passed in, create the entity automatically
+		if(!structKeyExists(arguments, 'structValueEntity')) {
+			if (assnEntityName == 'type') {
+				arguments.structValueEntity = returnDefaultTypeByPropertyName(arguments.propertyName);
+			} else {
+				var createEntityMethodName = "createMock" & assnEntityName;
+				if(structKeyExists(this,'#createEntityMethodName#')) {//Yuqing: calls functions in other files
+					var createEntityMethod = this[createEntityMethodName];
+					var tempEntity = createEntityMethod();
+				} else {
+					request.debug("On missing entity");
+					var tempEntity = createSimpleMockEntityByEntityName(assnEntityName);//Yuqing: calls functions in other files
+				}
+				arguments.structValueEntity = tempEntity;
+			}
+			
+		}
+		
+		//Set Association
+		var methodName = 'set#arguments.propertyName#';
+		arguments.entityObject.invokeMethod(methodName=methodName,methodArguments = { 1=arguments.structValueEntity });
+		
+		verifyRel(arguments.entityObject, arguments.propertyName);
+		return arguments.entityObject;
+		
+	}
+	
+	
 	
 	/**
 	*  Only works on many-to-many and one-to-many associtions
