@@ -75,7 +75,7 @@ Notes:
 			<div class="container">
 			<cfif !$.slatwall.getLoggedInFlag()>
 				<span style="color:black;font-size:13px">
-					<cfif !isNull($.slatwall.getAccount().getFullName())> Hello <a href="/meta/sample/account.cfm">#$.slatwall.getAccount().getFullName()# </a></cfif>
+					<cfif !isNull($.slatwall.getAccount().getFullName())> Welcome <a href="/meta/sample/account.cfm">#$.slatwall.getAccount().getFullName()# </a></cfif>
 					<span style="color:grey;font-size:14px">
 						<cfif !isNull($.slatwall.getAccount().getCompany())> <small>#$.slatwall.getAccount().getCompany()#</small>&nbsp</cfif>
 					</span>
