@@ -390,7 +390,7 @@ component displayname="Order Fulfillment" entityname="SlatwallOrderFulfillment" 
     		}
 
     		if(!arrayLen(optionsArray)) {
-    			arrayPrepend(optionsArray, {name=rbKey('define.none'), value=''});
+    			arrayPrepend(optionsArray, {name=rbKey('define.select'), value=''});
     		}
 
     		variables.shippingMethodOptions = optionsArray;
@@ -433,7 +433,9 @@ component displayname="Order Fulfillment" entityname="SlatwallOrderFulfillment" 
   		if( !structKeyExists(variables,"subtotal") ) {
 	    	variables.subtotal = 0;
 	    	for( var i=1; i<=arrayLen(getOrderFulfillmentItems()); i++ ) {
-	    		variables.subtotal = precisionEvaluate(variables.subtotal + getOrderFulfillmentItems()[i].getExtendedPrice());
+	    	    if(getOrderFulfillmentItems()[i].isRootOrderItem()){
+	    		    variables.subtotal = precisionEvaluate(variables.subtotal + getOrderFulfillmentItems()[i].getExtendedPrice());
+	    		}
 	    	}
   		}
     	return variables.subtotal;
