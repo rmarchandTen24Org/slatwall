@@ -19,6 +19,7 @@
                     data-collection-config="swListingDisplay.collectionConfig"
                     data-get-collection="swListingDisplay.getCollection"
                     data-paginator="swListingDisplay.paginator"
+                    data-show-filters="swListingDisplay.showFilters"
                     data-ng-if="swListingDisplay.hasSearch !== false">
 
             </sw-listing-controls>
@@ -211,6 +212,7 @@
                                           popover-append-to-body="true">
                                     </span>
                                     <span ng-if="(!column.action || !column.queryString) && column.type==='currency'"
+                                          class="s-number"
                                           ng-bind-html="pageRecord[swListingDisplay.getPageRecordKey(column.propertyIdentifier)] | swcurrency"
                                           popover="{{swListingDisplay.replaceStringWithProperties(column.tooltip, pageRecord)}}"
                                           popover-trigger="mouseenter"
