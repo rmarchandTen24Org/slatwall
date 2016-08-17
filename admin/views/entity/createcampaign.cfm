@@ -63,6 +63,16 @@ Notes:
 			</hb:HibachiPropertyList>
 		</hb:HibachiPropertyRow>
 
+	    <sw-listing-display data-collection="'Campaign'"
+	                        data-name="Campaign"
+                            data-multiselect-field-name="test"
+                            data-multiselect-property-identifier="test">
+            <sw-listing-filter data-property-identifier="activeFlag" data-comparison-value="true"></sw-listing-filter>
+
+            <sw-listing-column data-property-identifier="campaignDescription"></sw-listing-column>
+            <sw-listing-column data-property-identifier="campaignName"></sw-listing-column>
+	    </sw-listing-display>
+
 	    <sw-listing-display data-collection="'Account'" data-name="account" collection-config-input="collectionConfig">
 	        <sw-listing-column data-property-identifier="primaryEmailAddress.emailAddress"></sw-listing-column>
 	        <sw-listing-column data-property-identifier="lastName"></sw-listing-column>

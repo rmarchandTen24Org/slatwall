@@ -96,6 +96,12 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 		);
 	}
 
+
+	public any function getEmail(){
+
+	}
+
+
 	// =====================  END: Logical Methods ============================
 
 	// ===================== START: DAO Passthrough ===========================
