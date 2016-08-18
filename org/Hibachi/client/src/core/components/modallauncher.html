@@ -1,0 +1,9 @@
+<a data-ng-click="swModalLauncher.launchModal()" href>
+    <div data-ng-transclude="button"></div>
+</a>
+<div data-ng-transclude="staticButton"></div>
+<sw-modal-slider data-show-modal="swModalLauncher.showModal">
+    <sw-modal-body>
+        <div data-ng-transclude="content"></div>
+    </sw-modal-body>
+</sw-modal-slider>
