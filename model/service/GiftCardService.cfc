@@ -141,7 +141,11 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 		var giftCardDebitTransaction = createDebitGiftCardTransaction(arguments.giftCard, arguments.processObject.getOrderPayments(), arguments.processObject.getOrderItems(), arguments.processObject.getDebitAmount());
 
 		if(!giftCardDebitTransaction.hasErrors()){
-			arguments.giftCard.updateCalculatedProperties();
+			if(arguments.giftCard.getBalanceAmount() == 0){
+				arguments.giftCard.setActiveFlag(false);//this will trigger updateCalculateProperties to run when gift card is saved
+			} else {
+			    arguments.giftCard.updateCalculatedProperties();
+			}
 			arguments.giftCard = this.saveGiftCard(arguments.giftCard);
 		} else {
 			arguments.giftCard.addErrors(giftCardDebitTransaction.getErrors());
@@ -198,6 +202,14 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 		}
 
 		return arguments.giftCard;
+
+	}
+
+	public any function processGiftCard_toggleActive(required any giftCard, required any processObject){
+
+		arguments.giftCard.setActiveFlag(processObject.getActiveFlag());
+
+		return this.saveGiftCard(arguments.giftCard);
 
 	}
 
