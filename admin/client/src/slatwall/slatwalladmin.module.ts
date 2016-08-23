@@ -6,6 +6,7 @@ import {entitymodule} from "../../../../org/Hibachi/client/src/entity/entity.mod
 import {contentmodule} from "../content/content.module";
 import {formbuildermodule} from "../formbuilder/formbuilder.module";
 import {giftcardmodule} from "../giftcard/giftcard.module";
+import {marketingautomationmodule} from "../marketingautomation/marketingautomation.module";
 import {optiongroupmodule} from "../optiongroup/optiongroup.module";
 import {orderitemmodule} from "../orderitem/orderitem.module";
 import {productmodule} from "../product/product.module";
@@ -30,6 +31,7 @@ var slatwalladminmodule = angular.module('slatwalladmin',[
   contentmodule.name,
   formbuildermodule.name,
   giftcardmodule.name,
+  marketingautomationmodule.name,
   optiongroupmodule.name,
   orderitemmodule.name,
   productmodule.name,

@@ -1,5 +1,4 @@
-{{swModalSlider.modalSize}}
-<div class="s-slide-panel from-right s-slide-{{swModalSlider.modalSize}}" data-ng-class="{'is-visible' : swModalSlider.showModal}" id="{{swModalSlider.modalName}}">
+<div class="s-slide-panel from-right s-slide-{{swModalSlider.modalSize}}" data-ng-class="{'is-visible' : swModalSlider.showModal}" id="{{swModalSlider.modalName}}" data-ng-if="swModalSlider.showModal">
     <header class="s-slide-panel-header">
         <h4 data-ng-bind="swModalSlider.title"></h4>
         <a href class="s-slide-panel-close" data-ng-click="swModalSlider.closeModal()">Close</a>
@@ -10,6 +9,7 @@
             <div class="s-animated-loader"></div>
         </div>
         <div class="s-slide-panel-content s-list-style">
+
             <!-- Transcluded Content Here -->
             <div data-ng-transclude="modalBody"></div>
         </div>
