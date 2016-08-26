@@ -2,67 +2,48 @@
 /// <reference path='../../../typings/tsd.d.ts' />
 
 class SWUpcomingActivityController{
-    private id;
-    private data:any = {};
-    private campaignObject;
-    private editing = false;
-    private saving = false;
-
+    private campaignId;
+    private activities;
     //@ngInject
     constructor(
-        protected collectionConfigService,
-        protected $hibachi
+        protected collectionConfigService
     ){
         this.init();
     }
 
     public init =()=> {
-        this.campaignObject = this.$hibachi.getCampaign(this.id)['value'];
+        this.activities=[];
+        var collectionConfig = this.collectionConfigService.newCollectionConfig('CampaignActivity');
+        collectionConfig.addFilter('campaign.campaignID', this.campaignId);
+        collectionConfig.addDisplayProperty('campaignActivityID,campaignActivityName,emailSendDateTime');
 
-
-
-        //console.log(this.campaignObject);
-        //var collectionConfig = this.collectionConfigService.newCollectionConfig('Campaign');
-        //collectionConfig.addFilter('campaignID', this.id);
-        //collectionConfig.addDisplayProperty('campaignName,campaignDescription,defaultFromName,defaultFromEmail,defaultReplyTo');
-        //collectionConfig.addDisplayAggregate('campaignActivities', 'COUNT');
-        //collectionConfig.getEntity().then((res:any) =>{
-        //    if(res.pageRecords && res.pageRecords.length){
-        //        this.data = res.pageRecords[0];
-        //    }
-        //});
+        collectionConfig.getEntity().then((res:any) =>{
+            this.activities = res.pageRecords;
+        });
     };
-
-    public saveCampaign =()=>{
-        this.saving = true;
-        this.campaignObject.$$save().then((lol)=>{
-            this.editing = false;
-        }).finally(()=>{
-            this.saving = false;
-        })
-    }
 }
 
-class SWCampaign implements ng.IDirective{
+class SWUpcomingActivity implements ng.IDirective{
 
     public restrict:string = 'EA';
     public scope=true;
     public bindToController ={
-        id:"@"
+        activityCount:"=",
+        campaignId:"@"
     };
-    public controller=SWCampaignController;
-    public controllerAs="swCampaign";
+    public controller=SWUpcomingActivityController;
+    public controllerAs="swUpcomingActivity";
 
     public templateUrl;
     //@ngInject
     constructor(public marketignAutomationPartialsPath, public slatwallPathBuilder){
-        this.templateUrl = this.slatwallPathBuilder.buildPartialsPath(this.marketignAutomationPartialsPath+'campaign.html');
+        this.templateUrl = this.slatwallPathBuilder.buildPartialsPath(this.marketignAutomationPartialsPath+'upcomingActivity.html');
     }
     public static Factory(){
         var directive = (
             marketignAutomationPartialsPath,
             slatwallPathBuilder
-        )=>new SWCampaign(
+        )=>new SWUpcomingActivity(
             marketignAutomationPartialsPath,
             slatwallPathBuilder
         );
@@ -77,5 +58,5 @@ class SWCampaign implements ng.IDirective{
     }
 }
 export{
-    SWCampaign
+    SWUpcomingActivity
 }
