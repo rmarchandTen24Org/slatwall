@@ -133,7 +133,7 @@ class SWPropertyDisplayController {
 		this.label			    = this.label || "true";
 		this.labelText			= this.labelText || "";
 		this.labelClass			= this.labelClass || "";
-		this.name			    	= this.name || "unnamed";
+        this.name			    	= this.name || this.property;
 
 
 		this.object				= this.object || this.swForm.object; //this is the process object

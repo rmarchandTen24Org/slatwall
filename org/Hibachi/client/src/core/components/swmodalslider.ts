@@ -32,7 +32,8 @@ class SWModalSlider implements ng.IDirective{
 
     public templateUrl;
     public transclude={
-        modalBody:"?swModalBody"
+        modalBody:"?swModalBody",
+        modalHeader:"?swModalHeader"
     };
     public require = {
         swModalLauncher:'^?swModalLauncher'

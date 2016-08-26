@@ -1,8 +1,9 @@
-<a data-ng-click="swModalLauncher.launchModal()" href data-ng-transclude="button">
-
-</a>
-<div data-ng-transclude="staticButton"></div>
+<span data-ng-click="swModalLauncher.launchModal()" data-ng-transclude="button"></span>
+<span data-ng-transclude="staticButton" ></span>
 <sw-modal-slider data-show-modal="swModalLauncher.showModal">
+    <sw-modal-header>
+        <span data-ng-transclude="header" style="display: inline-block; float:right"></span>
+    </sw-modal-header>
     <sw-modal-body>
         <div data-ng-transclude="content"></div>
     </sw-modal-body>

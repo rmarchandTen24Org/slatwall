@@ -1,0 +1,28 @@
+<div class="panel info-box panel-white inside inside-full-height">
+    <div class="panel-body">
+        <div class="row">
+            <div class="col-md-4">
+                <div class="info-box-stats">
+                    <p class="counter">{{swUpcomingActivity.activityCount}}</p>
+                    <span class="info-box-title">Activities</span>
+                </div>
+
+            </div>
+            <div class="col-md-8">
+
+                <h5 class="s-content-title">Upcoming Activities <a href="#">view all</a></h5>
+                <ul class="list-unstyled">
+                    <li data-ng-repeat="activity in swUpcomingActivity.activities">
+                        <a href data-ng-href="/default.cfm?slatAction=entity.detailCampaignActivity&campaignActivityID={{activity.campaignActivityID}}">
+                            {{activity.campaignActivityName}}
+                        </a>
+                        <span class="s-date">{{activity.emailSendDateTime}}</span>
+                        <a href data-ng-href="/default.cfm?slatAction=entity.detailCampaignActivity&campaignActivityID={{activity.campaignActivityID}}"><i class="fa fa-eye" aria-hidden="true"></i></a>
+                    </li>
+                </ul>
+
+            </div>
+        </div>
+
+    </div>
+</div>

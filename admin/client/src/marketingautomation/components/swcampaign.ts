@@ -5,6 +5,8 @@ class SWCampaignController{
     private id;
     private data:any = {};
     private campaignObject;
+    private editing = false;
+    private saving = false;
 
     //@ngInject
     constructor(
@@ -15,20 +17,30 @@ class SWCampaignController{
     }
 
     public init =()=> {
-        this.campaignObject = this.$hibachi.newCampaign();
-        var collectionConfig = this.collectionConfigService.newCollectionConfig('Campaign');
-        collectionConfig.addFilter('campaignID', this.id);
-        collectionConfig.addDisplayProperty('campaignName,campaignDescription,defaultFromName,defaultFromEmail,defaultReplyTo');
-        collectionConfig.addDisplayAggregate('campaignActivities', 'COUNT');
-        collectionConfig.getEntity().then((res:any) =>{
-            if(res.pageRecords && res.pageRecords.length){
-                this.data = res.pageRecords[0];
+        this.campaignObject = this.$hibachi.getCampaign(this.id)['value'];
 
-                console.warn('sd', this.campaignObject);
-            }
-        });
+
+
+        //console.log(this.campaignObject);
+        //var collectionConfig = this.collectionConfigService.newCollectionConfig('Campaign');
+        //collectionConfig.addFilter('campaignID', this.id);
+        //collectionConfig.addDisplayProperty('campaignName,campaignDescription,defaultFromName,defaultFromEmail,defaultReplyTo');
+        //collectionConfig.addDisplayAggregate('campaignActivities', 'COUNT');
+        //collectionConfig.getEntity().then((res:any) =>{
+        //    if(res.pageRecords && res.pageRecords.length){
+        //        this.data = res.pageRecords[0];
+        //    }
+        //});
     };
 
+    public saveCampaign =()=>{
+        this.saving = true;
+        this.campaignObject.$$save().then((lol)=>{
+            this.editing = false;
+        }).finally(()=>{
+            this.saving = false;
+        })
+    }
 }
 
 class SWCampaign implements ng.IDirective{

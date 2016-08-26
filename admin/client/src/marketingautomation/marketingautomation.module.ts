@@ -6,6 +6,9 @@ import {coremodule} from "../../../../org/Hibachi/client/src/core/core.module";
 
 //directives
 import {SWCampaign} from "./components/swcampaign";
+import {SWCampaignStats} from "./components/swcampaignstats";
+import {SWUpcomingActivity} from "./components/swupcomingactivity";
+
 //models
 
 var marketingautomationmodule = angular.module('marketingautomation',[coremodule.name])
@@ -20,6 +23,8 @@ var marketingautomationmodule = angular.module('marketingautomation',[coremodule
 
 //directives
         .directive('swCampaign', SWCampaign.Factory())
+        .directive('swCampaignStats', SWCampaignStats.Factory())
+        .directive('swUpcomingActivity', SWUpcomingActivity.Factory())
     ;
 export{
     marketingautomationmodule

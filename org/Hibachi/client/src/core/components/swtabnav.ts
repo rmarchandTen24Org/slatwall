@@ -1,14 +1,30 @@
 /// <reference path='../../../typings/hibachiTypescript.d.ts' />
 /// <reference path='../../../typings/tsd.d.ts' />
-class SWTabHeaderController {
+class SWTabNavController {
+    public for;
+    public tabs = [];
 
     // @ngInject
-    constructor(){}
+    constructor(public observerService){
+        this.init();
+    }
 
+    public init = ():void => {
+        this.observerService.attach(this.addTab,'addTab'+this.for);
+    };
+
+    private addTab =(tab):void=>{
+        console.log(tab)
+        this.tabs.push(tab);
+    };
+
+    public changeTab=(id):void=>{
+        this.observerService.notify('SwitchTab:'+this.for, id);
+    }
 
 }
 
-class SWTabHeader implements ng.IDirective{
+class SWTabNav implements ng.IDirective{
 
     public templateUrl;
     public transclude=true;
@@ -16,13 +32,14 @@ class SWTabHeader implements ng.IDirective{
     public scope = {};
 
     public bindToController = {
+        "for" : "@"
     };
-    public controller=SWTabHeaderController;
-    public controllerAs="swTabHeader";
+    public controller=SWTabNavController;
+    public controllerAs="swTabNav";
 
     // @ngInject
     constructor(public $compile, private corePartialsPath,hibachiPathBuilder){
-        this.templateUrl = hibachiPathBuilder.buildPartialsPath(corePartialsPath) + "tabheader.html";
+        this.templateUrl = hibachiPathBuilder.buildPartialsPath(corePartialsPath) + "tabnav.html";
     }
 
     public static Factory(){
@@ -30,7 +47,7 @@ class SWTabHeader implements ng.IDirective{
             $compile
             ,corePartialsPath
             ,hibachiPathBuilder
-        )=> new SWTabHeader(
+        )=> new SWTabNav(
             $compile
             ,corePartialsPath
             ,hibachiPathBuilder
@@ -40,5 +57,5 @@ class SWTabHeader implements ng.IDirective{
     }
 }
 export{
-    SWTabHeader
+    SWTabNav
 }

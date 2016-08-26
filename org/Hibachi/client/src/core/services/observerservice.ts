@@ -48,7 +48,7 @@ class ObserverService extends BaseService{
           this.observers[event][id] = [];
 
         this.observers[event][id].push(callback);
-    }
+    };
 
     /**
      * @ngdoc method
@@ -91,14 +91,14 @@ class ObserverService extends BaseService{
           delete this.observers[event][id];
         }
       }
-    }
+    };
 
     /**
      * @ngdoc method
      * @name ObserverService#notify
      * @methodOf sdt.models:ObserverService
      * @param {string} event name of the event
-     * @param {string|object|array|number} parameters pass whatever your listener is expecting
+     * @param {string|object|Array|number} parameters pass whatever your listener is expecting
      * @description notifies all observers of a specific event
      */
     notify = (event:string, parameters:any):void => {
@@ -106,10 +106,11 @@ class ObserverService extends BaseService{
         for(var id in this.observers[event]) {
           for(var callback of this.observers[event][id]) {
             callback(parameters);
-          };
+          }
         }
       });
-    }
+    };
+
 	notifyById = (event:string, eventId:string ,parameters:any):void => {
         return this.$timeout(()=>{
           for(var id in this.observers[event]) {

@@ -1,31 +1,36 @@
 /// <reference path='../../../typings/hibachiTypescript.d.ts' />
 /// <reference path='../../../typings/tsd.d.ts' />
 class SWTabGroupController {
-    public tabGroupID:string;
+    public name:string;
     public switchTabEventName:string;
     public tabs:any[];
+    public showTabs;
 
     // @ngInject
     constructor(private utilityService,
                 private rbkeyService,
                 private observerService
     ){
+        if(angular.isUndefined(this.showTabs)){
+            this.showTabs = true;
+        }
         if(angular.isUndefined(this.tabs)){
             this.tabs = [];
         }
-        this.tabGroupID = "TG" + this.utilityService.createID(30);
-        this.switchTabEventName = "SwitchTab:" + this.tabGroupID;
-        this.observerService.attach(this.switchTab, this.switchTabEventName)
+        if(angular.isUndefined(this.name)){
+            this.name = "TG" + this.utilityService.createID(30)
+        }
+        this.switchTabEventName = "SwitchTab:" + this.name;
+        this.observerService.attach(this.switchTabByID, this.switchTabEventName);
     }
 
     public switchTab = (tabToActivate) => {
-        console.log("switchTab called", tabToActivate)
         for(var i = 0; i < this.tabs.length; i++){
             this.tabs[i].active = false;
         }
         tabToActivate.active = true;
         tabToActivate.loaded = true;
-    }
+    };
 
     public getTabByName = (name) =>{
         for(var i = 0; i < this.tabs.length; i++){
@@ -33,7 +38,22 @@ class SWTabGroupController {
                 return this.tabs[i];
             }
         }
-    }
+    };
+
+    public getTabById = (id) =>{
+        for(var i = 0; i < this.tabs.length; i++){
+            if(this.tabs[i].id == id){
+                return this.tabs[i];
+            }
+        }
+    };
+
+    public switchTabByID = (id) => {
+        var tabToActivate = this.getTabById(id);
+        if(angular.isDefined(tabToActivate)){
+            this.switchTab(tabToActivate);
+        }
+    };
 }
 
 class SWTabGroup implements ng.IDirective{
@@ -44,7 +64,8 @@ class SWTabGroup implements ng.IDirective{
     public scope = {};
 
     public bindToController = {
-
+        "showTabs" : "=?",
+        "name" : "@?"
     };
     public controller=SWTabGroupController;
     public controllerAs="swTabGroup";
@@ -71,8 +92,7 @@ class SWTabGroup implements ng.IDirective{
             ,corePartialsPath
             ,hibachiPathBuilder
         );
-        directive.$inject = ["$compile","corePartialsPath",
-            'hibachiPathBuilder'];
+        directive.$inject = ["$compile","corePartialsPath", "hibachiPathBuilder"];
         return directive;
     }
 }

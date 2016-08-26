@@ -188,6 +188,23 @@ class HibachiServiceDecorator{
 
                 };
                 _jsEntities[ entity.className ].prototype = {
+                    $$getPropertyValue:function(propertyIdentifier){
+                        var keys = propertyIdentifier.split('.'), obj = this, keyPart;
+                        while ((keyPart = keys.shift()) && keys.length) {
+                            obj = obj[keyPart];
+                        }
+                        return obj[keyPart];
+                    },
+                    $$setPropertyValue:function(propertyIdentifier,value) {
+                        var keys = propertyIdentifier.split('.'), obj = this, keyPart;
+                        while ((keyPart = keys.shift()) && keys.length) {
+                            if (!obj[keyPart]) {
+                                obj[keyPart] = {};
+                            }
+                            obj = obj[keyPart];
+                        }
+                        obj[keyPart] = value;
+                    },
                     $$getPropertyByName:function(propertyName){
                         return this['$$get'+propertyName.charAt(0).toUpperCase() + propertyName.slice(1)]();
                     },
@@ -816,7 +833,7 @@ class HibachiServiceDecorator{
                             entityName = modifiedData.objectLevel.metaData.className;
                         }
                         var savePromise = $delegate.saveEntity(entityName,entityID,params,context);
-                        savePromise.then(function(response){
+                        savePromise.then(function(response:any){
                             var returnedIDs = response.data;
                             if(angular.isDefined(response.SUCCESS) && response.SUCCESS === true){
 
@@ -826,6 +843,7 @@ class HibachiServiceDecorator{
                                 _addReturnedIDs(returnedIDs,modifiedData.objectLevel);
 
                                 deferred.resolve(returnedIDs);
+                                observerService.notify('updateBindings');
                                 observerService.notify('saveSuccess',returnedIDs);
                                 observerService.notify('saveSuccess'+entityName,returnedIDs);
                             }else{

@@ -66,12 +66,13 @@ class SWModalLauncherController {
     };
 }
 
-class SWModalLauncher implements ng.IDirective{
+class SWModalLauncher implements ng.IDirective{x
 
     public templateUrl;
     transclude = {
         button: '?swModalButton',
         staticButton: '?swModalStaticButton',
+        header: '?swModalHeader',
         content: '?swModalContent'
     };
     public restrict = "EA";

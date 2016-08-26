@@ -31,13 +31,16 @@ class SWTabContent implements ng.IDirective{
     public bindToController = {
         active:"=?",
         loaded:"=?",
-        name:"@?"
+        count:"=?",
+        name:"@?",
+        id:"@?",
+        icon:"@?"
     };
     public controller=SWTabContentController;
     public controllerAs="swTabContent";
 
     // @ngInject
-    constructor(public $compile, private scopeService, private corePartialsPath,hibachiPathBuilder){
+    constructor(public $compile, public observerService, private scopeService, private corePartialsPath,hibachiPathBuilder){
         this.templateUrl = hibachiPathBuilder.buildPartialsPath(corePartialsPath) + "tabcontent.html";
     }
 
@@ -54,26 +57,28 @@ class SWTabContent implements ng.IDirective{
                         $scope.swTabContent.active = true;
                         $scope.swTabContent.loaded = true;
                     }
+                    this.observerService.notify('addTab'+parentDirective.name, $scope.swTabContent);
                 }
             }
         };
-    }
+    };
 
     public static Factory(){
         var directive:ng.IDirectiveFactory = (
-            $compile
+            $compile,
+            observerService
             ,scopeService
             ,corePartialsPath
             ,hibachiPathBuilder
 
         )=> new SWTabContent(
-            $compile
+            $compile,
+            observerService
             ,scopeService
             ,corePartialsPath
             ,hibachiPathBuilder
         );
-        directive.$inject = ["$compile","scopeService","corePartialsPath",
-            "hibachiPathBuilder"];
+        directive.$inject = ["$compile","observerService","scopeService","corePartialsPath", "hibachiPathBuilder"];
         return directive;
     }
 }
