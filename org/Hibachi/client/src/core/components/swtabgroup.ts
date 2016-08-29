@@ -32,29 +32,6 @@ class SWTabGroupController {
         tabToActivate.loaded = true;
     };
 
-    // @ngInject
-    constructor(private utilityService, 
-                private rbkeyService, 
-                private observerService
-        ){
-        if(angular.isUndefined(this.tabs)){
-            this.tabs = []; 
-        } 
-        this.tabGroupID = "TG" + this.utilityService.createID(30);
-        this.switchTabEventName = "SwitchTab:" + this.tabGroupID;
-        this.observerService.attach(this.switchTab, this.switchTabEventName)
-    }
-
-    public switchTab = (tabToActivate) => {
-        console.log("switchTab called", tabToActivate)
-        for(var i = 0; i < this.tabs.length; i++){
-            this.tabs[i].active = false; 
-        }
-        tabToActivate.active = true;  
-        tabToActivate.loaded = true;  
-    }
->>>>>>> origin/develop
-
     public getTabByName = (name) =>{
         for(var i = 0; i < this.tabs.length; i++){
             if(this.tabs[i].name == name){
@@ -103,7 +80,7 @@ class SWTabGroup implements ng.IDirective{
             pre: ($scope: any, element: JQuery, attrs: angular.IAttributes) => {},
             post: ($scope: any, element: JQuery, attrs: angular.IAttributes) => {}
         };
-    }
+    };
 
     public static Factory(){
         var directive:ng.IDirectiveFactory = (
