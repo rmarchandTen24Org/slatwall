@@ -10,36 +10,27 @@ class SWCampaignController{
 
     //@ngInject
     constructor(
-        protected collectionConfigService,
-        protected $hibachi
+        public $hibachi,
+        public observerService
     ){
         this.init();
     }
 
-    public init =()=> {
+    public init =():void => {
         this.campaignObject = this.$hibachi.getCampaign(this.id)['value'];
-
-
-
-        //console.log(this.campaignObject);
-        //var collectionConfig = this.collectionConfigService.newCollectionConfig('Campaign');
-        //collectionConfig.addFilter('campaignID', this.id);
-        //collectionConfig.addDisplayProperty('campaignName,campaignDescription,defaultFromName,defaultFromEmail,defaultReplyTo');
-        //collectionConfig.addDisplayAggregate('campaignActivities', 'COUNT');
-        //collectionConfig.getEntity().then((res:any) =>{
-        //    if(res.pageRecords && res.pageRecords.length){
-        //        this.data = res.pageRecords[0];
-        //    }
-        //});
     };
 
-    public saveCampaign =()=>{
+    public saveCampaign =():void =>{
         this.saving = true;
-        this.campaignObject.$$save().then((lol)=>{
+        this.campaignObject.$$save().then(()=>{
             this.editing = false;
         }).finally(()=>{
             this.saving = false;
         })
+    };
+
+    public saveCampaignActivity =():void =>{
+        this.observerService.notify('saveNewCampaignActivity');
     }
 }
 

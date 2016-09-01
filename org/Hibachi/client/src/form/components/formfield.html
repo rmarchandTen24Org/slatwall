@@ -52,8 +52,9 @@
 		/>
 	</span>
 
-	<input type="file" ng-switch-when="file" ng-model="swFormField.object[swFormField.property]"  class="{{swFormField.class}}" name="{{swFormField.name}}"></input>
+	<input type="file" ng-switch-when="file" ng-model="swFormField.object[swFormField.property]"  class="{{swFormField.class}}" name="{{swFormField.name}}" />
 	<textarea ng-switch-when="textarea" class="{{swFormField.class}}"  id="{{swFormField.name}}TextArea" ng-model="swFormField.object[swFormField.property]" name="{{swFormField.name}}"></textarea>
+	<textarea ng-switch-when="wysiwyg" class="{{swFormField.class}}"  id="{{swFormField.name}}Wysiwyg" ng-model="swFormField.object[swFormField.property]" name="{{swFormField.name}}"></textarea>
 	<input type="checkbox" ng-switch-when="checkbox" value="{{swFormField.value}}" class="{{swFormField.class}}" name="{{swFormField.name}}"><span></span></input>
 
 	<select ng-switch-when="multiselect" class="{{swFormField.class}}" name="{{swFormField.name}}" multiple="true">
@@ -77,7 +78,7 @@
 
 	<!--- needs to be replaced with an action caller --->
 	<div ng-switch-when="submit" name="submit">
-		<input type="submit" class="btn" name="submit" text="{{swFormField.name}}" value="{{swFormField.name}}" ng-click="swfPropertyDisplayController.submit();"></input>
+		<input type="submit" class="btn" name="submit" text="{{swFormField.name}}" value="{{swFormField.name}}" ng-click="swfPropertyDisplayController.submit();" />
 	</div>
 
 </ng-switch>

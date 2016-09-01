@@ -52,7 +52,7 @@ component displayname="CampaignActivity" entityname="SlatwallCampaignActivity" t
 	property name="campaignActivityID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
 	property name="campaignActivityIDPath" ormtype="string" length="4000";
 	property name="campaignActivityName" ormtype="string";
-	property name="campaignActivityDescription" ormtype="string" length="4000" hb_formFieldType="wysiwyg";
+	property name="campaignActivityDescription" ormtype="string" length="4000" hb_formFieldType="textarea";
 	property name="collectionConfig" ormtype="string" length="8000" hb_auditable="false" hb_formFieldType="json";
 
 	property name="emailSubject" ormtype="string";
@@ -60,8 +60,8 @@ component displayname="CampaignActivity" entityname="SlatwallCampaignActivity" t
 	property name="emailFromEmail" ormtype="string";
 	property name="emailReplyTo" ormtype="string";
 	property name="emailStyle" ormtype="string";
-	property name="emailBodyHTML" ormtype="string" hb_auditable="false";
-	property name="emailBodyText" ormtype="string" hb_auditable="false";
+	property name="emailBodyHTML" ormtype="string" hb_auditable="false" hb_formFieldType="wysiwyg" length="8000";
+	property name="emailBodyText" ormtype="string" hb_auditable="false" hb_formFieldType="textarea" length="8000";
 	property name="emailSendDateTime" ormtype="timestamp";
 	property name="runningFlag" ormtype="boolean" hb_formatType="yesno";
 

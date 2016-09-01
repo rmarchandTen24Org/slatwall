@@ -364,7 +364,7 @@ class HibachiService{
 		return metaData.$$getRBKey('object.'+metaData.className.toLowerCase()+'.'+propertyName.toLowerCase());
 	}
 
-	saveEntity= (entityName,id,params,context) => {
+	saveEntity= (entityName,id,params,context, validationContext?) => {
 
 		var urlString = this.getUrlWithActionPrefix()+'api:main.post';
 
@@ -374,10 +374,13 @@ class HibachiService{
 		if(angular.isDefined(id))  {
 			params.entityID = id;
 		}
-
 		if(angular.isDefined(context))  {
 			params.context = context;
 		}
+        if(angular.isDefined(validationContext)){
+            params.validationContext = validationContext;
+        }
+
 		let request = this.requestService.newAdminRequest(urlString,params);
 
 		return request.promise;

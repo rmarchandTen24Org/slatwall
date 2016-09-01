@@ -14,7 +14,6 @@ class SWTabNavController {
     };
 
     private addTab =(tab):void=>{
-        console.log(tab)
         this.tabs.push(tab);
     };
 

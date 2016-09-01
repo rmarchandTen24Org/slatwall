@@ -1,20 +1,18 @@
-<div class="row s-steps-wrapper">
-    <div class="col-md-12">
+<div class="s-slide-panel-content" ng-transclude></div>
+<div class="col-md-12">
+    <div class="row s-steps-wrapper">
         <button class="btn btn-no-style s-back" data-ng-click="swWizard.stepBack()" data-ng-hide="swWizard.currentStepPosition === 0">
             <i class="fa fa-angle-left" aria-hidden="true"></i> Back
         </button>
         <ul class="list-inline list-unstyled">
-            <li data-ng-class="{'s-selected':step.active}" data-ng-repeat="_step in swWizard.steps track by $index">
+            <li class="s-steps" data-ng-class="{'s-selected' : _step.active}" data-ng-repeat="_step in swWizard.steps track by $index">
                 <button class="btn btn-no-style" data-ng-click="swWizard.step($index)">{{_step.name}}</button>
             </li>
         </ul>
         <button class="btn btn-no-style s-next" data-ng-click="swWizard.stepNext()" data-ng-hide="swWizard.currentStepPosition === swWizard.steps.length-1">
             Next <i class="fa fa-angle-right" aria-hidden="true"></i>
         </button>
-        <!-- <button class="btn btn-success s-next">Save</button> -->
     </div>
 </div>
 
-<div class="row s-step-content">
-    <ng-transclude></ng-transclude>
-</div>
+

@@ -15,10 +15,6 @@
                         data-title="Activity Info"
                         data-modal-size="sm"
                         >
-                    <!---data-show-modal="swModalLauncher.showModal"--->
-                    <!---data-save-action="swModalLauncher.saveCallback"--->
-                    <!---data-delete-action="swModalLauncher.deleteCallback"--->
-                    <!---data-cancel-action="swModalLauncher.cancelCallback"--->
                     <sw-modal-button>
                         <button class="btn btn-default s-slide-btn"><i class="fa fa-info-circle" aria-hidden="true"></i></button>
                     </sw-modal-button>
@@ -56,10 +52,6 @@
                         data-title="System Activity"
                         data-modal-size="md"
                         >
-                    <!---data-show-modal="swModalLauncher.showModal"--->
-                    <!---data-save-action="swModalLauncher.saveCallback"--->
-                    <!---data-delete-action="swModalLauncher.deleteCallback"--->
-                    <!---data-cancel-action="swModalLauncher.cancelCallback"--->
                     <sw-modal-button>
                         <button class="btn btn-default s-slide-btn">System</button>
                     </sw-modal-button>
@@ -78,412 +70,49 @@
         <sw-tab-nav data-for="campaign-tabs"></sw-tab-nav>
     </div>
 
-
     <div class="col-xs-10 s-slip-page">
         <sw-tab-group data-show-tabs="false" data-name="campaign-tabs">
             <sw-tab-content data-name="Dashboard" data-id="dashboard" data-icon="fa-dashboard">
             <!--- Dashboard content area --->
-
                 <div class="row row s-info-box-wrapper">
                     <div class="row-height">
                         <div class="col-md-5 col-sm-height col-sm-top">
                             <sw-upcoming-activity data-activity-count="20" data-campaign-id="{{swCampaign.id}}"></sw-upcoming-activity>
                         </div>
-
                         <div class="col-md-7 col-sm-height">
                             <div class="panel info-box panel-white inside inside-full-height">
 
                                 <div class="panel-body">
                                     <div class="row">
 
-                                        <div class="col-md-6">
+                                        <div class="col-md-9">
                                             <div class="s-content-body">
                                                 <h5 class="s-content-title" style="display:inline-block">
                                                     Create Activity:
                                                 </h5> Add a new activity to the current campaign.
                                             </div>
                                         </div>
-                                        <div class="col-md-6">
-                                            <div class="input-group">
-                                                <span class="input-group-btn pull-right">
-
-                                                    <sw-modal-launcher
-                                                            data-modal-name="activity"
-                                                            data-title="New Activity"
-                                                            data-modal-size="lg"
-                                                            >
-                                                        <!---data-show-modal="swModalLauncher.showModal"--->
-                                                        <!---data-save-action="swModalLauncher.saveCallback"--->
-                                                        <!---data-delete-action="swModalLauncher.deleteCallback"--->
-                                                        <!---data-cancel-action="swModalLauncher.cancelCallback"--->
-                                                        <sw-modal-button>
-                                                            <button class="btn btn-primary s-slide-btn" style="border-radius: 2px;margin-left: 5px;" type="button" >Create Activity</button>
-                                                        </sw-modal-button>
-                                                        <sw-modal-content>
-                                                            <sw-wizard>
-                                                                <sw-wizard-step data-name="Test">
-                                                                    <div class="col-md-12">
-                                                                        <div class="form-group">
-                                                                            <label for="name">Name</label>
-                                                                            <input type="email" class="form-control" value="">
-                                                                        </div>
-                                                                        <div class="form-group">
-                                                                            <label for="description">Description</label>
-                                                                            <textarea class="form-control" id="description" rows="8" cols="40"></textarea>
-                                                                        </div>
-                                                                    </div>
-                                                                </sw-wizard-step>
-                                                                <sw-wizard-step data-name="Email Setup">
-                                                                    <div class="col-md-6">
-                                                                        <div class="form-group">
-                                                                            <label for="">Subject Line</label>
-                                                                            <input type="text" class="form-control" value="Thank you for visiting">
-                                                                        </div>
-                                                                    </div>
-                                                                    <div class="col-md-6">
-                                                                        <div class="form-group">
-                                                                            <label for="">From Name</label>
-                                                                            <input type="text" class="form-control" value="Cleveland">
-                                                                        </div>
-                                                                    </div>
-                                                                    <div class="col-md-6">
-                                                                        <div class="form-group">
-                                                                            <label for="">From E-Mail</label>
-                                                                            <input type="text" class="form-control" value="info@Cleveland.com">
-                                                                        </div>
-                                                                    </div>
-                                                                    <div class="col-md-6">
-                                                                        <div class="form-group">
-                                                                            <label for="">Reply To</label>
-                                                                            <input type="text" class="form-control" value="info@Cleveland.com">
-                                                                        </div>
-                                                                    </div>
-                                                                </sw-wizard-step>
-                                                                <sw-wizard-step data-name="Create New Email">
-                                                                    <div class="col-md-12">
-
-                                                                        <div class="form-group s-radio-content">
-                                                                            <div class="radio s-vertical">
-                                                                                <input type="radio" name="broadcast-schedule" id="broadcast-schedule-new" value="1">
-                                                                                <label for="broadcast-schedule-new">
-                                                                                    Create New Email
-                                                                                </label>
-                                                                            </div>
-                                                                            <br/>
-                                                                            <div class="row">
-
-                                                                                <div class="col-md-12">
-                                                                                    <div class="s-tab-table">
-                                                                                        <div class="row s-tabs">
-                                                                                            <ul class="nav nav-tabs" role="tablist">
-                                                                                                <li role="presentation" class="active">
-                                                                                                    <a href="#j-html" role="tab" data-toggle="tab" aria-controls="sent" aria-expanded="true">HTML</a>
-                                                                                                </li>
-                                                                                                <li role="presentation" class="">
-                                                                                                    <a href="#j-plain-text" role="tab" data-toggle="tab" aria-controls="sent" aria-expanded="true">Plain Text</a>
-                                                                                                </li>
-                                                                                            </ul>
-                                                                                        </div>
-                                                                                        <div class="tab-content">
-                                                                                            <!-- html Tab -->
-                                                                                            <div role="tabpanel" class="tab-pane active" id="j-html">
-                                                                                                <div class="row">
-                                                                                                    <div class="col-md-4 s-wys-nav">
-
-                                                                                                        <div class="s-select-wrapper s-titled-select-wrapper s-template">
-                                                                                                            <span>Template:</span>
-                                                                                                            <select class="form-control input-sm">
-                                                                                                                <option value="" disabled="" selected="">-select-</option>
-                                                                                                                <option value="name">template one</option>
-                                                                                                                <option value="name">template two</option>
-                                                                                                                <option value="name">template three</option>
-                                                                                                            </select>
-                                                                                                        </div>
-
-                                                                                                    </div>
-                                                                                                    <div class="col-md-8 s-wys-nav">
-
-                                                                                                        <div class="btn-group" role="group">
-                                                                                                            <button type="button" class="btn btn-white btn-sm">Preview HTML</button>
-                                                                                                            <button type="button" class="btn btn-white btn-sm">Preview Text</button>
-                                                                                                        </div>
-
-                                                                                                    </div>
-                                                                                                    <div class="col-md-12">
-                                                                                                        <img src="/meta/prototypes/images/wysiwyg.jpg" class="s-responsive-image" alt="">
-                                                                                                    </div>
-                                                                                                </div>
-                                                                                            </div>
-                                                                                            <!-- ///html Tab -->
-                                                                                            <!-- plain text Tab -->
-                                                                                            <div role="tabpanel" class="tab-pane" id="j-plain-text">
-                                                                                                <div class="row">
-                                                                                                    <div class="col-md-4 s-wys-nav">
-
-                                                                                                    </div>
-                                                                                                    <div class="col-md-8 s-wys-nav">
-
-                                                                                                        <div class="btn-group" role="group">
-                                                                                                            <button type="button" class="btn btn-white btn-sm">Preview HTML</button>
-                                                                                                            <button type="button" class="btn btn-white btn-sm">Preview Text</button>
-                                                                                                        </div>
-
-                                                                                                    </div>
-
-                                                                                                    <div class="col-md-12">
-                                                                                                        <div class="form-group">
-                                                                                                            <textarea class="form-control" rows="8" cols="" placeholder="add message here..."></textarea>
-                                                                                                        </div>
-                                                                                                    </div>
-                                                                                                </div>
-
-                                                                                            </div>
-                                                                                            <!-- ///plain text Tab -->
-
-                                                                                        </div>
-                                                                                    </div>
-                                                                                </div>
-
-                                                                            </div>
-                                                                        </div>
-
-                                                                        <div class="form-group s-radio-content">
-                                                                            <div class="radio s-vertical">
-                                                                                <input type="radio" name="broadcast-schedule" id="broadcast-schedule-copy" value="1">
-                                                                                <label for="broadcast-schedule-copy">
-                                                                                    Copy Email From Existing Mailings
-                                                                                </label>
-                                                                            </div>
-                                                                            <div class="row" id="remove-this-email-options">
-                                                                                <div class="col-md-12">
-
-                                                                                    <div class="row s-table-inner-nav">
-
-                                                                                        <div class="s-search-wrapper">
-                                                                                            <div class="input-group">
-                                                                                                <div class="input-group-btn search-panel">
-                                                                                                    <button type="button" class="btn btn-sm btn-default dropdown-toggle" data-toggle="dropdown">
-                                                                                                        <span>All</span> <span class="caret"></span>
-                                                                                                    </button>
-                                                                                                    <ul class="dropdown-menu" role="menu">
-                                                                                                        <li><a href="#">Price</a></li>
-                                                                                                        <li><a href="#">Qty. Max</a></li>
-                                                                                                        <li><a href="#">Qty. Min</a></li>
-                                                                                                        <li><a href="#">Currency</a></li>
-                                                                                                        <li><a href="#">Price Group</a></li>
-                                                                                                        <li><a href="#">Sku Definition </a></li>
-                                                                                                        <li><a href="#">SKU Code</a></li>
-                                                                                                    </ul>
-                                                                                                </div>
-                                                                                                <div class="s-search">
-                                                                                                    <input type="text" class="form-control s-search" name="" placeholder="Search...">
-                                                                                                </div>
-                                                                                            </div>
-                                                                                        </div>
-
-                                                                                    </div>
-
-                                                                                    <div class="table-responsive">
-                                                                                        <table class="table table-bordered s-default-table">
-                                                                                            <thead>
-                                                                                            <tr>
-                                                                                                <th class="s-table-checkbox">
-
-                                                                                                </th>
-                                                                                                <th>
-                                                                                                    <span>E-Mail Title</span>
-                                                                                                    <a href="#" class="s-sort-arrows">
-                                                                                                        <svg class="nc-icon outline" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="20px" height="20px" viewBox="0 0 64 64">
-                                                                                                            <g transform="translate(0.5, 0.5)">
-                                                                                                                <polygon class="s-ascending" fill="#aaaaaa" stroke="#aaaaaa" stroke-width="3" stroke-linecap="square" stroke-miterlimit="10" points="20,26 44,26 32,12 " stroke-linejoin="round"></polygon>
-                                                                                                                <polygon class="s-descending" fill="#aaaaaa" stroke="#aaaaaa" stroke-width="3" stroke-linecap="square" stroke-miterlimit="10" points="44,38 20,38 32,52 " stroke-linejoin="round"></polygon>
-                                                                                                            </g>
-                                                                                                        </svg>
-                                                                                                    </a>
-                                                                                                </th>
-                                                                                                <th>
-                                                                                                    <span>Subject</span>
-                                                                                                    <a href="#" class="s-sort-arrows">
-                                                                                                        <svg class="nc-icon outline" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="20px" height="20px" viewBox="0 0 64 64">
-                                                                                                            <g transform="translate(0.5, 0.5)">
-                                                                                                                <polygon class="s-ascending" fill="#aaaaaa" stroke="#aaaaaa" stroke-width="3" stroke-linecap="square" stroke-miterlimit="10" points="20,26 44,26 32,12 " stroke-linejoin="round"></polygon>
-                                                                                                                <polygon class="s-descending" fill="#aaaaaa" stroke="#aaaaaa" stroke-width="3" stroke-linecap="square" stroke-miterlimit="10" points="44,38 20,38 32,52 " stroke-linejoin="round"></polygon>
-                                                                                                            </g>
-                                                                                                        </svg>
-                                                                                                    </a>
-                                                                                                </th>
-                                                                                                <th>
-                                                                                                    <span>Campaign</span>
-                                                                                                    <a href="#" class="s-sort-arrows">
-                                                                                                        <svg class="nc-icon outline" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="20px" height="20px" viewBox="0 0 64 64">
-                                                                                                            <g transform="translate(0.5, 0.5)">
-                                                                                                                <polygon class="s-ascending" fill="#aaaaaa" stroke="#aaaaaa" stroke-width="3" stroke-linecap="square" stroke-miterlimit="10" points="20,26 44,26 32,12 " stroke-linejoin="round"></polygon>
-                                                                                                                <polygon class="s-descending" fill="#aaaaaa" stroke="#aaaaaa" stroke-width="3" stroke-linecap="square" stroke-miterlimit="10" points="44,38 20,38 32,52 " stroke-linejoin="round"></polygon>
-                                                                                                            </g>
-                                                                                                        </svg>
-                                                                                                    </a>
-                                                                                                </th>
-                                                                                                <th class="s-actions">
-
-                                                                                                </th>
-                                                                                            </tr>
-                                                                                            </thead>
-                                                                                            <tbody>
-                                                                                            <tr>
-                                                                                                <td class="s-table-checkbox">
-                                                                                                    <div class="radio">
-                                                                                                        <input type="radio" name="email-templates" id="temp-1" value="1">
-                                                                                                        <label for="temp-1"></label>
-                                                                                                    </div>
-                                                                                                </td>
-                                                                                                <td>Thank You - Retry Email</td>
-                                                                                                <td>"Welcome"</td>
-                                                                                                <td>Thank You Campaign</td>
-                                                                                                <td class="s-no-wrap">
-                                                                                                    <a href="##" title="" class="btn btn-white btn-xs" target="_self">
-                                                                                                        <i class="fa fa-eye"></i> HTML
-                                                                                                    </a>
-                                                                                                    <a href="##" title="" class="btn btn-white btn-xs" target="_self">
-                                                                                                        <i class="fa fa-eye"></i> Text
-                                                                                                    </a>
-                                                                                                </td>
-                                                                                            </tr>
-                                                                                            <tr>
-                                                                                                <td class="s-table-checkbox">
-                                                                                                    <div class="radio">
-                                                                                                        <input type="radio" name="email-templates" id="temp-2" value="1">
-                                                                                                        <label for="temp-2"></label>
-                                                                                                    </div>
-                                                                                                </td>
-                                                                                                <td>Visit Us Again</td>
-                                                                                                <td>"Come Back to Us"</td>
-                                                                                                <td>Abandoned Cart Campaign</td>
-                                                                                                <td class="s-no-wrap">
-                                                                                                    <a href="##" title="" class="btn btn-white btn-xs" target="_self">
-                                                                                                        <i class="fa fa-eye"></i> HTML
-                                                                                                    </a>
-                                                                                                    <a href="##" title="" class="btn btn-white btn-xs" target="_self">
-                                                                                                        <i class="fa fa-eye"></i> Text
-                                                                                                    </a>
-                                                                                                </td>
-                                                                                            </tr>
-
-                                                                                            </tbody>
-                                                                                        </table>
-                                                                                    </div>
-
-                                                                                    <div class="j-pagination-remove-this" data-tableid="LD9D579B9FCC280BDD7D9FBA9C0B5186CF">
-                                                                                        <ul class="pagination paginationpages12">
-                                                                                            <li><a href="#" class="paging-show-toggle">Show <span class="details">(1 - 10 of 113)</span></a></li>
-                                                                                            <li><a href="#" class="show-option" data-show="10" style="display: none;">10</a></li>
-                                                                                            <li><a href="#" class="show-option" data-show="25" style="display: none;">25</a></li>
-                                                                                            <li><a href="#" class="show-option" data-show="50" style="display: none;">50</a></li>
-                                                                                            <li><a href="#" class="show-option" data-show="100" style="display: none;">100</a></li>
-                                                                                            <li><a href="#" class="show-option" data-show="500" style="display: none;">500</a></li>
-                                                                                            <li><a href="#" class="show-option" data-show="ALL" style="display: none;">ALL</a></li>
-                                                                                            <li class="disabled"><a href="#" class="page-option prev">«</a></li>
-                                                                                            <li class="active"><a href="#" class="listing-pager page-option" data-page="1">1</a></li>
-                                                                                            <li><a href="#" class="listing-pager page-option" data-page="2">2</a></li>
-                                                                                            <li><a href="#" class="listing-pager page-option" data-page="3">3</a></li>
-                                                                                        </ul>
-                                                                                    </div>
-                                                                                </div>
-                                                                            </div>
-                                                                            <div class="row" id="remove-this-show-email">
-                                                                                <div class="col-md-12">
-                                                                                    <a href="#" id="remove-this-back-to-emails-btn"><i class="fa fa-angle-double-left" aria-hidden="true"></i> Back To Existing Mails</a>
-                                                                                </div>
-                                                                                <div class="col-md-12">
-                                                                                    <div class="s-tab-table">
-                                                                                        <div class="row s-tabs">
-                                                                                            <ul class="nav nav-tabs" role="tablist">
-                                                                                                <li role="presentation" class="active">
-                                                                                                    <a href="#j-html" role="tab" data-toggle="tab" aria-controls="sent" aria-expanded="true">HTML</a>
-                                                                                                </li>
-                                                                                                <li role="presentation" class="">
-                                                                                                    <a href="#j-plain-text" role="tab" data-toggle="tab" aria-controls="sent" aria-expanded="true">Plain Text</a>
-                                                                                                </li>
-                                                                                            </ul>
-                                                                                        </div>
-                                                                                        <div class="tab-content">
-                                                                                            <!-- html Tab -->
-                                                                                            <div role="tabpanel" class="tab-pane active" id="j-html">
-                                                                                                <div class="row">
-                                                                                                    <div class="col-md-4 s-wys-nav">
-
-                                                                                                        <div class="s-select-wrapper s-titled-select-wrapper s-template">
-                                                                                                            <span>Template:</span>
-                                                                                                            <select class="form-control input-sm">
-                                                                                                                <option value="" disabled="" selected="">-select-</option>
-                                                                                                                <option value="name">template one</option>
-                                                                                                                <option value="name">template two</option>
-                                                                                                                <option value="name">template three</option>
-                                                                                                            </select>
-                                                                                                        </div>
-
-                                                                                                    </div>
-                                                                                                    <div class="col-md-8 s-wys-nav">
-
-                                                                                                        <div class="btn-group" role="group">
-                                                                                                            <button type="button" class="btn btn-white btn-sm">Preview HTML</button>
-                                                                                                            <button type="button" class="btn btn-white btn-sm">Preview Text</button>
-                                                                                                        </div>
-
-                                                                                                    </div>
-                                                                                                    <div class="col-md-12">
-                                                                                                        <img src="/meta/prototypes/images/wysiwyg.jpg" class="s-responsive-image" alt="">
-                                                                                                    </div>
-                                                                                                </div>
-                                                                                            </div>
-                                                                                            <!-- ///html Tab -->
-                                                                                            <!-- plain text Tab -->
-                                                                                            <div role="tabpanel" class="tab-pane" id="j-plain-text">
-                                                                                                <div class="row">
-                                                                                                    <div class="col-md-4 s-wys-nav">
-
-                                                                                                    </div>
-                                                                                                    <div class="col-md-8 s-wys-nav">
-
-                                                                                                        <div class="btn-group" role="group">
-                                                                                                            <button type="button" class="btn btn-white btn-sm">Preview HTML</button>
-                                                                                                            <button type="button" class="btn btn-white btn-sm">Preview Text</button>
-                                                                                                        </div>
-
-                                                                                                    </div>
-
-                                                                                                    <div class="col-md-12">
-                                                                                                        <div class="form-group">
-                                                                                                            <textarea class="form-control" rows="8" cols="" placeholder="add message here..."></textarea>
-                                                                                                        </div>
-                                                                                                    </div>
-                                                                                                </div>
-
-                                                                                            </div>
-                                                                                            <!-- ///plain text Tab -->
-
-                                                                                        </div>
-                                                                                    </div>
-                                                                                </div>
-
-                                                                            </div>
-                                                                        </div>
-
-                                                                    </div>
-                                                                </sw-wizard-step>
-                                                            </sw-wizard>
-                                                        </sw-modal-content>
-                                                    </sw-modal-launcher>
-
-
-                                                    </span>
-                                            </div>
+                                        <div class="col-md-3">
+                                            <sw-modal-launcher
+                                                    data-modal-name="activity"
+                                                    data-title="Create Activity"
+                                                    data-modal-size="lg"
+                                                    >
+                                                <sw-modal-button>
+                                                    <button class="btn btn-primary s-slide-btn" style="border-radius: 2px;margin-left: 5px;" type="button" >Create Activity</button>
+                                                </sw-modal-button>
+                                                <sw-modal-header>
+                                                    <button class="btn btn-white pull-right" data-ng-click="swCampaign.saveCampaignActivity()">Save</button>
+                                                </sw-modal-header>
+                                                <sw-modal-content>
+                                                    <sw-campaign-wizard data-campaign-id="{{swCampaign.id}}"></sw-campaign-wizard>
+                                                </sw-modal-content>
+                                            </sw-modal-launcher>
                                         </div>
-
                                     </div>
                                 </div>
                             </div>
                         </div>
-
                     </div>
                 </div>
 
@@ -504,14 +133,10 @@
                         </sw-tab-content>
                     </sw-tab-group>
                 </content>
-
-
-
             </sw-tab-content>
             <sw-tab-content data-name="Activities" data-id="activities" data-icon="fa-line-chart" data-count="2">
                 <h4 class="s-title">Activities</h4>
                 <content class="s-body-box">
-
                     <div class="tab-content">
                         <!-- Lists Tab -->
                         <sw-listing-display
@@ -525,14 +150,11 @@
                         </sw-listing-display>
                         <!-- ///Lists Tab -->
                     </div>
-
                 </content>
             </sw-tab-content>
             <sw-tab-content data-name="Lists" data-id="lists" data-icon="fa-list">
-
                 <h4 class="s-title">Lists</h4>
                 <content class="s-body-box">
-
                     <div class="tab-content">
                         <!-- Lists Tab -->
                         <sw-listing-display
@@ -546,9 +168,7 @@
                         </sw-listing-display>
                         <!-- ///Lists Tab -->
                     </div>
-
                 </content>
-
            </sw-tab-content>
         </sw-tab-group>
     </div>

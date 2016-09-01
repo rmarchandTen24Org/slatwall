@@ -1,5 +1,5 @@
 {
-  "contexts":	["save","edit","delete"],
+  "contexts":	["save","edit","delete","pending"],
   "properties":{
     "campaignName":         [{"contexts":"save","required":true}]
   }

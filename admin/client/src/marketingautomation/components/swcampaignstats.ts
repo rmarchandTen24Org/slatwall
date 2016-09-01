@@ -29,7 +29,7 @@ class SWCampaignStats implements ng.IDirective{
     public templateUrl;
     //@ngInject
     constructor(public marketignAutomationPartialsPath, public slatwallPathBuilder){
-        this.templateUrl = this.slatwallPathBuilder.buildPartialsPath(this.marketignAutomationPartialsPath+'campaignStats.html');
+        this.templateUrl = this.slatwallPathBuilder.buildPartialsPath(this.marketignAutomationPartialsPath+'campaignstats.html');
     }
     public static Factory(){
         var directive = (

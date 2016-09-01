@@ -6021,8 +6021,7 @@ a.disabled > i.hibachi-ui-radio-checked {
 .s-slide-panel-content.s-list-style {
   padding: 50px 0px;
 }
-.s-slide-panel-content.s-list-style ul li {
-  border-bottom: 1px solid #eee;
+.s-slide-panel-content.s-list-style ul li.s-steps {
   padding: 10px;
 }
 /*Conponent: Loader*/
@@ -8006,7 +8005,7 @@ table.s-detail-content-table tbody tr.s-done {
   margin-bottom: 0px;
   font-weight: 300;
 }
-.s-slide-panel.s-steps-slide-panel .s-slide-panel-content {
+.s-slide-panel-content {
   padding-top: 120px;
 }
 .s-slide-panel-content .s-item-comments .s-comment-item {
@@ -8036,6 +8035,7 @@ table.s-detail-content-table tbody tr.s-done {
   margin-top: -3px;
   position: relative;
   opacity: 0;
+  z-index: 30;
 }
 .s-slide-panel.is-visible .s-steps-wrapper {
   opacity: 1;
@@ -8090,12 +8090,12 @@ table.s-detail-content-table tbody tr.s-done {
 .s-steps-wrapper .s-back {
   position: absolute;
   left: 10px;
-  top: 0px;
+  top: 12px;
 }
 .s-steps-wrapper .s-next {
   position: absolute;
   right: 10px;
-  top: 0px;
+  top: 12px;
 }
 @media only screen and (max-width: 767px) {
   #slatwall-navbar .nav .dropdown-menu {

@@ -8,7 +8,6 @@ class SWTabGroupController {
 
     // @ngInject
     constructor(private utilityService,
-                private rbkeyService,
                 private observerService
     ){
         if(angular.isUndefined(this.showTabs)){

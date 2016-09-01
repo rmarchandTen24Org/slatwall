@@ -4,7 +4,9 @@
 
             <ul class="nav nav-tabs" role="tablist">
                 <li role="presentation" data-ng-class="{'active':tab.active}" data-ng-repeat="tab in swTabGroup.tabs track by $index">
-                    <a data-ng-click="swTabGroup.switchTab(tab)" role="tab" data-toggle="tab" aria-controls="{{tab.name}}" aria-expanded="true"><span data-ng-bind="tab.name"></span><span data-ng-if="tab.count"> ({{tab.count}})</span></a>
+                    <a data-ng-click="swTabGroup.switchTab(tab)" role="tab" data-toggle="tab" aria-controls="{{tab.name}}" aria-expanded="true">
+                        <span data-ng-bind="tab.name"></span><span data-ng-if="tab.count"> ({{tab.count}})</span>
+                    </a>
                 </li>
             </ul>
         </div>

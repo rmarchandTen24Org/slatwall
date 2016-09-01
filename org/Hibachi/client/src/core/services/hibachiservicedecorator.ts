@@ -215,8 +215,8 @@ class HibachiServiceDecorator{
 
                         _init(this,data);
                     },
-                    $$save:function(){
-                        return _save(this);
+                    $$save:function(formName?){
+                        return _save(this, formName);
                     },
                     $$delete:function(){
                         return _delete(this);
@@ -806,12 +806,16 @@ class HibachiServiceDecorator{
             };
 
 
-            var _save = function(entityInstance){
+            var _save = function(entityInstance, formName?){
                 var deferred = $q.defer();
                 $timeout(function(){
                     //$log.debug('save begin');
                     //$log.debug(entityInstance);
+                    var validationContext = 'save';
 
+                    if(angular.isDefined(formName) && angular.isDefined(entityInstance.forms[formName])){
+                        validationContext = entityInstance.forms[formName].$$swFormInfo.context;
+                    }
                     var entityID = entityInstance.$$getID();
 
                     var modifiedData:any = _getModifiedData(entityInstance);
@@ -832,7 +836,7 @@ class HibachiServiceDecorator{
                         }else{
                             entityName = modifiedData.objectLevel.metaData.className;
                         }
-                        var savePromise = $delegate.saveEntity(entityName,entityID,params,context);
+                        var savePromise = $delegate.saveEntity(entityName,entityID,params,context, validationContext);
                         savePromise.then(function(response:any){
                             var returnedIDs = response.data;
                             if(angular.isDefined(response.SUCCESS) && response.SUCCESS === true){

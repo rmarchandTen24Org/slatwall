@@ -34,8 +34,6 @@ class SWWizardController {
     };
 
     public step = (index) => {
-        console.log("step called", index);
-        console.log("step called", this.steps[index]);
         this.currentStepPosition = index;
         for(var i = 0; i < this.steps.length; i++){
             if(i != index){
