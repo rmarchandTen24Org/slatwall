@@ -249,9 +249,7 @@ class SWWorkflowTriggers{
 				 * Adds a workflow trigger.
 				 */
 				scope.addWorkflowTrigger = function(){
-
-					var newWorkflowTrigger = $hibachi.newWorkflowTrigger();
-					scope.workflowTriggers.selectedTrigger = newWorkflowTrigger;
+                    scope.workflowTriggers.selectedTrigger = $hibachi.newWorkflowTrigger();
 				};
 
 

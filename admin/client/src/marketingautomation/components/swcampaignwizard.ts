@@ -29,8 +29,19 @@ class SWCampaignWizardController{
        }
     };
 
-    private loadPreviousEmail =(emailID:string):void=>{
-        this.emailCopied = true;
+    private loadPreviousEmail =(campaignActivityID:string):void=>{
+        var tempCampaignActivity = this.collectionConfigService.newCollectionConfig('CampaignActivity');
+        tempCampaignActivity.setDisplayProperties('emailBodyHTML,emailBodyText,emailStyle');
+        tempCampaignActivity.getEntity(campaignActivityID).then((data)=>{
+
+            console.log('LOOLLLL', data);
+            this.newCampaignActivity.emailBodyHTML = data.emailBodyHTML;
+            this.newCampaignActivity.emailBodyText = data.emailBodyText;
+            this.newCampaignActivity.emailStyle = data.emailStyle;
+            this.emailCopied = true;
+        });
+
+
     };
 
     public saveCampaignActivity = ():void =>{

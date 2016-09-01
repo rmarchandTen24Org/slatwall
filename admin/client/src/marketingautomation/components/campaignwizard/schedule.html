@@ -1,5 +1,38 @@
-<div class="col-sm-6">
-<sw-schedule></sw-schedule>
+<div class="col-sm-6" data-ng-init="scheduleOpt = '0'">
+    <div class="form-group s-radio-content">
+        <div class="radio s-vertical">
+            <input type="radio" id="j-immediately" data-ng-model="scheduleOpt" value="0">
+            <label for="j-immediately">
+                Send Immediately
+            </label>
+        </div>
+    </div>
+    <div class="form-group s-radio-content">
+        <div class="radio s-vertical">
+            <input type="radio"  id="j-schedule-date" data-ng-model="scheduleOpt" value="1">
+            <label for="j-schedule-date">
+                Schedule on Specific Date &amp; Time
+            </label>
+        </div>
+        <div class="row" data-ng-if="scheduleOpt == '1'">
+            <div class="col-md-4">
+                <input type="datetime" class="form-control input-sm" placeholder="Select Date/Time...">
+            </div>
+        </div>
+    </div>
+    <div class="form-group s-radio-content">
+        <div class="radio s-vertical">
+            <input type="radio" id="j-ongoing" data-ng-model="scheduleOpt" value="2">
+            <label for="j-ongoing">
+                Ongoing / Recurring Send
+            </label>
+        </div>
+        <div class="row" data-ng-if="scheduleOpt == '2'">
+            <sw-schedule></sw-schedule>
+        </div>
+        <button type="button" class="btn btn-large btn-block btn-success">Schedule &amp; Send</button>
+    </div>
+
 </div>
 <div class="col-sm-4 pull-right">
     <div class="well">

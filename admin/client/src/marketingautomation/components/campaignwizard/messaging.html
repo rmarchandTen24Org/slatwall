@@ -1,7 +1,7 @@
 <div class="col-md-12">
     <div class="form-group s-radio-content">
         <div class="radio s-vertical">
-            <input type="radio" name="broadcast-schedule" id="broadcast-schedule-new" data-ng-model="emailType" data-ng-init="emailType = '1'" value="1">
+            <input type="radio" id="broadcast-schedule-new" data-ng-model="emailType" data-ng-init="emailType = '1'" value="1">
             <label for="broadcast-schedule-new">
                 Create New Email
             </label>
@@ -59,7 +59,7 @@
 
     <span class="form-group s-radio-content">
         <div class="radio s-vertical">
-            <input type="radio" name="broadcast-schedule" id="broadcast-schedule-copy" data-ng-model="emailType" value="0">
+            <input type="radio" id="broadcast-schedule-copy" data-ng-model="emailType" value="0">
             <label for="broadcast-schedule-copy">
                 Copy Email From Existing Mailings
             </label>
@@ -68,14 +68,14 @@
             <div class="col-md-12" data-ng-show="!swCampaignWizard.emailCopied">
                 <sw-listing-display
                         data-name="previousEmail"
-                        data-collection="'Campaign'"
-                        data-multiselect-field-name="campaignID"
-                        data-multiselect-property-identifier="campaignID"
+                        data-collection="'CampaignActivity'"
+                        data-multiselect-field-name="campaignActivityID"
+                        data-multiselect-property-identifier="campaignAcitivityID"
                         data-is-radio="true"
+                        data-expandable="false"
                         >
-                    <sw-listing-column data-property-identifier="activeFlag" ></sw-listing-column>
-                    <sw-listing-column data-property-identifier="campaignDescription" ></sw-listing-column>
-                    <sw-listing-column data-property-identifier="campaignName" ></sw-listing-column>
+                    <sw-listing-column data-property-identifier="campaignActivityDescription" ></sw-listing-column>
+                    <sw-listing-column data-property-identifier="campaignActivityName" ></sw-listing-column>
                 </sw-listing-display>
             </div>
 

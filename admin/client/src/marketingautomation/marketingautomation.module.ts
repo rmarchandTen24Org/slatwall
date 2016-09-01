@@ -28,6 +28,7 @@ var marketingautomationmodule = angular.module('marketingautomation',[coremodule
         .directive('swCampaign', SWCampaign.Factory())
         .directive('swCampaignStats', SWCampaignStats.Factory())
         .directive('swCampaignWizard', SWCampaignWizard.Factory())
+        .directive('swUpcomingActivity', SWUpcomingActivity.Factory())
         .directive('swCampaignWizardStep', SWCampaignWizardStep.Factory())
         .directive('swSchedule', SWSchedule.Factory())
     ;

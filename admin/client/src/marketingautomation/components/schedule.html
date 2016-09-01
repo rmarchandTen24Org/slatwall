@@ -1,10 +1,9 @@
 <div class="form-group form-group-sm">
-    <div class="col-sm-12 s-no-paddings">
+    <div class="col-sm-12">
 
         <!--- search --->
         <div class="s-search-filter">
-            <h4>Schedule Frequency {{selectedSchedule}}</h4>
-            <div class="form-group form-group-sm">
+
                 <div sw-typeahead-search
                      data-collection-config="swSchedule.scheduleCollectionConfig"
                      data-property-to-show="'scheduleName'"
@@ -16,20 +15,18 @@
                      data-validate-required="true">
                     <span sw-typeahead-search-line-item data-property-identifier="scheduleName"></span>
                 </div>
-            </div>
 
-            <div class="s-add-content" id="j-toggle-add-bundle-type3" data-ng-if="createSchedule">
-                <sw-form name="scheduleForm" data-object="scheduleEntity" data-context="save">
+
+            <div class="s-add-content" id="j-toggle-add-bundle-type3" data-ng-if="swSchedule.createSchedule">
+                <sw-form name="scheduleForm" data-object="swSchedule.scheduleEntity" data-context="save">
 
                     <span sw-property-display
-                          data-object="scheduleEntity"
                           data-property="scheduleName"
                           data-editing="true"
                           data-editable="true">
                     </span>
 
                     <span sw-property-display
-                          data-object="scheduleEntity"
                           data-property="recuringType"
                           data-options-arguments="{property:'recuringType'}"
                           data-editing="true"
@@ -40,7 +37,6 @@
                     <div class="row">
                         <div class="form-group form-group-sm col-sm-6">
                             <span sw-property-display
-                                  data-object="scheduleEntity"
                                   data-property="frequencyStartTime"
                                   data-editing="true"
                                   data-editable="true">
@@ -48,17 +44,15 @@
                         </div>
                         <div class="form-group form-group-sm col-sm-6">
                             <span sw-property-display
-                                  data-object="scheduleEntity"
                                   data-property="frequencyEndTime"
                                   data-editing="true"
                                   data-editable="true">
                             </span>
                         </div>
                     </div>
-                    <div class="row" data-ng-if="scheduleEntity.data.frequencyEndTime">
+                    <div class="row" data-ng-if="swSchedule.scheduleEntity.frequencyEndTime">
                         <div class="form-group form-group-sm col-sm-6">
                             <span sw-property-display
-                                  data-object="scheduleEntity"
                                   data-property="frequencyInterval"
                                   data-editing="true"
                                   data-editable="true">
@@ -68,7 +62,6 @@
                     <hr/>
                     <span sw-property-display
                           style="display:none"
-                          data-object="scheduleEntity"
                           data-property="daysOfWeekToRun"
                           data-editing="true"
                           data-is-dirty="true"
@@ -76,11 +69,10 @@
                     <span sw-property-display
                           style="display:none"
                           data-field-type="text"
-                          data-object="scheduleEntity"
                           data-property="daysOfMonthToRun"
                           data-editing="true"
                           data-is-dirty="true"></span>
-                    <div class="form-group s-workflow-checkbox" data-ng-if="scheduleEntity.data.recuringType == 'weekly'">
+                    <div class="form-group s-workflow-checkbox" data-ng-if="swSchedule.scheduleEntity.recuringType == 'weekly'">
                         <label class="col-sm-12 s-no-paddings">Days of week:</label>
                         <div class="controls col-sm-6 s-checkbox">
                             <input type="checkbox" id="j-checkboxsunday" data-ng-model="daysOfweek[1]" data-ng-true-value="'1'"><label for="j-checkboxsunday"> Sunday</label>
@@ -94,7 +86,7 @@
                             <input type="checkbox" id="j-checkboxsaturday" data-ng-model="daysOfweek[7]" data-ng-true-value="'7'"><label for="j-checkboxsaturday"> Saturday</label>
                         </div>
                     </div>
-                    <div class="form-group s-workflow-checkbox" data-ng-if="scheduleEntity.data.recuringType == 'monthly'">
+                    <div class="form-group s-workflow-checkbox" data-ng-if="swSchedule.scheduleEntity.recuringType == 'monthly'">
                         <label class="col-sm-12 s-no-paddings">Days of Month:</label>
                         <div class="controls col-sm-3 s-checkbox">
                             <input type="checkbox" id="j-checkbox1" data-ng-model="daysOfMonth[1]" data-ng-true-value="'1'"><label for="j-checkbox1"> 1</label>
@@ -136,7 +128,7 @@
                             <input type="checkbox" id="j-checkbox31" data-ng-model="daysOfMonth[31]" data-ng-true-value="'31'"><label for="j-checkbox31"> 31</label>
                         </div>
                     </div>
-                    <button name="button" class="btn btn-primary btn-xs s-width-100 text-center" data-ng-click="saveSchedule();"> Save Schedule</button>
+                    <button name="button" class="btn btn-primary btn-xs s-width-100 text-center" data-ng-click="swSchedule.saveSchedule();"> Save Schedule</button>
                 </sw-form>
             </div>
         </div>
