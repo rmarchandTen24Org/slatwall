@@ -1,0 +1,145 @@
+<div class="form-group form-group-sm">
+    <div class="col-sm-12 s-no-paddings">
+
+        <!--- search --->
+        <div class="s-search-filter">
+            <h4>Schedule Frequency {{selectedSchedule}}</h4>
+            <div class="form-group form-group-sm">
+                <div sw-typeahead-search
+                     data-collection-config="swSchedule.scheduleCollectionConfig"
+                     data-property-to-show="'scheduleName'"
+                     data-placeholder-text="Search Schedule..."
+                     data-add-function="swSchedule.selectedSchedule"
+                     data-search-text="swSchedule.selectedName"
+                     data-add-button-function="swSchedule.addNewSchedule"
+                     data-disabled="swSchedule.disabled"
+                     data-validate-required="true">
+                    <span sw-typeahead-search-line-item data-property-identifier="scheduleName"></span>
+                </div>
+            </div>
+
+            <div class="s-add-content" id="j-toggle-add-bundle-type3" data-ng-if="createSchedule">
+                <sw-form name="scheduleForm" data-object="scheduleEntity" data-context="save">
+
+                    <span sw-property-display
+                          data-object="scheduleEntity"
+                          data-property="scheduleName"
+                          data-editing="true"
+                          data-editable="true">
+                    </span>
+
+                    <span sw-property-display
+                          data-object="scheduleEntity"
+                          data-property="recuringType"
+                          data-options-arguments="{property:'recuringType'}"
+                          data-editing="true"
+                          data-editable="true">
+                    </span>
+
+
+                    <div class="row">
+                        <div class="form-group form-group-sm col-sm-6">
+                            <span sw-property-display
+                                  data-object="scheduleEntity"
+                                  data-property="frequencyStartTime"
+                                  data-editing="true"
+                                  data-editable="true">
+                            </span>
+                        </div>
+                        <div class="form-group form-group-sm col-sm-6">
+                            <span sw-property-display
+                                  data-object="scheduleEntity"
+                                  data-property="frequencyEndTime"
+                                  data-editing="true"
+                                  data-editable="true">
+                            </span>
+                        </div>
+                    </div>
+                    <div class="row" data-ng-if="scheduleEntity.data.frequencyEndTime">
+                        <div class="form-group form-group-sm col-sm-6">
+                            <span sw-property-display
+                                  data-object="scheduleEntity"
+                                  data-property="frequencyInterval"
+                                  data-editing="true"
+                                  data-editable="true">
+                            </span>
+                        </div>
+                    </div>
+                    <hr/>
+                    <span sw-property-display
+                          style="display:none"
+                          data-object="scheduleEntity"
+                          data-property="daysOfWeekToRun"
+                          data-editing="true"
+                          data-is-dirty="true"
+                          data-field-type="text"></span>
+                    <span sw-property-display
+                          style="display:none"
+                          data-field-type="text"
+                          data-object="scheduleEntity"
+                          data-property="daysOfMonthToRun"
+                          data-editing="true"
+                          data-is-dirty="true"></span>
+                    <div class="form-group s-workflow-checkbox" data-ng-if="scheduleEntity.data.recuringType == 'weekly'">
+                        <label class="col-sm-12 s-no-paddings">Days of week:</label>
+                        <div class="controls col-sm-6 s-checkbox">
+                            <input type="checkbox" id="j-checkboxsunday" data-ng-model="daysOfweek[1]" data-ng-true-value="'1'"><label for="j-checkboxsunday"> Sunday</label>
+                            <input type="checkbox" id="j-checkboxmonday" data-ng-model="daysOfweek[2]" data-ng-true-value="'2'"><label for="j-checkboxmonday"> Monday</label>
+                            <input type="checkbox" id="j-checkboxtuesday" data-ng-model="daysOfweek[3]" data-ng-true-value="'3'"><label for="j-checkboxtuesday"> Tuesday</label>
+                            <input type="checkbox" id="j-checkboxwednrsday" data-ng-model="daysOfweek[4]" data-ng-true-value="'4'"><label for="j-checkboxwednrsday"> Wednesday</label>
+                        </div>
+                        <div class="controls col-sm-6 s-checkbox">
+                            <input type="checkbox" id="j-checkboxthursday" data-ng-model="daysOfweek[5]" data-ng-true-value="'5'"><label for="j-checkboxthursday"> Thursday</label>
+                            <input type="checkbox" id="j-checkboxfriday" data-ng-model="daysOfweek[6]" data-ng-true-value="'6'"><label for="j-checkboxfriday"> Friday</label>
+                            <input type="checkbox" id="j-checkboxsaturday" data-ng-model="daysOfweek[7]" data-ng-true-value="'7'"><label for="j-checkboxsaturday"> Saturday</label>
+                        </div>
+                    </div>
+                    <div class="form-group s-workflow-checkbox" data-ng-if="scheduleEntity.data.recuringType == 'monthly'">
+                        <label class="col-sm-12 s-no-paddings">Days of Month:</label>
+                        <div class="controls col-sm-3 s-checkbox">
+                            <input type="checkbox" id="j-checkbox1" data-ng-model="daysOfMonth[1]" data-ng-true-value="'1'"><label for="j-checkbox1"> 1</label>
+                            <input type="checkbox" id="j-checkbox2" data-ng-model="daysOfMonth[2]" data-ng-true-value="'2'"><label for="j-checkbox2"> 2</label>
+                            <input type="checkbox" id="j-checkbox3" data-ng-model="daysOfMonth[3]" data-ng-true-value="'3'"><label for="j-checkbox3"> 3</label>
+                            <input type="checkbox" id="j-checkbox4" data-ng-model="daysOfMonth[4]" data-ng-true-value="'4'"><label for="j-checkbox4"> 4</label>
+                            <input type="checkbox" id="j-checkbox5" data-ng-model="daysOfMonth[5]" data-ng-true-value="'5'"><label for="j-checkbox5"> 5</label>
+                            <input type="checkbox" id="j-checkbox6" data-ng-model="daysOfMonth[6]" data-ng-true-value="'6'"><label for="j-checkbox6"> 6</label>
+                            <input type="checkbox" id="j-checkbox7" data-ng-model="daysOfMonth[7]" data-ng-true-value="'7'"><label for="j-checkbox7"> 7</label>
+                            <input type="checkbox" id="j-checkbox8" data-ng-model="daysOfMonth[8]" data-ng-true-value="'8'"><label for="j-checkbox8"> 8</label>
+                        </div>
+                        <div class="controls col-sm-3 s-checkbox">
+                            <input type="checkbox" id="j-checkbox9" data-ng-model="daysOfMonth[9]" data-ng-true-value="'9'"><label for="j-checkbox9"> 9</label>
+                            <input type="checkbox" id="j-checkbox10" data-ng-model="daysOfMonth[10]" data-ng-true-value="'10'"><label for="j-checkbox10"> 10</label>
+                            <input type="checkbox" id="j-checkbox11" data-ng-model="daysOfMonth[11]" data-ng-true-value="'11'"><label for="j-checkbox11"> 11</label>
+                            <input type="checkbox" id="j-checkbox12" data-ng-model="daysOfMonth[12]" data-ng-true-value="'12'"><label for="j-checkbox12"> 12</label>
+                            <input type="checkbox" id="j-checkbox13" data-ng-model="daysOfMonth[13]" data-ng-true-value="'13'"><label for="j-checkbox13"> 13</label>
+                            <input type="checkbox" id="j-checkbox14" data-ng-model="daysOfMonth[14]" data-ng-true-value="'14'"><label for="j-checkbox14"> 14</label>
+                            <input type="checkbox" id="j-checkbox15" data-ng-model="daysOfMonth[15]" data-ng-true-value="'15'"><label for="j-checkbox15"> 15</label>
+                            <input type="checkbox" id="j-checkbox16" data-ng-model="daysOfMonth[16]" data-ng-true-value="'16'"><label for="j-checkbox16"> 16</label>
+                        </div>
+                        <div class="controls col-sm-3 s-checkbox">
+                            <input type="checkbox" id="j-checkbox17" data-ng-model="daysOfMonth[17]" data-ng-true-value="'17'"><label for="j-checkbox17"> 17</label>
+                            <input type="checkbox" id="j-checkbox18" data-ng-model="daysOfMonth[18]" data-ng-true-value="'18'"><label for="j-checkbox18"> 18</label>
+                            <input type="checkbox" id="j-checkbox19" data-ng-model="daysOfMonth[19]" data-ng-true-value="'19'"><label for="j-checkbox19"> 19</label>
+                            <input type="checkbox" id="j-checkbox20" data-ng-model="daysOfMonth[20]" data-ng-true-value="'20'"><label for="j-checkbox20"> 20</label>
+                            <input type="checkbox" id="j-checkbox21" data-ng-model="daysOfMonth[21]" data-ng-true-value="'21'"><label for="j-checkbox21"> 21</label>
+                            <input type="checkbox" id="j-checkbox22" data-ng-model="daysOfMonth[22]" data-ng-true-value="'22'"><label for="j-checkbox22"> 22</label>
+                            <input type="checkbox" id="j-checkbox23" data-ng-model="daysOfMonth[23]" data-ng-true-value="'23'"><label for="j-checkbox23"> 23</label>
+                            <input type="checkbox" id="j-checkbox24" data-ng-model="daysOfMonth[24]" data-ng-true-value="'24'"><label for="j-checkbox24"> 24</label>
+                        </div>
+                        <div class="controls col-sm-3 s-checkbox">
+                            <input type="checkbox" id="j-checkbox25" data-ng-model="daysOfMonth[25]" data-ng-true-value="'25'"><label for="j-checkbox25"> 25</label>
+                            <input type="checkbox" id="j-checkbox26" data-ng-model="daysOfMonth[26]" data-ng-true-value="'26'"><label for="j-checkbox26"> 26</label>
+                            <input type="checkbox" id="j-checkbox27" data-ng-model="daysOfMonth[26]" data-ng-true-value="'27'"><label for="j-checkbox27"> 27</label>
+                            <input type="checkbox" id="j-checkbox28" data-ng-model="daysOfMonth[28]" data-ng-true-value="'28'"><label for="j-checkbox28"> 28</label>
+                            <input type="checkbox" id="j-checkbox29" data-ng-model="daysOfMonth[29]" data-ng-true-value="'29'"><label for="j-checkbox29"> 29</label>
+                            <input type="checkbox" id="j-checkbox30" data-ng-model="daysOfMonth[30]" data-ng-true-value="'30'"><label for="j-checkbox30"> 30</label>
+                            <input type="checkbox" id="j-checkbox31" data-ng-model="daysOfMonth[31]" data-ng-true-value="'31'"><label for="j-checkbox31"> 31</label>
+                        </div>
+                    </div>
+                    <button name="button" class="btn btn-primary btn-xs s-width-100 text-center" data-ng-click="saveSchedule();"> Save Schedule</button>
+                </sw-form>
+            </div>
+        </div>
+        <!--- // search --->
+    </div>
+</div>

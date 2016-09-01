@@ -1,0 +1,20 @@
+<sw-wizard>
+    <sw-form data-object="swCampaignWizard.newCampaignActivity" data-name="wizard" data-context="pending">
+        <span data-ng-if="$root.slatwall.getRequestByAction().loading">TEST</span>
+        <sw-wizard-step data-name="Details">
+            <sw-campaign-wizard-step data-template="detail"></sw-campaign-wizard-step>
+        </sw-wizard-step>
+        <sw-wizard-step data-name="Email Setup">
+            <sw-campaign-wizard-step data-template="email"></sw-campaign-wizard-step>
+        </sw-wizard-step>
+        <sw-wizard-step data-name="Messaging">
+            <sw-campaign-wizard-step data-template="messaging"></sw-campaign-wizard-step>
+        </sw-wizard-step>
+        <sw-wizard-step data-name="List">
+            <sw-campaign-wizard-step data-template="list"></sw-campaign-wizard-step>
+        </sw-wizard-step>
+        <sw-wizard-step data-name="Schedule & Send">
+            <sw-campaign-wizard-step data-template="schedule"></sw-campaign-wizard-step>
+        </sw-wizard-step>
+    </sw-form>
+</sw-wizard>

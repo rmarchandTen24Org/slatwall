@@ -37,7 +37,7 @@ class SWUpcomingActivity implements ng.IDirective{
     public templateUrl;
     //@ngInject
     constructor(public marketignAutomationPartialsPath, public slatwallPathBuilder){
-        this.templateUrl = this.slatwallPathBuilder.buildPartialsPath(this.marketignAutomationPartialsPath+'upcomingActivity.html');
+        this.templateUrl = this.slatwallPathBuilder.buildPartialsPath(this.marketignAutomationPartialsPath+'upcomingactivity.html');
     }
     public static Factory(){
         var directive = (
