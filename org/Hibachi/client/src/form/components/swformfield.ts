@@ -104,6 +104,7 @@ class SWFormFieldController {
 		}
 
 		this.property = this.property || this.propertyIdentifier;
+        this.name = this.name || this.property;
         this.propertyIdentifier = this.propertyIdentifier || this.property;
 
         this.type = this.type || this.fieldType;

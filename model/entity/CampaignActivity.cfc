@@ -46,7 +46,7 @@
 Notes:
 
 */
-component displayname="CampaignActivity" entityname="SlatwallCampaignActivity" table="SwCampaignActivity" persistent="true" accessors="true" extends="HibachiEntity" cacheuse="transactional" hb_permission="this" hb_parentPropertyName="parentCampaignActivity" hb_childPropertyName="childCampaignActivities"{
+component displayname="CampaignActivity" entityname="SlatwallCampaignActivity" table="SwCampaignActivity" persistent="true" accessors="true" extends="HibachiEntity" cacheuse="transactional" hb_permission="this" hb_serviceName="campaignActivityService" hb_parentPropertyName="parentCampaignActivity" hb_childPropertyName="childCampaignActivities"{
 
 	// Persistent Properties
 	property name="campaignActivityID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";

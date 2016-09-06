@@ -18,7 +18,7 @@ class SWCampaignWizardController{
         this.emailCopied = false;
         this.observerService.attach(this.toggleSelection,'swSelectionToggleSelection');
         this.observerService.attach(this.saveCampaignActivity, 'saveNewCampaignActivity');
-        this.newCampaignActivity = this.$hibachi.newCampaignActivity();
+        this.newCampaignActivity = this.$hibachi.newCampaignActivity_Create();
     };
 
     private toggleSelection =(action:any):void=>{
@@ -45,11 +45,11 @@ class SWCampaignWizardController{
     };
 
     public saveCampaignActivity = ():void =>{
-
+console.log(this.newCampaignActivity);
         this.newCampaignActivity.$$save('wizard').then(()=>{
             console.log('Success');
         }, (error)=>{
-            console.log('VALIDATION', error);
+            //console.log('VALIDATION', error);
         });
         //this.newCampaignActivity = this.$hibachi.newCampaignActivity();
     };

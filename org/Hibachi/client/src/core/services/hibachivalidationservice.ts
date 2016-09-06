@@ -103,7 +103,9 @@ class HibachiValidationService{
 
             }
         }
-        modifiedData[entityInstance.$$getIDName()] = entityInstance.$$getID();
+        if(entityInstance.$$getIDName() !== ""){
+            modifiedData[entityInstance.$$getIDName()] = entityInstance.$$getID();
+        }
         this.$log.debug(modifiedData);
 
 
@@ -123,6 +125,7 @@ class HibachiValidationService{
                     if(form.$dirty && form.$valid){
                     for(var key in form){
                         if(key.charAt(0) !== '$' && angular.isObject(form[key])){
+
                             var inputField = form[key];
                             if(inputField.$modelValue){
                                 inputField.$dirty = true;
@@ -146,8 +149,9 @@ class HibachiValidationService{
 
                     }
                 }
-
-                modifiedData[parentObject.name][parentInstance.$$getIDName()] = parentInstance.$$getID();
+                if(parentInstance.$$getIDName() !== "") {
+                    modifiedData[parentObject.name][parentInstance.$$getIDName()] = parentInstance.$$getID();
+                }
             }
         }
         this.$log.debug(modifiedData);

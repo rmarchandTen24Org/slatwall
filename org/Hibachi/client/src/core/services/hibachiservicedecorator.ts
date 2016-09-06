@@ -172,7 +172,10 @@ class HibachiServiceDecorator{
                             ,$$getIDName:function(){
                                 var IDNameString = '';
                                 return IDNameString;
-                            }
+                            },
+                            $$save:function(formName?){
+                                return _save(this, formName);
+                            },
                         }})(entity);
                     }
 
@@ -819,6 +822,7 @@ class HibachiServiceDecorator{
                     var entityID = entityInstance.$$getID();
 
                     var modifiedData:any = _getModifiedData(entityInstance);
+                    console.log(modifiedData);
                     //$log.debug('modifiedData complete');
                     //$log.debug(modifiedData);
                     //timeoutPromise.valid = modifiedData.valid;
@@ -829,7 +833,8 @@ class HibachiServiceDecorator{
                         //if we have a process object then the context is different from the standard save
                         var entityName = '';
                         var context = 'save';
-                        if(entityInstance.metaData.isProcessObject === 1){
+                        console.log(entityInstance);
+                        if(entityInstance.metaData.isProcessObject === true){
                             var processStruct = modifiedData.objectLevel.metaData.className.split('_');
                             entityName = processStruct[0];
                             context = processStruct[1];
