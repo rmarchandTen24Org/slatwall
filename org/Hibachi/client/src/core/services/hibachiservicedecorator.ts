@@ -163,20 +163,16 @@ class HibachiServiceDecorator{
                     this.modifiedData = {};
 
                     var jsEntity = this;
-                    if(entity.isProcessObject){
-                        (function(entity){_jsEntities[ entity.className ].prototype = {
-                            $$getID:function(){
 
+                    if(entity.isProcessObject){
+                        (function(entity){
+                            _jsEntities[ entity.className ].prototype.$$getID=function(){
                                 return '';
-                            }
-                            ,$$getIDName:function(){
-                                var IDNameString = '';
-                                return IDNameString;
-                            },
-                            $$save:function(formName?){
-                                return _save(this, formName);
-                            },
-                        }})(entity);
+                            };
+                            _jsEntities[ entity.className ].prototype.$$getIDName=function(){
+                                return '';
+                            };
+                        })(entity);
                     }
 
                     angular.forEach(entity,function(property){

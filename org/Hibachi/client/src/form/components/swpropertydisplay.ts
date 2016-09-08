@@ -65,7 +65,6 @@ class SWPropertyDisplayController {
 
         var bindToControllerProps = this.$injector.get('swPropertyDisplayDirective')[0].bindToController;
         for(var i in bindToControllerProps){
-
 			if(!this[i] && this.swForm && this.swForm[i]){
 				this[i] = this.swForm[i];
 			}
@@ -134,7 +133,6 @@ class SWPropertyDisplayController {
 		this.labelText			= this.labelText || "";
 		this.labelClass			= this.labelClass || "";
         this.name			    	= this.name || this.property;
-
 
 		this.object				= this.object || this.swForm.object; //this is the process object
 

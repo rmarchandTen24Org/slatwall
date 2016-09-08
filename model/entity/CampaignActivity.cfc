@@ -54,6 +54,7 @@ component displayname="CampaignActivity" entityname="SlatwallCampaignActivity" t
 	property name="campaignActivityName" ormtype="string";
 	property name="campaignActivityDescription" ormtype="string" length="4000" hb_formFieldType="textarea";
 	property name="collectionConfig" ormtype="string" length="8000" hb_auditable="false" hb_formFieldType="json";
+	property name="listIDs" ormtype="string";
 
 	property name="emailSubject" ormtype="string";
 	property name="emailFromName" ormtype="string";

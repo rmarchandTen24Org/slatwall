@@ -6811,14 +6811,11 @@
 	                var jsEntity = this;
 	                if (entity.isProcessObject) {
 	                    (function (entity) {
-	                        _jsEntities[entity.className].prototype = {
-	                            $$getID: function () {
-	                                return '';
-	                            },
-	                            $$getIDName: function () {
-	                                var IDNameString = '';
-	                                return IDNameString;
-	                            }
+	                        _jsEntities[entity.className].prototype.$$getID = function () {
+	                            return '';
+	                        };
+	                        _jsEntities[entity.className].prototype.$$getIDName = function () {
+	                            return '';
 	                        };
 	                    })(entity);
 	                }
@@ -7380,6 +7377,7 @@
 	                }
 	                var entityID = entityInstance.$$getID();
 	                var modifiedData = _getModifiedData(entityInstance);
+	                console.log(modifiedData);
 	                //$log.debug('modifiedData complete');
 	                //$log.debug(modifiedData);
 	                //timeoutPromise.valid = modifiedData.valid;
@@ -7389,7 +7387,8 @@
 	                    //if we have a process object then the context is different from the standard save
 	                    var entityName = '';
 	                    var context = 'save';
-	                    if (entityInstance.metaData.isProcessObject === 1) {
+	                    console.log(entityInstance);
+	                    if (entityInstance.metaData.isProcessObject === true) {
 	                        var processStruct = modifiedData.objectLevel.metaData.className.split('_');
 	                        entityName = processStruct[0];
 	                        context = processStruct[1];
@@ -7873,7 +7872,9 @@
 	                    }
 	                }
 	            }
-	            modifiedData[entityInstance.$$getIDName()] = entityInstance.$$getID();
+	            if (entityInstance.$$getIDName() !== "") {
+	                modifiedData[entityInstance.$$getIDName()] = entityInstance.$$getID();
+	            }
 	            _this.$log.debug(modifiedData);
 	            _this.$log.debug('process parent data');
 	            if (angular.isDefined(entityInstance.parents)) {
@@ -7913,7 +7914,9 @@
 	                            }
 	                        }
 	                    }
-	                    modifiedData[parentObject.name][parentInstance.$$getIDName()] = parentInstance.$$getID();
+	                    if (parentInstance.$$getIDName() !== "") {
+	                        modifiedData[parentObject.name][parentInstance.$$getIDName()] = parentInstance.$$getID();
+	                    }
 	                }
 	            }
 	            _this.$log.debug(modifiedData);
@@ -12817,16 +12820,16 @@
 	var formbuilder_module_1 = __webpack_require__(204);
 	var giftcard_module_1 = __webpack_require__(206);
 	var marketingautomation_module_1 = __webpack_require__(217);
-	var optiongroup_module_1 = __webpack_require__(223);
-	var orderitem_module_1 = __webpack_require__(226);
-	var product_module_1 = __webpack_require__(233);
-	var productbundle_module_1 = __webpack_require__(235);
+	var optiongroup_module_1 = __webpack_require__(224);
+	var orderitem_module_1 = __webpack_require__(227);
+	var product_module_1 = __webpack_require__(234);
+	var productbundle_module_1 = __webpack_require__(236);
 	//constant
-	var slatwallpathbuilder_1 = __webpack_require__(242);
+	var slatwallpathbuilder_1 = __webpack_require__(243);
 	//directives
-	var swcurrencyformatter_1 = __webpack_require__(243);
+	var swcurrencyformatter_1 = __webpack_require__(244);
 	//filters
-	var swcurrency_1 = __webpack_require__(244);
+	var swcurrency_1 = __webpack_require__(245);
 	var slatwalladminmodule = angular.module('slatwalladmin', [
 	    //custom modules
 	    hibachi_module_1.hibachimodule.name,
@@ -19595,6 +19598,7 @@
 	                }
 	            }
 	            _this.property = _this.property || _this.propertyIdentifier;
+	            _this.name = _this.name || _this.property;
 	            _this.propertyIdentifier = _this.propertyIdentifier || _this.property;
 	            _this.type = _this.type || _this.fieldType;
 	            _this.fieldType = _this.fieldType || _this.type;
@@ -24467,8 +24471,8 @@
 	var swcampaignstats_1 = __webpack_require__(219);
 	var swcampaignwizard_1 = __webpack_require__(220);
 	var swcampaignwizardstep_1 = __webpack_require__(221);
-	var swupcomingactivity_1 = __webpack_require__(245);
-	var swschedule_1 = __webpack_require__(222);
+	var swupcomingactivity_1 = __webpack_require__(222);
+	var swschedule_1 = __webpack_require__(223);
 	//models
 	var marketingautomationmodule = angular.module('marketingautomation', [core_module_1.coremodule.name])
 	    .config([function () {
@@ -24607,21 +24611,31 @@
 	"use strict";
 	var SWCampaignWizardController = (function () {
 	    //@ngInject
-	    function SWCampaignWizardController(collectionConfigService, observerService, $hibachi) {
+	    function SWCampaignWizardController(collectionConfigService, observerService, $hibachi, selectionService, utilityService, $scope) {
 	        var _this = this;
 	        this.collectionConfigService = collectionConfigService;
 	        this.observerService = observerService;
 	        this.$hibachi = $hibachi;
+	        this.selectionService = selectionService;
+	        this.utilityService = utilityService;
+	        this.$scope = $scope;
 	        this.init = function () {
+	            _this.saveObserverID = _this.utilityService.createID();
 	            _this.emailCopied = false;
 	            _this.observerService.attach(_this.toggleSelection, 'swSelectionToggleSelection');
-	            _this.observerService.attach(_this.saveCampaignActivity, 'saveNewCampaignActivity');
+	            _this.observerService.attach(_this.saveCampaignActivity, 'saveNewCampaignActivity', _this.saveObserverID);
 	            _this.newCampaignActivity = _this.$hibachi.newCampaignActivity();
+	            _this.$scope.$on("$destroy", function () {
+	                _this.observerService.detachById(_this.saveObserverID);
+	            });
 	        };
 	        this.toggleSelection = function (action) {
 	            switch (action.selectionid) {
 	                case "previousEmail":
 	                    _this.loadPreviousEmail(action.selection);
+	                    break;
+	                case "lists":
+	                    _this.listIDs = _this.selectionService.getSelections('lists').join();
 	                    break;
 	            }
 	        };
@@ -24629,7 +24643,6 @@
 	            var tempCampaignActivity = _this.collectionConfigService.newCollectionConfig('CampaignActivity');
 	            tempCampaignActivity.setDisplayProperties('emailBodyHTML,emailBodyText,emailStyle');
 	            tempCampaignActivity.getEntity(campaignActivityID).then(function (data) {
-	                console.log('LOOLLLL', data);
 	                _this.newCampaignActivity.emailBodyHTML = data.emailBodyHTML;
 	                _this.newCampaignActivity.emailBodyText = data.emailBodyText;
 	                _this.newCampaignActivity.emailStyle = data.emailStyle;
@@ -24640,9 +24653,14 @@
 	            _this.newCampaignActivity.$$save('wizard').then(function () {
 	                console.log('Success');
 	            }, function (error) {
-	                console.log('VALIDATION', error);
+	                //console.log('VALIDATION', error);
 	            });
 	            //this.newCampaignActivity = this.$hibachi.newCampaignActivity();
+	        };
+	        this.scheduleEmail = function (option) {
+	            if (option == '0') {
+	                _this.emailSendDateTime = new Date();
+	            }
 	        };
 	        this.init();
 	    }
@@ -24724,6 +24742,63 @@
 	/// <reference path='../../../typings/slatwallTypescript.d.ts' />
 	/// <reference path='../../../typings/tsd.d.ts' />
 	"use strict";
+	var SWUpcomingActivityController = (function () {
+	    //@ngInject
+	    function SWUpcomingActivityController(collectionConfigService) {
+	        var _this = this;
+	        this.collectionConfigService = collectionConfigService;
+	        this.init = function () {
+	            _this.activities = [];
+	            var collectionConfig = _this.collectionConfigService.newCollectionConfig('CampaignActivity');
+	            collectionConfig.addFilter('campaign.campaignID', _this.campaignId);
+	            collectionConfig.addDisplayProperty('campaignActivityID,campaignActivityName,emailSendDateTime');
+	            collectionConfig.getEntity().then(function (res) {
+	                _this.activities = res.pageRecords;
+	            });
+	        };
+	        this.init();
+	    }
+	    return SWUpcomingActivityController;
+	}());
+	var SWUpcomingActivity = (function () {
+	    //@ngInject
+	    function SWUpcomingActivity(marketignAutomationPartialsPath, slatwallPathBuilder) {
+	        this.marketignAutomationPartialsPath = marketignAutomationPartialsPath;
+	        this.slatwallPathBuilder = slatwallPathBuilder;
+	        this.restrict = 'EA';
+	        this.scope = true;
+	        this.bindToController = {
+	            activityCount: "=",
+	            campaignId: "@"
+	        };
+	        this.controller = SWUpcomingActivityController;
+	        this.controllerAs = "swUpcomingActivity";
+	        this.link = function (scope, element, attrs) {
+	        };
+	        this.templateUrl = this.slatwallPathBuilder.buildPartialsPath(this.marketignAutomationPartialsPath + 'upcomingactivity.html');
+	    }
+	    SWUpcomingActivity.Factory = function () {
+	        var directive = function (marketignAutomationPartialsPath, slatwallPathBuilder) {
+	            return new SWUpcomingActivity(marketignAutomationPartialsPath, slatwallPathBuilder);
+	        };
+	        directive.$inject = [
+	            'marketignAutomationPartialsPath',
+	            'slatwallPathBuilder'
+	        ];
+	        return directive;
+	    };
+	    return SWUpcomingActivity;
+	}());
+	exports.SWUpcomingActivity = SWUpcomingActivity;
+
+
+/***/ },
+/* 223 */
+/***/ function(module, exports) {
+
+	/// <reference path='../../../typings/slatwallTypescript.d.ts' />
+	/// <reference path='../../../typings/tsd.d.ts' />
+	"use strict";
 	var SWScheduleController = (function () {
 	    //@ngInject
 	    function SWScheduleController(collectionConfigService, $hibachi, formService) {
@@ -24791,7 +24866,7 @@
 
 
 /***/ },
-/* 223 */
+/* 224 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -24801,8 +24876,8 @@
 	var core_module_1 = __webpack_require__(16);
 	//controllers
 	//directives
-	var swaddoptiongroup_1 = __webpack_require__(224);
-	var swoptionsforoptiongroup_1 = __webpack_require__(225);
+	var swaddoptiongroup_1 = __webpack_require__(225);
+	var swoptionsforoptiongroup_1 = __webpack_require__(226);
 	var optiongroupmodule = angular.module('optiongroup', [core_module_1.coremodule.name])
 	    .config([function () {
 	    }]).run([function () {
@@ -24814,7 +24889,7 @@
 
 
 /***/ },
-/* 224 */
+/* 225 */
 /***/ function(module, exports) {
 
 	/// <reference path='../../../typings/slatwallTypescript.d.ts' />
@@ -24983,7 +25058,7 @@
 
 
 /***/ },
-/* 225 */
+/* 226 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -25056,7 +25131,7 @@
 
 
 /***/ },
-/* 226 */
+/* 227 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -25064,12 +25139,12 @@
 	/// <reference path="../../typings/slatwallTypescript.d.ts" />
 	var core_module_1 = __webpack_require__(16);
 	//directives
-	var swchildorderitem_1 = __webpack_require__(227);
-	var sworderitem_1 = __webpack_require__(228);
-	var swoishippinglabelstamp_1 = __webpack_require__(229);
-	var sworderitemdetailstamp_1 = __webpack_require__(230);
-	var sworderitems_1 = __webpack_require__(231);
-	var swresizedimage_1 = __webpack_require__(232);
+	var swchildorderitem_1 = __webpack_require__(228);
+	var sworderitem_1 = __webpack_require__(229);
+	var swoishippinglabelstamp_1 = __webpack_require__(230);
+	var sworderitemdetailstamp_1 = __webpack_require__(231);
+	var sworderitems_1 = __webpack_require__(232);
+	var swresizedimage_1 = __webpack_require__(233);
 	var orderitemmodule = angular.module('hibachi.orderitem', [core_module_1.coremodule.name])
 	    .run([function () {
 	    }])
@@ -25084,7 +25159,7 @@
 
 
 /***/ },
-/* 227 */
+/* 228 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -25375,7 +25450,7 @@
 
 
 /***/ },
-/* 228 */
+/* 229 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -25798,7 +25873,7 @@
 
 
 /***/ },
-/* 229 */
+/* 230 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -25842,7 +25917,7 @@
 
 
 /***/ },
-/* 230 */
+/* 231 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -25956,7 +26031,7 @@
 
 
 /***/ },
-/* 231 */
+/* 232 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -26113,7 +26188,7 @@
 
 
 /***/ },
-/* 232 */
+/* 233 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -26156,7 +26231,7 @@
 
 
 /***/ },
-/* 233 */
+/* 234 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -26166,7 +26241,7 @@
 	var core_module_1 = __webpack_require__(16);
 	//services
 	//controllers
-	var preprocessproduct_create_1 = __webpack_require__(234);
+	var preprocessproduct_create_1 = __webpack_require__(235);
 	//filters
 	//directives
 	var productmodule = angular.module('hibachi.product', [core_module_1.coremodule.name]).config(function () {
@@ -26177,7 +26252,7 @@
 
 
 /***/ },
-/* 234 */
+/* 235 */
 /***/ function(module, exports) {
 
 	/// <reference path='../../../typings/slatwallTypescript.d.ts' />
@@ -26275,7 +26350,7 @@
 
 
 /***/ },
-/* 235 */
+/* 236 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/// <reference path='../../typings/slatwallTypescript.d.ts' />
@@ -26284,14 +26359,14 @@
 	//modules
 	var core_module_1 = __webpack_require__(16);
 	//services
-	var productbundleservice_1 = __webpack_require__(236);
+	var productbundleservice_1 = __webpack_require__(237);
 	//controllers
-	var create_bundle_controller_1 = __webpack_require__(237);
+	var create_bundle_controller_1 = __webpack_require__(238);
 	//directives
-	var swproductbundlegrouptype_1 = __webpack_require__(238);
-	var swproductbundlegroups_1 = __webpack_require__(239);
-	var swproductbundlegroup_1 = __webpack_require__(240);
-	var swproductbundlecollectionfilteritemtypeahead_1 = __webpack_require__(241);
+	var swproductbundlegrouptype_1 = __webpack_require__(239);
+	var swproductbundlegroups_1 = __webpack_require__(240);
+	var swproductbundlegroup_1 = __webpack_require__(241);
+	var swproductbundlecollectionfilteritemtypeahead_1 = __webpack_require__(242);
 	//filters
 	var productbundlemodule = angular.module('hibachi.productbundle', [core_module_1.coremodule.name]).config(function () {
 	})
@@ -26306,7 +26381,7 @@
 
 
 /***/ },
-/* 236 */
+/* 237 */
 /***/ function(module, exports) {
 
 	/// <reference path='../../../typings/slatwallTypescript.d.ts' />
@@ -26392,7 +26467,7 @@
 
 
 /***/ },
-/* 237 */
+/* 238 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -26465,7 +26540,7 @@
 
 
 /***/ },
-/* 238 */
+/* 239 */
 /***/ function(module, exports) {
 
 	/// <reference path='../../../typings/slatwallTypescript.d.ts' />
@@ -26636,7 +26711,7 @@
 
 
 /***/ },
-/* 239 */
+/* 240 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -26710,7 +26785,7 @@
 
 
 /***/ },
-/* 240 */
+/* 241 */
 /***/ function(module, exports) {
 
 	/// <reference path='../../../typings/slatwallTypescript.d.ts' />
@@ -26903,7 +26978,7 @@
 
 
 /***/ },
-/* 241 */
+/* 242 */
 /***/ function(module, exports) {
 
 	/// <reference path='../../../typings/slatwallTypescript.d.ts' />
@@ -27248,7 +27323,7 @@
 
 
 /***/ },
-/* 242 */
+/* 243 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -27280,7 +27355,7 @@
 
 
 /***/ },
-/* 243 */
+/* 244 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -27339,7 +27414,7 @@
 
 
 /***/ },
-/* 244 */
+/* 245 */
 /***/ function(module, exports) {
 
 	/// <reference path='../../../typings/slatwallTypescript.d.ts' />
@@ -27395,63 +27470,6 @@
 	    return SWCurrency;
 	}());
 	exports.SWCurrency = SWCurrency;
-
-
-/***/ },
-/* 245 */
-/***/ function(module, exports) {
-
-	/// <reference path='../../../typings/slatwallTypescript.d.ts' />
-	/// <reference path='../../../typings/tsd.d.ts' />
-	"use strict";
-	var SWUpcomingActivityController = (function () {
-	    //@ngInject
-	    function SWUpcomingActivityController(collectionConfigService) {
-	        var _this = this;
-	        this.collectionConfigService = collectionConfigService;
-	        this.init = function () {
-	            _this.activities = [];
-	            var collectionConfig = _this.collectionConfigService.newCollectionConfig('CampaignActivity');
-	            collectionConfig.addFilter('campaign.campaignID', _this.campaignId);
-	            collectionConfig.addDisplayProperty('campaignActivityID,campaignActivityName,emailSendDateTime');
-	            collectionConfig.getEntity().then(function (res) {
-	                _this.activities = res.pageRecords;
-	            });
-	        };
-	        this.init();
-	    }
-	    return SWUpcomingActivityController;
-	}());
-	var SWUpcomingActivity = (function () {
-	    //@ngInject
-	    function SWUpcomingActivity(marketignAutomationPartialsPath, slatwallPathBuilder) {
-	        this.marketignAutomationPartialsPath = marketignAutomationPartialsPath;
-	        this.slatwallPathBuilder = slatwallPathBuilder;
-	        this.restrict = 'EA';
-	        this.scope = true;
-	        this.bindToController = {
-	            activityCount: "=",
-	            campaignId: "@"
-	        };
-	        this.controller = SWUpcomingActivityController;
-	        this.controllerAs = "swUpcomingActivity";
-	        this.link = function (scope, element, attrs) {
-	        };
-	        this.templateUrl = this.slatwallPathBuilder.buildPartialsPath(this.marketignAutomationPartialsPath + 'upcomingactivity.html');
-	    }
-	    SWUpcomingActivity.Factory = function () {
-	        var directive = function (marketignAutomationPartialsPath, slatwallPathBuilder) {
-	            return new SWUpcomingActivity(marketignAutomationPartialsPath, slatwallPathBuilder);
-	        };
-	        directive.$inject = [
-	            'marketignAutomationPartialsPath',
-	            'slatwallPathBuilder'
-	        ];
-	        return directive;
-	    };
-	    return SWUpcomingActivity;
-	}());
-	exports.SWUpcomingActivity = SWUpcomingActivity;
 
 
 /***/ }

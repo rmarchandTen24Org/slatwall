@@ -16,7 +16,12 @@
         </div>
         <div class="row" data-ng-if="scheduleOpt == '1'">
             <div class="col-md-4">
-                <input type="datetime" class="form-control input-sm" placeholder="Select Date/Time...">
+                <sw-property-display
+                        data-property="emailSendDateTime"
+                        data-name="emailSendDateTime"
+                        data-editing="true"
+                        data-editable="true">
+                </sw-property-display>
             </div>
         </div>
     </div>
@@ -30,7 +35,7 @@
         <div class="row" data-ng-if="scheduleOpt == '2'">
             <sw-schedule></sw-schedule>
         </div>
-        <button type="button" class="btn btn-large btn-block btn-success">Schedule &amp; Send</button>
+        <button type="button" class="btn btn-large btn-block btn-success" data-ng-click="swCampaignWizard.scheduleEmail(scheduleOpt)">Schedule &amp; Send</button>
     </div>
 
 </div>
@@ -40,6 +45,6 @@
             <label>Send Test Email</label>
             <input type="email" class="form-control" placeholder="email">
         </div>
-        <button type="button" class="btn btn-large btn-block btn-dgrey">Send Test Email</button>
+        <button type="button" class="btn btn-large btn-block btn-dgrey" data-ng-click="swCampaignWizard.sendText">Send Test Email</button>
     </div>
 </div>

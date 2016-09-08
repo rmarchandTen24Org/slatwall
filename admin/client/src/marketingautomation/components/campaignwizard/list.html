@@ -1,8 +1,10 @@
 <sw-listing-display
         data-collection="'Campaign'"
-        data-multiselect-field-name="listIDs"
+        data-name="lists"
+        data-multiselect-field-name="test"
         data-multiselect-property-identifier="campaignID">
     <sw-listing-column data-property-identifier="activeFlag" ></sw-listing-column>
     <sw-listing-column data-property-identifier="campaignDescription" ></sw-listing-column>
     <sw-listing-column data-property-identifier="campaignName" ></sw-listing-column>
 </sw-listing-display>
+<input type="hidden" data-ng-model="swCampaignWizard.listIDs" name="listIDs">

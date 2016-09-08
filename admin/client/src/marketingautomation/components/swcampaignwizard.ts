@@ -4,27 +4,41 @@
 class SWCampaignWizardController{
     private newCampaignActivity;
     private emailCopied;
+    private listIDs;
+    private saveObserverID;
+    private emailSendDateTime;
 
     //@ngInject
     constructor(
         public collectionConfigService,
         public observerService,
-        public $hibachi
+        public $hibachi,
+        public selectionService,
+        public utilityService,
+        public $scope
     ){
         this.init();
     }
 
     public init =()=> {
+        this.saveObserverID= this.utilityService.createID();
         this.emailCopied = false;
         this.observerService.attach(this.toggleSelection,'swSelectionToggleSelection');
-        this.observerService.attach(this.saveCampaignActivity, 'saveNewCampaignActivity');
-        this.newCampaignActivity = this.$hibachi.newCampaignActivity_Create();
+        this.observerService.attach(this.saveCampaignActivity, 'saveNewCampaignActivity', this.saveObserverID);
+        this.newCampaignActivity = this.$hibachi.newCampaignActivity();
+        this.$scope.$on("$destroy",()=>{
+            this.observerService.detachById(this.saveObserverID);
+        })
+
     };
 
     private toggleSelection =(action:any):void=>{
        switch (action.selectionid){
            case "previousEmail":
                this.loadPreviousEmail(action.selection);
+               break;
+           case "lists":
+               this.listIDs = this.selectionService.getSelections('lists').join();
                break;
        }
     };
@@ -33,19 +47,14 @@ class SWCampaignWizardController{
         var tempCampaignActivity = this.collectionConfigService.newCollectionConfig('CampaignActivity');
         tempCampaignActivity.setDisplayProperties('emailBodyHTML,emailBodyText,emailStyle');
         tempCampaignActivity.getEntity(campaignActivityID).then((data)=>{
-
-            console.log('LOOLLLL', data);
             this.newCampaignActivity.emailBodyHTML = data.emailBodyHTML;
             this.newCampaignActivity.emailBodyText = data.emailBodyText;
             this.newCampaignActivity.emailStyle = data.emailStyle;
             this.emailCopied = true;
         });
-
-
     };
 
     public saveCampaignActivity = ():void =>{
-console.log(this.newCampaignActivity);
         this.newCampaignActivity.$$save('wizard').then(()=>{
             console.log('Success');
         }, (error)=>{
@@ -53,6 +62,15 @@ console.log(this.newCampaignActivity);
         });
         //this.newCampaignActivity = this.$hibachi.newCampaignActivity();
     };
+
+    public scheduleEmail = (option:string): void =>{
+        if(option == '0'){
+            this.emailSendDateTime = new Date();
+        }
+    }
+
+
+
 }
 
 class SWCampaignWizard implements ng.IDirective{

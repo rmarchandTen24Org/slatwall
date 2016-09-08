@@ -102,6 +102,11 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 	}
 
 
+	//public any function saveCampaignActivity(required any campaignActivity, struct data={}){
+		//writeDump(arguments.data);abort;
+	//}
+
+
 	// =====================  END: Logical Methods ============================
 
 	// ===================== START: DAO Passthrough ===========================
@@ -109,10 +114,7 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 	// ===================== START: DAO Passthrough ===========================
 
 	// ===================== START: Process Methods ===========================
-	public any function processCampaignActivity_Create(required any campaignActivity, required any processObject){
-		writeDump(var=processObject, top=1); abort;
-		return campaignActivity;
-	}
+
 	// =====================  END: Process Methods ============================
 
 	// ====================== START: Save Overrides ===========================
