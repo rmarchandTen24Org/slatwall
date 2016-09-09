@@ -26,6 +26,8 @@ class SWCampaignWizardController{
         this.observerService.attach(this.toggleSelection,'swSelectionToggleSelection');
         this.observerService.attach(this.saveCampaignActivity, 'saveNewCampaignActivity', this.saveObserverID);
         this.newCampaignActivity = this.$hibachi.newCampaignActivity();
+
+        console.log(this.newCampaignActivity);
         this.$scope.$on("$destroy",()=>{
             this.observerService.detachById(this.saveObserverID);
         })
@@ -56,6 +58,16 @@ class SWCampaignWizardController{
 
     public saveCampaignActivity = ():void =>{
         this.newCampaignActivity.$$save('wizard').then(()=>{
+            console.log('Success');
+        }, (error)=>{
+            //console.log('VALIDATION', error);
+        });
+        //this.newCampaignActivity = this.$hibachi.newCampaignActivity();
+    };
+
+
+    public sendTestEmail = ():void =>{
+        this.newCampaignActivity.$$save('wizard', 'test').then(()=>{
             console.log('Success');
         }, (error)=>{
             //console.log('VALIDATION', error);

@@ -6857,8 +6857,8 @@
 	                $$init: function (data) {
 	                    _init(this, data);
 	                },
-	                $$save: function (formName) {
-	                    return _save(this, formName);
+	                $$save: function (formName, validationContext) {
+	                    return _save(this, formName, validationContext);
 	                },
 	                $$delete: function () {
 	                    return _delete(this);
@@ -7366,7 +7366,7 @@
 	                }
 	            }
 	        };
-	        var _save = function (entityInstance, formName) {
+	        var _save = function (entityInstance, formName, vContext) {
 	            var deferred = $q.defer();
 	            $timeout(function () {
 	                //$log.debug('save begin');
@@ -7374,6 +7374,9 @@
 	                var validationContext = 'save';
 	                if (angular.isDefined(formName) && angular.isDefined(entityInstance.forms[formName])) {
 	                    validationContext = entityInstance.forms[formName].$$swFormInfo.context;
+	                }
+	                if (vContext) {
+	                    validationContext = vContext;
 	                }
 	                var entityID = entityInstance.$$getID();
 	                var modifiedData = _getModifiedData(entityInstance);
@@ -24625,6 +24628,7 @@
 	            _this.observerService.attach(_this.toggleSelection, 'swSelectionToggleSelection');
 	            _this.observerService.attach(_this.saveCampaignActivity, 'saveNewCampaignActivity', _this.saveObserverID);
 	            _this.newCampaignActivity = _this.$hibachi.newCampaignActivity();
+	            console.log(_this.newCampaignActivity);
 	            _this.$scope.$on("$destroy", function () {
 	                _this.observerService.detachById(_this.saveObserverID);
 	            });
@@ -24651,6 +24655,14 @@
 	        };
 	        this.saveCampaignActivity = function () {
 	            _this.newCampaignActivity.$$save('wizard').then(function () {
+	                console.log('Success');
+	            }, function (error) {
+	                //console.log('VALIDATION', error);
+	            });
+	            //this.newCampaignActivity = this.$hibachi.newCampaignActivity();
+	        };
+	        this.sendTestEmail = function () {
+	            _this.newCampaignActivity.$$save('wizard', 'test').then(function () {
 	                console.log('Success');
 	            }, function (error) {
 	                //console.log('VALIDATION', error);

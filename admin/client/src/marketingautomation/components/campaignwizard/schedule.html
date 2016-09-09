@@ -43,8 +43,8 @@
     <div class="well">
         <div class="form-group">
             <label>Send Test Email</label>
-            <input type="email" class="form-control" placeholder="email">
+            <input type="email" class="form-control" placeholder="email" name="testEmail" data-ng-model="testEmail">
         </div>
-        <button type="button" class="btn btn-large btn-block btn-dgrey" data-ng-click="swCampaignWizard.sendText">Send Test Email</button>
+        <button type="button" class="btn btn-large btn-block btn-dgrey" data-ng-click="swCampaignWizard.sendTestEmail()">Send Test Email</button>
     </div>
 </div>

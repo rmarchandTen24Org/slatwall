@@ -96,6 +96,8 @@ component extends="Slatwall.model.service.HibachiService" accessors="true" outpu
 		var result = send24Request('post','email', emailConfig);
 
 		if (!result.statuscode contains "201") {
+			writeDump(emailConfig);
+			writeDump(result);abort;
 			throw("Bad status code creating Email");
 		}
 		return result.Filecontent;

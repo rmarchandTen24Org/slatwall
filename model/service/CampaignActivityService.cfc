@@ -48,6 +48,7 @@ Notes:
 */
 component extends="HibachiService" persistent="false" accessors="true" output="false" {
 
+	property name="campaignActivityLinkDAO" type="any";
 	// ===================== START: Logical Methods ===========================
 
 	public string function mergeCampaignActivitiesCollectionConfig(required string campaignActivityIds) {
@@ -102,9 +103,104 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 	}
 
 
-	//public any function saveCampaignActivity(required any campaignActivity, struct data={}){
-		//writeDump(arguments.data);abort;
-	//}
+	private boolean function isReadyToSend(required any campaignActivity){
+		var requiredProperties =  ListToArray('campaignActivityDescription,collectionConfig,emailSubject,emailFromName,'&
+		'emailFromEmail,emailReplyTo,emailStyle,emailBodyHTML,emailBodyText');
+
+		for (i = 1; i <= ArrayLen(requiredProperties); i++) {
+			if(isNull(arguments.campaignActivity.invokeMethod('get#requiredProperties[i]#'))){
+				return false;
+			}
+		}
+		return true;
+	}
+
+	private boolean function isEmailChanged(required any campaignActivity, required struct data){
+		var properties =  ListToArray('campaignActivityName,emailSubject,emailFromName,'&
+		'emailFromEmail,emailReplyTo,emailStyle,emailBodyHTML,emailBodyText');
+
+		for (i = 1; i <= ArrayLen(properties); i++) {
+			if(structKeyExists(arguments.data, properties[i]) && arguments.campaignActivity.invokeMethod('get#properties[i]#') != arguments.data[properties[i]]) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+
+	private any function getEmailService(){
+		return getService("send24Service");
+	}
+
+	private void function scrapeLinks(required string campaignActivityID,required string emailBody){
+		var urlList = '';
+		var pattern = CreateObject("java", "java.util.regex.Pattern").Compile(JavaCast( "string", "<a\s+(?:[^>]*?\s+)?href=[\x22\x27]([^\x22\x27]+)\x22"));
+		var matcher = pattern.Matcher(JavaCast( "string", arguments.emailBody));
+		while (matcher.Find()) {
+			if(!ListFind(urlList, matcher.Group(JavaCast('int',1)))){
+				urlList = ListAppend(urlList, matcher.Group(JavaCast('int',1)));
+			}
+		}
+		if(listLen(urlList)){
+			getCampaignActivityLinkDAO().insertLink(urls=urlList,marketingEmailID=arguments.campaignActivityID);
+		}
+	}
+
+
+	public any function saveCampaignActivity(required any campaignActivity, required struct data={}, required string context){
+		getService("HibachiTagService").cfsetting(requesttimeout="6000");
+		var emailChanged = isEmailChanged(campaignActivity, data);
+
+		arguments.campaignActivity = super.save(arguments.campaignActivity,arguments.data, arguments.context);
+
+		if(arguments.campaignActivity.hasErrors()){
+			return arguments.campaignActivity;
+		}
+
+		isReadyToSend(arguments.campaignActivity);
+
+
+		if(arguments.context == 'test') {
+
+			var emailConfig = {
+				'name' = arguments.campaignActivity.getCampaignActivityName(),
+				'subject' = arguments.campaignActivity.getEmailSubject(),
+				'fromemaillabel' = arguments.campaignActivity.getEmailFromName(),
+				'fromemailaddress' = arguments.campaignActivity.getEmailFromEmail(),
+				'replytoemailaddress' = arguments.campaignActivity.getEmailReplyTo(),
+				'emailStyleID' = 1,//arguments.campaignActivity.getEmailStyle(),
+				'htmlContent' = arguments.campaignActivity.getEmailBodyHTML(),
+				'textContent' = arguments.campaignActivity.getEmailBodyText()
+			};
+
+			var emailID = '';
+			var getURLs = false;
+
+			//Create the Email in Send24 or update it if already exists
+			if(isNull(arguments.campaignActivity.getSend24EmailID())) {
+				emailID = getEmailService().createEmail(emailConfig);
+				arguments.campaignActivity.setSend24EmailID(emailID);
+
+				arguments.campaignActivity = this.save(arguments.campaignActivity);
+
+				///save
+				ormFlush();
+				getURLs = true;
+			}else if(emailChanged){
+				getEmailService().updateEmail(arguments.campaignActivity.getSend24EmailID(), emailConfig);
+				getURLs = true;
+			}
+
+			//Get all URLs from Email Body
+			if(getURLs && len(arguments.campaignActivity.getEmailBodyHTML())){
+				//scrapeLinks(arguments.campaignActivity.getCampaignActivityID(), arguments.campaignActivity.getEmailBodyHTML());
+			}
+
+			var broadcastID = getHibachiScope().sendTestEmail(emailID, arguments.data.testEmail);
+		}
+		return arguments.campaignActivity;
+
+	}
 
 
 	// =====================  END: Logical Methods ============================

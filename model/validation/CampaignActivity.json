@@ -1,6 +1,12 @@
 {
-  "contexts":	["save","edit","delete"],
+  "contexts":	["save","edit","delete","pending","test"],
   "properties":{
-    "campaignActivityName":         [{"contexts":"save","required":true}]
+    "campaignActivityName":         [{"contexts":"save,pending,test","required":true}],
+    "emailSubject":         [{"contexts":"test","required":true}],
+    "emailFromName":         [{"contexts":"test","required":true}],
+    "emailFromEmail":         [{"contexts":"test","required":true}],
+    "emailReplyTo":         [{"contexts":"test","required":true}],
+    "emailBodyHTML":         [{"contexts":"test","required":true}],
+    "emailBodyText":         [{"contexts":"test","required":true}]
   }
 }
