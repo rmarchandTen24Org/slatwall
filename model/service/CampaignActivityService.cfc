@@ -170,7 +170,7 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 				'replytoemailaddress' = arguments.campaignActivity.getEmailReplyTo(),
 				'emailStyleID' = 1,//arguments.campaignActivity.getEmailStyle(),
 				'htmlContent' = arguments.campaignActivity.getEmailBodyHTML(),
-				'textContent' = arguments.campaignActivity.getEmailBodyText()
+				'textContent' = (isNull(arguments.campaignActivity.getEmailBodyText())) ? " " : arguments.campaignActivity.getEmailBodyText()
 			};
 
 			var emailID = '';
@@ -196,7 +196,7 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 				//scrapeLinks(arguments.campaignActivity.getCampaignActivityID(), arguments.campaignActivity.getEmailBodyHTML());
 			}
 
-			var broadcastID = getHibachiScope().sendTestEmail(emailID, arguments.data.testEmail);
+			var broadcastID = getEmailService().sendTestEmail(emailID, arguments.data.testEmail);
 		}
 		return arguments.campaignActivity;
 

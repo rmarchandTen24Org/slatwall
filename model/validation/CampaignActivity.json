@@ -6,7 +6,6 @@
     "emailFromName":         [{"contexts":"test","required":true}],
     "emailFromEmail":         [{"contexts":"test","required":true}],
     "emailReplyTo":         [{"contexts":"test","required":true}],
-    "emailBodyHTML":         [{"contexts":"test","required":true}],
-    "emailBodyText":         [{"contexts":"test","required":true}]
+    "emailBodyHTML":         [{"contexts":"test","required":true}]
   }
 }
