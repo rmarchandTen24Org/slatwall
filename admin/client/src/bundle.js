@@ -5574,7 +5574,7 @@
 	        };
 	        this.clearSelection = function (selectionid) {
 	            _this.createSelections(selectionid);
-	            _this.observerService.notify('swSelectionToggleSelection', { action: 'clear' });
+	            _this.observerService.notify('swSelectionToggleSelection', { action: 'clear', selectionid: selectionid });
 	            console.info(_this._selection[selectionid]);
 	        };
 	        this.selectAll = function (selectionid) {
@@ -12823,16 +12823,16 @@
 	var formbuilder_module_1 = __webpack_require__(204);
 	var giftcard_module_1 = __webpack_require__(206);
 	var marketingautomation_module_1 = __webpack_require__(217);
-	var optiongroup_module_1 = __webpack_require__(224);
-	var orderitem_module_1 = __webpack_require__(227);
-	var product_module_1 = __webpack_require__(234);
-	var productbundle_module_1 = __webpack_require__(236);
+	var optiongroup_module_1 = __webpack_require__(226);
+	var orderitem_module_1 = __webpack_require__(229);
+	var product_module_1 = __webpack_require__(236);
+	var productbundle_module_1 = __webpack_require__(238);
 	//constant
-	var slatwallpathbuilder_1 = __webpack_require__(243);
+	var slatwallpathbuilder_1 = __webpack_require__(245);
 	//directives
-	var swcurrencyformatter_1 = __webpack_require__(244);
+	var swcurrencyformatter_1 = __webpack_require__(246);
 	//filters
-	var swcurrency_1 = __webpack_require__(245);
+	var swcurrency_1 = __webpack_require__(247);
 	var slatwalladminmodule = angular.module('slatwalladmin', [
 	    //custom modules
 	    hibachi_module_1.hibachimodule.name,
@@ -24476,6 +24476,8 @@
 	var swcampaignwizardstep_1 = __webpack_require__(221);
 	var swupcomingactivity_1 = __webpack_require__(222);
 	var swschedule_1 = __webpack_require__(223);
+	var swcampaignactivity_1 = __webpack_require__(224);
+	var swcampaignactivitystatus_1 = __webpack_require__(225);
 	//models
 	var marketingautomationmodule = angular.module('marketingautomation', [core_module_1.coremodule.name])
 	    .config([function () {
@@ -24487,7 +24489,9 @@
 	    .directive('swCampaignWizard', swcampaignwizard_1.SWCampaignWizard.Factory())
 	    .directive('swUpcomingActivity', swupcomingactivity_1.SWUpcomingActivity.Factory())
 	    .directive('swCampaignWizardStep', swcampaignwizardstep_1.SWCampaignWizardStep.Factory())
-	    .directive('swSchedule', swschedule_1.SWSchedule.Factory());
+	    .directive('swSchedule', swschedule_1.SWSchedule.Factory())
+	    .directive('swCampaignActivity', swcampaignactivity_1.SWCampaignActivity.Factory())
+	    .directive('swCampaignActivityStatus', swcampaignactivitystatus_1.SWCampaignActivityStatus.Factory());
 	exports.marketingautomationmodule = marketingautomationmodule;
 
 
@@ -24634,6 +24638,7 @@
 	            });
 	        };
 	        this.toggleSelection = function (action) {
+	            console.log(action);
 	            switch (action.selectionid) {
 	                case "previousEmail":
 	                    _this.loadPreviousEmail(action.selection);
@@ -24673,6 +24678,9 @@
 	            if (option == '0') {
 	                _this.emailSendDateTime = new Date();
 	            }
+	        };
+	        this.clearListIDs = function () {
+	            _this.selectionService.clearSelection('lists');
 	        };
 	        this.init();
 	    }
@@ -24879,6 +24887,108 @@
 
 /***/ },
 /* 224 */
+/***/ function(module, exports) {
+
+	/// <reference path='../../../typings/slatwallTypescript.d.ts' />
+	/// <reference path='../../../typings/tsd.d.ts' />
+	"use strict";
+	var SWCampaignActivityController = (function () {
+	    //@ngInject
+	    function SWCampaignActivityController() {
+	        var _this = this;
+	        this.data = {};
+	        this.editing = false;
+	        this.saving = false;
+	        this.saveCampaign = function () {
+	            _this.saving = true;
+	            _this.campaignObject.$$save().then(function () {
+	                _this.editing = false;
+	            }).finally(function () {
+	                _this.saving = false;
+	            });
+	        };
+	    }
+	    return SWCampaignActivityController;
+	}());
+	var SWCampaignActivity = (function () {
+	    //@ngInject
+	    function SWCampaignActivity(marketignAutomationPartialsPath, slatwallPathBuilder) {
+	        this.marketignAutomationPartialsPath = marketignAutomationPartialsPath;
+	        this.slatwallPathBuilder = slatwallPathBuilder;
+	        this.restrict = 'EA';
+	        this.scope = true;
+	        this.bindToController = {
+	            object: "="
+	        };
+	        this.controller = SWCampaignActivityController;
+	        this.controllerAs = "swCampaignActivity";
+	        this.link = function (scope, element, attrs) {
+	        };
+	        this.templateUrl = this.slatwallPathBuilder.buildPartialsPath(this.marketignAutomationPartialsPath + 'campaignactivity.html');
+	    }
+	    SWCampaignActivity.Factory = function () {
+	        var directive = function (marketignAutomationPartialsPath, slatwallPathBuilder) {
+	            return new SWCampaignActivity(marketignAutomationPartialsPath, slatwallPathBuilder);
+	        };
+	        directive.$inject = [
+	            'marketignAutomationPartialsPath',
+	            'slatwallPathBuilder'
+	        ];
+	        return directive;
+	    };
+	    return SWCampaignActivity;
+	}());
+	exports.SWCampaignActivity = SWCampaignActivity;
+
+
+/***/ },
+/* 225 */
+/***/ function(module, exports) {
+
+	/// <reference path='../../../typings/slatwallTypescript.d.ts' />
+	/// <reference path='../../../typings/tsd.d.ts' />
+	"use strict";
+	var SWCampaignActivityStatusController = (function () {
+	    //@ngInject
+	    function SWCampaignActivityStatusController(collectionConfigService) {
+	        this.collectionConfigService = collectionConfigService;
+	        this.init = function () {
+	        };
+	        this.init();
+	    }
+	    return SWCampaignActivityStatusController;
+	}());
+	var SWCampaignActivityStatus = (function () {
+	    //@ngInject
+	    function SWCampaignActivityStatus(marketignAutomationPartialsPath, slatwallPathBuilder) {
+	        this.marketignAutomationPartialsPath = marketignAutomationPartialsPath;
+	        this.slatwallPathBuilder = slatwallPathBuilder;
+	        this.restrict = 'EA';
+	        this.scope = true;
+	        this.bindToController = {};
+	        this.controller = SWCampaignActivityStatusController;
+	        this.controllerAs = "swCampaignStats";
+	        this.link = function (scope, element, attrs) {
+	        };
+	        this.templateUrl = this.slatwallPathBuilder.buildPartialsPath(this.marketignAutomationPartialsPath + 'campaignactivitystatus.html');
+	    }
+	    SWCampaignActivityStatus.Factory = function () {
+	        var directive = function (marketignAutomationPartialsPath, slatwallPathBuilder) {
+	            return new SWCampaignActivityStatus(marketignAutomationPartialsPath, slatwallPathBuilder);
+	        };
+	        directive.$inject = [
+	            'marketignAutomationPartialsPath',
+	            'slatwallPathBuilder'
+	        ];
+	        return directive;
+	    };
+	    return SWCampaignActivityStatus;
+	}());
+	exports.SWCampaignActivityStatus = SWCampaignActivityStatus;
+
+
+/***/ },
+/* 226 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -24888,8 +24998,8 @@
 	var core_module_1 = __webpack_require__(16);
 	//controllers
 	//directives
-	var swaddoptiongroup_1 = __webpack_require__(225);
-	var swoptionsforoptiongroup_1 = __webpack_require__(226);
+	var swaddoptiongroup_1 = __webpack_require__(227);
+	var swoptionsforoptiongroup_1 = __webpack_require__(228);
 	var optiongroupmodule = angular.module('optiongroup', [core_module_1.coremodule.name])
 	    .config([function () {
 	    }]).run([function () {
@@ -24901,7 +25011,7 @@
 
 
 /***/ },
-/* 225 */
+/* 227 */
 /***/ function(module, exports) {
 
 	/// <reference path='../../../typings/slatwallTypescript.d.ts' />
@@ -25070,7 +25180,7 @@
 
 
 /***/ },
-/* 226 */
+/* 228 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -25143,7 +25253,7 @@
 
 
 /***/ },
-/* 227 */
+/* 229 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -25151,12 +25261,12 @@
 	/// <reference path="../../typings/slatwallTypescript.d.ts" />
 	var core_module_1 = __webpack_require__(16);
 	//directives
-	var swchildorderitem_1 = __webpack_require__(228);
-	var sworderitem_1 = __webpack_require__(229);
-	var swoishippinglabelstamp_1 = __webpack_require__(230);
-	var sworderitemdetailstamp_1 = __webpack_require__(231);
-	var sworderitems_1 = __webpack_require__(232);
-	var swresizedimage_1 = __webpack_require__(233);
+	var swchildorderitem_1 = __webpack_require__(230);
+	var sworderitem_1 = __webpack_require__(231);
+	var swoishippinglabelstamp_1 = __webpack_require__(232);
+	var sworderitemdetailstamp_1 = __webpack_require__(233);
+	var sworderitems_1 = __webpack_require__(234);
+	var swresizedimage_1 = __webpack_require__(235);
 	var orderitemmodule = angular.module('hibachi.orderitem', [core_module_1.coremodule.name])
 	    .run([function () {
 	    }])
@@ -25171,7 +25281,7 @@
 
 
 /***/ },
-/* 228 */
+/* 230 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -25462,7 +25572,7 @@
 
 
 /***/ },
-/* 229 */
+/* 231 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -25885,7 +25995,7 @@
 
 
 /***/ },
-/* 230 */
+/* 232 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -25929,7 +26039,7 @@
 
 
 /***/ },
-/* 231 */
+/* 233 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -26043,7 +26153,7 @@
 
 
 /***/ },
-/* 232 */
+/* 234 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -26200,7 +26310,7 @@
 
 
 /***/ },
-/* 233 */
+/* 235 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -26243,7 +26353,7 @@
 
 
 /***/ },
-/* 234 */
+/* 236 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -26253,7 +26363,7 @@
 	var core_module_1 = __webpack_require__(16);
 	//services
 	//controllers
-	var preprocessproduct_create_1 = __webpack_require__(235);
+	var preprocessproduct_create_1 = __webpack_require__(237);
 	//filters
 	//directives
 	var productmodule = angular.module('hibachi.product', [core_module_1.coremodule.name]).config(function () {
@@ -26264,7 +26374,7 @@
 
 
 /***/ },
-/* 235 */
+/* 237 */
 /***/ function(module, exports) {
 
 	/// <reference path='../../../typings/slatwallTypescript.d.ts' />
@@ -26362,7 +26472,7 @@
 
 
 /***/ },
-/* 236 */
+/* 238 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/// <reference path='../../typings/slatwallTypescript.d.ts' />
@@ -26371,14 +26481,14 @@
 	//modules
 	var core_module_1 = __webpack_require__(16);
 	//services
-	var productbundleservice_1 = __webpack_require__(237);
+	var productbundleservice_1 = __webpack_require__(239);
 	//controllers
-	var create_bundle_controller_1 = __webpack_require__(238);
+	var create_bundle_controller_1 = __webpack_require__(240);
 	//directives
-	var swproductbundlegrouptype_1 = __webpack_require__(239);
-	var swproductbundlegroups_1 = __webpack_require__(240);
-	var swproductbundlegroup_1 = __webpack_require__(241);
-	var swproductbundlecollectionfilteritemtypeahead_1 = __webpack_require__(242);
+	var swproductbundlegrouptype_1 = __webpack_require__(241);
+	var swproductbundlegroups_1 = __webpack_require__(242);
+	var swproductbundlegroup_1 = __webpack_require__(243);
+	var swproductbundlecollectionfilteritemtypeahead_1 = __webpack_require__(244);
 	//filters
 	var productbundlemodule = angular.module('hibachi.productbundle', [core_module_1.coremodule.name]).config(function () {
 	})
@@ -26393,7 +26503,7 @@
 
 
 /***/ },
-/* 237 */
+/* 239 */
 /***/ function(module, exports) {
 
 	/// <reference path='../../../typings/slatwallTypescript.d.ts' />
@@ -26479,7 +26589,7 @@
 
 
 /***/ },
-/* 238 */
+/* 240 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -26552,7 +26662,7 @@
 
 
 /***/ },
-/* 239 */
+/* 241 */
 /***/ function(module, exports) {
 
 	/// <reference path='../../../typings/slatwallTypescript.d.ts' />
@@ -26723,7 +26833,7 @@
 
 
 /***/ },
-/* 240 */
+/* 242 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -26797,7 +26907,7 @@
 
 
 /***/ },
-/* 241 */
+/* 243 */
 /***/ function(module, exports) {
 
 	/// <reference path='../../../typings/slatwallTypescript.d.ts' />
@@ -26990,7 +27100,7 @@
 
 
 /***/ },
-/* 242 */
+/* 244 */
 /***/ function(module, exports) {
 
 	/// <reference path='../../../typings/slatwallTypescript.d.ts' />
@@ -27335,7 +27445,7 @@
 
 
 /***/ },
-/* 243 */
+/* 245 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -27367,7 +27477,7 @@
 
 
 /***/ },
-/* 244 */
+/* 246 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -27426,7 +27536,7 @@
 
 
 /***/ },
-/* 245 */
+/* 247 */
 /***/ function(module, exports) {
 
 	/// <reference path='../../../typings/slatwallTypescript.d.ts' />

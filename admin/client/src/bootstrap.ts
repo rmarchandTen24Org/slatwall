@@ -9,7 +9,7 @@ class bootstrapper extends BaseBootStrapper{
     public myApplication;
     constructor(){
         var angular:any = super(slatwalladminmodule.name);
-        angular.bootstrap()
+        angular.bootstrap();
     }
 
 
