@@ -52,8 +52,9 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 	// ===================== START: Logical Methods ===========================
 
 	public string function mergeCampaignActivitiesCollectionConfig(required string campaignActivityIds) {
-		var campaignActivityIdArray = listToArray (campaignActivityIds);
+		if(!len(campaignActivityIds)) return '';
 
+		var campaignActivityIdArray = listToArray (campaignActivityIds);
 
 		for( currentId in campaignActivityIdArray ){
 			var currentCampaign = this.getCampaign(currentId);
@@ -151,53 +152,67 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 		getService("HibachiTagService").cfsetting(requesttimeout="6000");
 		var emailChanged = isEmailChanged(campaignActivity, data);
 
+		if(structKeyExists(arguments.data,'listIDs')){
+			arguments.data['collectionConfig'] = mergeCampaignActivitiesCollectionConfig(arguments.data.listIDs);
+		}
+
+		//HACK.
+		if(structKeyExists(arguments.data, 'campaign.campaignID')){
+			arguments.data['campaign'] = {
+				'campaignID' =  arguments.data['campaign.campaignID']
+			};
+		}
+
 		arguments.campaignActivity = super.save(arguments.campaignActivity,arguments.data, arguments.context);
 
 		if(arguments.campaignActivity.hasErrors()){
 			return arguments.campaignActivity;
 		}
 
-		isReadyToSend(arguments.campaignActivity);
+		if(isReadyToSend(arguments.campaignActivity)){
+			//Ready to Send
+			arguments.campaignActivity.setCampaignActivityStatus(this.getType('402828c656eafa1d0157108d4739012a'));
+		}else{
+			//Pending
+			arguments.campaignActivity.setCampaignActivityStatus(this.getType('402828c656eafa1d0157108cbb230128'));
+		}
 
+		var emailConfig = {
+			'name' = arguments.campaignActivity.getCampaignActivityName(),
+			'subject' = arguments.campaignActivity.getEmailSubject(),
+			'fromemaillabel' = arguments.campaignActivity.getEmailFromName(),
+			'fromemailaddress' = arguments.campaignActivity.getEmailFromEmail(),
+			'replytoemailaddress' = arguments.campaignActivity.getEmailReplyTo(),
+			'emailStyleID' = arguments.campaignActivity.getEmailStyle(),
+			'htmlContent' = arguments.campaignActivity.getEmailBodyHTML(),
+			'textContent' = (isNull(arguments.campaignActivity.getEmailBodyText())) ? " " : arguments.campaignActivity.getEmailBodyText()
+		};
 
-		if(arguments.context == 'test') {
-
-			var emailConfig = {
-				'name' = arguments.campaignActivity.getCampaignActivityName(),
-				'subject' = arguments.campaignActivity.getEmailSubject(),
-				'fromemaillabel' = arguments.campaignActivity.getEmailFromName(),
-				'fromemailaddress' = arguments.campaignActivity.getEmailFromEmail(),
-				'replytoemailaddress' = arguments.campaignActivity.getEmailReplyTo(),
-				'emailStyleID' = 1,//arguments.campaignActivity.getEmailStyle(),
-				'htmlContent' = arguments.campaignActivity.getEmailBodyHTML(),
-				'textContent' = (isNull(arguments.campaignActivity.getEmailBodyText())) ? " " : arguments.campaignActivity.getEmailBodyText()
-			};
-
-			var emailID = '';
-			var getURLs = false;
+		var emailID = '';
+		var getURLs = false;
 
 			//Create the Email in Send24 or update it if already exists
-			if(isNull(arguments.campaignActivity.getSend24EmailID())) {
-				emailID = getEmailService().createEmail(emailConfig);
-				arguments.campaignActivity.setSend24EmailID(emailID);
-
-				arguments.campaignActivity = this.save(arguments.campaignActivity);
-
-				///save
-				ormFlush();
-				getURLs = true;
-			}else if(emailChanged){
-				getEmailService().updateEmail(arguments.campaignActivity.getSend24EmailID(), emailConfig);
-				getURLs = true;
-			}
-
-			//Get all URLs from Email Body
-			if(getURLs && len(arguments.campaignActivity.getEmailBodyHTML())){
-				//scrapeLinks(arguments.campaignActivity.getCampaignActivityID(), arguments.campaignActivity.getEmailBodyHTML());
-			}
-
-			var broadcastID = getEmailService().sendTestEmail(emailID, arguments.data.testEmail);
+		if(isNull(arguments.campaignActivity.getSend24EmailID())) {
+			emailID = getEmailService().createEmail(emailConfig);
+			arguments.campaignActivity.setSend24EmailID(emailID);
+			arguments.campaignActivity = this.save(arguments.campaignActivity);
+			getURLs = true;
+		}else if(emailChanged){
+			getEmailService().updateEmail(arguments.campaignActivity.getSend24EmailID(), emailConfig);
+			getURLs = true;
 		}
+
+		//Get all URLs from Email Body
+		if(getURLs && len(arguments.campaignActivity.getEmailBodyHTML())){
+			scrapeLinks(arguments.campaignActivity.getCampaignActivityID(), arguments.campaignActivity.getEmailBodyHTML());
+		}
+
+		if(arguments.context == 'test') {
+			getEmailService().sendTestEmail(emailID, arguments.data.testEmail);
+		}
+
+		writeDump(var=arguments.data);
+		writeDump(var=arguments.campaignActivity, top=1); abort;
 		return arguments.campaignActivity;
 
 	}
@@ -210,6 +225,35 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 	// ===================== START: DAO Passthrough ===========================
 
 	// ===================== START: Process Methods ===========================
+
+	public any function processCampaignActivity_sendEmail(required any campaignActivity, required any processObject) {
+		getService("HibachiTagService").cfsetting(requesttimeout="600000");
+
+		// Create new collection, load conllection config
+		var emailRecipientsCollection = getCollectionList('Account');
+		emailRecipientsCollection.setCollectionConfig(campaignActivity.getCollectionConfig());
+
+		//run collection to retrieve accounts
+		var emailRecipients = emailRecipientsCollection.getRecords();
+
+		if(emailRecipientsCollection.getRecordsCount() == 0){
+			return campaignActivity;
+		}
+		//create mailing list
+		var mailingList = getEmailService().createMailingList(campaignActivity.getAcampaignActivityName(), "Generated by Slatwall");
+
+		//Upload Recipients
+		getEmailService().addSubscribers(mailingList, emailRecipients);
+
+		//send email
+
+		var broadcastID = getEmailService().sendEmail(campaignActivity.getSend24EmailID(), mailingList);
+		if(broadcastID){
+			campaignActivity.setBroadcastID(broadcastID);
+			//Snapshot of Recipients.
+		}
+
+	}
 
 	// =====================  END: Process Methods ============================
 

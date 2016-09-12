@@ -35,6 +35,8 @@ class SWCampaignWizardController{
     };
 
     private toggleSelection =(action:any):void=>{
+
+        console.log(action);
        switch (action.selectionid){
            case "previousEmail":
                this.loadPreviousEmail(action.selection);
@@ -79,7 +81,12 @@ class SWCampaignWizardController{
         if(option == '0'){
             this.emailSendDateTime = new Date();
         }
+    };
+
+    public clearListIDs = ():void=>{
+        this.selectionService.clearSelection('lists');
     }
+
 
 
 

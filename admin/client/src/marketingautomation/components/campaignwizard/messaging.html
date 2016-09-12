@@ -10,14 +10,14 @@
             <div class="col-md-12">
 
                 <sw-tab-group>
-                    <sw-tab-content data-name="HTML">
+                    <sw-tab-content data-name="HTML" data-ng-init="emailStyle='1'">
 
                         <div class="row">
                             <div class="col-md-4 s-wys-nav">
 
                                 <div class="s-select-wrapper s-titled-select-wrapper s-template">
                                     <span>Template:</span>
-                                    <select class="form-control input-sm" name="emailStyle">
+                                    <select class="form-control input-sm" data-ng-model="emailStyle" name="emailStyle">
                                         <option value="1">Default</option>
                                     </select>
                                 </div>
@@ -85,14 +85,14 @@
                 </div>
                 <div class="col-md-12">
                     <sw-tab-group >
-                        <sw-tab-content data-name="HTML">
+                        <sw-tab-content data-name="HTML" data-ng-init="emailStyle='1'">
 
                             <div class="row">
                                 <div class="col-md-4 s-wys-nav">
 
                                     <div class="s-select-wrapper s-titled-select-wrapper s-template">
                                         <span>Template:</span>
-                                        <select class="form-control input-sm" name="emailStyle">
+                                        <select class="form-control input-sm" data-ng-model="emailStyle" name="emailStyle">
                                             <option value="1">Default</option>
                                         </select>
                                     </div>

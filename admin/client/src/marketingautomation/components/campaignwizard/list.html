@@ -1,10 +1,34 @@
-<sw-listing-display
-        data-collection="'Campaign'"
-        data-name="lists"
-        data-multiselect-field-name="test"
-        data-multiselect-property-identifier="campaignID">
-    <sw-listing-column data-property-identifier="activeFlag" ></sw-listing-column>
-    <sw-listing-column data-property-identifier="campaignDescription" ></sw-listing-column>
-    <sw-listing-column data-property-identifier="campaignName" ></sw-listing-column>
-</sw-listing-display>
-<input type="hidden" data-ng-model="swCampaignWizard.listIDs" name="listIDs">
+<div class="col-md-12">
+
+    <input type="hidden" data-ng-model="swCampaignWizard.listIDs" name="listIDs">
+
+
+    <div class="form-group s-radio-content">
+        <div class="radio s-vertical">
+            <input type="radio" id="broadcast-schedule-new" data-ng-model="list" data-ng-init="list = '1'" value="1" data-ng-click="swCampaignWizard.clearListIDs()">
+            <label for="broadcast-schedule-new">
+                Original Campaign List
+            </label>
+        </div>
+    </div>
+
+    <span class="form-group s-radio-content">
+        <div class="radio s-vertical">
+            <input type="radio" id="broadcast-schedule-copy" data-ng-model="list" value="0">
+            <label for="broadcast-schedule-copy">
+                Select List(s)
+            </label>
+        </div>
+        <span class="row" data-ng-show="list == '0'">
+            <sw-listing-display
+                    data-collection="'Campaign'"
+                    data-name="lists"
+                    data-multiselect-field-name="test"
+                    data-multiselect-property-identifier="campaignID">
+                <sw-listing-column data-property-identifier="activeFlag" ></sw-listing-column>
+                <sw-listing-column data-property-identifier="campaignDescription" ></sw-listing-column>
+                <sw-listing-column data-property-identifier="campaignName" ></sw-listing-column>
+            </sw-listing-display>
+        </span>
+    </span>
+</div>

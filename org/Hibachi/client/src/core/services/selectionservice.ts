@@ -83,7 +83,7 @@ class SelectionService extends BaseService{
     };
     clearSelection=(selectionid):void=>{
         this.createSelections(selectionid);
-        this.observerService.notify('swSelectionToggleSelection',{action:'clear'});
+        this.observerService.notify('swSelectionToggleSelection',{action:'clear', selectionid});
         console.info(this._selection[selectionid])
     };
     selectAll=(selectionid):void=>{
