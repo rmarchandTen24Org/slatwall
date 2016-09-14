@@ -59,7 +59,8 @@ class ObserverService extends BaseService{
      * @param {string} id unique id for the object that is listening i.e. namespace
      * @description removes all events for a specific id from the observers object
      */
-    detachById = (id:string):void => {
+    detachById = (id?:string):void => {
+        if(angular.isUndefined(id)) return;
         id = id.toLowerCase();
         for(var event in this.observers) {
             this.detachByEventAndId(event, id);

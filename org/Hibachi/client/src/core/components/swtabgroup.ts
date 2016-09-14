@@ -21,6 +21,7 @@ class SWTabGroupController {
         }
         this.switchTabEventName = "SwitchTab:" + this.name;
         this.observerService.attach(this.switchTabByID, this.switchTabEventName);
+        this.observerService.attach(this.updateTabIcon,'updateTabIcon'+this.name);
     }
 
     public switchTab = (tabToActivate) => {
@@ -53,6 +54,13 @@ class SWTabGroupController {
             this.switchTab(tabToActivate);
         }
     };
+
+    public updateTabIcon = (tab)=>{
+        var tabToUpdate = this.getTabById(tab.id);
+        if(angular.isDefined(tabToUpdate)){
+            tabToUpdate.icon = tab.icon;
+        }
+    }
 }
 
 class SWTabGroup implements ng.IDirective{

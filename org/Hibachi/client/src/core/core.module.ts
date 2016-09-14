@@ -74,6 +74,7 @@ import {SWTooltip} from "./components/swtooltip";
 import {SWRbKey} from "./components/swrbkey";
 import {SWOptions} from "./components/swoptions";
 import {SWSelection} from "./components/swselection";
+import {SWSelect} from "./components/swselect";
 import {SWClickOutside} from "./components/swclickoutside";
 import {SWDirective} from "./components/swdirective";
 import {SWExportAction} from "./components/swexportaction";
@@ -211,6 +212,7 @@ var coremodule = angular.module('hibachi.core',[
 .directive('swRbkey',SWRbKey.Factory())
 .directive('swOptions',SWOptions.Factory())
 .directive('swSelection',SWSelection.Factory())
+.directive('swSelect',SWSelect.Factory())
 .directive('swTabGroup', SWTabGroup.Factory())
 .directive('swTabContent', SWTabContent.Factory())
 .directive('swTabNav', SWTabNav.Factory())

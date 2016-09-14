@@ -1,6 +1,7 @@
 <ul class="nav nav-tabs">
     <li data-ng-repeat="tab in swTabNav.tabs" data-ng-class="{'active' : tab.active}">
         <a href data-ng-click="swTabNav.changeTab(tab.id)">
+            <span data-ng-if="!tab.icon && swTabNav.style == 'wizard'">{{$index}}.</span>
             <span class="s-icon" data-ng-if="tab.icon"><i class="fa" data-ng-class="tab.icon"></i>
             </span> {{tab.name}}<span data-ng-show="tab.count"> ({{tab.count}})</span>
         </a>

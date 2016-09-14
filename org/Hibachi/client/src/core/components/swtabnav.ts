@@ -11,6 +11,9 @@ class SWTabNavController {
 
     public init = ():void => {
         this.observerService.attach(this.addTab,'addTab'+this.for);
+        this.observerService.attach(this.updateTab,'updateTab'+this.for);
+        this.observerService.attach(this.updateTabIcon,'updateTabIcon'+this.for);
+
     };
 
     private addTab =(tab):void=>{
@@ -19,7 +22,26 @@ class SWTabNavController {
 
     public changeTab=(id):void=>{
         this.observerService.notify('SwitchTab:'+this.for, id);
-    }
+    };
+
+    public updateTab=(tab: any):void=>{
+        for(var i = 0; i <= this.tabs.length; i++){
+            if(this.tabs[i].name == tab.name){
+                this.tabs[i] = tab;
+                break;
+            }
+        }
+    };
+
+    public updateTabIcon=(tab: any):void=>{
+        if(angular.isUndefined(tab.id) || this.tabs.length == 0) return;
+        for(var i = 0; i < this.tabs.length; i++){
+            if(this.tabs[i].id == tab.id){
+                this.tabs[i].icon = tab.icon;
+                break;
+            }
+        }
+    };
 
 }
 
@@ -31,7 +53,8 @@ class SWTabNav implements ng.IDirective{
     public scope = {};
 
     public bindToController = {
-        "for" : "@"
+        "for" : "@",
+        "style":"@?"
     };
     public controller=SWTabNavController;
     public controllerAs="swTabNav";

@@ -3626,7 +3626,8 @@
 	var swtooltip_1 = __webpack_require__(98);
 	var swrbkey_1 = __webpack_require__(99);
 	var swoptions_1 = __webpack_require__(100);
-	var swselection_1 = __webpack_require__(101);
+	var swselection_1 = __webpack_require__(248);
+	var swselect_1 = __webpack_require__(101);
 	var swclickoutside_1 = __webpack_require__(102);
 	var swdirective_1 = __webpack_require__(103);
 	var swexportaction_1 = __webpack_require__(104);
@@ -3755,6 +3756,7 @@
 	    .directive('swRbkey', swrbkey_1.SWRbKey.Factory())
 	    .directive('swOptions', swoptions_1.SWOptions.Factory())
 	    .directive('swSelection', swselection_1.SWSelection.Factory())
+	    .directive('swSelect', swselect_1.SWSelect.Factory())
 	    .directive('swTabGroup', swtabgroup_1.SWTabGroup.Factory())
 	    .directive('swTabContent', swtabcontent_1.SWTabContent.Factory())
 	    .directive('swTabNav', swtabnav_1.SWTabNav.Factory())
@@ -5664,6 +5666,8 @@
 	         * @description removes all events for a specific id from the observers object
 	         */
 	        this.detachById = function (id) {
+	            if (angular.isUndefined(id))
+	                return;
 	            id = id.toLowerCase();
 	            for (var event in _this.observers) {
 	                _this.detachByEventAndId(event, id);
@@ -11649,6 +11653,12 @@
 	                _this.switchTab(tabToActivate);
 	            }
 	        };
+	        this.updateTabIcon = function (tab) {
+	            var tabToUpdate = _this.getTabById(tab.id);
+	            if (angular.isDefined(tabToUpdate)) {
+	                tabToUpdate.icon = tab.icon;
+	            }
+	        };
 	        if (angular.isUndefined(this.showTabs)) {
 	            this.showTabs = true;
 	        }
@@ -11660,6 +11670,7 @@
 	        }
 	        this.switchTabEventName = "SwitchTab:" + this.name;
 	        this.observerService.attach(this.switchTabByID, this.switchTabEventName);
+	        this.observerService.attach(this.updateTabIcon, 'updateTabIcon' + this.name);
 	    }
 	    return SWTabGroupController;
 	}());
@@ -11787,12 +11798,32 @@
 	        this.tabs = [];
 	        this.init = function () {
 	            _this.observerService.attach(_this.addTab, 'addTab' + _this.for);
+	            _this.observerService.attach(_this.updateTab, 'updateTab' + _this.for);
+	            _this.observerService.attach(_this.updateTabIcon, 'updateTabIcon' + _this.for);
 	        };
 	        this.addTab = function (tab) {
 	            _this.tabs.push(tab);
 	        };
 	        this.changeTab = function (id) {
 	            _this.observerService.notify('SwitchTab:' + _this.for, id);
+	        };
+	        this.updateTab = function (tab) {
+	            for (var i = 0; i <= _this.tabs.length; i++) {
+	                if (_this.tabs[i].name == tab.name) {
+	                    _this.tabs[i] = tab;
+	                    break;
+	                }
+	            }
+	        };
+	        this.updateTabIcon = function (tab) {
+	            if (angular.isUndefined(tab.id) || _this.tabs.length == 0)
+	                return;
+	            for (var i = 0; i < _this.tabs.length; i++) {
+	                if (_this.tabs[i].id == tab.id) {
+	                    _this.tabs[i].icon = tab.icon;
+	                    break;
+	                }
+	            }
 	        };
 	        this.init();
 	    }
@@ -11807,7 +11838,8 @@
 	        this.restrict = "EA";
 	        this.scope = {};
 	        this.bindToController = {
-	            "for": "@"
+	            "for": "@",
+	            "style": "@?"
 	        };
 	        this.controller = SWTabNavController;
 	        this.controllerAs = "swTabNav";
@@ -12371,80 +12403,86 @@
 	/// <reference path='../../../typings/hibachiTypescript.d.ts' />
 	/// <reference path='../../../typings/tsd.d.ts' />
 	"use strict";
-	var SWSelectionController = (function () {
+	var SWSelectController = (function () {
 	    //@ngInject
-	    function SWSelectionController(selectionService, observerService) {
+	    function SWSelectController($scope, $hibachi, observerService, collectionConfigService) {
 	        var _this = this;
-	        this.selectionService = selectionService;
+	        this.$scope = $scope;
+	        this.$hibachi = $hibachi;
 	        this.observerService = observerService;
-	        this.updateSelectValue = function (res) {
-	            if (res.action == 'clear') {
-	                _this.toggleValue = false;
-	            }
-	            else if (res.action == 'selectAll') {
-	                _this.toggleValue = true;
-	            }
-	            else if (res.selection == _this.selection) {
-	                _this.toggleValue = (res.action == 'check');
-	            }
-	        };
-	        this.toggleSelection = function (toggleValue, selectionid, selection) {
-	            if (_this.isRadio) {
-	                _this.selectionService.radioSelection(selectionid, selection);
-	                _this.toggleValue = toggleValue;
+	        this.collectionConfigService = collectionConfigService;
+	        this.init = function () {
+	            if (angular.isString(_this.collection)) {
+	                _this.collectionObject = _this.collection;
 	            }
 	            else {
-	                if (toggleValue) {
-	                    _this.selectionService.addSelection(selectionid, selection);
-	                }
-	                else {
-	                    _this.selectionService.removeSelection(selectionid, selection);
-	                }
+	                _this.collectionObject = _this.collection.baseEntityName;
 	            }
+	            _this.selectCollectionConfig = _this.collectionConfigService.newCollectionConfig(_this.collectionObject);
+	            if (angular.isUndefined(_this.id)) {
+	                //this.id = $hibachi.getPrimaryIDPropertyNameByEntityName(this.objectName); // Not Working!!!
+	                _this.exampleEntity = _this.$hibachi.newEntity(_this.collectionObject);
+	                _this.id = _this.exampleEntity.$$getIDName();
+	            }
+	            if (angular.isUndefined(_this.value)) {
+	                _this.value = _this.collectionObject.charAt(0).toLowerCase() + _this.collectionObject.slice(1) + 'Name';
+	            }
+	            if (!angular.isString(_this.collection)) {
+	                _this.selectCollectionConfig.loadJson(_this.collection);
+	            }
+	            if (angular.isDefined(_this.selected)) {
+	                _this.selectedOption = {};
+	                _this.selectedOption[_this.id] = _this.selected;
+	            }
+	            _this.selectCollectionConfig.addDisplayProperty(_this.id + ',' + _this.value);
+	            _this.selectCollectionConfig.setAllRecords(true);
+	            _this.selectCollectionConfig.getEntity().then(function (res) {
+	                _this.options = res.records;
+	            });
 	        };
-	        if (angular.isUndefined(this.name)) {
-	            this.name = 'selection';
-	        }
-	        if (selectionService.isAllSelected(this.selectionid)) {
-	            this.toggleValue = !selectionService.hasSelection(this.selectionid, this.selection);
-	        }
-	        else {
-	            this.toggleValue = selectionService.hasSelection(this.selectionid, this.selection);
-	        }
-	        //attach observer so we know when a selection occurs
-	        observerService.attach(this.updateSelectValue, 'swSelectionToggleSelection');
+	        this.selectOption = function () {
+	            console.log('HERE', 'optionChanged' + _this.collectionObject);
+	            _this.observerService.notify('optionChanged' + _this.collectionObject, _this.selectedOption);
+	        };
+	        this.init();
 	    }
-	    return SWSelectionController;
+	    return SWSelectController;
 	}());
-	var SWSelection = (function () {
-	    function SWSelection(collectionPartialsPath, hibachiPathBuilder) {
-	        this.collectionPartialsPath = collectionPartialsPath;
+	var SWSelect = (function () {
+	    //@ngInject
+	    function SWSelect(corePartialsPath, hibachiPathBuilder) {
+	        this.corePartialsPath = corePartialsPath;
 	        this.hibachiPathBuilder = hibachiPathBuilder;
-	        this.restrict = 'E';
-	        this.scope = {};
+	        this.restrict = 'EA';
+	        this.scope = true;
 	        this.bindToController = {
-	            selection: "=",
-	            selectionid: "@",
-	            id: "=",
-	            isRadio: "=",
-	            name: "@",
-	            disabled: "="
+	            collection: "=",
+	            id: "@?",
+	            value: "@?",
+	            selected: "@?"
 	        };
-	        this.controller = SWSelectionController;
-	        this.controllerAs = 'swSelection';
-	        this.templateUrl = this.hibachiPathBuilder.buildPartialsPath(this.collectionPartialsPath) + "selection.html";
+	        this.controller = SWSelectController;
+	        this.controllerAs = "swSelect";
+	        this.link = function (scope, element, attrs) {
+	        };
+	        this.corePartialsPath = corePartialsPath;
+	        this.hibachiPathBuilder = hibachiPathBuilder;
+	        this.templateUrl = this.hibachiPathBuilder.buildPartialsPath(this.corePartialsPath + 'select.html');
 	    }
-	    SWSelection.Factory = function () {
+	    SWSelect.Factory = function () {
 	        var directive = function (corePartialsPath, hibachiPathBuilder) {
-	            return new SWSelection(corePartialsPath, hibachiPathBuilder);
+	            return new SWSelect(corePartialsPath, hibachiPathBuilder);
 	        };
-	        directive.$inject = ['corePartialsPath', 'hibachiPathBuilder'];
+	        directive.$inject = [
+	            'corePartialsPath',
+	            'hibachiPathBuilder'
+	        ];
 	        return directive;
 	    };
-	    SWSelection.$inject = ['corePartialsPath', 'hibachiPathBuilder'];
-	    return SWSelection;
+	    SWSelect.$inject = ['corePartialsPath', 'hibachiPathBuilder'];
+	    return SWSelect;
 	}());
-	exports.SWSelection = SWSelection;
+	exports.SWSelect = SWSelect;
 
 
 /***/ },
@@ -24618,7 +24656,7 @@
 	"use strict";
 	var SWCampaignWizardController = (function () {
 	    //@ngInject
-	    function SWCampaignWizardController(collectionConfigService, observerService, $hibachi, selectionService, utilityService, $scope) {
+	    function SWCampaignWizardController(collectionConfigService, observerService, $hibachi, selectionService, utilityService, $scope, marketignAutomationPartialsPath, slatwallPathBuilder) {
 	        var _this = this;
 	        this.collectionConfigService = collectionConfigService;
 	        this.observerService = observerService;
@@ -24626,16 +24664,59 @@
 	        this.selectionService = selectionService;
 	        this.utilityService = utilityService;
 	        this.$scope = $scope;
+	        this.marketignAutomationPartialsPath = marketignAutomationPartialsPath;
+	        this.slatwallPathBuilder = slatwallPathBuilder;
+	        this.ui = {};
+	        this.getTemplateUrl = function () {
+	            var template = 'campaignwizard.html';
+	            if (_this.isCampaignActivity()) {
+	                template = 'campaignactivitywizard.html';
+	            }
+	            return _this.slatwallPathBuilder.buildPartialsPath(_this.marketignAutomationPartialsPath + template);
+	        };
+	        this.isValid = function (variable) {
+	            return angular.isDefined(variable) && variable.length > 0;
+	        };
+	        this.updateTabs = function (data) {
+	            if (_this.isValid(data.emailBodyHTML) && _this.isValid(data.emailBodyText)) {
+	                _this.observerService.notify('updateTabIconcampaign-tabs', { id: 'messaging', icon: 'fa-check' });
+	            }
+	            if (_this.isValid(data.emailFromEmail) && _this.isValid(data.emailFromName) && _this.isValid(data.emailReplyTo) && _this.isValid(data.emailSubject)) {
+	                _this.observerService.notify('updateTabIconcampaign-tabs', { id: 'email', icon: 'fa-check' });
+	            }
+	            _this.observerService.notify('updateTabIconcampaign-tabs', { id: 'lists', icon: 'fa-check' });
+	        };
+	        this.changeCampaignActivity = function (data) {
+	            window.location.replace('/default.cfm?slatAction=entity.detailCampaignActivity&campaignActivityID=' + data.campaignActivityID);
+	        };
 	        this.init = function () {
 	            _this.saveObserverID = _this.utilityService.createID();
 	            _this.emailCopied = false;
 	            _this.observerService.attach(_this.toggleSelection, 'swSelectionToggleSelection');
 	            _this.observerService.attach(_this.saveCampaignActivity, 'saveNewCampaignActivity', _this.saveObserverID);
-	            _this.newCampaignActivity = _this.$hibachi.newCampaignActivity();
+	            _this.observerService.attach(_this.scheduleSelected, 'scheduleSelected');
+	            if (_this.isCampaignActivity()) {
+	                var params = _this.utilityService.getQueryParamsFromUrl(self.location.href);
+	                var test = _this.$hibachi.getCampaignActivity(params.campaignActivityID);
+	                _this.newCampaignActivity = test['value'];
+	                test['promise'].then(function (data) {
+	                    _this.updateTabs(data);
+	                });
+	                _this.observerService.attach(_this.changeCampaignActivity, 'optionChangedCampaignActivity');
+	            }
+	            else {
+	                _this.newCampaignActivity = _this.$hibachi.newCampaignActivity();
+	            }
 	            console.log(_this.newCampaignActivity);
 	            _this.$scope.$on("$destroy", function () {
 	                _this.observerService.detachById(_this.saveObserverID);
 	            });
+	        };
+	        this.scheduleSelected = function (schedule) {
+	            console.log('abigos', schedule);
+	        };
+	        this.isCampaignActivity = function () {
+	            return /entity\.(detail|edit)CampaignActivity/.test(self.location.href);
 	        };
 	        this.toggleSelection = function (action) {
 	            console.log(action);
@@ -24687,10 +24768,7 @@
 	    return SWCampaignWizardController;
 	}());
 	var SWCampaignWizard = (function () {
-	    //@ngInject
-	    function SWCampaignWizard(marketignAutomationPartialsPath, slatwallPathBuilder) {
-	        this.marketignAutomationPartialsPath = marketignAutomationPartialsPath;
-	        this.slatwallPathBuilder = slatwallPathBuilder;
+	    function SWCampaignWizard() {
 	        this.restrict = 'EA';
 	        this.scope = true;
 	        this.bindToController = {
@@ -24698,19 +24776,10 @@
 	        };
 	        this.controller = SWCampaignWizardController;
 	        this.controllerAs = "swCampaignWizard";
-	        this.link = function (scope, element, attrs) {
-	        };
-	        this.templateUrl = this.slatwallPathBuilder.buildPartialsPath(this.marketignAutomationPartialsPath + 'campaignwizard.html');
+	        this.template = '<ng-include src="swCampaignWizard.getTemplateUrl()"/>';
 	    }
 	    SWCampaignWizard.Factory = function () {
-	        var directive = function (marketignAutomationPartialsPath, slatwallPathBuilder) {
-	            return new SWCampaignWizard(marketignAutomationPartialsPath, slatwallPathBuilder);
-	        };
-	        directive.$inject = [
-	            'marketignAutomationPartialsPath',
-	            'slatwallPathBuilder'
-	        ];
-	        return directive;
+	        return function () { return new SWCampaignWizard(); };
 	    };
 	    return SWCampaignWizard;
 	}());
@@ -24821,17 +24890,21 @@
 	"use strict";
 	var SWScheduleController = (function () {
 	    //@ngInject
-	    function SWScheduleController(collectionConfigService, $hibachi, formService) {
+	    function SWScheduleController(collectionConfigService, $hibachi, formService, observerService) {
 	        var _this = this;
 	        this.collectionConfigService = collectionConfigService;
 	        this.$hibachi = $hibachi;
 	        this.formService = formService;
+	        this.observerService = observerService;
 	        this.daysOfweek = [];
 	        this.daysOfMonth = [];
 	        this.init = function () {
 	            _this.scheduleCollectionConfig = _this.collectionConfigService.newCollectionConfig("Schedule");
 	            _this.scheduleCollectionConfig.setDisplayProperties("scheduleID,scheduleName,daysOfMonthToRun," +
 	                "daysOfWeekToRun,recuringType,frequencyStartTime,frequencyEndTime,frequencyInterval");
+	        };
+	        this.selectedSchedule = function (data) {
+	            _this.observerService.notify('scheduleSelected', data);
 	        };
 	        this.addNewSchedule = function () {
 	            _this.createSchedule = true;
@@ -24894,20 +24967,13 @@
 	"use strict";
 	var SWCampaignActivityController = (function () {
 	    //@ngInject
-	    function SWCampaignActivityController() {
-	        var _this = this;
-	        this.data = {};
-	        this.editing = false;
-	        this.saving = false;
-	        this.saveCampaign = function () {
-	            _this.saving = true;
-	            _this.campaignObject.$$save().then(function () {
-	                _this.editing = false;
-	            }).finally(function () {
-	                _this.saving = false;
-	            });
-	        };
+	    function SWCampaignActivityController($hibachi, observerService) {
+	        this.$hibachi = $hibachi;
+	        this.observerService = observerService;
+	        this.init();
 	    }
+	    SWCampaignActivityController.prototype.init = function () {
+	    };
 	    return SWCampaignActivityController;
 	}());
 	var SWCampaignActivity = (function () {
@@ -24918,7 +24984,7 @@
 	        this.restrict = 'EA';
 	        this.scope = true;
 	        this.bindToController = {
-	            object: "="
+	            id: "@"
 	        };
 	        this.controller = SWCampaignActivityController;
 	        this.controllerAs = "swCampaignActivity";
@@ -27592,6 +27658,89 @@
 	    return SWCurrency;
 	}());
 	exports.SWCurrency = SWCurrency;
+
+
+/***/ },
+/* 248 */
+/***/ function(module, exports) {
+
+	/// <reference path='../../../typings/hibachiTypescript.d.ts' />
+	/// <reference path='../../../typings/tsd.d.ts' />
+	"use strict";
+	var SWSelectionController = (function () {
+	    //@ngInject
+	    function SWSelectionController(selectionService, observerService) {
+	        var _this = this;
+	        this.selectionService = selectionService;
+	        this.observerService = observerService;
+	        this.updateSelectValue = function (res) {
+	            if (res.action == 'clear') {
+	                _this.toggleValue = false;
+	            }
+	            else if (res.action == 'selectAll') {
+	                _this.toggleValue = true;
+	            }
+	            else if (res.selection == _this.selection) {
+	                _this.toggleValue = (res.action == 'check');
+	            }
+	        };
+	        this.toggleSelection = function (toggleValue, selectionid, selection) {
+	            if (_this.isRadio) {
+	                _this.selectionService.radioSelection(selectionid, selection);
+	                _this.toggleValue = toggleValue;
+	            }
+	            else {
+	                if (toggleValue) {
+	                    _this.selectionService.addSelection(selectionid, selection);
+	                }
+	                else {
+	                    _this.selectionService.removeSelection(selectionid, selection);
+	                }
+	            }
+	        };
+	        if (angular.isUndefined(this.name)) {
+	            this.name = 'selection';
+	        }
+	        if (selectionService.isAllSelected(this.selectionid)) {
+	            this.toggleValue = !selectionService.hasSelection(this.selectionid, this.selection);
+	        }
+	        else {
+	            this.toggleValue = selectionService.hasSelection(this.selectionid, this.selection);
+	        }
+	        //attach observer so we know when a selection occurs
+	        observerService.attach(this.updateSelectValue, 'swSelectionToggleSelection');
+	    }
+	    return SWSelectionController;
+	}());
+	var SWSelection = (function () {
+	    function SWSelection(collectionPartialsPath, hibachiPathBuilder) {
+	        this.collectionPartialsPath = collectionPartialsPath;
+	        this.hibachiPathBuilder = hibachiPathBuilder;
+	        this.restrict = 'E';
+	        this.scope = {};
+	        this.bindToController = {
+	            selection: "=",
+	            selectionid: "@",
+	            id: "=",
+	            isRadio: "=",
+	            name: "@",
+	            disabled: "="
+	        };
+	        this.controller = SWSelectionController;
+	        this.controllerAs = 'swSelection';
+	        this.templateUrl = this.hibachiPathBuilder.buildPartialsPath(this.collectionPartialsPath) + "selection.html";
+	    }
+	    SWSelection.Factory = function () {
+	        var directive = function (corePartialsPath, hibachiPathBuilder) {
+	            return new SWSelection(corePartialsPath, hibachiPathBuilder);
+	        };
+	        directive.$inject = ['corePartialsPath', 'hibachiPathBuilder'];
+	        return directive;
+	    };
+	    SWSelection.$inject = ['corePartialsPath', 'hibachiPathBuilder'];
+	    return SWSelection;
+	}());
+	exports.SWSelection = SWSelection;
 
 
 /***/ }

@@ -7,6 +7,7 @@ class SWCampaignWizardController{
     private listIDs;
     private saveObserverID;
     private emailSendDateTime;
+    public ui = {};
 
     //@ngInject
     constructor(
@@ -15,23 +16,76 @@ class SWCampaignWizardController{
         public $hibachi,
         public selectionService,
         public utilityService,
-        public $scope
+        public $scope,
+        public marketignAutomationPartialsPath,
+        public slatwallPathBuilder
     ){
         this.init();
     }
+
+
+    public getTemplateUrl =()=> {
+        var template = 'campaignwizard.html';
+        if (this.isCampaignActivity()){
+            template = 'campaignactivitywizard.html';
+        }
+        return this.slatwallPathBuilder.buildPartialsPath(this.marketignAutomationPartialsPath+template);
+    };
+
+
+    private isValid =(variable?)=>{
+        return angular.isDefined(variable) && variable.length > 0;
+    };
+
+    private updateTabs=(data:any)=>{
+        if(this.isValid(data.emailBodyHTML) && this.isValid(data.emailBodyText)){
+            this.observerService.notify('updateTabIconcampaign-tabs', {id: 'messaging', icon:'fa-check'});
+        }
+
+        if(this.isValid(data.emailFromEmail) && this.isValid(data.emailFromName) && this.isValid(data.emailReplyTo) && this.isValid(data.emailSubject)){
+            this.observerService.notify('updateTabIconcampaign-tabs', {id: 'email', icon:'fa-check'});
+        }
+        this.observerService.notify('updateTabIconcampaign-tabs', {id: 'lists', icon:'fa-check'});
+    };
+
+    private changeCampaignActivity=(data:any):void=>{
+        window.location.replace('/default.cfm?slatAction=entity.detailCampaignActivity&campaignActivityID='+data.campaignActivityID);
+    };
+
 
     public init =()=> {
         this.saveObserverID= this.utilityService.createID();
         this.emailCopied = false;
         this.observerService.attach(this.toggleSelection,'swSelectionToggleSelection');
         this.observerService.attach(this.saveCampaignActivity, 'saveNewCampaignActivity', this.saveObserverID);
-        this.newCampaignActivity = this.$hibachi.newCampaignActivity();
+        this.observerService.attach(this.scheduleSelected, 'scheduleSelected');
+
+        if(this.isCampaignActivity()) {
+            var params = this.utilityService.getQueryParamsFromUrl(self.location.href);
+            var test = this.$hibachi.getCampaignActivity(params.campaignActivityID);
+            this.newCampaignActivity = test['value'];
+            test['promise'].then((data)=>{
+                this.updateTabs(data);
+            });
+            this.observerService.attach(this.changeCampaignActivity, 'optionChangedCampaignActivity');
+        }else{
+            this.newCampaignActivity = this.$hibachi.newCampaignActivity();
+        }
+
 
         console.log(this.newCampaignActivity);
         this.$scope.$on("$destroy",()=>{
             this.observerService.detachById(this.saveObserverID);
         })
 
+    };
+
+    private scheduleSelected=(schedule:any):void=>{
+        console.log('abigos', schedule);
+    };
+
+    private isCampaignActivity=():boolean=>{
+        return /entity\.(detail|edit)CampaignActivity/.test(self.location.href);
     };
 
     private toggleSelection =(action:any):void=>{
@@ -102,27 +156,10 @@ class SWCampaignWizard implements ng.IDirective{
     public controller=SWCampaignWizardController;
     public controllerAs="swCampaignWizard";
 
-    public templateUrl;
-    //@ngInject
-    constructor(public marketignAutomationPartialsPath, public slatwallPathBuilder){
-        this.templateUrl = this.slatwallPathBuilder.buildPartialsPath(this.marketignAutomationPartialsPath+'campaignwizard.html');
-    }
-    public static Factory(){
-        var directive = (
-            marketignAutomationPartialsPath,
-            slatwallPathBuilder
-        )=>new SWCampaignWizard(
-            marketignAutomationPartialsPath,
-            slatwallPathBuilder
-        );
-        directive.$inject = [
-            'marketignAutomationPartialsPath',
-            'slatwallPathBuilder'
-        ];
-        return directive;
-    }
+    public template = '<ng-include src="swCampaignWizard.getTemplateUrl()"/>';
 
-    public link:ng.IDirectiveLinkFn = (scope: ng.IScope, element: ng.IAugmentedJQuery, attrs:ng.IAttributes) =>{
+    public static Factory(){
+        return ()=>new SWCampaignWizard();
     }
 }
 export{

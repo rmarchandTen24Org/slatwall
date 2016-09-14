@@ -12,7 +12,8 @@ class SWScheduleController{
     constructor(
         public collectionConfigService,
         public $hibachi,
-        public formService
+        public formService,
+        public observerService
     ){
         this.init();
     }
@@ -22,6 +23,10 @@ class SWScheduleController{
         this.scheduleCollectionConfig = this.collectionConfigService.newCollectionConfig("Schedule");
         this.scheduleCollectionConfig.setDisplayProperties("scheduleID,scheduleName,daysOfMonthToRun," +
             "daysOfWeekToRun,recuringType,frequencyStartTime,frequencyEndTime,frequencyInterval");
+    };
+
+    public selectedSchedule=(data:any):void=>{
+        this.observerService.notify('scheduleSelected', data);
     };
 
 

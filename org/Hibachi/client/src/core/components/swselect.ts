@@ -4,7 +4,8 @@
 interface ISWSelectScope {
     collection:string;
     id?:string;
-    value:string;
+    value?:string;
+    selected?:string;
 }
 
 class SWSelectController{
@@ -19,6 +20,7 @@ class SWSelectController{
 
     private selectedOption;
     private options;
+    private selected;
     //@ngInject
     constructor(
         protected $scope: ISWSelectScope,
@@ -53,6 +55,11 @@ class SWSelectController{
             this.selectCollectionConfig.loadJson(this.collection);
         }
 
+        if(angular.isDefined(this.selected)){
+            this.selectedOption = {};
+            this.selectedOption[this.id] = this.selected;
+        }
+
         this.selectCollectionConfig.addDisplayProperty(this.id+','+this.value);
         this.selectCollectionConfig.setAllRecords(true);
 
@@ -62,7 +69,8 @@ class SWSelectController{
     };
 
     public selectOption = ()=>{
-        this.observerService.notify('optionsChanged',this.selectedOption);
+        console.log('HERE', 'optionChanged'+this.collectionObject);
+        this.observerService.notify('optionChanged'+this.collectionObject,this.selectedOption);
     }
 
 
@@ -75,7 +83,8 @@ class SWSelect implements ng.IDirective{
     public bindToController: ISWSelectScope ={
         collection:"=",
         id:"@?",
-        value:"@?"
+        value:"@?",
+        selected:"@?"
     };
     public controller=SWSelectController;
     public controllerAs="swSelect";

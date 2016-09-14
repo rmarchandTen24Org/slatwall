@@ -1,12 +1,12 @@
 <div class="col-md-12">
     <div class="form-group s-radio-content">
         <div class="radio s-vertical">
-            <input type="radio" id="broadcast-schedule-new" data-ng-model="emailType" data-ng-init="emailType = '1'" value="1">
+            <input type="radio" id="broadcast-schedule-new" data-ng-model="swCampaignWizard.ui.emailType" data-ng-init="swCampaignWizard.ui.emailType = '1'" value="1">
             <label for="broadcast-schedule-new">
                 Create New Email
             </label>
         </div>
-        <div class="row" data-ng-if="emailType == '1'">
+        <div class="row" data-ng-if="swCampaignWizard.ui.emailType == '1'">
             <div class="col-md-12">
 
                 <sw-tab-group>
@@ -58,12 +58,12 @@
 
     <span class="form-group s-radio-content">
         <div class="radio s-vertical">
-            <input type="radio" id="broadcast-schedule-copy" data-ng-model="emailType" value="0">
+            <input type="radio" id="broadcast-schedule-copy" data-ng-model="swCampaignWizard.ui.emailType" value="0">
             <label for="broadcast-schedule-copy">
                 Copy Email From Existing Mailings
             </label>
         </div>
-        <span class="row" data-ng-if="emailType == '0'">
+        <span class="row" data-ng-if="swCampaignWizard.ui.emailType == '0'">
             <div class="col-md-12" data-ng-show="!swCampaignWizard.emailCopied">
                 <sw-listing-display
                         data-name="previousEmail"

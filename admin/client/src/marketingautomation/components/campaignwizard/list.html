@@ -2,10 +2,9 @@
 
     <input type="hidden" data-ng-model="swCampaignWizard.listIDs" name="listIDs">
 
-
     <div class="form-group s-radio-content">
         <div class="radio s-vertical">
-            <input type="radio" id="broadcast-schedule-new" data-ng-model="list" data-ng-init="list = '1'" value="1" data-ng-click="swCampaignWizard.clearListIDs()">
+            <input type="radio" id="broadcast-schedule-new" data-ng-model="swCampaignWizard.ui.list" data-ng-init="swCampaignWizard.ui.list = '1'" value="1" data-ng-click="swCampaignWizard.clearListIDs()">
             <label for="broadcast-schedule-new">
                 Original Campaign List
             </label>
@@ -14,12 +13,12 @@
 
     <span class="form-group s-radio-content">
         <div class="radio s-vertical">
-            <input type="radio" id="broadcast-schedule-copy" data-ng-model="list" value="0">
+            <input type="radio" id="broadcast-schedule-copy" data-ng-model="swCampaignWizard.ui.list" value="0">
             <label for="broadcast-schedule-copy">
                 Select List(s)
             </label>
         </div>
-        <span class="row" data-ng-show="list == '0'">
+        <span class="row" data-ng-show="swCampaignWizard.ui.list == '0'">
             <sw-listing-display
                     data-collection="'Campaign'"
                     data-name="lists"

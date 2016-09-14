@@ -2,24 +2,20 @@
 /// <reference path='../../../typings/tsd.d.ts' />
 
 class SWCampaignActivityController{
+    private object;
     private id;
-    private data:any = {};
-    private campaignObject;
-    private editing = false;
-    private saving = false;
-    private newCampaignActivity;
-
     //@ngInject
-    constructor(){}
+    constructor(public $hibachi,
+                public observerService){
+        this.init();
+    }
 
-    public saveCampaign =():void =>{
-        this.saving = true;
-        this.campaignObject.$$save().then(()=>{
-            this.editing = false;
-        }).finally(()=>{
-            this.saving = false;
-        })
-    };
+
+
+    private init():void {
+
+
+    }
 }
 
 class SWCampaignActivity implements ng.IDirective{
@@ -27,7 +23,7 @@ class SWCampaignActivity implements ng.IDirective{
     public restrict:string = 'EA';
     public scope=true;
     public bindToController ={
-        object:"="
+        id:"@"
     };
     public controller=SWCampaignActivityController;
     public controllerAs="swCampaignActivity";

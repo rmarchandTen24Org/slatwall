@@ -1,0 +1,136 @@
+<sw-form data-object="swCampaignWizard.newCampaignActivity" data-name="wizard" data-context="pending" >
+    <sw-tab-group data-show-tabs="false" data-name="campaign-tabs">
+        <sw-tab-content data-name="Dashboard" data-id="dashboard" data-icon="fa-dashboard">
+            <!--- Dashboard content area --->
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="panel info-box panel-white">
+                        <div class="panel-body">
+                            <div class="row">
+                                <div class="row-height">
+                                    <div class="col-md-7 col-height col-middle">
+                                        <div class="s-content-body">
+                                            <h5 class="s-content-title" style="display:inline-block">
+                                                Create Follow Up:
+                                            </h5> You can create new activities based on your current email list or a new emails list.
+                                        </div>
+                                    </div>
+                                    <div class="col-md-5 col-height col-middle">
+                                        <div class="input-group">
+                                            <select class="form-control input-sm">
+                                                <option value="" selected>Same list follow up</option>
+                                                <option value="">Follow up to openers (103)</option>
+                                                <option value="">Non-bounces follow up</option>
+                                                <option value="">Custom follow up</option>
+                                            </select>
+                                                    <span class="input-group-btn">
+                                                        <button class="btn btn-primary s-slide-btn" style="border-radius: 2px;margin-left: 5px;" type="button" data-slideout="j-create-email">Create Follow Up Activity</button>
+                                                    </span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <sw-campaign-stats></sw-campaign-stats>
+
+            <content class="s-body-box">
+                <sw-tab-group>
+                    <sw-tab-content data-name="Sent" data-count="2">
+                        <sw-listing-display
+                                data-collection="'Campaign'"
+                                data-record-detail-action="entity.detailCampaign"
+                                data-record-edit-action="entity.editCampaign"
+                                is-angular-route="false">
+                            <sw-listing-column data-property-identifier="activeFlag" ></sw-listing-column>
+                            <sw-listing-column data-property-identifier="campaignDescription" ></sw-listing-column>
+                            <sw-listing-column data-property-identifier="campaignName" ></sw-listing-column>
+                        </sw-listing-display>
+                    </sw-tab-content>
+                    <sw-tab-content data-name="Clicks" data-count="2">
+                        <sw-listing-display
+                                data-collection="'Campaign'"
+                                data-record-detail-action="entity.detailCampaign"
+                                data-record-edit-action="entity.editCampaign"
+                                is-angular-route="false">
+                            <sw-listing-column data-property-identifier="activeFlag" ></sw-listing-column>
+                            <sw-listing-column data-property-identifier="campaignDescription" ></sw-listing-column>
+                            <sw-listing-column data-property-identifier="campaignName" ></sw-listing-column>
+                        </sw-listing-display>
+                    </sw-tab-content>
+                    <sw-tab-content data-name="Bounces" data-count="2">
+                        <sw-listing-display
+                                data-collection="'Campaign'"
+                                data-record-detail-action="entity.detailCampaign"
+                                data-record-edit-action="entity.editCampaign"
+                                is-angular-route="false">
+                            <sw-listing-column data-property-identifier="activeFlag" ></sw-listing-column>
+                            <sw-listing-column data-property-identifier="campaignDescription" ></sw-listing-column>
+                            <sw-listing-column data-property-identifier="campaignName" ></sw-listing-column>
+                        </sw-listing-display>
+                    </sw-tab-content>
+                    <sw-tab-content data-name="Opens" data-count="2">
+                        <sw-listing-display
+                                data-collection="'Campaign'"
+                                data-record-detail-action="entity.detailCampaign"
+                                data-record-edit-action="entity.editCampaign"
+                                is-angular-route="false">
+                            <sw-listing-column data-property-identifier="activeFlag" ></sw-listing-column>
+                            <sw-listing-column data-property-identifier="campaignDescription" ></sw-listing-column>
+                            <sw-listing-column data-property-identifier="campaignName" ></sw-listing-column>
+                        </sw-listing-display>
+                    </sw-tab-content>
+                    <sw-tab-content data-name="Transactions" data-count="2">
+                        <sw-listing-display
+                                data-collection="'Campaign'"
+                                data-record-detail-action="entity.detailCampaign"
+                                data-record-edit-action="entity.editCampaign"
+                                is-angular-route="false">
+                            <sw-listing-column data-property-identifier="activeFlag" ></sw-listing-column>
+                            <sw-listing-column data-property-identifier="campaignDescription" ></sw-listing-column>
+                            <sw-listing-column data-property-identifier="campaignName" ></sw-listing-column>
+                        </sw-listing-display>
+                    </sw-tab-content>
+                    <sw-tab-content data-name="Sent History" data-count="2">
+                        <sw-listing-display
+                                data-collection="'Campaign'"
+                                data-record-detail-action="entity.detailCampaign"
+                                data-record-edit-action="entity.editCampaign"
+                                is-angular-route="false">
+                            <sw-listing-column data-property-identifier="activeFlag" ></sw-listing-column>
+                            <sw-listing-column data-property-identifier="campaignDescription" ></sw-listing-column>
+                            <sw-listing-column data-property-identifier="campaignName" ></sw-listing-column>
+                        </sw-listing-display>
+                    </sw-tab-content>
+                </sw-tab-group>
+            </content>
+        </sw-tab-content>
+        <sw-tab-content data-name="Messaging" data-id="messaging">
+            <div class="s-header">
+                <h4 class="s-title">Messaging</h4>
+            </div>
+            <sw-campaign-wizard-step data-template="messaging"></sw-campaign-wizard-step>
+        </sw-tab-content>
+        <sw-tab-content data-name="E-Mail Setup" data-id="email">
+            <div class="s-header">
+                <h4 class="s-title">E-Mail Setup</h4>
+            </div>
+            <sw-campaign-wizard-step data-template="email"></sw-campaign-wizard-step>
+        </sw-tab-content>
+        <sw-tab-content data-name="Lists" data-id="lists">
+            <div class="s-header">
+                <h4 class="s-title">Lists</h4>
+            </div>
+            <sw-campaign-wizard-step data-template="list"></sw-campaign-wizard-step>
+        </sw-tab-content>
+        <sw-tab-content data-name="Schedule & Send Ongoing" data-id="schedule">
+            <div class="s-header">
+                <h4 class="s-title">Schedule & Send Ongoing</h4>
+            </div>
+            <sw-campaign-wizard-step data-template="schedule"></sw-campaign-wizard-step>
+        </sw-tab-content>
+    </sw-tab-group>
+</sw-form>
