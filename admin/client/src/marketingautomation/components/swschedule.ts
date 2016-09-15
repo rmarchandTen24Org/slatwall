@@ -37,10 +37,10 @@ class SWScheduleController{
 
     public saveSchedule=():void=> {
         if(this.scheduleEntity.data.recuringType == 'weekly'){
-            //this.scheduleEntity.data.daysOfWeekToRun = this.daysOfweek.filter(Number).join();
+           // this.scheduleEntity.data.daysOfWeekToRun = this.daysOfweek.filter(Number).join();
         }else if(this.scheduleEntity.data.recuringType == 'monthly'){
             var scope;
-            //this.scheduleEntity.data.daysOfMonthToRun = this.daysOfMonth.filter(Number).join();
+          //  this.scheduleEntity.data.daysOfMonthToRun = this.daysOfMonth.filter(Number).join();
         }
         this.scheduleEntity.$$save().then((res) =>{
             scope.schedule.selectedName = angular.copy(scope.scheduleEntity.data.scheduleName);

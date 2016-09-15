@@ -65,7 +65,7 @@ component output="false" accessors="true" extends="Slatwall.org.Hibachi.HibachiC
 	property name="loyaltyService" type="any";
 	property name="typeService" type="any";
 
-	property name="campaignActivityService" type="any";
+	property name="campaignActivityTrackerService" type="any";
 
 	this.publicMethods='';
 
@@ -398,7 +398,9 @@ component output="false" accessors="true" extends="Slatwall.org.Hibachi.HibachiC
 
 	//public void function listCampaign(required struct rc){
 //
-		//writeDump(getCampaignActivityService().mergeCampaignActivitiesCollectionConfig('402828c656224162015632800be2017a,402828c6562241620156328b8623017c')); abort;
+		//var test = getCampaignActivityTrackerService().newCampaignActivityTracker();
+		//getCampaignActivityTrackerService().processCampaignActivityTracker_getBroadcast(test, {});
+//abort;
 	//}
 
 
