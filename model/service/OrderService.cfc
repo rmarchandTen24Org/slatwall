@@ -695,20 +695,29 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 
         // If this was a giftCard payment
         if(!isNull(newOrderPayment.getPaymentMethod()) && newOrderPayment.getPaymentMethod().getPaymentMethodType() eq 'giftCard'){
-            if(!len(arguments.processObject.getCopyFromType()) && !isNull(arguments.processObject.getGiftCard())){
+            if((!len(arguments.processObject.getCopyFromType()) || arguments.processObject.getCopyFromType()=="accountGiftCard")
+            	&& !isNull(arguments.processObject.getGiftCard())
+            ){
 	            var giftCard = arguments.processObject.getGiftCard();
             } else if(len(arguments.processObject.getAccountPaymentMethodID()) && getAccountService().getAccountPaymentMethod(arguments.processObject.getAccountPaymentMethodID()).isGiftCardAccountPaymentMethod()) {
             	var giftCard = getAccountService().getAccountPaymentMethod(arguments.processObject.getAccountPaymentMethodID()).getGiftCard();
             }
   			if(!isNull(giftCard)){
             	newOrderPayment.setGiftCardNumberEncrypted(giftCard.getGiftCardCode());
+            	if( arguments.order.getPaymentAmountDueAfterGiftCards() > giftCard.getBalanceAmount() ){
+					newOrderPayment.setAmount(giftCard.getBalanceAmount());
+				} else {
+					newOrderPayment.setAmount(arguments.order.getPaymentAmountDueAfterGiftCards());
+				}
             } else {
             	newOrderPayment.addError('giftCard', rbKey('validate.giftCardCode.invalid'));
-            }
+  			}
         }
 
 		// We need to call updateOrderAmounts so that if the tax is updated from the billingAddress that change is put in place.
 		arguments.order = this.processOrder( arguments.order, 'updateOrderAmounts');
+
+
 
 		// Save the newOrderPayment
 		newOrderPayment = this.saveOrderPayment( newOrderPayment );
@@ -1180,7 +1189,10 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 		newOrderItem.setPrice( arguments.orderItem.getPrice() );
 		newOrderItem.setSkuPrice( arguments.orderItem.getSkuPrice() );
 		newOrderItem.setCurrencyCode( arguments.orderItem.getCurrencyCode() );
-		newOrderItem.setQuantity(arguments.orderItem.getQuantity() );
+		if(!isNull(arguments.orderItem.getBundleItemQuantity())){
+			newOrderItem.setBundleItemQuantity(arguments.orderItem.getBundleItemQuantity()); 
+		}
+		newOrderItem.setQuantity(arguments.orderItem.getQuantity());
 		newOrderItem.setOrderItemType( arguments.orderItem.getOrderItemType() );
 		newOrderItem.setOrderItemStatusType( arguments.orderItem.getOrderItemStatusType() );
 		newOrderItem.setSku( arguments.orderItem.getSku() );
@@ -1350,6 +1362,18 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 						if(arguments.order.getPaymentAmountDue() > 0 && arguments.order.hasGiftCardOrderPaymentAmount()){
 							arguments.order.addMessage('paymentProcessedMessage', rbKey('entity.order.process.placeOrder.paymentProcessedMessage'));
 						}
+						
+						// Loop over the orderItems looking for any skus that are 'event' skus, and setting their registration value 
+						for(var orderitem in arguments.order.getOrderItems()) {
+							if(orderitem.getSku().getBaseProductType() == "event") {
+								if(!orderItem.getSku().getAvailableForPurchaseFlag() OR !orderItem.getSku().allowWaitlistedRegistrations() ){
+									arguments.order.addError('payment','Event: #orderItem.getSku().getProduct().getProductName()# is unavailable for registration. The registration period has closed.');
+								}
+								if(!orderItem.hasEventRegistration()){
+									arguments.order.addError('orderItem','Error when trying to register for: #orderItem.getSku().getProduct().getProductName()#. Please verify your registration details.');
+								}
+							}
+						}
 
 						// After all of the processing, double check that the order does not have errors.  If one of the payments didn't go through, then an error would have been set on the order.
 						if((!arguments.order.hasErrors() || amountAuthorizeCreditReceive gt 0) && arguments.order.getOrderPaymentAmountNeeded() == 0) {
@@ -1378,7 +1402,7 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 
 							// Update the orderPlaced
 							order.confirmOrderNumberOpenDateCloseDatePaymentAmount();
-							
+
 							// Save the order to the database
 							getHibachiDAO().save( arguments.order );
 
@@ -1387,19 +1411,6 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 
 							// Log that the order was placed
 							logHibachi(message="New Order Processed - Order Number: #order.getOrderNumber()# - Order ID: #order.getOrderID()#", generalLog=true);
-
-							// Loop over the orderItems looking for any skus that are 'event' skus, and setting their registration value
-							/*for(var orderitem in arguments.order.getOrderItems()) {
-								if(orderitem.getSku().getBaseProductType() == "event") {
-									for(var eventRegistration in orderitem.getEventRegistrations()) {
-										if(orderItem.getSku().setting('skuAllowWaitlistingFlag')) {
-											eventRegistration.setEventRegistrationStatusType(getTypeService().getTypeBySystemCode("erstPending"));
-										} else {
-											eventRegistration.setEventRegistrationStatusType(getTypeService().getTypeBySystemCode("erstRegistered"));
-										}
-									}
-								}
-							}*/
 
 							// Look for 'auto' order fulfillments
 							for(var i=1; i<=arrayLen( arguments.order.getOrderFulfillments() ); i++) {
@@ -1690,7 +1701,7 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 			if(arguments.order.getOrderStatusType().getSystemCode() == "ostNotPlaced") {
 				for(var orderItem in arguments.order.getOrderItems()){
 					var skuPrice = val(orderItem.getSkuPrice());
-					var SkuPriceByCurrencyCode = val(orderItem.getSku().getPriceByCurrencyCode(orderItem.getCurrencyCode()));
+					var SkuPriceByCurrencyCode = val(orderItem.getSku().getPriceByCurrencyCode(orderItem.getCurrencyCode(), orderItem.getQuantity()));
  					if(listFindNoCase("oitSale,oitDeposit",orderItem.getOrderItemType().getSystemCode()) && skuPrice != SkuPriceByCurrencyCode){
  						if(!orderItem.getSku().getUserDefinedPriceFlag()) {
  							orderItem.setPrice(SkuPriceByCurrencyCode);
@@ -2061,6 +2072,9 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 			// Set quantity if needed
 			if(isNull(arguments.childOrderItem.getQuantity())) {
 				arguments.childOrderItem.setQuantity( 1 );
+			}	
+			if(isNull(arguments.childOrderItem.getBundleItemQuantity())){
+				arguments.childOrderItem.setBundleItemQuantity(arguments.childOrderItem.getQuantity());
 			}
 			// Set orderFulfillment if needed
 			if(isNull(arguments.childOrderItem.getOrderFulfillment())) {
@@ -2160,10 +2174,10 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 	public any function processOrderItem_updateEventRegistrationQuantity(required any orderItem,struct data={}) {
 
 		// We need LESS event registrations due to order adjustment before order has been placed
-		if( arrayLen(orderItem.getActiveEventRegistrations()) > orderItem.getQuantity() && arguments.orderItem.getOrder().getStatusCode() == "ostNotPlaced" ) {
+		if( orderItem.getActiveEventRegistrations().getRecordsCount() > orderItem.getQuantity() && arguments.orderItem.getOrder().getStatusCode() == "ostNotPlaced" ) {
 
 			var removableEvents = [];
-			var numberToRemove = arrayLen(orderItem.getEventRegistrations()) - orderItem.getQuantity();
+			var numberToRemove = orderItem.getActiveEventRegistrations().getRecordsCount() - orderItem.getQuantity();
 
 			// Create an array of registrations we can safely remove, i.e. not associated with an account
 			for(var eventRegistration in orderItem.getEventRegistrations()) {
@@ -2186,13 +2200,13 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 		}
 
 		// We need less event registration, but couldn't do it... add error
-		if(arrayLen(orderItem.getEventRegistrations()) > orderItem.getQuantity()) {
+		if(orderItem.getActiveEventRegistrations().getRecordsCount() > orderItem.getQuantity()) {
 			orderItem.addError('updateRegistrationQuantity', rbKey('validate.orderItem.quantity.tooManyEventRegistrations'));
 		}
 
 		// We need MORE event registrations due to order adjustment before order has been placed
-		if(arrayLen(orderItem.getEventRegistrations()) < orderItem.getQuantity()) {
-			for(var i=1; i <= orderItem.getQuantity() - arrayLen(orderItem.getEventRegistrations()); i++ ) {
+		if(orderItem.getActiveEventRegistrations().getRecordsCount() < orderItem.getQuantity()) {
+			for(var i=1; i <= orderItem.getQuantity() - orderItem.getActiveEventRegistrations().getRecordsCount(); i++ ) {
 				var eventRegistration = this.newEventRegistration();
 				eventRegistration.setOrderItem(orderitem);
 				eventRegistration.seteventRegistrationStatusType( getTypeService().getTypeBySystemCode("erstNotPlaced") );
@@ -2882,8 +2896,42 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 
 		return false;
 	}
+	public any function deleteShippingAddress( required any shippingAddress ) {
 
+		// Check delete validation
+		if(arguments.shippingAddress.isDeletable()) {
 
+			// Remove the primary fields so that we can delete this entity
+			var order = arguments.shippingAddress.getOrder();
+
+			order.removeShippingAddress( arguments.shippingAddress );
+
+			// Actually delete the entity
+			getHibachiDAO().delete( arguments.shippingAddress );
+
+			return true;
+		}
+
+		return false;
+	}
+	public any function deleteBillingAddress( required any billingAddress ) {
+
+		// Check delete validation
+		if(arguments.billingAddress.isDeletable()) {
+
+			// Remove the primary fields so that we can delete this entity
+			var order = arguments.billingAddress.getOrder();
+
+			order.removeBillingAddress( arguments.billingAddress );
+
+			// Actually delete the entity
+			getHibachiDAO().delete( arguments.billingAddress );
+
+			return true;
+		}
+
+		return false;
+	}
 	// =====================  END: Delete Overrides ===========================
 
 	// ================== START: Private Helper Functions =====================

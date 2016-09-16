@@ -72,19 +72,23 @@ class HibachiService{
 	getJsEntities= () =>{
 		return this._jsEntities;
 	};
-		setJsEntities= (jsEntities) =>{
+	
+	setJsEntities= (jsEntities) =>{
 		this._jsEntities = jsEntities;
 	};
 
 	getJsEntityInstances= () =>{
 		return this._jsEntityInstances;
 	};
-		setJsEntityInstances= (jsEntityInstances) =>{
+	
+	setJsEntityInstances= (jsEntityInstances) =>{
 		this._jsEntityInstances = jsEntityInstances;
 	};
+	
 	getEntityExample = (entityName)=>{
 		return this._jsEntityInstances[entityName];
 	};
+	
 	getEntityMetaData = (entityName)=>{
 		return this._jsEntityInstances[entityName].metaData;
 	};
@@ -94,12 +98,16 @@ class HibachiService{
 	};
 
 	getPrimaryIDPropertyNameByEntityName = (entityName)=>{
-		return this.getEntityMetaData(entityName).$$getIDName();
+		return this.getEntityExample(entityName).$$getIDName();
 	};
 
 	getEntityHasPropertyByEntityName = (entityName,propertyName):boolean=>{
 		return angular.isDefined(this.getEntityMetaData(entityName)[propertyName]);
 	};
+
+	getBaseEntityAliasFromName = (entityName)=>{
+		return '_' + entityName;
+	}
 
 	getPropertyIsObjectByEntityNameAndPropertyIdentifier = (entityName:string,propertyIdentifier:string):boolean=>{
 		var lastEntity = this.getLastEntityNameInPropertyIdentifier(entityName,propertyIdentifier);
@@ -130,7 +138,12 @@ class HibachiService{
 		return entityName;
 
 	};
-
+	//helper method to inflate a new entity with data
+	populateEntity = (entityName, data)=>{ 
+		var newEntity = this.newEntity(entityName); 
+		angular.extend(newEntity.data,data); 
+		return newEntity;
+	}
 	//service method used to transform collection data to collection objects based on a collectionconfig
 	populateCollection = (collectionData,collectionConfig) =>{
 		//create array to hold objects
@@ -194,6 +207,14 @@ class HibachiService{
 		}
 	};
 	newEntity= (entityName) =>{
+		var entityServiceName = entityName.charAt(0).toLowerCase()+entityName.slice(1)+'Service';
+
+
+		if(angular.element(document.body).injector().has(entityServiceName)){
+			var entityService = angular.element(document.body).injector().get(entityServiceName);
+
+			return entityService['new'+entityName]();
+		}
 		return new this._jsEntities[entityName];
 	};
 	getEntityDefinition= (entityName) =>{
@@ -210,6 +231,7 @@ class HibachiService{
 		if(angular.isUndefined(options)){
 			options = {};
 		}
+		console.log("get entity options", options);
 
 		if(angular.isDefined(options.deferKey)) {
 			this.cancelPromise(options.deferKey);
@@ -230,7 +252,7 @@ class HibachiService{
 			params.groupBysConfig = options.groupBysConfig || '';
 			params.isDistinct = options.isDistinct || false;
 			params.propertyIdentifiersList = options.propertyIdentifiersList || '';
-			params.allRecords = options.allRecords || '';
+			params.allRecords = options.allRecords || false;
 			params.defaultColumns = options.defaultColumns || true;
 			params.processContext = options.processContext || '';
 			var urlString = this.getUrlWithActionPrefix()+'api:main.get&entityName='+entityName;
@@ -429,7 +451,7 @@ class HibachiService{
 	};
 	getConfigValue= (key) => {
 		return this._config[key];
-	}; 
+	};
 	setConfigValue= (key,value) => {
 		this._config[key] = value;
 	};

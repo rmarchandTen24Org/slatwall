@@ -149,6 +149,7 @@ component extends="HibachiService" output="false" accessors="true" {
 			emailCCAddress = {fieldType="text"},
 			emailBCCAddress = {fieldType="text"},
 			emailFailToAddress = {fieldType="text", defaultValue="email@youremaildomain.com"},
+			emailReplyToAddress = {fieldType="text"},
 			emailSubject = {fieldType="text", defaultValue="Notification From Slatwall"},
 			emailIMAPServer = {fieldType="text"},
 			emailIMAPServerPort = {fieldType="text"},
@@ -203,7 +204,8 @@ component extends="HibachiService" output="false" accessors="true" {
 			globalClientSecret = {fieldtype="text",defaultValue="#createUUID()#"},
 			globalDisplayIntegrationProcessingErrors = {fieldtype="yesno", defaultValue=1},
 			globalUseExtendedSession = {fieldtype="yesno", defaultValue=0},
-			
+			globalUseShippingIntegrationForTrackingNumberOption = {fieldtype="yesno", defaultValue=0},
+			globalSmartListGetAllRecordsLimit = {fieldType="text",defaultValue=250},
 			// Image
 			imageAltString = {fieldType="text",defaultValue=""},
 			imageMissingImagePath = {fieldType="text",defaultValue="/assets/images/missingimage.jpg"},
@@ -325,7 +327,23 @@ component extends="HibachiService" output="false" accessors="true" {
 		return allSettingMetaData;
 	}
 
+	private string function extractPackageNameBySettingName (required string settingName){
+		var substringInfo = REFIND('\integration(?!.*\\)(.*?)(?=[A-Z])',arguments.settingName,1,true);
+		var substring = Mid(arguments.settingName,substringInfo.pos[1],substringInfo.len[1]);
+		var packageName = Mid(substring,12,len(substring));
+		return packageName;
+	}
+
 	public array function getSettingOptions(required string settingName, any settingObject) {
+		//check if setting is related to an integration
+		if(
+			left(arguments.settingName,11) == 'integration' 
+		){
+			var packageName = extractPackageNameBySettingName(arguments.settingName);
+			var integration = getService('integrationService').getIntegrationByIntegrationPackage(trim(packageName));
+			return integration.getIntegrationCFC().getSettingOptions(arguments.settingName);
+		}
+		
 		switch(arguments.settingName) {
 			case "contentTemplateFile":
 				if(structKeyExists(arguments, "settingObject")) {
@@ -888,7 +906,8 @@ component extends="HibachiService" output="false" accessors="true" {
 
 			getHibachiDAO().flushORMSession();
 
-			getHibachiCacheService().resetCachedKeyByPrefix('setting_#arguments.entity.getSettingName()#');
+			//wait for thread to finish because admin depends on getting the savedID
+			getHibachiCacheService().resetCachedKeyByPrefix('setting_#arguments.entity.getSettingName()#',true);
 
 			// If calculation is needed, then we should do it
 			if(listFindNoCase("skuAllowBackorderFlag,skuAllowPreorderFlag,skuQATSIncludesQNROROFlag,skuQATSIncludesQNROVOFlag,skuQATSIncludesQNROSAFlag,skuTrackInventoryFlag", arguments.entity.getSettingName())) {

@@ -82,7 +82,7 @@ component extends="Slatwall.meta.tests.unit.entity.SlatwallEntityTestBase" {
 		};
 		var product = createPersistedTestEntity('product',productData);
 		var productRating = product.getProductRating();
-		assertEquals(productRating,3.3333);
+		assertEquals(productRating, 3.3333, 'Calculation result is wrong');
 	}
 
 	public void function getUnusedProductOptionsTest_CaseHasUnusedOptions(){

@@ -70,6 +70,7 @@ component displayname="Attribute Value" entityname="SlatwallAttributeValue" tabl
 	property name="accountPayment" cfc="AccountPayment" fieldtype="many-to-one" fkcolumn="accountPaymentID";
 	property name="attributeOption" cfc="AttributeOption" fieldtype="many-to-one" fkcolumn="attributeOptionID";
 	property name="brand" cfc="Brand" fieldtype="many-to-one" fkcolumn="brandID";
+	property name="eventRegistration" cfc="EventRegistration" fieldtype="many-to-one" fkcolumn="eventRegistrationID";
 	property name="file" cfc="File" fieldtype="many-to-one" fkcolumn="fileID";
 	property name="image" cfc="Image" fieldtype="many-to-one" fkcolumn="imageID";
 	property name="location" cfc="Location" fieldtype="many-to-one" fkcolumn="locationID";
@@ -85,6 +86,7 @@ component displayname="Attribute Value" entityname="SlatwallAttributeValue" tabl
 	property name="productBundleGroup" cfc="ProductBundleGroup" fieldtype="many-to-one" fkcolumn="productBundleGroupID";
 	property name="productType" cfc="ProductType" fieldtype="many-to-one" fkcolumn="productTypeID";
 	property name="productReview" cfc="ProductReview" fieldtype="many-to-one" fkcolumn="productReviewID";
+	property name="promotion" cfc="Promotion" fieldtype="many-to-one" fkcolumn="promotionID";
 	property name="sku" cfc="Sku" fieldtype="many-to-one" fkcolumn="skuID";
 	property name="site" cfc="Site" fieldtype="many-to-one" fkcolumn="siteID";
 	property name="subscriptionBenefit" cfc="SubscriptionBenefit" fieldtype="many-to-one" fkcolumn="subscriptionBenefitID";
@@ -298,6 +300,24 @@ component displayname="Attribute Value" entityname="SlatwallAttributeValue" tabl
 			arrayDeleteAt(arguments.brand.getAttributeValues(), index);
 		}
 		structDelete(variables, "brand");
+	}
+	
+	// Event Registrationf (many-to-one)
+	public void function setEventRegistration(required any eventRegistration) {
+		variables.eventRegistration = arguments.eventRegistration;
+		if(isNew() or !arguments.eventRegistration.hasAttributeValue( this )) {
+			arrayAppend(arguments.eventRegistration.getAttributeValues(), this);
+		}
+	}
+	public void function removeEventRegistration(any eventRegistration) {
+		if(!structKeyExists(arguments, "eventRegistration")) {
+			arguments.eventRegistration = variables.eventRegistration;
+		}
+		var index = arrayFind(arguments.eventRegistration.getAttributeValues(), this);
+		if(index > 0) {
+			arrayDeleteAt(arguments.eventRegistration.getAttributeValues(), index);
+		}
+		structDelete(variables, "eventRegistration");
 	}
 
 	// File (many-to-one)
@@ -570,6 +590,24 @@ component displayname="Attribute Value" entityname="SlatwallAttributeValue" tabl
 		structDelete(variables, "productReview");
 	}
 
+	// Product Review (many-to-one)
+ 	public void function setPromotion(required any promotion) {
+ 		variables.promotion = arguments.promotion;
+ 		if(isNew() or !arguments.promotion.hasAttributeValue( this )) {
+ 			arrayAppend(arguments.promotion.getAttributeValues(), this);
+ 		}
+ 	}
+ 	public void function removePromotion(any promotion) {
+ 		if(!structKeyExists(arguments, "promotion")) {
+ 			arguments.promotion = variables.promotion;
+ 		}
+ 		var index = arrayFind(arguments.promotion.getAttributeValues(), this);
+ 		if(index > 0) {
+ 			arrayDeleteAt(arguments.promotion.getAttributeValues(), index);
+ 		}
+ 		structDelete(variables, "promotion");
+ 	}
+ 	
 	// Sku (many-to-one)
 	public void function setSku(required any sku) {
 		variables.sku = arguments.sku;

@@ -49,6 +49,40 @@ Notes:
 <cfcomponent accessors="true" extends="HibachiDAO">
 	
 	<cfscript>
+        public any function getChildrenProductTypeIDs(required any productType){
+            return ormExecuteQuery(
+                'Select productTypeID from #getApplicationKey()#ProductType
+                 where productTypeNamePath<>:productTypeNamePath
+                 and productTypeNamePath like :productTypeNamePathLike',
+                 {
+                    productTypeNamePath=productType.getProductTypeNamePath(),
+                    productTypeNamePathLike=productType.getProductTypeNamePath() & '%'
+                 }
+            );
+        }
+
+		public void function updateChildrenProductTypeNamePaths(required array productTypeIDs, required string previousProductTypeNamePath, required string newProductTypeNamePath ){
+			var queryService = new query();
+			arguments.contentIDs = listQualify(arguments.productTypeIDs,"'",",");
+			var sql = "UPDATE SwProductType pt SET productTypeNamePath=REPLACE(pt.productTypeNamePath,'#arguments.previousProductTypeNamePath#','#arguments.newProductTypeNamePath#') Where s.productTypeIDs IN (#arguments.productTypeIDs#) ";
+			queryService.execute(sql=sql);
+		}
+		
+		public void function setSkusAsInactiveByProduct(required any product){
+			setSkusAsInactiveByProductID(arguments.product.getProductID());
+		}
+		
+		public void function setSkusAsInactiveByProductID(required string productID){
+			var updateQuery = new Query();
+			var sql = '
+				UPDATE SwSku s
+				SET s.activeFlag=0,publishedFlag=0
+				WHERE s.productID = :productID
+			';
+			updateQuery.addParam(name="productID",value=arguments.productID,cfsqltype="cf_sql_varchar");
+			updateQuery.execute(sql=sql);
+		}
+		
 		public numeric function getProductRating(required any product){
 			return OrmExecuteQuery('
 				SELECT avg(pr.rating) 

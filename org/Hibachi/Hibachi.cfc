@@ -390,7 +390,7 @@ component extends="FW1.framework" {
 					context.getResponse().setStatus(status, "#getSubsystem(request.context[ getAction() ])#:#hibachiConfig.loginDefaultSection#.#hibachiConfig.loginDefaultItem#");
 					message['message'] = 'timeout';
 				}else if(structKeyExists(authorizationDetails,'invalidToken') && authorizationDetails.invalidToken == true){
-					status = getHibachiScope().getService("hibachiAuthenticationService").getInvalidCredentialsStatusCode();;
+					status = getHibachiScope().getService("hibachiAuthenticationService").getInvalidCredentialsStatusCode();
 					context.getResponse().setStatus(status, "#getSubsystem(request.context[ getAction() ])#:#hibachiConfig.loginDefaultSection#.#hibachiConfig.loginDefaultItem#");
 					message['message'] = 'invalid_token';
 				}
@@ -556,6 +556,12 @@ component extends="FW1.framework" {
                     if(!coreBF.containsBean("hibachiJWTService")) {
                         coreBF.declareBean("hibachiJWTService", "#variables.framework.applicationKey#.org.Hibachi.HibachiJWTService", true);  
                     } 
+                    if(!coreBF.containsBean("hibachiJsonService")){
+						coreBF.declareBean("hibachiJsonService", "#variables.framework.applicationKey#.org.Hibachi.HibachiJsonService",true);
+					}
+					if(!coreBF.containsBean("hibachiEntityQueueService")) {
+						coreBF.declareBean("hibachiEntityQueueService", "#variables.framework.applicationKey#.org.Hibachi.HibachiEntityQueueService", true);	
+					}
 					// If the default transient beans were not found in the model, add a reference to the core one in hibachi
 					if(!coreBF.containsBean("hibachiScope")) {
 						coreBF.declareBean("hibachiScope", "#variables.framework.applicationKey#.org.Hibachi.HibachiScope", false);
@@ -572,6 +578,10 @@ component extends="FW1.framework" {
 					if(!coreBF.containsBean("hibachiJWT")){
 						coreBF.declareBean("hibachiJWT", "#variables.framework.applicationKey#.org.Hibachi.HibachiJWT",false);
 					}
+					if(!coreBF.containsBean("hibachiEntityParser")){
+						coreBF.declareBean("hibachiEntityParser", "#variables.framework.applicationKey#.org.Hibachi.hibachiEntityParser",false);
+					}
+					
 					
 					// Setup the custom bean factory
 					if(directoryExists("#getHibachiScope().getApplicationValue("applicationRootMappingPath")#/custom/model")) {
@@ -608,11 +618,17 @@ component extends="FW1.framework" {
 						setBeanFactory(coreBF);
 					}
 					writeLog(file="#variables.framework.applicationKey#", text="General Log - Bean Factory Set");
-					
 					//========================= END: IOC SETUP ===============================
 					
 					// Call the onFirstRequest() Method for the parent Application.cfc
 					onFirstRequest();
+					
+					//==================== START: EVENT HANDLER SETUP ========================
+					
+					getBeanFactory().getBean('hibachiEventService').registerEventHandlers();
+					
+					
+					//===================== END: EVENT HANDLER SETUP =========================
 					
 					// ============================ FULL UPDATE =============================== (this is only run when updating, or explicitly calling it by passing update=true as a url key)
 					if(!fileExists(expandPath('/#variables.framework.applicationKey#/custom/config') & '/lastFullUpdate.txt.cfm') || (structKeyExists(url, variables.framework.hibachi.fullUpdateKey) && url[ variables.framework.hibachi.fullUpdateKey ] == variables.framework.hibachi.fullUpdatePassword)){
@@ -623,6 +639,8 @@ component extends="FW1.framework" {
 						
 						//Update custom properties
 						var success = getHibachiScope().getService('updateService').updateEntitiesWithCustomProperties();
+						
+						getHibachiScope().getService("hibachiEventService").announceEvent(eventName="afterUpdateEntitiesWithCustomProperties");
 						if (success){
 							writeLog(file="Slatwall", text="General Log - Attempting to update entities with custom properties.");
 						}else{
@@ -646,11 +664,11 @@ component extends="FW1.framework" {
 					// Call the onFirstRequestPostUpdate() Method for the parent Application.cfc
 					onFirstRequestPostUpdate();
 					
-					//==================== START: EVENT HANDLER SETUP ========================
+					//==================== START: JSON BUILD SETUP ========================
 					
-					getBeanFactory().getBean('hibachiEventService').registerEventHandlers();
+					getBeanFactory().getBean('hibachiJsonService').createJson();
 					
-					//===================== END: EVENT HANDLER SETUP =========================
+					//===================== END: JSON BUILD SETUP =========================
 					
 					// Application Setup Ended
 					getHibachiScope().setApplicationValue("initialized", true);

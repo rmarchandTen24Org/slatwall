@@ -165,6 +165,6 @@ component extends="Slatwall.meta.tests.unit.SlatwallUnitTestBase" {
 		assert(cachedTime < notCachedTime);
 		
 	}
-}
+} 
 
 
