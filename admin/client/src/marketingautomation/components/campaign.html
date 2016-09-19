@@ -77,7 +77,7 @@
                 <div class="row row s-info-box-wrapper">
                     <div class="row-height">
                         <div class="col-md-5 col-sm-height col-sm-top">
-                            <sw-upcoming-activity data-activity-count="20" data-campaign-id="{{swCampaign.id}}"></sw-upcoming-activity>
+                            <sw-upcoming-activity data-activity-count="swCampaign.activityCount" data-campaign-id="{{swCampaign.id}}"></sw-upcoming-activity>
                         </div>
                         <div class="col-md-7 col-sm-height">
                             <div class="panel info-box panel-white inside inside-full-height">
@@ -105,7 +105,7 @@
                                                     <button class="btn btn-white pull-right" data-ng-click="swCampaign.saveCampaignActivity()">Save</button>
                                                 </sw-modal-header>
                                                 <sw-modal-content>
-                                                    <sw-campaign-wizard data-campaign-id="{{swCampaign.id}}"></sw-campaign-wizard>
+                                                    <sw-campaign-wizard data-campaign="swCampaign.campaignObject"></sw-campaign-wizard>
                                                 </sw-modal-content>
                                             </sw-modal-launcher>
                                         </div>
@@ -120,21 +120,23 @@
 
                 <content class="s-body-box">
                     <sw-tab-group>
-                        <sw-tab-content data-name="Sent History" data-count="2">
+                        <sw-tab-content data-name="Sent History">
                             <sw-listing-display
-                                    data-collection="'Campaign'"
+                                    data-collection="'CampaignActivity'"
                                     data-record-detail-action="entity.detailCampaign"
                                     data-record-edit-action="entity.editCampaign"
-                                    is-angular-route="false">
-                                <sw-listing-column data-property-identifier="activeFlag" ></sw-listing-column>
-                                <sw-listing-column data-property-identifier="campaignDescription" ></sw-listing-column>
-                                <sw-listing-column data-property-identifier="campaignName" ></sw-listing-column>
+                                    data-is-angular-route="false"
+                                    data-expandable="false">
+                                <sw-listing-filter data-property-identifier="campaignActivityStatus.typeName" data-comparison-value="Sent"></sw-listing-filter>
+                                <sw-listing-column data-property-identifier="emailSendDateTime" ></sw-listing-column>
+                                <sw-listing-column data-property-identifier="emailSubject" ></sw-listing-column>
+                                <sw-listing-column data-property-identifier="campaignActivityName" ></sw-listing-column>
                             </sw-listing-display>
                         </sw-tab-content>
                     </sw-tab-group>
                 </content>
             </sw-tab-content>
-            <sw-tab-content data-name="Activities" data-id="activities" data-icon="fa-line-chart" data-count="2">
+            <sw-tab-content data-name="Activities" data-id="activities" data-icon="fa-line-chart">
                 <h4 class="s-title">Activities</h4>
                 <content class="s-body-box">
                     <div class="tab-content">
@@ -142,10 +144,11 @@
                         <sw-listing-display
                                 data-collection="'CampaignActivity'"
                                 data-record-detail-action="entity.detailCampaignActivity"
-                                data-record-edit-action="entity.editCampaignActivity"
                                 data-expandable="false"
                                 is-angular-route="false">
-                            <sw-listing-column data-property-identifier="campaignActivityName" ></sw-listing-column>
+                                <sw-listing-column data-property-identifier="campaignActivityStatus.typeName" ></sw-listing-column>
+                                <sw-listing-column data-property-identifier="emailSubject" ></sw-listing-column>
+                                <sw-listing-column data-property-identifier="campaignActivityName" ></sw-listing-column>
                         </sw-listing-display>
                         <!-- ///Lists Tab -->
                     </div>
@@ -162,6 +165,7 @@
                                 data-record-edit-action="entity.editCampaignActivity"
                                 data-expandable="false"
                                 is-angular-route="false">
+
                             <sw-listing-column data-property-identifier="campaignActivityName" ></sw-listing-column>
                         </sw-listing-display>
                         <!-- ///Lists Tab -->

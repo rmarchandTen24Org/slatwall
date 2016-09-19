@@ -1,4 +1,6 @@
-<div class="col-sm-6" data-ng-init="scheduleOpt = '0'">
+<div class="col-sm-6" data-ng-init="swCampaignWizard.ui.scheduleOpt = '0'">
+    <input type="hidden" data-ng-model="swCampaignWizard.emailSendDateTime" name="emailSendDateTime">
+    <input type="hidden" data-ng-model="swCampaignWizard.scheduleID" name="scheduleID">
     <div class="form-group s-radio-content">
         <div class="radio s-vertical">
             <input type="radio" id="j-immediately" data-ng-model="swCampaignWizard.ui.scheduleOpt" value="0">
@@ -14,7 +16,7 @@
                 Schedule on Specific Date &amp; Time
             </label>
         </div>
-        <div class="row" data-ng-if="scheduleOpt == '1'">
+        <div class="row" data-ng-if="swCampaignWizard.ui.scheduleOpt == '1'">
             <div class="col-md-4">
                 <sw-property-display
                         data-property="emailSendDateTime"
@@ -33,7 +35,7 @@
             </label>
         </div>
         <div class="row" data-ng-if="swCampaignWizard.ui.scheduleOpt == '2'">
-            <sw-schedule data-ng-selectSchedule=""></sw-schedule>
+            <sw-schedule></sw-schedule>
         </div>
     </div>
     <input type="hidden" name="scheduleType" data-ng-mode="swCampaign.ui.scheduleOpt">
@@ -47,4 +49,6 @@
         </div>
         <button type="button" class="btn btn-large btn-block btn-dgrey" data-ng-click="swCampaignWizard.sendTestEmail()">Send Test Email</button>
     </div>
+
+    <!--<sw-schedule-preview data-ng-if="swCampaignWizard.scheduleID" data-schedule="swCampaignWizard.scheduleID"></sw-schedule-preview>-->
 </div>

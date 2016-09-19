@@ -120,7 +120,7 @@ class SWWorkflowTriggers{
 										scope.workflowTriggers = scope.workflow.data.workflowTriggers;
 									}
 
-								angular.forEach(scope.workflowTriggers, function(workflowTrigger,key){
+								angular.forEach(scope.workflowTriggers, function(workflowTrigger:any,key){
 									if(workflowTrigger.data.triggerType === 'Schedule'){
 										workflowTrigger.$$getSchedule();
 										workflowTrigger.$$getScheduleCollection();

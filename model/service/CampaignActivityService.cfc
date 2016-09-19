@@ -113,6 +113,18 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 		return true;
 	}
 
+	private boolean function isEmailReady(required any campaignActivity){
+		var requiredProperties =  ListToArray('campaignActivityDescription,emailSubject,emailFromName,'&
+		'emailFromEmail,emailReplyTo,emailStyle,emailBodyHTML,emailBodyText');
+
+		for (i = 1; i <= ArrayLen(requiredProperties); i++) {
+			if(isNull(arguments.campaignActivity.invokeMethod('get#requiredProperties[i]#'))){
+				return false;
+			}
+		}
+		return true;
+	}
+
 	private boolean function isEmailChanged(required any campaignActivity, required struct data){
 		var properties =  ListToArray('campaignActivityName,emailSubject,emailFromName,'&
 		'emailFromEmail,emailReplyTo,emailStyle,emailBodyHTML,emailBodyText');
@@ -140,7 +152,7 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 			}
 		}
 		if(listLen(urlList)){
-			getCampaignActivityLinkDAO().insertLink(urls=urlList,marketingEmailID=arguments.campaignActivityID);
+			getCampaignActivityLinkDAO().insertLink(urls=urlList,campaignActivityID=arguments.campaignActivityID);
 		}
 	}
 
@@ -189,12 +201,13 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 		var getURLs = false;
 
 			//Create the Email in Send24 or update it if already exists
-		if(isNull(arguments.campaignActivity.getSend24EmailID())) {
+		if(isNull(arguments.campaignActivity.getSend24EmailID()) && isEmailReady(arguments.campaignActivity)) {
 			emailID = getEmailService().createEmail(emailConfig);
 			arguments.campaignActivity.setSend24EmailID(emailID);
 			arguments.campaignActivity = this.save(arguments.campaignActivity);
+			ormFlush();
 			getURLs = true;
-		}else if(emailChanged){
+		}else if(!isNull(arguments.campaignActivity.getSend24EmailID()) && emailChanged){
 			getEmailService().updateEmail(arguments.campaignActivity.getSend24EmailID(), emailConfig);
 			getURLs = true;
 		}
@@ -207,11 +220,7 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 		if(arguments.context == 'test') {
 			getEmailService().sendTestEmail(emailID, arguments.data.testEmail);
 		}
-
-		writeDump(var=arguments.data);
-		writeDump(var=arguments.campaignActivity, top=1); abort;
 		return arguments.campaignActivity;
-
 	}
 
 

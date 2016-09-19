@@ -14,7 +14,7 @@
                         modifiedDateTime
                     )
                 SELECT
-                    REPLACE(newid(),'-','') as campaignActivityAccountID,
+                    #lcase(replace(createUUID(),"-","","all"))# as campaignActivityAccountID,
                     <cfqueryparam cfsqltype="cf_sql_varchar" value="#arguments.campaignActivityID#" /> AS campaignActivityID,
 	                accountID,
 	                getDate() as createdDateTime,

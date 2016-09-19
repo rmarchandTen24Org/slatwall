@@ -6,7 +6,8 @@ class SWUpcomingActivityController{
     private activities;
     //@ngInject
     constructor(
-        protected collectionConfigService
+        protected collectionConfigService,
+        public observerService
     ){
         this.init();
     }
@@ -16,11 +17,18 @@ class SWUpcomingActivityController{
         var collectionConfig = this.collectionConfigService.newCollectionConfig('CampaignActivity');
         collectionConfig.addFilter('campaign.campaignID', this.campaignId);
         collectionConfig.addDisplayProperty('campaignActivityID,campaignActivityName,emailSendDateTime');
+        collectionConfig.setPageShow(5);
 
         collectionConfig.getEntity().then((res:any) =>{
             this.activities = res.pageRecords;
         });
+
     };
+
+    public viewActivities=()=>{
+        console.log('csadasd')
+        this.observerService.notify('SwitchTab:campaign-tabs', 'activities');
+    }
 }
 
 class SWUpcomingActivity implements ng.IDirective{

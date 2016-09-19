@@ -39,7 +39,8 @@ class SWCampaign implements ng.IDirective{
     public restrict:string = 'EA';
     public scope=true;
     public bindToController ={
-        id:"@"
+        id:"@",
+        activityCount:"@"
     };
     public controller=SWCampaignController;
     public controllerAs="swCampaign";

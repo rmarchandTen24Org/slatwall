@@ -8,6 +8,8 @@ class SWCampaignWizardController{
     private saveObserverID;
     private emailSendDateTime;
     public ui = {};
+    private campaign;
+    private scheduleID;
 
     //@ngInject
     constructor(
@@ -70,6 +72,9 @@ class SWCampaignWizardController{
             this.observerService.attach(this.changeCampaignActivity, 'optionChangedCampaignActivity');
         }else{
             this.newCampaignActivity = this.$hibachi.newCampaignActivity();
+            this.newCampaignActivity.emailFromName = this.campaign.defaultFromName;
+            this.newCampaignActivity.emailFromEmail = this.campaign.defaultFromEmail;
+            this.newCampaignActivity.emailReplyTo = this.campaign.defaultReplyTo;
         }
 
 
@@ -81,7 +86,7 @@ class SWCampaignWizardController{
     };
 
     private scheduleSelected=(schedule:any):void=>{
-        console.log('abigos', schedule);
+        this.scheduleID = schedule.scheduleID;
     };
 
     private isCampaignActivity=():boolean=>{
@@ -132,17 +137,35 @@ class SWCampaignWizardController{
     };
 
     public scheduleEmail = (option:string): void =>{
-        if(option == '0'){
-            this.emailSendDateTime = new Date();
+        switch (option){
+            case '0':
+                this.emailSendDateTime = this.cfDate(new Date());
+                this.scheduleID = '';
+                break;
+            case '1':
+                this.scheduleID = '';
+                break;
+            case '2':
+                this.emailSendDateTime = '';
+                break;
         }
+        this.newCampaignActivity.$$save('wizard', 'schedule').then(()=>{
+            console.log('Success');
+            this.newCampaignActivity.emailSendDateTime = this.emailSendDateTime;
+        }, (error)=>{
+            //console.log('VALIDATION', error);
+        });
     };
 
     public clearListIDs = ():void=>{
         this.selectionService.clearSelection('lists');
+    };
+
+    public cfDate = (date):string=>{
+        return date.getFullYear() + '-' + ('00' + (date.getMonth()+1)).slice(-2) + '-' +
+        ('00' + date.getDate()).slice(-2) + ' ' + ('00' + date.getHours()).slice(-2) + ':' +
+        ('00' + date.getMinutes()).slice(-2) + ':' + ('00' + date.getSeconds()).slice(-2);
     }
-
-
-
 
 }
 
@@ -151,7 +174,7 @@ class SWCampaignWizard implements ng.IDirective{
     public restrict:string = 'EA';
     public scope=true;
     public bindToController ={
-        campaignId:"@"
+        campaign:"="
     };
     public controller=SWCampaignWizardController;
     public controllerAs="swCampaignWizard";

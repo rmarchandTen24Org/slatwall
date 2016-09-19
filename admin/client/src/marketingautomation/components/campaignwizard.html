@@ -1,7 +1,6 @@
 <sw-wizard>
     <sw-form data-object="swCampaignWizard.newCampaignActivity" data-name="wizard" data-context="pending" >
-        <input type="hidden" data-ng-model="swCampaignWizard.campaignId" name="campaign.campaignID" />
-
+        <input type="text" data-ng-model="swCampaignWizard.campaign.data.campaignID" name="campaign.campaignID" />
         <sw-wizard-step data-name="Details">
             <sw-campaign-wizard-step data-template="detail"></sw-campaign-wizard-step>
         </sw-wizard-step>
