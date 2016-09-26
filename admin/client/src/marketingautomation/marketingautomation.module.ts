@@ -13,6 +13,8 @@ import {SWUpcomingActivity} from "./components/swupcomingactivity";
 import {SWSchedule} from "./components/swschedule";
 import {SWCampaignActivity} from "./components/swcampaignactivity";
 import {SWCampaignActivityStatus} from "./components/swcampaignactivitystatus";
+import {SWCreateFollowUp} from "./components/swcreatefollowup";
+import {SWCreateCampaignList} from "./components/swcreatecampaignlist";
 
 //models
 
@@ -35,6 +37,8 @@ var marketingautomationmodule = angular.module('marketingautomation',[coremodule
         .directive('swSchedule', SWSchedule.Factory())
         .directive('swCampaignActivity', SWCampaignActivity.Factory())
         .directive('swCampaignActivityStatus', SWCampaignActivityStatus.Factory())
+        .directive('swCreateFollowUp', SWCreateFollowUp.Factory())
+        .directive('swCreateCampaignList', SWCreateCampaignList.Factory())
     ;
 export{
     marketingautomationmodule

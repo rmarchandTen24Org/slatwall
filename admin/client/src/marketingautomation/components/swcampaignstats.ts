@@ -2,6 +2,8 @@
 /// <reference path='../../../typings/tsd.d.ts' />
 
 class SWCampaignStatsController{
+    private campaignId;
+    private totalSent;
 
     //@ngInject
     constructor(
@@ -11,6 +13,15 @@ class SWCampaignStatsController{
     }
 
     public init =()=> {
+        var collectionConfig = this.collectionConfigService.newCollectionConfig('CampaignActivityAccount');
+        collectionConfig.addFilter('campaignActivity.campaign.campaignID', this.campaignId);
+        collectionConfig.addDisplayProperty('campaignActivityAccountID');
+        //collectionConfig.addDisplayAggregate('campaignActivity.totalEmailOpen', 'SUM');
+
+        collectionConfig.getEntity().then((res:any) =>{
+            console.log('RES', res);
+            this.totalSent = res.recordsCount;
+        });
 
     };
 }

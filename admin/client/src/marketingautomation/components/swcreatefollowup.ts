@@ -1,7 +1,9 @@
 /// <reference path='../../../typings/slatwallTypescript.d.ts' />
 /// <reference path='../../../typings/tsd.d.ts' />
 
-class SWCampaignActivityStatusController{
+class SWCreateFollowupController{
+    private campaignId;
+    private totalSent;
 
     //@ngInject
     constructor(
@@ -11,30 +13,40 @@ class SWCampaignActivityStatusController{
     }
 
     public init =()=> {
+        var collectionConfig = this.collectionConfigService.newCollectionConfig('CampaignActivityAccount');
+        collectionConfig.addFilter('campaignActivity.campaign.campaignID', this.campaignId);
+        collectionConfig.addDisplayProperty('campaignActivityAccountID');
+        //collectionConfig.addDisplayAggregate('campaignActivity.totalEmailOpen', 'SUM');
+
+        collectionConfig.getEntity().then((res:any) =>{
+            console.log('RES', res);
+            this.totalSent = res.recordsCount;
+        });
 
     };
 }
 
-class SWCampaignActivityStatus implements ng.IDirective{
+class SWCreateFollowUp implements ng.IDirective{
 
     public restrict:string = 'EA';
     public scope=true;
     public bindToController ={
-        status : "="
+        activityCount:"=",
+        campaignId:"@"
     };
-    public controller=SWCampaignActivityStatusController;
-    public controllerAs="swCampaignActivityStatus";
+    public controller=SWCreateFollowupController;
+    public controllerAs="swCreateFollowUp";
 
     public templateUrl;
     //@ngInject
     constructor(public marketignAutomationPartialsPath, public slatwallPathBuilder){
-        this.templateUrl = this.slatwallPathBuilder.buildPartialsPath(this.marketignAutomationPartialsPath+'campaignactivitystatus.html');
+        this.templateUrl = this.slatwallPathBuilder.buildPartialsPath(this.marketignAutomationPartialsPath+'createfollowup.html');
     }
     public static Factory(){
         var directive = (
             marketignAutomationPartialsPath,
             slatwallPathBuilder
-        )=>new SWCampaignActivityStatus(
+        )=>new SWCreateFollowUp(
             marketignAutomationPartialsPath,
             slatwallPathBuilder
         );
@@ -49,5 +61,5 @@ class SWCampaignActivityStatus implements ng.IDirective{
     }
 }
 export{
-    SWCampaignActivityStatus
+    SWCreateFollowUp
 }

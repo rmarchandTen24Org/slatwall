@@ -179,8 +179,13 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 		}
 
 		if(isReadyToSend(arguments.campaignActivity)){
-			//Ready to Send
-			arguments.campaignActivity.setCampaignActivityStatus(this.getType('402828c656eafa1d0157108d4739012a'));
+			if((context == "schedule" || arguments.campaignActivity.getCampaignActivityStatus().getTypeID() == '402828c656eafa1d01574400d4920249')&& structKeyExists(arguments.data, "emailSendDateTime")){
+				//Scheduled
+				arguments.campaignActivity.setCampaignActivityStatus(this.getType('402828c656eafa1d01574400d4920249'));
+			}else{
+				//Ready to Send
+				arguments.campaignActivity.setCampaignActivityStatus(this.getType('402828c656eafa1d0157108d4739012a'));
+			}
 		}else{
 			//Pending
 			arguments.campaignActivity.setCampaignActivityStatus(this.getType('402828c656eafa1d0157108cbb230128'));

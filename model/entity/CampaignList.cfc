@@ -46,24 +46,21 @@
 Notes:
 
 */
-component displayname="Campaign" entityname="SlatwallCampaign" table="SwCampaign" persistent="true" accessors="true" extends="HibachiEntity" cacheuse="transactional" hb_permission="this" hb_serviceName="campaignService" {
+component displayname="CampaignList" entityname="SlatwallCampaignList" table="SwCampaignList" persistent="true" accessors="true" extends="HibachiEntity" cacheuse="transactional" hb_permission="this"{
 
 	// Persistent Properties
-	property name="campaignID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
-	property name="campaignName" ormtype="string";
-	property name="campaignDescription" ormtype="string" length="4000" hb_formFieldType="textarea";
+	property name="campaignListID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
+	property name="campaignListName" ormtype="string";
+	property name="campaignListDescription" ormtype="string" length="4000" hb_formFieldType="textarea";
 	property name="collectionConfig" ormtype="string" length="8000" hb_auditable="false" hb_formFieldType="json";
-	property name="activeFlag" ormtype="boolean";
-
-	property name="defaultFromName" ormtype="string";
-	property name="defaultFromEmail" ormtype="string";
-	property name="defaultReplyTo" ormtype="string";
+	property name="global" ormtype="boolean" hb_formatType="yesno";
 
 	// Related Object Properties (many-to-one)
-	property name="campaignList" cfc="CampaignList" fieldtype="many-to-one" fkcolumn="campaignListID";
+
+
+	property name="campaignActivities" singularname="campaignActivity" cfc="CampaignActivity" type="array" fieldtype="one-to-many" fkcolumn="campaignListID" cascade="all-delete-orphan" inverse="true";
 
 	// Related Object Properties (one-to-many)
-	property name="campaignActivities" singularname="campaignActivity" fieldType="one-to-many" type="array" fkColumn="campaignID" cfc="CampaignActivity" inverse="true" cascade="all-delete-orphan";
 
 	// Related Object Properties (many-to-many - owner)
 
@@ -81,21 +78,19 @@ component displayname="Campaign" entityname="SlatwallCampaign" table="SwCampaign
 	// Non-Persistent Properties
 
 
+// ============ START: Non-Persistent Property Methods =================
 
+// ============  END:  Non-Persistent Property Methods =================
 
-	// ============ START: Non-Persistent Property Methods =================
+// ============= START: Bidirectional Helper Methods ===================
 
-	// ============  END:  Non-Persistent Property Methods =================
+// =============  END:  Bidirectional Helper Methods ===================
 
-	// ============= START: Bidirectional Helper Methods ===================
+// ================== START: Overridden Methods ========================
 
-	// =============  END:  Bidirectional Helper Methods ===================
+// ==================  END:  Overridden Methods ========================
 
-	// ================== START: Overridden Methods ========================
+// =================== START: ORM Event Hooks  =========================
 
-	// ==================  END:  Overridden Methods ========================
-
-	// =================== START: ORM Event Hooks  =========================
-
-	// ===================  END:  ORM Event Hooks  =========================
+// ===================  END:  ORM Event Hooks  =========================
 }

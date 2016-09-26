@@ -4,6 +4,11 @@
 class SWCampaignActivityController{
     private object;
     private id;
+    private campaignActivity;
+    private campaignID;
+    private campaign;
+    private saving;
+    private editing;
     //@ngInject
     constructor(public $hibachi,
                 public observerService){
@@ -11,11 +16,22 @@ class SWCampaignActivityController{
     }
 
 
-
     private init():void {
-
-
+        this.campaignActivity = this.$hibachi.getCampaignActivity(this.id)['value'];
     }
+
+    public saveCampaignActivityBasic =():void =>{
+        this.saving = true;
+        this.campaignActivity.$$save().then(()=>{
+            this.editing = false;
+        }).finally(()=>{
+            this.saving = false;
+        })
+    };
+
+    public saveCampaignActivity =():void =>{
+        this.observerService.notify('saveNewCampaignActivity');
+    };
 }
 
 class SWCampaignActivity implements ng.IDirective{
@@ -23,7 +39,9 @@ class SWCampaignActivity implements ng.IDirective{
     public restrict:string = 'EA';
     public scope=true;
     public bindToController ={
-        id:"@"
+        id:"@",
+        campaignID:"@",
+        campaignName:"@"
     };
     public controller=SWCampaignActivityController;
     public controllerAs="swCampaignActivity";

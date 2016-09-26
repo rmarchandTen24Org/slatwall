@@ -6,7 +6,7 @@
                 Activity
             </h1>
             <ul class="list-unstyled list-inline">
-                <li><a href="">Thank You Cleveland </a></li>
+                <li><a ng-href="http://slatwall-feature/?slatAction=entity.detailCampaign&campaignID={{swCampaignActivity.campaignID}}">{{swCampaignActivity.campaignName}}</a></li>
                 <li>
                     <sw-select data-collection="'CampaignActivity'" data-value="campaignActivityName" data-selected="{{swCampaignActivity.id}}"></sw-select>
 
@@ -25,10 +25,10 @@
                         <button class="btn btn-default s-slide-btn"><i class="fa fa-info-circle" aria-hidden="true"></i></button>
                     </sw-modal-button>
                     <sw-modal-header>
-                        <button class="btn btn-success pull-right" data-ng-if="swCampaign.editing" data-ng-click="swCampaign.saveCampaign()" data-ng-disabled="swCampaign.saving">
+                        <button class="btn btn-success pull-right" data-ng-if="swCampaignActivity.editing" data-ng-click="swCampaignActivity.saveCampaignActivityBasic()" data-ng-disabled="swCampaignActivity.saving">
                             Save
                         </button>
-                        <button class="btn btn-primary pull-right" data-ng-if="!swCampaign.editing" data-ng-click="swCampaign.editing = true">
+                        <button class="btn btn-primary pull-right" data-ng-if="!swCampaignActivity.editing" data-ng-click="swCampaignActivity.editing = true">
                             Edit
                         </button>
                     </sw-modal-header>
@@ -37,15 +37,15 @@
                             <div class="s-animated-loader"></div>
                         </div>
                         <div class="s-slide-panel-content">
-                            <sw-form data-object="swCampaign.campaignObject">
+                            <sw-form data-object="swCampaignActivity.campaignActivity">
                                 <sw-property-display
-                                        data-property="campaignName"
-                                        data-editing="swCampaign.editing"
+                                        data-property="campaignActivityName"
+                                        data-editing="swCampaignActivity.editing"
                                         data-editable="true">
                                 </sw-property-display>
                                 <sw-property-display
-                                        data-property="campaignDescription"
-                                        data-editing="swCampaign.editing"
+                                        data-property="campaignActivityDescription"
+                                        data-editing="swCampaignActivity.editing"
                                         data-editable="true">
                                 </sw-property-display>
                             </sw-form>
@@ -65,6 +65,8 @@
                         <sw-timeline data-object="Account" data-id="40282899557d58900155980e1a180333"></sw-timeline>
                     </sw-modal-content>
                 </sw-modal-launcher>
+
+                <button class="btn btn-success s-slide-btn" data-ng-click="swCampaignActivity.saveCampaignActivity()">Save</button>
             </div>
         </div>
     </nav>
@@ -73,7 +75,7 @@
 <div class="row s-split-wrapper">
 
     <div class="col-xs-2 s-slip-nav">
-        <sw-campaign-activity-status></sw-campaign-activity-status>
+        <sw-campaign-activity-status data-status="'pending'"></sw-campaign-activity-status>
 
         <sw-tab-nav data-for="campaign-tabs" data-style="wizard"></sw-tab-nav>
     </div>

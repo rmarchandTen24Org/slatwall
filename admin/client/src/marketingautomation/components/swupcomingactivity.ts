@@ -16,7 +16,11 @@ class SWUpcomingActivityController{
         this.activities=[];
         var collectionConfig = this.collectionConfigService.newCollectionConfig('CampaignActivity');
         collectionConfig.addFilter('campaign.campaignID', this.campaignId);
+        //Scheduled
+        //collectionConfig.addFilter('campaignActivityStatus.typeID', '402828c656eafa1d01574400d4920249');
+
         collectionConfig.addDisplayProperty('campaignActivityID,campaignActivityName,emailSendDateTime');
+        collectionConfig.addOrderBy("emailSendDateTime|DESC");
         collectionConfig.setPageShow(5);
 
         collectionConfig.getEntity().then((res:any) =>{
@@ -26,7 +30,6 @@ class SWUpcomingActivityController{
     };
 
     public viewActivities=()=>{
-        console.log('csadasd')
         this.observerService.notify('SwitchTab:campaign-tabs', 'activities');
     }
 }

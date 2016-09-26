@@ -63,21 +63,44 @@ Notes:
 			</hb:HibachiPropertyList>
 		</hb:HibachiPropertyRow>
 
-	    <sw-listing-display data-collection="'Campaign'"
-	                        data-name="Campaign"
-                            data-multiselect-field-name="test"
-                            data-multiselect-property-identifier="test">
-            <sw-listing-filter data-property-identifier="activeFlag" data-comparison-value="true"></sw-listing-filter>
+<input type="hidden" name="listOpt" data-ng-model="listOpt">
 
-            <sw-listing-column data-property-identifier="campaignDescription"></sw-listing-column>
-            <sw-listing-column data-property-identifier="campaignName"></sw-listing-column>
-	    </sw-listing-display>
+    <span class="form-group s-radio-content">
+        <div class="radio s-vertical">
+            <input type="radio"  name="listOpt" id="lol" data-ng-model="listOpt" value="1">
+            <label for="lol">
+              <b>New List</b>
+            </label>
+        </div>
+        <span class="row" data-ng-if="listOpt == '1'">
+              <sw-listing-display data-collection="'Account'" data-name="account" collection-config-input="collectionConfig">
+                  <sw-listing-column data-property-identifier="primaryEmailAddress.emailAddress"></sw-listing-column>
+                  <sw-listing-column data-property-identifier="lastName"></sw-listing-column>
+                  <sw-listing-column data-property-identifier="firstName"></sw-listing-column>
+              </sw-listing-display>
+        </span>
+    </span>
 
-	    <sw-listing-display data-collection="'Account'" data-name="account" collection-config-input="collectionConfig">
-	        <sw-listing-column data-property-identifier="primaryEmailAddress.emailAddress"></sw-listing-column>
-	        <sw-listing-column data-property-identifier="lastName"></sw-listing-column>
-	        <sw-listing-column data-property-identifier="firstName"></sw-listing-column>
-	    </sw-listing-display>
+    <span class="form-group s-radio-content">
+        <div class="radio s-vertical">
+            <input type="radio" name="listOpt" id="lal" data-ng-model="listOpt" value="0">
+            <label for="lal">
+                <b>Select List</b>
+            </label>
+        </div>
+        <span class="row" data-ng-if="listOpt == '0'">
+             <sw-listing-display data-collection="'CampaignList'"
+                                 data-name="CampaignList"
+                                 data-multiselect-field-name="test"
+                                 data-multiselect-property-identifier="test">
+                 <sw-listing-column data-property-identifier="campaignList"></sw-listing-column>
+             </sw-listing-display>
+        </span>
+    </span>
+
+
+
+
 	</hb:HibachiEntityDetailForm>
 </cfoutput>
 

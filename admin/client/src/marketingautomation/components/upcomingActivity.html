@@ -10,7 +10,7 @@
             </div>
             <div class="col-md-8">
 
-                <h5 class="s-content-title">Upcoming Activities <a href="#">view all</a></h5>
+                <h5 class="s-content-title" >Upcoming Activities <a href data-ng-click="swUpcomingActivity.viewActivities()">view all</a></h5>
                 <ul class="list-unstyled">
                     <li data-ng-repeat="activity in swUpcomingActivity.activities">
                         <a href data-ng-href="/default.cfm?slatAction=entity.detailCampaignActivity&campaignActivityID={{activity.campaignActivityID}}">

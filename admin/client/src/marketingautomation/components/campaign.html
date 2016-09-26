@@ -9,12 +9,11 @@
         </div>
         <div class="col-md-6" data-ng-cloak>
             <div class="btn-toolbar">
-                <!---<button data-slideout="j-comments" class="btn btn-default s-slide-btn"><i class="fa fa-comment" aria-hidden="true"></i> 2</button>--->
                 <sw-modal-launcher
-                        data-modal-name="info"
-                        data-title="Activity Info"
-                        data-modal-size="sm"
-                        >
+                    data-modal-name="info"
+                    data-title="Activity Info"
+                    data-modal-size="sm"
+                    >
                     <sw-modal-button>
                         <button class="btn btn-default s-slide-btn"><i class="fa fa-info-circle" aria-hidden="true"></i></button>
                     </sw-modal-button>
@@ -42,16 +41,34 @@
                                     data-editing="swCampaign.editing"
                                     data-editable="true">
                                 </sw-property-display>
+
+                                <sw-property-display
+                                        data-property="defaultFromName"
+                                        data-editing="swCampaign.editing"
+                                        data-editable="true">
+                                </sw-property-display>
+
+                                <sw-property-display
+                                        data-property="defaultFromEmail"
+                                        data-editing="swCampaign.editing"
+                                        data-editable="true">
+                                </sw-property-display>
+
+                                <sw-property-display
+                                        data-property="defaultReplyTo"
+                                        data-editing="swCampaign.editing"
+                                        data-editable="true">
+                                </sw-property-display>
+
                             </sw-form>
                         </div>
                     </sw-modal-content>
                 </sw-modal-launcher>
 
                 <sw-modal-launcher
-                        data-modal-name="system"
-                        data-title="System Activity"
-                        data-modal-size="md"
-                        >
+                    data-modal-name="system"
+                    data-title="System Activity"
+                    data-modal-size="md">
                     <sw-modal-button>
                         <button class="btn btn-default s-slide-btn">System</button>
                     </sw-modal-button>
@@ -155,18 +172,32 @@
                 </content>
             </sw-tab-content>
             <sw-tab-content data-name="Lists" data-id="lists" data-icon="fa-list">
-                <h4 class="s-title">Lists</h4>
+                <span class="h4 s-title">Lists</span> <sw-modal-launcher
+                        data-modal-name="activity"
+                        data-title="New List"
+                        data-modal-size="lg"
+                        >
+                    <sw-modal-button>
+                        <button class="btn btn-primary s-slide-btn pull-right" style="border-radius: 2px;margin-left: 5px;" type="button" >Create List</button>
+                    </sw-modal-button>
+                    <sw-modal-header>
+                        <button class="btn btn-white pull-right" data-ng-click="swCampaign.saveCampaignList()">Save</button>
+                    </sw-modal-header>
+                    <sw-modal-content>
+                        <sw-create-campaign-list></sw-create-campaign-list>
+                    </sw-modal-content>
+                </sw-modal-launcher>
+
                 <content class="s-body-box">
                     <div class="tab-content">
                         <!-- Lists Tab -->
                         <sw-listing-display
-                                data-collection="'CampaignActivity'"
-                                data-record-detail-action="entity.detailCampaignActivity"
-                                data-record-edit-action="entity.editCampaignActivity"
-                                data-expandable="false"
+                                data-collection="'CampaignList'"
+                                data-record-detail-action="entity.detailCampaignList"
                                 is-angular-route="false">
-
-                            <sw-listing-column data-property-identifier="campaignActivityName" ></sw-listing-column>
+                            <!--<sw-listing-column data-property-identifier="campaignListDescription" ></sw-listing-column>-->
+                            <sw-listing-column data-property-identifier="global" ></sw-listing-column>
+                            <sw-listing-column data-property-identifier="campaignListName" ></sw-listing-column>
                         </sw-listing-display>
                         <!-- ///Lists Tab -->
                     </div>

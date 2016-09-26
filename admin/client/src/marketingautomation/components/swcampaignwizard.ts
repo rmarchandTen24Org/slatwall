@@ -7,7 +7,9 @@ class SWCampaignWizardController{
     private listIDs;
     private saveObserverID;
     private emailSendDateTime;
-    public ui = {};
+    public ui:any = {
+        scheduleOpt : 0
+    };
     private campaign;
     private scheduleID;
 
@@ -48,6 +50,11 @@ class SWCampaignWizardController{
             this.observerService.notify('updateTabIconcampaign-tabs', {id: 'email', icon:'fa-check'});
         }
         this.observerService.notify('updateTabIconcampaign-tabs', {id: 'lists', icon:'fa-check'});
+
+        if(this.isValid(data.emailSendDateTime)){
+            this.ui.scheduleOpt = 1;
+            this.observerService.notify('updateTabIconcampaign-tabs', {id: 'schedule', icon:'fa-check'});
+        }
     };
 
     private changeCampaignActivity=(data:any):void=>{
@@ -118,7 +125,8 @@ class SWCampaignWizardController{
     };
 
     public saveCampaignActivity = ():void =>{
-        this.newCampaignActivity.$$save('wizard').then(()=>{
+        this.newCampaignActivity.$$save('wizard').then((data)=>{
+            this.updateTabs(this.newCampaignActivity)
             console.log('Success');
         }, (error)=>{
             //console.log('VALIDATION', error);
@@ -149,9 +157,12 @@ class SWCampaignWizardController{
                 this.emailSendDateTime = '';
                 break;
         }
-        this.newCampaignActivity.$$save('wizard', 'schedule').then(()=>{
+        this.newCampaignActivity.$$save('wizard', 'schedule').then((res: any)=>{
             console.log('Success');
             this.newCampaignActivity.emailSendDateTime = this.emailSendDateTime;
+            if(!this.isCampaignActivity()){
+                window.location.href = '/default.cfm?slatAction=entity.detailCampaignActivity&campaignActivityID='+ res.campaignActivityID;
+            }
         }, (error)=>{
             //console.log('VALIDATION', error);
         });

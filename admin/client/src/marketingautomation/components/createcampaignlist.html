@@ -1,0 +1,25 @@
+<div class="s-loader-wrapper" >
+    <div class="s-animated-loader"></div>
+</div>
+<div class="s-slide-panel-content">
+    <sw-form data-object="swCreateCampaignList.newCampaignList">
+        <sw-property-display
+                data-property="campaignListName"
+                data-editing="true"
+                data-editable="true">
+        </sw-property-display>
+
+        <sw-property-display
+                data-property="global"
+                data-editing="true"
+                data-editable="true">
+        </sw-property-display>
+
+
+        <sw-listing-display data-collection="'Account'" data-name="account" collection-config-input="collectionConfig">
+            <sw-listing-column data-property-identifier="primaryEmailAddress.emailAddress"></sw-listing-column>
+            <sw-listing-column data-property-identifier="lastName"></sw-listing-column>
+            <sw-listing-column data-property-identifier="firstName"></sw-listing-column>
+        </sw-listing-display>
+    </sw-form>
+</div>

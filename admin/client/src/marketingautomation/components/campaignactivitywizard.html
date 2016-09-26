@@ -2,109 +2,48 @@
     <sw-tab-group data-show-tabs="false" data-name="campaign-tabs">
         <sw-tab-content data-name="Dashboard" data-id="dashboard" data-icon="fa-dashboard">
             <!--- Dashboard content area --->
-            <div class="row">
-                <div class="col-md-12">
-                    <div class="panel info-box panel-white">
-                        <div class="panel-body">
-                            <div class="row">
-                                <div class="row-height">
-                                    <div class="col-md-7 col-height col-middle">
-                                        <div class="s-content-body">
-                                            <h5 class="s-content-title" style="display:inline-block">
-                                                Create Follow Up:
-                                            </h5> You can create new activities based on your current email list or a new emails list.
-                                        </div>
-                                    </div>
-                                    <div class="col-md-5 col-height col-middle">
-                                        <div class="input-group">
-                                            <select class="form-control input-sm">
-                                                <option value="" selected>Same list follow up</option>
-                                                <option value="">Follow up to openers (103)</option>
-                                                <option value="">Non-bounces follow up</option>
-                                                <option value="">Custom follow up</option>
-                                            </select>
-                                                    <span class="input-group-btn">
-                                                        <button class="btn btn-primary s-slide-btn" style="border-radius: 2px;margin-left: 5px;" type="button" data-slideout="j-create-email">Create Follow Up Activity</button>
-                                                    </span>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
+            <sw-create-follow-up></sw-create-follow-up>
 
             <sw-campaign-stats></sw-campaign-stats>
 
             <content class="s-body-box">
                 <sw-tab-group>
-                    <sw-tab-content data-name="Sent" data-count="2">
-                        <sw-listing-display
-                                data-collection="'Campaign'"
-                                data-record-detail-action="entity.detailCampaign"
-                                data-record-edit-action="entity.editCampaign"
-                                is-angular-route="false">
-                            <sw-listing-column data-property-identifier="activeFlag" ></sw-listing-column>
-                            <sw-listing-column data-property-identifier="campaignDescription" ></sw-listing-column>
-                            <sw-listing-column data-property-identifier="campaignName" ></sw-listing-column>
+                   <sw-tab-content data-name="Sent" > <!--data-count="2"-->
+                        <sw-listing-display data-collection="'CampaignActivityAccount'">
+                            <sw-listing-filter data-property-identifier="campaignActivity.campaignActivityID" data-comparison-value="{{swCampaignWizard.newCampaignActivity}}"></sw-listing-filter>
+                            <sw-listing-column data-property-identifier="account.firstName" ></sw-listing-column>
+                            <sw-listing-column data-property-identifier="account.lastName" ></sw-listing-column>
                         </sw-listing-display>
                     </sw-tab-content>
-                    <sw-tab-content data-name="Clicks" data-count="2">
-                        <sw-listing-display
-                                data-collection="'Campaign'"
-                                data-record-detail-action="entity.detailCampaign"
-                                data-record-edit-action="entity.editCampaign"
-                                is-angular-route="false">
-                            <sw-listing-column data-property-identifier="activeFlag" ></sw-listing-column>
-                            <sw-listing-column data-property-identifier="campaignDescription" ></sw-listing-column>
-                            <sw-listing-column data-property-identifier="campaignName" ></sw-listing-column>
+                    <sw-tab-content data-name="Clicks">
+                        <sw-listing-display data-collection="'CampaignActivityTracker'">
+                            <sw-listing-filter data-property-identifier="broadcastType" data-comparison-value="Click"></sw-listing-filter>
+                            <sw-listing-filter data-property-identifier="campaignActivityAccount.campaignActivity.campaignActivityID" data-comparison-value="{{swCampaignWizard.newCampaignActivity}}"></sw-listing-filter>
+                            <sw-listing-column data-property-identifier="campaignActivityAccount.account.firstName" ></sw-listing-column>
+                            <sw-listing-column data-property-identifier="campaignActivityAccount.account.lastName" ></sw-listing-column>
                         </sw-listing-display>
                     </sw-tab-content>
-                    <sw-tab-content data-name="Bounces" data-count="2">
-                        <sw-listing-display
-                                data-collection="'Campaign'"
-                                data-record-detail-action="entity.detailCampaign"
-                                data-record-edit-action="entity.editCampaign"
-                                is-angular-route="false">
-                            <sw-listing-column data-property-identifier="activeFlag" ></sw-listing-column>
-                            <sw-listing-column data-property-identifier="campaignDescription" ></sw-listing-column>
-                            <sw-listing-column data-property-identifier="campaignName" ></sw-listing-column>
+                    <sw-tab-content data-name="Bounces">
+                        <sw-listing-display data-collection="'CampaignActivityTracker'">
+                            <sw-listing-filter data-property-identifier="broadcastType" data-comparison-value="Bounce"></sw-listing-filter>
+                            <sw-listing-filter data-property-identifier="campaignActivityAccount.campaignActivity.campaignActivityID" data-comparison-value="{{swCampaignWizard.newCampaignActivity}}"></sw-listing-filter>
+                            <sw-listing-column data-property-identifier="campaignActivityAccount.account.firstName" ></sw-listing-column>
+                            <sw-listing-column data-property-identifier="campaignActivityAccount.account.lastName" ></sw-listing-column>
                         </sw-listing-display>
                     </sw-tab-content>
-                    <sw-tab-content data-name="Opens" data-count="2">
-                        <sw-listing-display
-                                data-collection="'Campaign'"
-                                data-record-detail-action="entity.detailCampaign"
-                                data-record-edit-action="entity.editCampaign"
-                                is-angular-route="false">
-                            <sw-listing-column data-property-identifier="activeFlag" ></sw-listing-column>
-                            <sw-listing-column data-property-identifier="campaignDescription" ></sw-listing-column>
-                            <sw-listing-column data-property-identifier="campaignName" ></sw-listing-column>
+                    <sw-tab-content data-name="Opens">
+                        <sw-listing-display data-collection="'CampaignActivityTracker'">
+                            <sw-listing-filter data-property-identifier="broadcastType" data-comparison-value="Open"></sw-listing-filter>
+                            <sw-listing-filter data-property-identifier="campaignActivityAccount.campaignActivity.campaignActivityID" data-comparison-value="{{swCampaignWizard.newCampaignActivity}}"></sw-listing-filter>
+                            <sw-listing-column data-property-identifier="campaignActivityAccount.account.firstName" ></sw-listing-column>
+                            <sw-listing-column data-property-identifier="campaignActivityAccount.account.lastName" ></sw-listing-column>
                         </sw-listing-display>
                     </sw-tab-content>
-                    <sw-tab-content data-name="Transactions" data-count="2">
-                        <sw-listing-display
-                                data-collection="'Campaign'"
-                                data-record-detail-action="entity.detailCampaign"
-                                data-record-edit-action="entity.editCampaign"
-                                is-angular-route="false">
-                            <sw-listing-column data-property-identifier="activeFlag" ></sw-listing-column>
-                            <sw-listing-column data-property-identifier="campaignDescription" ></sw-listing-column>
-                            <sw-listing-column data-property-identifier="campaignName" ></sw-listing-column>
-                        </sw-listing-display>
+                    <sw-tab-content data-name="Transactions">
+
                     </sw-tab-content>
-                    <sw-tab-content data-name="Sent History" data-count="2">
-                        <sw-listing-display
-                                data-collection="'Campaign'"
-                                data-record-detail-action="entity.detailCampaign"
-                                data-record-edit-action="entity.editCampaign"
-                                is-angular-route="false">
-                            <sw-listing-column data-property-identifier="activeFlag" ></sw-listing-column>
-                            <sw-listing-column data-property-identifier="campaignDescription" ></sw-listing-column>
-                            <sw-listing-column data-property-identifier="campaignName" ></sw-listing-column>
-                        </sw-listing-display>
-                    </sw-tab-content>
+                    <sw-tab-content data-name="Sent History">
+
                 </sw-tab-group>
             </content>
         </sw-tab-content>

@@ -1,40 +1,53 @@
 /// <reference path='../../../typings/slatwallTypescript.d.ts' />
 /// <reference path='../../../typings/tsd.d.ts' />
 
-class SWCampaignActivityStatusController{
+class SWCreateCampaignListController{
+    private campaignId;
+    private totalSent;
+    private newCampaignList;
 
     //@ngInject
     constructor(
-        protected collectionConfigService
+        protected $hibachi,
+        protected observerService
     ){
         this.init();
     }
 
     public init =()=> {
-
+        this.observerService.attach(this.saveCampaignList, 'saveNewCampaignList');
+        this.newCampaignList = this.$hibachi.newCampaignList();
+        console.log(this.newCampaignList);
     };
+
+    private saveCampaignList =()=>{
+        this.newCampaignList.$$save().then(()=>{
+            console.log('DONE');
+        })
+    }
 }
 
-class SWCampaignActivityStatus implements ng.IDirective{
+class SWCreateCampaignList implements ng.IDirective{
 
     public restrict:string = 'EA';
     public scope=true;
     public bindToController ={
-        status : "="
+        activityCount:"=",
+        campaignId:"@"
     };
-    public controller=SWCampaignActivityStatusController;
-    public controllerAs="swCampaignActivityStatus";
+    public controller=SWCreateCampaignListController;
+    public controllerAs="swCreateCampaignList";
 
     public templateUrl;
     //@ngInject
     constructor(public marketignAutomationPartialsPath, public slatwallPathBuilder){
-        this.templateUrl = this.slatwallPathBuilder.buildPartialsPath(this.marketignAutomationPartialsPath+'campaignactivitystatus.html');
+        this.templateUrl = this.slatwallPathBuilder.buildPartialsPath(this.marketignAutomationPartialsPath+'createcampaignlist.html');
     }
     public static Factory(){
         var directive = (
             marketignAutomationPartialsPath,
             slatwallPathBuilder
-        )=>new SWCampaignActivityStatus(
+        )=>new SWCreateCampaignList(
             marketignAutomationPartialsPath,
             slatwallPathBuilder
         );
@@ -49,5 +62,5 @@ class SWCampaignActivityStatus implements ng.IDirective{
     }
 }
 export{
-    SWCampaignActivityStatus
+    SWCreateCampaignList
 }

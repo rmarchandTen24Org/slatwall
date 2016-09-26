@@ -14,6 +14,21 @@
 	</cffunction>
 
 
+	<cffunction name="getCampaignActivityIDByBroadcastID" access="public" returntype="any" >
+		<cfargument name="broadcastID" required="true"/>
+		<cfset var campaignActivity = "">
+		<cfquery name="campaignActivity">
+				SELECT
+					CampaignActivityID
+				FROM
+					SwCampaignActivity
+				WHERE
+					send24BroadcastID = <cfqueryparam value="#trim(arguments.broadcastID)#" />
+		</cfquery>
+		<cfreturn campaignActivity/>
+	</cffunction>
+
+
 	<cffunction name="trackerRecordExists" access="public" returntype="boolean" >
 		<cfargument name="broadcast" required="true"/>
 		<cfquery name="local.test">

@@ -32,6 +32,9 @@ class SWCampaignController{
     public saveCampaignActivity =():void =>{
         this.observerService.notify('saveNewCampaignActivity');
     }
+    public saveCampaignList =():void =>{
+        this.observerService.notify('saveNewCampaignList');
+    };
 }
 
 class SWCampaign implements ng.IDirective{

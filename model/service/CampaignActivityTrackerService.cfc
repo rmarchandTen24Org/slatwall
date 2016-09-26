@@ -53,7 +53,15 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 	property name="campaignActivityTrackerDAO" type="any";
 
 // ===================== START: Logical Methods ===========================
-
+private any function newBroadcastStruct(required any broadcastid){
+	return  {
+		id = broadcastid,
+		opens = 0,
+		clicks = 0,
+		bounces = 0,
+		unsubscribes = 0
+	};
+}
 
 // =====================  END: Logical Methods ============================
 
@@ -74,8 +82,10 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 
 		if(!arraylen(broadcasts)) return campaignActivityTracker;
 
-		var currentBroadcast = 0;
+		currentBroadcast = newBroadcastStruct(0);
+
 		var currentBroadcastExists = false;
+		var currentCampaignActivityID = 0;
 
 		for(var broadcast in broadcasts){
 
@@ -83,17 +93,50 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 				continue;
 			}
 
-			if(broadcast.broadcastID != currentBroadcast){
-				currentBroadcast = broadcast.broadcastID;
-				currentBroadcastExists = getCampaignActivityTrackerDAO().broadcastExists(broadcast.broadcastID);
+			if(broadcast.broadcastID != currentBroadcast.id){
+				if(currentCampaignID != 0){
+					//update campaign Activity
+					var tempCampaignActivity = getCampaignActivity(currentCampaignID);
+
+					tempCampaignActivity.setTotalEmailOpen( val(tempCampaignActivity.getTotalEmailOpen) + currentBroadcast.opens);
+					tempCampaignActivity.setTotalEmailClick( val(tempCampaignActivity.getTotalEmailClick()) + currentBroadcast.clicks);
+					tempCampaignActivity.setTotalEmailBounce( val(tempCampaignActivity.getTotalEmailBounce()) + currentBroadcast.bounces);
+					tempCampaignActivity.setTotalEmailUnsubscribe( val(tempCampaignActivity.getTotalEmailUnsubscribe()) + currentBroadcast.unsubscribes);
+				}
+
+
+				currentBroadcast = newBroadcastStruct(broadcast.broadcastID);
+				var _temp = getCampaignActivityTrackerDAO().getCampaignActivityIDByBroadcastID(broadcast.broadcastID);
+				if (_temp.recordCount == 1){
+					currentCampaignID = _temp.campaingActivityID;
+				}else{
+					currentCampaignID = 0;
+				}
 			}
 
 			if(broadcast.RESPONSETYPE == "GlobalUnsubscribe"){
 				broadcast.RESPONSETYPE = "Unsubscribe";
 			}
 
-			if(currentBroadcastExists){
+
+			if(currentCampaignID != 0){
 				getMarketingEmailTrackerDAO().insertNotMarketingEmail(broadcast);
+
+				//Sum to current broadcast
+				switch(broadcast.RESPONSETYPE){
+					case 'Open':
+						currentBroadcast.opens += 1;
+						break;
+					case 'Click':
+						currentBroadcast.clicks += 1;
+						break;
+					case 'Bounce':
+						currentBroadcast.bounces += 1;
+						break;
+					case 'Unsubscribe':
+						currentBroadcast.unsubscribes += 1;
+						break;
+				}
 			}
 
 		}

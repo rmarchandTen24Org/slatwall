@@ -4,8 +4,8 @@
 
     <div class="form-group s-radio-content">
         <div class="radio s-vertical">
-            <input type="radio" id="broadcast-schedule-new" data-ng-model="swCampaignWizard.ui.list" data-ng-init="swCampaignWizard.ui.list = '1'" value="1" data-ng-click="swCampaignWizard.ui.list = '1'; swCampaignWizard.clearListIDs()">
-            <label for="broadcast-schedule-new">
+            <input type="radio" id="originalList" data-ng-model="swCampaignWizard.ui.list" data-ng-init="swCampaignWizard.ui.list = '1'" value="1" data-ng-click="swCampaignWizard.ui.list = '1'; swCampaignWizard.clearListIDs()">
+            <label for="originalList">
                 Original Campaign List
             </label>
         </div>
@@ -13,20 +13,20 @@
 
     <span class="form-group s-radio-content">
         <div class="radio s-vertical">
-            <input type="radio" id="broadcast-schedule-copy" data-ng-model="swCampaignWizard.ui.list" value="0" data-ng-click="swCampaignWizard.ui.list = '0'">
-            <label for="broadcast-schedule-copy">
-                Select List(s)
+            <input type="radio" id="selectList" data-ng-model="swCampaignWizard.ui.list" value="0" data-ng-click="swCampaignWizard.ui.list = '0'">
+            <label for="selectList">
+                Select A List
             </label>
         </div>
         <span class="row" data-ng-if="swCampaignWizard.ui.list == '0'">
             <sw-listing-display
-                    data-collection="'Campaign'"
+                    data-collection="'CampaignList'"
                     data-name="lists"
                     data-multiselect-field-name="test"
-                    data-multiselect-property-identifier="campaignID">
-                <sw-listing-column data-property-identifier="activeFlag" ></sw-listing-column>
-                <sw-listing-column data-property-identifier="campaignDescription" ></sw-listing-column>
-                <sw-listing-column data-property-identifier="campaignName" ></sw-listing-column>
+                    data-multiselect-property-identifier="CampaignListID"
+                    data-is-radio="true">
+                <sw-listing-column data-property-identifier="global" ></sw-listing-column>
+                <sw-listing-column data-property-identifier="campaignListName" ></sw-listing-column>
             </sw-listing-display>
         </span>
     </span>
