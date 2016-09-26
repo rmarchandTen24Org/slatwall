@@ -75,6 +75,7 @@
             var datePickerElBcr = datetimePickerEl.getBoundingClientRect();
 
             datetimePickerEl.style.position='absolute';
+            datetimePickerEl.style.zIndex='9999';
             if(bcr.width > datePickerElBcr.width){
                 datetimePickerEl.style.left= (bcr.left + bcr.width - datePickerElBcr.width + window.scrollX) + 'px';
             } else {
