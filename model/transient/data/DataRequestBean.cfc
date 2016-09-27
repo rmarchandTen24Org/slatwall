@@ -48,11 +48,73 @@ Notes:
 */
 
 component accessors="true" output="false" extends="Slatwall.model.transient.RequestBean" {
+	property name="port" type="string" default="443";
 	property name="urlString" type="string";
 	property name="queryString" type="string";
+	property name="httpRequest" type="any";
+	property name="body" type="string" default="";
 	property name="response" type="any";
+	property name="contentType" type="string" default="";
+	property name="ifUnmodifiedSince" type="string" default="";
+	property name="authToken" type="string" default="";
+	//change this for custom responseBeans
+	property name="responseBeanPath" type="string" default="Slatwall.model.transient.data.DataResponseBean";
+	
 	public any function init() {
 		// Set defaults
 		return super.init();
+	}
+	
+	public any function getResponseBean(){
+		var response = getResponse();
+		
+		var responseBean = createObject('component',"#getResponseBeanPath()#");
+		responseBean.setRequestBean(this);
+		if(isJson(response.fileContent)){
+			responseBean.setData(deserializeJson(response.fileContent));
+		}else{
+			responseBean.setData(response.fileContent);
+		}
+		
+		responseBean.setStatusCode(response.statuscode);
+		return responseBean;
+	}
+	
+	public any function getResponse(){
+		var httpRequest = getHttpRequest();
+		httpRequest.setCharset("utf-8");
+		return httpRequest.send().getPrefix(); 
+	}
+	
+	public any function getHttpRequest(){
+		if(!structKeyExists(variables,'httpRequest')){
+			var httpRequest = new http();
+			httpRequest.setMethod(getMethod());
+	
+			httpRequest.setPort( getPort() );
+			httpRequest.setTimeout( 120 );
+			httpRequest.setResolveurl(false);
+			var urlString = getUrlString();
+			if(!isNull(getQueryString())){
+				urlString &= getQueryString();
+			}
+			httpRequest.setUrl(urlString);
+			if(len(getAuthToken())){
+				httpRequest.addParam(type="header",name='Authorization',value='Bearer '&getAuthToken());
+			}
+			if(len(getContentType())){
+				httpRequest.addParam(type="header",name='Content-Type',value=getContentType());
+			}
+			if(len(getIfUnmodifiedSince())){
+				httpRequest.addParam(type="header",name="If-Unmodified-Since",value=getIfUnmodifiedSince());
+			}
+			
+			if(len(getBody())){
+				httpRequest.addParam(type="body",value=getBody());
+			}
+			
+			variables.httpRequest = httpRequest;
+		}
+		return variables.httpRequest;
 	}
 }

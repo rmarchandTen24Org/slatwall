@@ -14,7 +14,7 @@
     GNU General Public License for more details.
 
     You should have received a copy of the GNU General Public License
-    along with this program.  If not, see <http://www.gnu.org/licenses/;.
+    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
     Linking this program statically or dynamically with other modules is
     making a combined work based on this program.  Thus, the terms and
@@ -46,17 +46,37 @@
 Notes:
 
 */
+component extends="Slatwall.model.transient.data.DataRequestBean" persistent="false" accessors="true" output="false" {
 
-component accessors="true" output="false" extends="Slatwall.model.transient.ResponseBean"{
-	property name="requestBean" type="any";
- 
+	// ===================== START: Logical Methods ===========================
+
 	public any function init() {
+		setResponseBeanPath("Slatwall.integrationServices.elasticsearch.model.transient.ElasticSearchResponseBean");
 		// Set defaults
-
-
 		return super.init();
 	}
 	
 
+	// =====================  END: Logical Methods ============================
+
+	// ===================== START: DAO Passthrough ===========================
+
+	// ===================== START: DAO Passthrough ===========================
+
+	// ===================== START: Process Methods ===========================
+
+	// =====================  END: Process Methods ============================
+
+	// ====================== START: Save Overrides ===========================
+
+	// ======================  END: Save Overrides ============================
+
+	// ==================== START: Smart List Overrides =======================
+
+	// ====================  END: Smart List Overrides ========================
+
+	// ====================== START: Get Overrides ============================
+
+	// ======================  END: Get Overrides =============================
 
 }
