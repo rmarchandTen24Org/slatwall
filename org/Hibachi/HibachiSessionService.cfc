@@ -149,7 +149,6 @@ component output="false" accessors="true" extends="HibachiService"  {
 		// If there was an integration, then check the verify method for any custom auto-logout logic
 		
 		// If the sessions account is an admin and last request by the session was 15 min or longer ago. 
-		
 		if((
 			(getHibachiScope().getSessionFoundPSIDCookieFlag()||getHibachiScope().getSessionFoundExtendedPSIDCookieFlag()||getHibachiScope().getSessionFoundNPSIDCookieFlag()) && !getHibachiScope().getLoggedInFlag())
 		

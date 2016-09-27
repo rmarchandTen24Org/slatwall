@@ -46,14 +46,36 @@
 Notes:
 
 */
-component extends="Slatwall.model.transient.data.DataRequestBean" persistent="false" accessors="true" output="false" {
+component extends="Slatwall.model.service.HibachiService" persistent="false" accessors="true" output="false" {
+	property name="integrationCFC" type="any";
+	property name="settingService" type="any";
+	
 
 	// ===================== START: Logical Methods ===========================
 
-	public any function init() {
-		setResponseBeanPath("Slatwall.integrationServices.elasticsearch.model.transient.ElasticSearchResponseBean");
-		// Set defaults
-		return super.init();
+	public any function newElasticSearchRequestBean(){
+		var requestBean = new Slatwall.integrationServices.elasticsearch.model.transient.ElasticSearchRequestBean();
+		requestBean.setURLString(setting('ServerURL'));
+		return requestBean;
+	}
+
+	public any function setting(required string settingName, array filterEntities=[], formatValue=false) {
+		return getIntegrationCFC().setting(argumentCollection=arguments);
+	}
+
+	public any function getResponseByHttpRequest(required any httpRequest){
+		var response = arguments.httpRequest.send().getPrefix();
+		var data = deserializejson(response.Filecontent);
+
+		if(!findNoCase(200,response.statusCode)){
+			getService('hibachiUtilityService').logMessage(message=data['error'] & " - " & data['error_description'],messageType="SalesForce Integration",messageCode=response.statusCode,logType="Error",generalLog=true);
+		}
+
+		var responseBean = new Slatwall.model.transient.data.DataResponseBean();
+		responseBean.setData(data);
+		responseBean.setStatusCode(response.statusCode);
+
+		return responseBean;
 	}
 
 	// =====================  END: Logical Methods ============================

@@ -48,7 +48,6 @@ Notes:
 */
 
 component accessors="true" output="false" extends="Slatwall.model.transient.RequestBean" {
-	property name="port" type="string" default="443";
 	property name="urlString" type="string";
 	property name="queryString" type="string";
 	property name="httpRequest" type="any";
@@ -91,7 +90,6 @@ component accessors="true" output="false" extends="Slatwall.model.transient.Requ
 			var httpRequest = new http();
 			httpRequest.setMethod(getMethod());
 	
-			httpRequest.setPort( getPort() );
 			httpRequest.setTimeout( 120 );
 			httpRequest.setResolveurl(false);
 			var urlString = getUrlString();

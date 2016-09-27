@@ -47,8 +47,13 @@ Notes:
 
 */
 component accessors="true" output="false" displayname="ElasticSearch" extends="Slatwall.integrationServices.BaseIntegration" implements="Slatwall.integrationServices.IntegrationInterface" {
+	property name="elasticSearchService" type="any";
 	
 	public any function init() {
+		if(getHibachiScope().hasService('elasticSearchService')){
+			setElasticSearchService(getHibachiScope().getService('elasticSearchService'));
+			getElasticSearchService().setIntegrationCFC(this);
+		}
 		return this;
 	}
 	
@@ -67,10 +72,11 @@ component accessors="true" output="false" displayname="ElasticSearch" extends="S
 	}
 	
 	public any function testIntegration() {
-		var requestBean = new Slatwall.integrationServices.elasticsearch.model.transient.ElasticSearchRequestBean();
-		requestBean.setPort(80);
-		requestBean.setURLString(setting('ServerURL'));
-		
+		return getElasticSearchDetailsResponseBean();
+	}
+	
+	public any function getElasticSearchDetailsResponseBean(){
+		var requestBean = getElasticSearchService().newElasticSearchRequestBean();
 		return requestBean.getResponseBean();
 	}
 }
