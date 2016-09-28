@@ -25,10 +25,13 @@
 					</h4>
 				</div>
 			</a>
+			
 			<div id="tabBasic" class="panel-collapse ">
 				<content class="s-body-box">
 					<cfoutput>
-						<cfset elasticSearchDetails = rc.integration.getIntegrationCFC().getElasticSearchDetailsResponseBean().getData()/>
+						<cfset integrationCFC = rc.integration.getIntegrationCFC()/>
+						<cfset elasticSearchDetails = integrationCFC.getElasticSearchDetailsResponseBean().getData()/>
+						<cfset elasticSearchClusterHealth = integrationCFC.getElasticSearchClusterHealthResponseBean().getData()/>
 						<div <cfif !isNull(tab) && structKeyExists(tab, "tabid") && activeTab eq tab.tabid> class="tab-pane active" <cfelse> class="tab-pane" </cfif> id="tabBasic">
 							<hb:HibachiFieldDisplay title="Cluster Name" value="#elasticSearchDetails['cluster_name']#" />
 							<hb:HibachiFieldDisplay title="Name" value="#elasticSearchDetails['name']#" />
@@ -37,7 +40,9 @@
 							<hb:HibachiFieldDisplay title="Build Time Stamp" value="#elasticSearchDetails['version']['build_timestamp']#" />
 							<hb:HibachiFieldDisplay title="Lucene Version" value="#elasticSearchDetails['version']['lucene_version']#" />
 							<hb:HibachiFieldDisplay title="Version ##" value="#elasticSearchDetails['version']['number']#" />
-							
+							<cfloop collection="#elasticSearchClusterHealth#" item="key">
+								<hb:HibachiFieldDisplay title="#key#" value="#elasticSearchClusterHealth[key]#" />
+							</cfloop>
 						</div>
 					</cfoutput>
 				</content><!--- s-body-box --->

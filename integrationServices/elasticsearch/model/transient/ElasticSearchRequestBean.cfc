@@ -47,13 +47,38 @@ Notes:
 
 */
 component extends="Slatwall.model.transient.data.DataRequestBean" persistent="false" accessors="true" output="false" {
-
+	property name="index" type="string" default="";
+	property name="type" type="string" default="";
+	property name="ID" type="string" default="";
+	property name="action" type="string" default="";
+	
 	// ===================== START: Logical Methods ===========================
 
 	public any function init() {
 		setResponseBeanPath("Slatwall.integrationServices.elasticsearch.model.transient.ElasticSearchResponseBean");
 		// Set defaults
 		return super.init();
+	}
+	
+	public any function getHttpRequest(){
+		var httpRequest = super.getHttpRequest();
+		var urlString = getUrlString();
+		
+		if(len(getIndex())){
+			urlString &= "/#getIndex()#";
+		}
+		//ID depneds on type depends on index
+		if(len(getIndex()) && len(getType()) && len(getID())){
+			urlString &= "/#getType()#";
+			urlString &= "/#ID#";
+		}
+		
+		if(len(getAction())){
+			urlString &= "/#getAction()#";
+		}
+		
+		httpRequest.setUrl(urlString);
+		return httpRequest;
 	}
 
 	// =====================  END: Logical Methods ============================

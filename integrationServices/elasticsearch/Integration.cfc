@@ -79,4 +79,74 @@ component accessors="true" output="false" displayname="ElasticSearch" extends="S
 		var requestBean = getElasticSearchService().newElasticSearchRequestBean();
 		return requestBean.getResponseBean();
 	}
+	
+	public any function getElasticSearchClusterHealthResponseBean(){
+		var requestBean = getElasticSearchService().newElasticSearchRequestBean();
+		requestBean.setAction('/_cluster/health');
+		return requestBean.getResponseBean();
+	}
+	
+	public any function getElasticSearchListAllIndicesResponseBean(){
+		var requestBean = getElasticSearchService().newElasticSearchRequestBean();
+		requestBean.setAction("_cat/indices?v");
+		return requestBean.getResponseBean();
+	}
+	
+	public any function createIndex(required string indexName){
+		var requestBean = getElasticSearchService().newElasticSearchRequestBean();
+		requestBean.setMethod('PUT');
+		requestBean.setIndex(arguments.indexName);
+		return requestBean.getResponseBean();
+	}
+	
+	public any function deleteIndex(required string indexName){
+		var requestBean = getElasticSearchService().newElasticSearchRequestBean();
+		requestBean.setMethod('DELETE');
+		requestBean.setIndex(arguments.indexName);
+		return requestBean.getResponseBean();
+	}
+	
+	public any function createDocument(required string index, required string type, required string ID, required string body){
+		var requestBean = getElasticSearchService().newElasticSearchRequestBean();
+		requestBean.setMethod('PUT');
+		requestBean.populate(arguments);
+		return requestBean.getResponseBean();
+	}
+	
+	public any function updateDocument(required string index, required string type, required string ID, required string body){
+		var requestBean = getElasticSearchService().newElasticSearchRequestBean();
+		requestBean.setMethod('POST');
+		requestBean.populate(arguments);
+		return requestBean.getResponseBean();
+	}
+	
+	public any function deleteDocument(required string index, required string type, required string ID){
+		var requestBean = getElasticSearchService().newElasticSearchRequestBean();
+		requestBean.setMethod('DELETE');
+		requestBean.populate(arguments);
+		return requestBean.getResponseBean();
+	}
+	
+	public any function getDocument(required string index, required string type, required string ID){
+		var requestBean = getElasticSearchService().newElasticSearchRequestBean();
+		requestBean.setMethod('GET');
+		requestBean.populate(arguments);
+		return requestBean.getResponseBean();
+	}
+	
+	public any function searchIndex(required string index){
+		var requestBean = getElasticSearchService().newElasticSearchRequestBean();
+		requestBean.setMethod('GET');
+		requestBean.populate(arguments);
+		requestBean.setAction('/_search');
+		return requestBean.getResponseBean();
+	}
+	
+	public any function bulkRequest(required string index, required string type, required string body){
+		var requestBean = getElasticSearchService().newElasticSearchRequestBean();
+		requestBean.setMethod('POST');
+		requestBean.populate(arguments);
+		requestBean.setAction('/_bulk');
+		return requestBean.getResponseBean();
+	}
 }
