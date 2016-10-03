@@ -77,6 +77,33 @@ component extends="Slatwall.model.service.HibachiService" persistent="false" acc
 
 		return responseBean;
 	}
+	
+	public void function indexCollection(required any collectionEntity){
+		var collectionRecords = arguments.collectionEntity.getRecords();
+		var collectionExampleEntity = collectionEntity.getCollectionEntityObject();
+		var collectionPrimaryIDName = collectionExampleEntity.getPrimaryIDPropertyName();
+		var requestBody = "";
+		var linebreak = Chr(13) & Chr(10);
+		/*bulk api body example
+			{"index":{"_id":"1"}}
+			{"name": "John Doe" }
+			{"index":{"_id":"2"}}
+			{"name": "Jane Doe" }
+			{"index":{"_id":"3"}}
+			{"name": "Bob Doe" }
+			{"index":{"_id":"4"}}
+			{"name": "Bobby Doe" }
+			
+			NOTE: always end body with a carriage return as elastic search reads this on a line by line basis
+		*/
+		for(var record in collectionRecords){
+			requestBody &='{"index":{"_id":"#record[collectionPrimaryIDName]#"}}' & linebreak;
+			requestBody &=serializeJson(record) & linebreak;
+		}
+		requestBody &= linebreak;
+		writedump(var=requestBody);abort;
+		
+	}
 
 	// =====================  END: Logical Methods ============================
 

@@ -71,6 +71,10 @@ component accessors="true" output="false" displayname="ElasticSearch" extends="S
 		return "Elastic Search";
 	}
 	
+	public array function getEventHandlers() {
+		return ["Slatwall.integrationServices.elasticsearch.model.handler.ElasticSearchHandler"];
+	}
+	
 	public any function testIntegration() {
 		return getElasticSearchDetailsResponseBean();
 	}
@@ -142,6 +146,18 @@ component accessors="true" output="false" displayname="ElasticSearch" extends="S
 		return requestBean.getResponseBean();
 	}
 	
+	/*bulk api body example
+		{"index":{"_id":"1"}}
+		{"name": "John Doe" }
+		{"index":{"_id":"2"}}
+		{"name": "Jane Doe" }
+		{"index":{"_id":"3"}}
+		{"name": "Bob Doe" }
+		{"index":{"_id":"4"}}
+		{"name": "Bobby Doe" }
+		
+		NOTE: always end body with a carriage return as elastic search reads this on a line by line basis
+	*/
 	public any function bulkRequest(required string index, required string type, required string body){
 		var requestBean = getElasticSearchService().newElasticSearchRequestBean();
 		requestBean.setMethod('POST');
