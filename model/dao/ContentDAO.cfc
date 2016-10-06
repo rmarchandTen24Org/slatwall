@@ -142,6 +142,19 @@ Notes:
 		)>
 	</cffunction>
 	
+	<cffunction name="getContentHasProduct" access="public">
+		<cfargument name="contentID" type="string" required="true" />
+		<cfargument name="productID" type="string" required="true">
+		<cfreturn !isNull(ORMExecuteQuery('
+			select lp from SlatwallProductListingPage lp
+			where content.contentID = :contentID
+			  and product.productID = :productID
+			',
+			{contentID=arguments.contentID,productID=arguments.productID},
+			true
+			))>
+	</cffunction>
+
 	<cffunction name="getContentBySortOrderMinAndMax">
 		<cfargument name="content" type="any" required="true">
 		<cfargument name="min" type="numeric" required="true">

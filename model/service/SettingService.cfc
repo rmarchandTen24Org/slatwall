@@ -101,7 +101,7 @@ component extends="HibachiService" output="false" accessors="true" {
 			sku = ["product.productID", "product.productType.productTypeIDPath&product.brand.brandID", "product.productType.productTypeIDPath"],
 			product = ["productType.productTypeIDPath&brand.brandID", "productType.productTypeIDPath"],
 			productType = ["productTypeIDPath"],
-			content = ["contentIDPath","contentID","site.siteID"],
+			content = ["contentIDPath","site.siteID"],
 			email = ["emailTemplate.emailTemplateID"],
 			shippingMethodRate = ["shippingMethod.shippingMethodID"],
 			accountAuthentication = [ "integration.integrationID" ],
@@ -149,7 +149,7 @@ component extends="HibachiService" output="false" accessors="true" {
 			emailCCAddress = {fieldType="text"},
 			emailBCCAddress = {fieldType="text"},
 			emailFailToAddress = {fieldType="text", defaultValue="email@youremaildomain.com"},
-			emailReplyToAddress = {fieldType="text", defaultValue="email@youremaildomain.com"},
+			emailReplyToAddress = {fieldType="text"},
 			emailSubject = {fieldType="text", defaultValue="Notification From Slatwall"},
 			emailIMAPServer = {fieldType="text"},
 			emailIMAPServerPort = {fieldType="text"},
@@ -195,6 +195,7 @@ component extends="HibachiService" output="false" accessors="true" {
 			globalWeightUnitCode = {fieldType="select",defaultValue="lb"},
 			globalAdminAutoLogoutMinutes = {fieldtype="text", defaultValue=15, validate={dataType="numeric",required=true,maxValue=15}},
 			globalPublicAutoLogoutMinutes = {fieldtype="text", defaultValue=30, validate={dataType="numeric", required=true}},
+			globalExtendedSessionAutoLogoutInDays = {fieldtype="text", defaultValue=5, validate={dataType="numeric", required=false}},
 			globalForceCreditCardOverSSL = {fieldtype="yesno",defaultValue=1},
 			globalAllowedOutsideRedirectSites = {fieldtype="text"},
 			globalFileTypeWhiteList = {fieldtype="text", defaultValue="pdf,zip,xml,txt,csv,xls,doc,jpeg,jpg,png,gif"},
@@ -202,6 +203,8 @@ component extends="HibachiService" output="false" accessors="true" {
 			globalAdminDomainNames = {fieldtype="text"},
 			globalClientSecret = {fieldtype="text",defaultValue="#createUUID()#"},
 			globalDisplayIntegrationProcessingErrors = {fieldtype="yesno", defaultValue=1},
+			globalUseExtendedSession = {fieldtype="yesno", defaultValue=0},
+			globalCopyCartToNewSessionOnLogout = {fieldtype="yesno", defaultValue=0},
 			globalUseShippingIntegrationForTrackingNumberOption = {fieldtype="yesno", defaultValue=0},
 			globalSmartListGetAllRecordsLimit = {fieldType="text",defaultValue=250},
 			// Image
@@ -324,8 +327,26 @@ component extends="HibachiService" output="false" accessors="true" {
 
 		return allSettingMetaData;
 	}
+	
+	private string function extractPackageNameBySettingName (required string settingName){
+		var substringInfo = REFIND('\integration(?!.*\\)(.*?)(?=[A-Z])',arguments.settingName,1,true);
+		var substring = Mid(arguments.settingName,substringInfo.pos[1],substringInfo.len[1]);
+		var packageName = Mid(substring,12,len(substring));
+		return packageName;
+	}
 
 	public array function getSettingOptions(required string settingName, any settingObject) {
+		//check if setting is related to an integration
+		if(
+			left(arguments.settingName,11) == 'integration' 
+		){
+			var packageName = extractPackageNameBySettingName(arguments.settingName);
+			var integration = getService('integrationService').getIntegrationByIntegrationPackage(trim(packageName));
+			if(!isNull(integration) && structkeyExists(integration.getIntegrationCFC(),"getSettingOptions")){
+				return integration.getIntegrationCFC().getSettingOptions(arguments.settingName);
+			}
+		}
+		
 		switch(arguments.settingName) {
 			case "contentTemplateFile":
 				if(structKeyExists(arguments, "settingObject")) {
@@ -791,6 +812,7 @@ component extends="HibachiService" output="false" accessors="true" {
 				// Select
 				} else if (settingMetaData.fieldType == "select") {
 					var options = getSettingOptions(arguments.settingName);
+					
 
 					if(!arrayLen(options)){
 						settingDetails.settingValueFormatted = settingDetails.settingValue;

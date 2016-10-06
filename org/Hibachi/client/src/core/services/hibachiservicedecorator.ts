@@ -239,19 +239,19 @@ class HibachiServiceDecorator{
                 angular.forEach(relatedAttributes,function(attributeSet){
                     angular.forEach(attributeSet.attributes,function(attribute){
                         if(attribute && attribute.attributeCode){
-                            Object.defineProperty(_jsEntities[ entity.className ].prototype, attribute.attributeCode, {
-                                configurable:true,
-                                enumerable:false,
-                                get: function() {
-                                    if(this.data[attribute.attributeCode] == null){
-                                        return undefined;
-                                    }
-                                    return this.data[attribute.attributeCode];
-                                },
-                                set: function(value) {
-                                    this.data[attribute.attributeCode]=value;
+                        Object.defineProperty(_jsEntities[ entity.className ].prototype, attribute.attributeCode, {
+                            configurable:true,
+                            enumerable:false,
+                            get: function() {
+                                if(attribute != null && this.data[attribute.attributeCode] == null){
+                                    return undefined;
                                 }
-                            });
+                                return this.data[attribute.attributeCode];
+                            },
+                            set: function(value) {
+                                this.data[attribute.attributeCode]=value;
+                            }
+                        });
                         }
                     });
                 });
@@ -379,7 +379,7 @@ class HibachiServiceDecorator{
                                             enumerable:false,
 
                                             get: function() {
-                                                if(this.data[attribute.attributeCode] == null){
+                                                if(attribute != null && this.data[attribute.attributeCode] == null){
                                                     return undefined;
                                                 }
 
@@ -483,7 +483,7 @@ class HibachiServiceDecorator{
                                         enumerable:false,
 
                                         get: function() {
-                                            if(attribute && attribute.attributeCode && this.data[attribute.attributeCode] == null){
+                                            if(attribute != null && attribute.attributeCode && this.data[attribute.attributeCode] == null){
                                                 return undefined;
                                             }
                                             return this.data[property.name];
@@ -528,7 +528,7 @@ class HibachiServiceDecorator{
                                             enumerable:false,
 
                                             get: function() {
-                                                if(attribute && attribute.attributeCode && this.data[attribute.attributeCode] == null){
+                                                if(attribute != null && attribute.attributeCode && this.data[attribute.attributeCode] == null){
                                                     return undefined;
                                                 }
                                                 return this.data[property.name];
@@ -806,7 +806,7 @@ class HibachiServiceDecorator{
                     if(modifiedData.valid){
                         var params:any = {};
 
-                        params.serializedJsonData = angular.toJson(modifiedData.value);
+                        params.serializedJsonData = utilityService.toJson(modifiedData.value);
                         //if we have a process object then the context is different from the standard save
                         var entityName = '';
                         var context = 'save';
