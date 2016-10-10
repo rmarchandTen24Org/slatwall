@@ -24974,7 +24974,8 @@
 	        this.restrict = 'EA';
 	        this.scope = true;
 	        this.bindToController = {
-	            campaign: "="
+	            campaign: "=",
+	            campaignActivityCount: "=?"
 	        };
 	        this.controller = SWCampaignWizardController;
 	        this.controllerAs = "swCampaignWizard";

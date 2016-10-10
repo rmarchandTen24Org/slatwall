@@ -198,7 +198,8 @@ class SWCampaignWizard implements ng.IDirective{
     public restrict:string = 'EA';
     public scope=true;
     public bindToController ={
-        campaign:"="
+        campaign:"=",
+        campaignActivityCount:"=?"
     };
     public controller=SWCampaignWizardController;
     public controllerAs="swCampaignWizard";

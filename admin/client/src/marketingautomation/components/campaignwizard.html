@@ -10,10 +10,10 @@
         <sw-wizard-step data-name="Messaging">
             <sw-campaign-wizard-step data-template="messaging"></sw-campaign-wizard-step>
         </sw-wizard-step>
-        <sw-wizard-step data-name="List">
+        <sw-wizard-step data-name="List" data-ng-if="swCampaignWizard.campaignActivityCount > 0">
             <sw-campaign-wizard-step data-template="list"></sw-campaign-wizard-step>
         </sw-wizard-step>
-        <sw-wizard-step data-name="Schedule & Send">
+        <sw-wizard-step data-name="Schedule & Send" data-ng-if="1===1">
             <sw-campaign-wizard-step data-template="schedule"></sw-campaign-wizard-step>
         </sw-wizard-step>
     </sw-form>
