@@ -1,10 +1,10 @@
 <div class="col-md-12">
 
-    <input type="hidden" data-ng-model="swCampaignWizard.listIDs" name="listIDs">
+    <input type="hidden" data-ng-model="swCampaignWizard.campaignListID" name="campaignList.campaignListID">
 
     <div class="form-group s-radio-content">
         <div class="radio s-vertical">
-            <input type="radio" id="originalList" data-ng-model="swCampaignWizard.ui.list" data-ng-init="swCampaignWizard.ui.list = '1'" value="1" data-ng-click="swCampaignWizard.ui.list = '1'; swCampaignWizard.clearListIDs()">
+            <input type="radio" id="originalList" data-ng-model="swCampaignWizard.ui.list" value="1" data-ng-change="swCampaignWizard.resetCampaignListID()">
             <label for="originalList">
                 Original Campaign List
             </label>
@@ -13,7 +13,7 @@
 
     <span class="form-group s-radio-content">
         <div class="radio s-vertical">
-            <input type="radio" id="selectList" data-ng-model="swCampaignWizard.ui.list" value="0" data-ng-click="swCampaignWizard.ui.list = '0'">
+            <input type="radio" id="selectList" data-ng-model="swCampaignWizard.ui.list" value="0">
             <label for="selectList">
                 Select A List
             </label>

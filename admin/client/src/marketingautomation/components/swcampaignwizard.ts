@@ -4,7 +4,6 @@
 class SWCampaignWizardController{
     private newCampaignActivity;
     private emailCopied;
-    private listIDs;
     private saveObserverID;
     private emailSendDateTime;
     public ui:any = {
@@ -12,17 +11,18 @@ class SWCampaignWizardController{
     };
     private campaign;
     private scheduleID;
+    private campaignListID;
 
     //@ngInject
     constructor(
         public collectionConfigService,
         public observerService,
         public $hibachi,
-        public selectionService,
         public utilityService,
         public $scope,
         public marketignAutomationPartialsPath,
-        public slatwallPathBuilder
+        public slatwallPathBuilder,
+        public $rootScope
     ){
         this.init();
     }
@@ -73,8 +73,11 @@ class SWCampaignWizardController{
             var params = this.utilityService.getQueryParamsFromUrl(self.location.href);
             var test = this.$hibachi.getCampaignActivity(params.campaignActivityID);
             this.newCampaignActivity = test['value'];
+
             test['promise'].then((data)=>{
                 this.updateTabs(data);
+                this.$rootScope.campaignActivityID = data.campaignActivityID;
+                this.$rootScope.send24BroadcastID = data.send24BroadcastID;
             });
             this.observerService.attach(this.changeCampaignActivity, 'optionChangedCampaignActivity');
         }else{
@@ -84,6 +87,9 @@ class SWCampaignWizardController{
             this.newCampaignActivity.emailReplyTo = this.campaign.defaultReplyTo;
         }
 
+        //if(this.campaignListID == ''){
+        //    this.resetCampaignListID();
+        //}
 
         console.log(this.newCampaignActivity);
         this.$scope.$on("$destroy",()=>{
@@ -108,7 +114,7 @@ class SWCampaignWizardController{
                this.loadPreviousEmail(action.selection);
                break;
            case "lists":
-               this.listIDs = this.selectionService.getSelections('lists').join();
+               this.campaignListID = action.selection;
                break;
        }
     };
@@ -168,8 +174,10 @@ class SWCampaignWizardController{
         });
     };
 
-    public clearListIDs = ():void=>{
-        this.selectionService.clearSelection('lists');
+    public resetCampaignListID = ():void=>{
+        this.campaign.$$getCampaignList().then((campaign)=>{
+            this.campaignListID = campaign.records[0].campaignList[0].campaignListID;
+        });
     };
 
     public cfDate = (date):string=>{

@@ -58,4 +58,49 @@
 
 
 
+
+    <cffunction name="insertCampaignActivityTracker" returntype="void" access="public">
+		<cfargument name="broadcast"  required="true"/>
+
+		<cfquery name="local.test" result="local.result">
+				INSERT INTO
+					swCampaignActivityTracker (
+						campaignActivityTrackerID,
+						broadcastID,
+						broadcastType,
+						broadcastDatetime,
+						url,
+						campaignActivityAccountID,
+						campaignActivityLinkID,
+						createdDateTime,
+						modifiedDateTime
+					)
+					SELECT
+						<cfqueryparam cfsqltype="cf_sql_varchar" value="#createSlatwallUUID()#" /> campaignActivityTrackerID,
+						<cfqueryparam value="#trim(arguments.broadcast.BROADCASTID)#" />  broadcastID,
+						<cfqueryparam value="#trim(arguments.broadcast.RESPONSETYPE)#" />  broadcastType,
+						<cfqueryparam value="#trim(arguments.broadcast.RESPONSEDATE)#" />  broadcastDatetime,
+						<cfqueryparam value="#trim(arguments.broadcast.LINK)#" />  url,
+                        SwCampaignActivityAccount.campaignActivityAccountID campaignActivityAccountID,
+                        SwCampaignActivityLink.campaignActivityLinkID campaignActivityLinkID,
+						#now()# createdDateTime,
+						#now()# modifiedDateTime
+
+					FROM
+						SwCampaignActivityAccount
+			            INNER JOIN SwCampaignActivity ON SwCampaignActivityAccount.campaignActivityID = SwCampaignActivity.campaignActivityID
+						LEFT JOIN SwCampaignActivityLink on SwCampaignActivity.campaignActivityID = SwCampaignActivityLink.campaignActivityID
+
+			            INNER JOIN SwAccount ON SwCampaignActivityAccount.accountID  = SwAccount.accountID
+                        INNER JOIN SwAccountEmailAddress ON SwAccount.primaryEmailAddressID  = SwAccountEmailAddress.accountEmailAddressID
+				    WHERE
+                        SwCampaignActivity.send24BroadcastID = <cfqueryparam value="#trim(arguments.broadcast.BROADCASTID)#" />
+					AND
+						LOWER(SwAccountEmailAddress.emailAddress) = <cfqueryparam value="#lcase(trim(arguments.broadcast.EMAILADDRESS))#" />
+
+		</cfquery>
+</cffunction>
+
+
+
 </cfcomponent>

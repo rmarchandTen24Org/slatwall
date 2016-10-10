@@ -4,46 +4,56 @@
             <!--- Dashboard content area --->
             <sw-create-follow-up></sw-create-follow-up>
 
-            <sw-campaign-stats></sw-campaign-stats>
+            <sw-campaign-activity-stats data-campaign-activity="swCampaignWizard.newCampaignActivity"></sw-campaign-activity-stats>
 
             <content class="s-body-box">
                 <sw-tab-group>
-                   <sw-tab-content data-name="Sent" > <!--data-count="2"-->
+                   <sw-tab-content data-name="Sent" data-ng-if="$root.campaignActivityID"> <!--data-count="2"-->
                         <sw-listing-display data-collection="'CampaignActivityAccount'">
-                            <sw-listing-filter data-property-identifier="campaignActivity.campaignActivityID" data-comparison-value="{{swCampaignWizard.newCampaignActivity}}"></sw-listing-filter>
-                            <sw-listing-column data-property-identifier="account.firstName" ></sw-listing-column>
+                            <sw-listing-filter data-property-identifier="campaignActivity.campaignActivityID" data-comparison-value="{{$root.campaignActivityID}}"></sw-listing-filter>
+                            <sw-listing-column data-property-identifier="account.primaryEmailAddress.emailAddress" ></sw-listing-column>
                             <sw-listing-column data-property-identifier="account.lastName" ></sw-listing-column>
+                            <sw-listing-column data-property-identifier="account.firstName" ></sw-listing-column>
                         </sw-listing-display>
                     </sw-tab-content>
-                    <sw-tab-content data-name="Clicks">
+                    <sw-tab-content data-name="Clicks" data-ng-if="$root.send24BroadcastID">
                         <sw-listing-display data-collection="'CampaignActivityTracker'">
                             <sw-listing-filter data-property-identifier="broadcastType" data-comparison-value="Click"></sw-listing-filter>
-                            <sw-listing-filter data-property-identifier="campaignActivityAccount.campaignActivity.campaignActivityID" data-comparison-value="{{swCampaignWizard.newCampaignActivity}}"></sw-listing-filter>
-                            <sw-listing-column data-property-identifier="campaignActivityAccount.account.firstName" ></sw-listing-column>
+                            <sw-listing-filter data-property-identifier="broadcastID" data-comparison-value="{{$root.send24BroadcastID}}"></sw-listing-filter>
+                            <sw-listing-column data-property-identifier="campaignActivityLink.url" ></sw-listing-column>
                             <sw-listing-column data-property-identifier="campaignActivityAccount.account.lastName" ></sw-listing-column>
+                            <sw-listing-column data-property-identifier="campaignActivityAccount.account.firstName" ></sw-listing-column>
                         </sw-listing-display>
                     </sw-tab-content>
-                    <sw-tab-content data-name="Bounces">
+                    <sw-tab-content data-name="Bounces" data-ng-if="$root.send24BroadcastID">
                         <sw-listing-display data-collection="'CampaignActivityTracker'">
                             <sw-listing-filter data-property-identifier="broadcastType" data-comparison-value="Bounce"></sw-listing-filter>
-                            <sw-listing-filter data-property-identifier="campaignActivityAccount.campaignActivity.campaignActivityID" data-comparison-value="{{swCampaignWizard.newCampaignActivity}}"></sw-listing-filter>
-                            <sw-listing-column data-property-identifier="campaignActivityAccount.account.firstName" ></sw-listing-column>
+                            <sw-listing-filter data-property-identifier="broadcastID" data-comparison-value="{{$root.send24BroadcastID}}"></sw-listing-filter>
                             <sw-listing-column data-property-identifier="campaignActivityAccount.account.lastName" ></sw-listing-column>
+                            <sw-listing-column data-property-identifier="campaignActivityAccount.account.firstName" ></sw-listing-column>
                         </sw-listing-display>
                     </sw-tab-content>
-                    <sw-tab-content data-name="Opens">
+                    <sw-tab-content data-name="Opens" data-ng-if="$root.send24BroadcastID">
                         <sw-listing-display data-collection="'CampaignActivityTracker'">
                             <sw-listing-filter data-property-identifier="broadcastType" data-comparison-value="Open"></sw-listing-filter>
-                            <sw-listing-filter data-property-identifier="campaignActivityAccount.campaignActivity.campaignActivityID" data-comparison-value="{{swCampaignWizard.newCampaignActivity}}"></sw-listing-filter>
-                            <sw-listing-column data-property-identifier="campaignActivityAccount.account.firstName" ></sw-listing-column>
+                            <sw-listing-filter data-property-identifier="broadcastID" data-comparison-value="{{$root.send24BroadcastID}}"></sw-listing-filter>
                             <sw-listing-column data-property-identifier="campaignActivityAccount.account.lastName" ></sw-listing-column>
+                            <sw-listing-column data-property-identifier="campaignActivityAccount.account.firstName" ></sw-listing-column>
                         </sw-listing-display>
                     </sw-tab-content>
-                    <sw-tab-content data-name="Transactions">
-
+                    <sw-tab-content data-name="Unsubscribes" data-ng-if="$root.send24BroadcastID">
+                        <sw-listing-display data-collection="'CampaignActivityTracker'">
+                            <sw-listing-filter data-property-identifier="broadcastType" data-comparison-value="Unsubscribe"></sw-listing-filter>
+                            <sw-listing-filter data-property-identifier="broadcastID" data-comparison-value="{{$root.send24BroadcastID}}"></sw-listing-filter>
+                            <sw-listing-column data-property-identifier="campaignActivityAccount.account.lastName" ></sw-listing-column>
+                            <sw-listing-column data-property-identifier="campaignActivityAccount.account.firstName" ></sw-listing-column>
+                        </sw-listing-display>
                     </sw-tab-content>
-                    <sw-tab-content data-name="Sent History">
+                    <!--<sw-tab-content data-name="Transactions">-->
 
+                    <!--</sw-tab-content>-->
+                    <!--<sw-tab-content data-name="Sent History">-->
+                    <!--</sw-tab-content>-->
                 </sw-tab-group>
             </content>
         </sw-tab-content>

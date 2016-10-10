@@ -161,16 +161,21 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 		getService("HibachiTagService").cfsetting(requesttimeout="6000");
 		var emailChanged = isEmailChanged(campaignActivity, data);
 
-		if(structKeyExists(arguments.data,'listIDs')){
-			arguments.data['collectionConfig'] = mergeCampaignActivitiesCollectionConfig(arguments.data.listIDs);
-		}
 
-		//HACK.
+		//HACK1
 		if(structKeyExists(arguments.data, 'campaign.campaignID')){
 			arguments.data['campaign'] = {
 				'campaignID' =  arguments.data['campaign.campaignID']
 			};
 		}
+		//HACK2
+		if(structKeyExists(arguments.data,'campaignList.campaignListID')){
+			//arguments.data['collectionConfig'] = mergeCampaignActivitiesCollectionConfig(arguments.data.listIDs);
+			arguments.data['campaignList'] = {
+				'campaignListID' =  arguments.data['campaignList.campaignListID']
+			};
+		}
+
 
 		arguments.campaignActivity = super.save(arguments.campaignActivity,arguments.data, arguments.context);
 
@@ -269,9 +274,9 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 		var broadcastID = getEmailService().sendEmail(campaignActivity.getSend24EmailID(), mailingList);
 		if(broadcastID){
 			campaignActivity.setCampaignActivityStatus(this.getType('402828c656eafa1d01572e197d810197'));
-			campaignActivity.setBroadcastID(broadcastID);
+			campaignActivity.setSend24BroadcastID(broadcastID);
 			//Snapshot of Recipients.
-			getCampaignActivityAccountDAO().insertAccount(emailRecipients, campaignActivity.getCampaignActivityID());
+			getCampaignActivityAccountDAO().insertActivityAccount(emailRecipients, campaignActivity.getCampaignActivityID());
 		}
 		campaignActivity.setRunningFlag(false);
 		ormFlush();

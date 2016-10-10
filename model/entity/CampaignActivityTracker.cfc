@@ -57,8 +57,8 @@ component displayname="CampaignActivityTracker" entityname="SlatwallCampaignActi
 	property name="url" ormtype="string";
 
 	// Related Object Properties (many-to-one)
-	property name="campaignActivityAccount" cfc="CampaignActivityAccount" fieldtype="many-to-one" fkcolumn="CampaignActivityAccountID";
-	property name="campaignActivityLink" cfc="CampaignActivityLink" fieldtype="many-to-one" fkcolumn="CampaignActivityLinkID";
+	property name="campaignActivityAccount" cfc="CampaignActivityAccount" fieldtype="many-to-one" fkcolumn="campaignActivityAccountID";
+	property name="campaignActivityLink" cfc="CampaignActivityLink" fieldtype="many-to-one" fkcolumn="campaignActivityLinkID";
 
 	// Related Object Properties (one-to-many)
 

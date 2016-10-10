@@ -18,6 +18,10 @@ class SWCampaignActivityController{
 
     private init():void {
         this.campaignActivity = this.$hibachi.getCampaignActivity(this.id)['value'];
+
+        this.campaignActivity.$$getCampaignActivityStatus().then((lol)=>{
+            console.log('LOL', lol)
+        })
     }
 
     public saveCampaignActivityBasic =():void =>{

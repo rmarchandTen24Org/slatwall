@@ -80,6 +80,7 @@ private any function newBroadcastStruct(required any broadcastid){
 		var broadcasts = getService("send24Service").getLatestBroadcasts(fakedate);
 
 
+
 		if(!arraylen(broadcasts)) return campaignActivityTracker;
 
 		currentBroadcast = newBroadcastStruct(0);
@@ -92,11 +93,11 @@ private any function newBroadcastStruct(required any broadcastid){
 			if(broadcast.broadcastID == '' || REFind('\${mailSubscriberID}:\${guid}', broadcast.LINK) > 0  || getCampaignActivityTrackerDAO().trackerRecordExists(broadcast) == true) {
 				continue;
 			}
-
+			writeDump(var=broadcast.broadcastID);
 			if(broadcast.broadcastID != currentBroadcast.id){
-				if(currentCampaignID != 0){
+				if(currentCampaignActivityID != 0){
 					//update campaign Activity
-					var tempCampaignActivity = getCampaignActivity(currentCampaignID);
+					var tempCampaignActivity = this.getCampaignActivity(currentCampaignActivityID);
 
 					tempCampaignActivity.setTotalEmailOpen( val(tempCampaignActivity.getTotalEmailOpen) + currentBroadcast.opens);
 					tempCampaignActivity.setTotalEmailClick( val(tempCampaignActivity.getTotalEmailClick()) + currentBroadcast.clicks);
@@ -108,9 +109,9 @@ private any function newBroadcastStruct(required any broadcastid){
 				currentBroadcast = newBroadcastStruct(broadcast.broadcastID);
 				var _temp = getCampaignActivityTrackerDAO().getCampaignActivityIDByBroadcastID(broadcast.broadcastID);
 				if (_temp.recordCount == 1){
-					currentCampaignID = _temp.campaingActivityID;
+					currentCampaignActivityID = _temp.campaignActivityID;
 				}else{
-					currentCampaignID = 0;
+					currentCampaignActivityID = 0;
 				}
 			}
 
@@ -119,8 +120,8 @@ private any function newBroadcastStruct(required any broadcastid){
 			}
 
 
-			if(currentCampaignID != 0){
-				getMarketingEmailTrackerDAO().insertNotMarketingEmail(broadcast);
+			if(currentCampaignActivityID != 0){
+				getCampaignActivityTrackerDAO().insertCampaignActivityTracker(broadcast);
 
 				//Sum to current broadcast
 				switch(broadcast.RESPONSETYPE){
