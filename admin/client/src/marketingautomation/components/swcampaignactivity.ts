@@ -9,6 +9,7 @@ class SWCampaignActivityController{
     private campaign;
     private saving;
     private editing;
+    private campaignActivityStatus;
     //@ngInject
     constructor(public $hibachi,
                 public observerService){
@@ -17,11 +18,18 @@ class SWCampaignActivityController{
 
 
     private init():void {
-        this.campaignActivity = this.$hibachi.getCampaignActivity(this.id)['value'];
+        var getCampaingActivity = this.$hibachi.getCampaignActivity(this.id);
+        this.campaignActivity = getCampaingActivity['value'];
 
-        this.campaignActivity.$$getCampaignActivityStatus().then((lol)=>{
-            console.log('LOL', lol)
+        getCampaingActivity.promise.then(()=>{
+            return this.campaignActivity.$$getCampaignActivityStatus();
+        }).then((res)=>{
+            if(res.records && res.records.length && res.records[0].campaignActivityStatus && res.records[0].campaignActivityStatus.length){
+                this.campaignActivityStatus = res.records[0].campaignActivityStatus[0];
+            }
         })
+
+
     }
 
     public saveCampaignActivityBasic =():void =>{

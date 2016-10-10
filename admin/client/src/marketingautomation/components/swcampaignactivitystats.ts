@@ -3,7 +3,6 @@
 
 class SWCampaignActivityStatsController{
     private campaignId;
-    private totalSent;
     private campaignActivity;
     public totalSent;
 
