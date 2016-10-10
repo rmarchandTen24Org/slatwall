@@ -1020,51 +1020,58 @@ component displayname="Collection" entityname="SlatwallCollection" table="SwColl
 
 			variables.pageRecords =	formattedRecords;
 		}else{
-			try{
-				var HQL = '';
-				var HQLParams = {};
+			//try{
+				
 				if( !structKeyExists(variables, "pageRecords") || arguments.refresh eq true) {
-					saveState();
-					if(this.getNonPersistentColumn() || (!isNull(this.getProcessContext()) && len(this.getProcessContext()))){
-						//prepare page records and possible process objects
-						variables.pageRecords = [];
-						variables.processObjects = [];
-						HQL = 'SELECT _#lcase(this.getCollectionObject())# ' & getHQL();
-						HQLParams = getHQLParams();
-						var entities = ormExecuteQuery(HQL, HQLParams, false, {offset=getPageRecordsStart()-1, maxresults=getPageRecordsShow(), ignoreCase="true", cacheable=getCacheable(), cachename="pageRecords-#getCacheName()#"});
-						var columns = getCollectionConfigStruct()["columns"];
-
-						for(var entity in entities){
-							var pageRecord = {};
-							for(var column in columns){
-								var listRest = ListRest(column.propertyIdentifier,'.');
-								if(structKeyExists(column,'setting') && column.setting == true){
-									var listRest = ListRest(column.propertyIdentifier,'.');
-									pageRecord[Replace(listRest(column.propertyIdentifier,'.'),'.','_','all')] = getSettingValueFormattedByPropertyIdentifier(listRest,entity);
-								}else{
-									pageRecord[Replace(listRest(column.propertyIdentifier,'.'),'.','_','all')] = entity.getValueByPropertyIdentifier(listRest);
-								}
-							}
-							arrayAppend(variables.pageRecords,pageRecord);
-
-							if(len(this.getProcessContext()) && entity.hasProcessObject(this.getProcessContext())){
-								var processObject = entity.getProcessObject(this.getProcessContext());
-								arrayAppend(variables.processObjects,processObject);
-							}
-
-						}
+					
+					if(getHibachiScope().hasService('elasticSearchService') && getCollectionObject() == 'Account'){
+						arguments.collectionEntity = this;
+						variables.pageRecords = getHibachiScope().getService('elasticSearchService').getPageRecords(argumentCollection=arguments);
 					}else{
-						HQL = getHQL();
-						HQLParams = getHQLParams();
-						variables.pageRecords = ormExecuteQuery(HQL, HQLParams, false, {offset=getPageRecordsStart()-1, maxresults=getPageRecordsShow(), ignoreCase="true", cacheable=getCacheable(), cachename="pageRecords-#getCacheName()#"});
+						var HQL = '';
+						var HQLParams = {};
+						saveState();
+						if(this.getNonPersistentColumn() || (!isNull(this.getProcessContext()) && len(this.getProcessContext()))){
+							//prepare page records and possible process objects
+							variables.pageRecords = [];
+							variables.processObjects = [];
+							HQL = 'SELECT _#lcase(this.getCollectionObject())# ' & getHQL();
+							HQLParams = getHQLParams();
+							var entities = ormExecuteQuery(HQL, HQLParams, false, {offset=getPageRecordsStart()-1, maxresults=getPageRecordsShow(), ignoreCase="true", cacheable=getCacheable(), cachename="pageRecords-#getCacheName()#"});
+							var columns = getCollectionConfigStruct()["columns"];
+	
+							for(var entity in entities){
+								var pageRecord = {};
+								for(var column in columns){
+									var listRest = ListRest(column.propertyIdentifier,'.');
+									if(structKeyExists(column,'setting') && column.setting == true){
+										var listRest = ListRest(column.propertyIdentifier,'.');
+										pageRecord[Replace(listRest(column.propertyIdentifier,'.'),'.','_','all')] = getSettingValueFormattedByPropertyIdentifier(listRest,entity);
+									}else{
+										pageRecord[Replace(listRest(column.propertyIdentifier,'.'),'.','_','all')] = entity.getValueByPropertyIdentifier(listRest);
+									}
+								}
+								arrayAppend(variables.pageRecords,pageRecord);
+	
+								if(len(this.getProcessContext()) && entity.hasProcessObject(this.getProcessContext())){
+									var processObject = entity.getProcessObject(this.getProcessContext());
+									arrayAppend(variables.processObjects,processObject);
+								}
+	
+							}
+						}else{
+							HQL = getHQL();
+							HQLParams = getHQLParams();
+							variables.pageRecords = ormExecuteQuery(HQL, HQLParams, false, {offset=getPageRecordsStart()-1, maxresults=getPageRecordsShow(), ignoreCase="true", cacheable=getCacheable(), cachename="pageRecords-#getCacheName()#"});
+						}
 					}
 				}
-			}
-			catch(any e){
-				variables.pageRecords = [{'failedCollection'='failedCollection'}];
-				writelog(file="collection",text="Error:#e.message#");
-				writelog(file="collection",text="HQL:#HQL#");
-			}
+//			}
+//			catch(any e){
+//				variables.pageRecords = [{'failedCollection'='failedCollection'}];
+//				writelog(file="collection",text="Error:#e.message#");
+//				writelog(file="collection",text="HQL:#HQL#");
+//			}
 
 		}
 		return variables.pageRecords;
@@ -1093,36 +1100,41 @@ component displayname="Collection" entityname="SlatwallCollection" table="SwColl
 		}else{
 			try{
 				//If we are returning only the exportable records, then check and pass through.
-				var HQL = '';
-				var HQLParams = {};
 				if( !structKeyExists(variables, "records") || arguments.refresh == true) {
-					if(this.getNonPersistentColumn()){
-						variables.records = [];
-						HQL =  'SELECT _#lcase(this.getCollectionObject())# ' &  getHQL(forExport=arguments.forExport);
-						HQLParams = getHQLParams();
-						var entities = ormExecuteQuery(HQL,HQLParams, false, {ignoreCase="true", cacheable=getCacheable(), cachename="records-#getCacheName()#"});
-						var columns = getCollectionConfigStruct()["columns"];
-						for(var entity in entities){
-							var record = {};
-
-							for(var column in columns){
-
-								var listRestValue = ListRest(column.propertyIdentifier,'.');
-								if(structKeyExists(column,'setting') && column.setting == true){
-									record[Replace(listRestValue,'.','_','all')] = getSettingValueFormattedByPropertyIdentifier(listRestValue,entity);
-								}else{
-									record[Replace(listRestValue,'.','_','all')] = entity.getValueByPropertyIdentifier(listRestValue);
-								}//<--end if
-
-							}//<--end for
-							arrayAppend(variables.records,record);
-						}//<--end entity
+					if(getHibachiScope().hasService('elasticSearchService') && getCollectionObject() == 'Account'){
+						arguments.collectionEntity = this;
+						variables.records = getHibachiScope().getService('elasticSearchService').getPageRecords(argumentCollection=arguments);
 					}else{
-						HQL = getHQL(forExport=arguments.forExport);
-						HQLParams = getHQLParams();
-						variables.records = ormExecuteQuery(HQL,HQLParams, false, {ignoreCase="true", cacheable=getCacheable(), cachename="records-#getCacheName()#"});
-						if(!structKeyExists(variables, "recordsCount")) {
-							variables.recordsCount = arrayLen(variables.records);
+						var HQL = '';
+						var HQLParams = {};
+						if(this.getNonPersistentColumn()){
+							variables.records = [];
+							HQL =  'SELECT _#lcase(this.getCollectionObject())# ' &  getHQL(forExport=arguments.forExport);
+							HQLParams = getHQLParams();
+							var entities = ormExecuteQuery(HQL,HQLParams, false, {ignoreCase="true", cacheable=getCacheable(), cachename="records-#getCacheName()#"});
+							var columns = getCollectionConfigStruct()["columns"];
+							for(var entity in entities){
+								var record = {};
+	
+								for(var column in columns){
+	
+									var listRestValue = ListRest(column.propertyIdentifier,'.');
+									if(structKeyExists(column,'setting') && column.setting == true){
+										record[Replace(listRestValue,'.','_','all')] = getSettingValueFormattedByPropertyIdentifier(listRestValue,entity);
+									}else{
+										record[Replace(listRestValue,'.','_','all')] = entity.getValueByPropertyIdentifier(listRestValue);
+									}//<--end if
+	
+								}//<--end for
+								arrayAppend(variables.records,record);
+							}//<--end entity
+						}else{
+							HQL = getHQL(forExport=arguments.forExport);
+							HQLParams = getHQLParams();
+							variables.records = ormExecuteQuery(HQL,HQLParams, false, {ignoreCase="true", cacheable=getCacheable(), cachename="records-#getCacheName()#"});
+							if(!structKeyExists(variables, "recordsCount")) {
+								variables.recordsCount = arrayLen(variables.records);
+							}
 						}
 					}
 				}
@@ -1373,40 +1385,6 @@ component displayname="Collection" entityname="SlatwallCollection" table="SwColl
 			for(var i = 1; i <= columnCount; i++){
 				var column = arguments.columns[i];
 				if(!arguments.forExport || (arguments.forExport && structKeyExists(column,'isExportable') && column.isExportable)){
-					var currentAlias = '';
-					var currentAliasStepped = '';
-					var columnPropertyIdentiferArray = listToArray(column.propertyIdentifier,'.');
-					var columnPropertyIdentiferArrayCount = arrayLen(columnPropertyIdentiferArray);
-
-					for(var j = 1; j <= columnPropertyIdentiferArrayCount;j++){
-						if(columnPropertyIdentiferArrayCount > 2){
-							if(j != 1 && j != columnPropertyIdentiferArrayCount){
-								var dotNeeded = '';
-								if(j >= 3){
-									dotNeeded = '.';
-								}
-
-								var join = {
-										associationName=currentAliasStepped&dotNeeded&columnPropertyIdentiferArray[j],
-										alias=currentAlias&'_'&columnPropertyIdentiferArray[j]
-								};
-
-
-								currentAlias = currentAlias&'_'&columnPropertyIdentiferArray[j];
-								currentAliasStepped = currentAliasStepped &dotNeeded& columnPropertyIdentiferArray[j];
-
-								addJoin(join);
-
-							}
-							if(j == columnPropertyIdentiferArrayCount){
-								column.propertyIdentifier = currentAlias&'.'&columnPropertyIdentiferArray[j];
-
-							}
-						}
-						if(!len(currentAlias)){
-							currentAlias = columnPropertyIdentiferArray[1];
-						}
-					}
 					if(structKeyExists(column,'attributeID')){
 						columnsHQL &= getColumnAttributeHQL(column);
 					}else{
@@ -1417,7 +1395,7 @@ component displayname="Collection" entityname="SlatwallCollection" table="SwColl
 							columnsHQL &= getAggregateHQL(column.aggregate,column.propertyIdentifier);
 
 						}else{
-							var columnAlias = Replace(Replace(column.propertyIdentifier,'.','_','all'),'_'&lcase(Replace(getCollectionObject(),'#getDao('hibachiDAO').getApplicationKey()#',''))&'_','');
+							var columnAlias = getColumnsAlias(column);
 							columnsHQL &= ' #column.propertyIdentifier# as #columnAlias#';
 						}
 					}
@@ -1439,6 +1417,52 @@ component displayname="Collection" entityname="SlatwallCollection" table="SwColl
 		}
 		return HQL;
 	}//<--end function
+	
+	public string function getColumnAlias(required struct column){
+		if(structKeyExists(column,'attributeID')){
+			return listLast(column.propertyIdentifier,'.');
+		}else{
+			if(structKeyExists(column,'aggregate')){
+				return arguments.aggregate.aggregateAlias;
+			}else{
+				var currentAlias = '';
+				var currentAliasStepped = '';
+				var columnPropertyIdentiferArray = listToArray(arguments.column.propertyIdentifier,'.');
+				var columnPropertyIdentiferArrayCount = arrayLen(columnPropertyIdentiferArray);
+		
+				for(var j = 1; j <= columnPropertyIdentiferArrayCount;j++){
+					if(columnPropertyIdentiferArrayCount > 2){
+						if(j != 1 && j != columnPropertyIdentiferArrayCount){
+							var dotNeeded = '';
+							if(j >= 3){
+								dotNeeded = '.';
+							}
+		
+							var join = {
+									associationName=currentAliasStepped&dotNeeded&columnPropertyIdentiferArray[j],
+									alias=currentAlias&'_'&columnPropertyIdentiferArray[j]
+							};
+		
+		
+							currentAlias = currentAlias&'_'&columnPropertyIdentiferArray[j];
+							currentAliasStepped = currentAliasStepped &dotNeeded& columnPropertyIdentiferArray[j];
+		
+							addJoin(join);
+		
+						}
+						if(j == columnPropertyIdentiferArrayCount){
+							arguments.column.propertyIdentifier = currentAlias&'.'&columnPropertyIdentiferArray[j];
+		
+						}
+					}
+					if(!len(currentAlias)){
+						currentAlias = columnPropertyIdentiferArray[1];
+					}
+				}
+				return Replace(Replace(arguments.column.propertyIdentifier,'.','_','all'),'_'&lcase(Replace(getCollectionObject(),'#getDao('hibachiDAO').getApplicationKey()#',''))&'_','');
+			}
+		}
+	}
 
 	public any function createHQLFromCollectionObject(required any collectionObject,
 		boolean excludeSelectAndOrderBy=false,

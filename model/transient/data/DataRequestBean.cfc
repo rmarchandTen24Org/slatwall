@@ -85,6 +85,10 @@ component accessors="true" output="false" extends="Slatwall.model.transient.Requ
 		return httpRequest.send().getPrefix(); 
 	}
 	
+	public any function addParam(string type, string name, any value){
+		getHttpRequest().addParam(argumentCollection=arguments);
+	}
+	
 	public any function getHttpRequest(){
 		if(!structKeyExists(variables,'httpRequest')){
 			var httpRequest = new http();

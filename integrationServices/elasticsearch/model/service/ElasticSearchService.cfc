@@ -78,12 +78,86 @@ component extends="Slatwall.model.service.HibachiService" persistent="false" acc
 		return responseBean;
 	}
 	
+	public array function getPageRecords(required any collectionEntity){
+		var requestBean = newElasticSearchRequestBean();
+		requestBean.setAction('_search');
+		requestBean.setIndex('collection');
+		requestBean.setType(arguments.collectionEntity.getCollectionID());
+		requestBean.addParam(type="formfield",name="size",value=arguments.collectionEntity.getPageRecordsShow());
+		requestBean.addParam(type="formfield",name="from",value=arguments.collectionEntity.getPageRecordsStart());
+		requestBean.addParam(type="formfield",name="_source",value="true");
+		
+		var collectionConfig = arguments.collectionEntity.getcollectionConfigStruct();
+		//column begin
+		var fields = "";
+		
+		if(!isNull(collectionConfig.columns) && arrayLen(collectionConfig.columns)){
+			var columnsCount = arraylen(collectionConfig.columns);
+			for(var i=1;i < columnsCount; i++){
+				var column = collectionConfig.columns[i];
+				var alias = arguments.collectionEntity.getColumnAlias(column);
+				if(i == columnsCount){
+					fields &= alias;
+				}else{
+					fields &= alias & ',';
+				}
+			}
+		}
+		if(len(fields)){
+			requestBean.addParam(type="formfield",name="fields",value=fields);
+		}
+		//column end
+		
+		//order begin
+		var sort = "";
+		
+		if(!isNull(collectionConfig.orderBy) && len(collectionConfig.orderBy)){
+			var orderByCount = arraylen(collectionConfig.orderBy);
+			for(var i = 1; i <= orderByCount; i++){
+				var ordering = arguments.orderBy[i];
+				var direction = '';
+				if(!isnull(ordering.direction)){
+					direction = ordering.direction;
+				}
+	
+				sort &= '#ordering.propertyIdentifier#:#direction# ';
+	
+				//check whether a comma is needed
+				if(i != orderByCount){
+					sort &= ',';
+				}
+			}
+		}
+		
+		if(len(sort)){
+			requestBean.addParam(type="formfield",name="sort",value=sort);
+		}
+		//order end
+		
+		var queryJson = {
+			query={
+				match_all={}
+			}
+		};
+		requestBean.setBody(serializeJson(queryJson));
+		
+				
+		var responseBean = requestBean.getResponseBean();
+		var pageRecords = [];
+		for(var hit in responseBean.getData().hits.hits){
+			arrayAppend(pageRecords,hit['_source']);
+		}
+		return pageRecords;
+		
+	}
+	
 	public void function indexCollection(required any collectionEntity){
 		var collectionRecords = arguments.collectionEntity.getRecords();
 		var collectionExampleEntity = collectionEntity.getCollectionEntityObject();
 		var collectionPrimaryIDName = collectionExampleEntity.getPrimaryIDPropertyName();
 		var requestBody = "";
 		var linebreak = Chr(13) & Chr(10);
+		//var linebreak = '\n';
 		/*bulk api body example
 			{"index":{"_id":"1"}}
 			{"name": "John Doe" }
@@ -101,8 +175,17 @@ component extends="Slatwall.model.service.HibachiService" persistent="false" acc
 			requestBody &=serializeJson(record) & linebreak;
 		}
 		requestBody &= linebreak;
-		writedump(var=requestBody);abort;
+		var requestBean = newElasticSearchRequestBean();
+		requestBean.setAction('_bulk');
+		requestBean.setIndex('collection');
+		requestBean.setType('#arguments.collectionEntity.getCollectionID()#');
+		requestBean.setMethod('POST');
 		
+		requestBean.setBody(requestBody);
+		var responseBean = requestBean.getResponseBean();
+		if(structKeyExists(responseBean.getData(),'errors') && responseBean.getData().errors == 'YES'){
+			logHibachi('collectionIndexFailed: collection/#arguments.collectionEntity.getCollectionID()#/_bulk',true);
+		}		
 	}
 
 	// =====================  END: Logical Methods ============================

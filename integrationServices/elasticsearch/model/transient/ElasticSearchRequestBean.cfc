@@ -57,7 +57,7 @@ component extends="Slatwall.model.transient.data.DataRequestBean" persistent="fa
 	public any function init() {
 		setResponseBeanPath("Slatwall.integrationServices.elasticsearch.model.transient.ElasticSearchResponseBean");
 		// Set defaults
-		return super.init();
+		return super.init(argumentCollection=arguments);
 	}
 	
 	public any function getHttpRequest(){
@@ -67,9 +67,14 @@ component extends="Slatwall.model.transient.data.DataRequestBean" persistent="fa
 		if(len(getIndex())){
 			urlString &= "/#getIndex()#";
 		}
+		
+		//type depends on index
+		if(len(getIndex()) && len(getType())){
+			urlString &= "/#getType()#";
+		}
+		
 		//ID depneds on type depends on index
 		if(len(getIndex()) && len(getType()) && len(getID())){
-			urlString &= "/#getType()#";
 			urlString &= "/#ID#";
 		}
 		
