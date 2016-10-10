@@ -24815,7 +24815,7 @@
 	"use strict";
 	var SWCampaignWizardController = (function () {
 	    //@ngInject
-	    function SWCampaignWizardController(collectionConfigService, observerService, $hibachi, utilityService, $scope, marketignAutomationPartialsPath, slatwallPathBuilder, $rootScope) {
+	    function SWCampaignWizardController(collectionConfigService, observerService, $hibachi, utilityService, $scope, marketignAutomationPartialsPath, slatwallPathBuilder, $rootScope, scheduleService) {
 	        var _this = this;
 	        this.collectionConfigService = collectionConfigService;
 	        this.observerService = observerService;
@@ -24825,6 +24825,7 @@
 	        this.marketignAutomationPartialsPath = marketignAutomationPartialsPath;
 	        this.slatwallPathBuilder = slatwallPathBuilder;
 	        this.$rootScope = $rootScope;
+	        this.scheduleService = scheduleService;
 	        this.ui = {
 	            scheduleOpt: 0
 	        };
@@ -24886,6 +24887,8 @@
 	            });
 	        };
 	        this.scheduleSelected = function (schedule) {
+	            console.log('SELECTED', schedule);
+	            _this.schedulePreview = _this.scheduleService.buildSchedulePreview(schedule, 6);
 	            _this.scheduleID = schedule.scheduleID;
 	        };
 	        this.isCampaignActivity = function () {

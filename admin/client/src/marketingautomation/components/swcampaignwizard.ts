@@ -12,6 +12,8 @@ class SWCampaignWizardController{
     private campaign;
     private scheduleID;
     private campaignListID;
+    private schedule;
+    private schedulePreview;
 
     //@ngInject
     constructor(
@@ -22,7 +24,8 @@ class SWCampaignWizardController{
         public $scope,
         public marketignAutomationPartialsPath,
         public slatwallPathBuilder,
-        public $rootScope
+        public $rootScope,
+        public scheduleService
     ){
         this.init();
     }
@@ -99,6 +102,8 @@ class SWCampaignWizardController{
     };
 
     private scheduleSelected=(schedule:any):void=>{
+        console.log('SELECTED', schedule);
+        this.schedulePreview = this.scheduleService.buildSchedulePreview(schedule,6);
         this.scheduleID = schedule.scheduleID;
     };
 
