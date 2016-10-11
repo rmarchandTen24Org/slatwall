@@ -45,7 +45,7 @@ component displayname="Collection" entityname="SlatwallCollection" table="SwColl
 	property name="collectionDescription" ormtype="string";
 	property name="collectionObject" ormtype="string" hb_formFieldType="select";
 	property name="collectionConfig" ormtype="string" length="8000" hb_auditable="false" hb_formFieldType="json" hint="json object used to construct the base collection HQL query";
-
+	//property name="indexing" ormtype="boolean"; 
 	// Calculated Properties
 
 	// Related Object Properties (many-to-one)
@@ -95,12 +95,12 @@ component displayname="Collection" entityname="SlatwallCollection" table="SwColl
 	property name="collectionEntityObject" type="any" persistent="false";
 	property name="hasDisplayAggregate" type="boolean" persistent="false";
 	property name="hasManyRelationFilter" type="boolean" persistent="false";
-
+	
 	//property name="entityNameOptions" persistent="false" hint="an array of name/value structs for the entity's metaData";
 	property name="collectionObjectOptions" persistent="false";
 
 	// ============ START: Non-Persistent Property Methods =================
-
+	
 	public any function getCollectionEntityObject(){
 		if(!structKeyExists(variables,'collectionEntityObject')){
 			variables.collectionEntityObject = getService('hibachiService').getEntityObject(getCollectionObject());
@@ -1026,6 +1026,10 @@ component displayname="Collection" entityname="SlatwallCollection" table="SwColl
 					
 					if(getHibachiScope().hasService('elasticSearchService') && getCollectionObject() == 'Account'){
 						arguments.collectionEntity = this;
+						if(!getHibachiScope().getService('elasticSearchService').indexExists('collection',getCollectionID())){
+							
+							getHibachiScope().getService('elasticSearchService').indexCollection(this);								
+						}
 						variables.pageRecords = getHibachiScope().getService('elasticSearchService').getPageRecords(argumentCollection=arguments);
 					}else{
 						var HQL = '';
@@ -1098,13 +1102,17 @@ component displayname="Collection" entityname="SlatwallCollection" table="SwColl
 
 			variables.records =	formattedRecords;
 		}else{
-			try{
+//			try{
 				//If we are returning only the exportable records, then check and pass through.
 				if( !structKeyExists(variables, "records") || arguments.refresh == true) {
-					if(getHibachiScope().hasService('elasticSearchService') && getCollectionObject() == 'Account'){
-						arguments.collectionEntity = this;
-						variables.records = getHibachiScope().getService('elasticSearchService').getPageRecords(argumentCollection=arguments);
-					}else{
+//					if(getHibachiScope().hasService('elasticSearchService') &&  getCollectionObject() == 'Account'){
+//						
+//						arguments.collectionEntity = this;
+//						if(!getHibachiScope().getService('elasticSearchService').indexExists('collection',getCollectionID())){
+//							getHibachiScope().getService('elasticSearchService').indexCollection(this);								
+//						}
+//						variables.records = getHibachiScope().getService('elasticSearchService').getRecords(argumentCollection=arguments);
+//					}else{
 						var HQL = '';
 						var HQLParams = {};
 						if(this.getNonPersistentColumn()){
@@ -1137,13 +1145,13 @@ component displayname="Collection" entityname="SlatwallCollection" table="SwColl
 							}
 						}
 					}
-				}
-			}
-			catch(any e){
-				variables.records = [{'failedCollection'='failedCollection'}];
-				writelog(file="collection",text="Error:#e.message#");
-				writelog(file="collection",text="HQL:#HQL#");
-			}
+				//}
+//			}
+//			catch(any e){
+//				variables.records = [{'failedCollection'='failedCollection'}];
+//				writelog(file="collection",text="Error:#e.message#");
+//				writelog(file="collection",text="HQL:#HQL#");
+//			}
 		}
 
 		return variables.records;
@@ -1395,7 +1403,7 @@ component displayname="Collection" entityname="SlatwallCollection" table="SwColl
 							columnsHQL &= getAggregateHQL(column.aggregate,column.propertyIdentifier);
 
 						}else{
-							var columnAlias = getColumnsAlias(column);
+							var columnAlias = getColumnAlias(column);
 							columnsHQL &= ' #column.propertyIdentifier# as #columnAlias#';
 						}
 					}

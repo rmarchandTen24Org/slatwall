@@ -78,14 +78,27 @@ component extends="Slatwall.model.service.HibachiService" persistent="false" acc
 		return responseBean;
 	}
 	
+	public boolean function indexExists(required index, required type){
+		var requestBean = newElasticSearchRequestBean();
+		requestBean.setAction('_search/exists');
+		requestBean.setType(arguments.type);
+		requestBean.setIndex(arguments.index);
+		
+		var responseBean = requestBean.getResponseBean();
+		
+		return responseBean.getData().exists;		
+	}
+	
 	public array function getPageRecords(required any collectionEntity){
 		var requestBean = newElasticSearchRequestBean();
+		var body = {};
+		requestBean.setMethod('POST');
 		requestBean.setAction('_search');
 		requestBean.setIndex('collection');
 		requestBean.setType(arguments.collectionEntity.getCollectionID());
-		requestBean.addParam(type="formfield",name="size",value=arguments.collectionEntity.getPageRecordsShow());
-		requestBean.addParam(type="formfield",name="from",value=arguments.collectionEntity.getPageRecordsStart());
-		requestBean.addParam(type="formfield",name="_source",value="true");
+		body['size']=arguments.collectionEntity.getPageRecordsShow();
+		body['from']=arguments.collectionEntity.getPageRecordsStart();
+		body['_source']=true;
 		
 		var collectionConfig = arguments.collectionEntity.getcollectionConfigStruct();
 		//column begin
@@ -93,6 +106,9 @@ component extends="Slatwall.model.service.HibachiService" persistent="false" acc
 		
 		if(!isNull(collectionConfig.columns) && arrayLen(collectionConfig.columns)){
 			var columnsCount = arraylen(collectionConfig.columns);
+			
+			var searchableFields = [];
+			
 			for(var i=1;i < columnsCount; i++){
 				var column = collectionConfig.columns[i];
 				var alias = arguments.collectionEntity.getColumnAlias(column);
@@ -101,10 +117,28 @@ component extends="Slatwall.model.service.HibachiService" persistent="false" acc
 				}else{
 					fields &= alias & ',';
 				}
+				
+				if(structKeyExists(column,'isSearchable') && column.isSearchable){
+					arrayAppend(searchableFields,alias);
+				}
 			}
+			
+			//keywords
+			
+			if(len(arguments.collectionEntity.getKeywords())){
+				queryJson['query']['query_string'] = {};
+				queryJson['query']['query_string']['query']=arguments.collectionEntity.getKeywords();
+				queryJson['query']['query_string']['fields']=searchableFields;
+			}else{
+				queryJson['query']['match_all']={};
+			}
+			
+			var jsonBody = serializeJson(queryJson);
+			requestBean.setBody(jsonBody);
+		
 		}
 		if(len(fields)){
-			requestBean.addParam(type="formfield",name="fields",value=fields);
+			body['fields']=fields;
 		}
 		//column end
 		
@@ -130,19 +164,12 @@ component extends="Slatwall.model.service.HibachiService" persistent="false" acc
 		}
 		
 		if(len(sort)){
-			requestBean.addParam(type="formfield",name="sort",value=sort);
+			body['sort']=sort;
 		}
 		//order end
 		
-		var queryJson = {
-			query={
-				match_all={}
-			}
-		};
-		requestBean.setBody(serializeJson(queryJson));
-		
-				
 		var responseBean = requestBean.getResponseBean();
+		writedump(var=responseBean,top=2);abort;
 		var pageRecords = [];
 		for(var hit in responseBean.getData().hits.hits){
 			arrayAppend(pageRecords,hit['_source']);
@@ -152,40 +179,42 @@ component extends="Slatwall.model.service.HibachiService" persistent="false" acc
 	}
 	
 	public void function indexCollection(required any collectionEntity){
-		var collectionRecords = arguments.collectionEntity.getRecords();
-		var collectionExampleEntity = collectionEntity.getCollectionEntityObject();
-		var collectionPrimaryIDName = collectionExampleEntity.getPrimaryIDPropertyName();
-		var requestBody = "";
-		var linebreak = Chr(13) & Chr(10);
-		//var linebreak = '\n';
-		/*bulk api body example
-			{"index":{"_id":"1"}}
-			{"name": "John Doe" }
-			{"index":{"_id":"2"}}
-			{"name": "Jane Doe" }
-			{"index":{"_id":"3"}}
-			{"name": "Bob Doe" }
-			{"index":{"_id":"4"}}
-			{"name": "Bobby Doe" }
+		lock name="elasticSearchIndex#arguments.collectionEntity.getCollectionID()#" timeout="200" {
+			var collectionRecords = arguments.collectionEntity.getRecords(indexing=true);
+			var collectionExampleEntity = collectionEntity.getCollectionEntityObject();
+			var collectionPrimaryIDName = collectionExampleEntity.getPrimaryIDPropertyName();
+			var requestBody = "";
+			var linebreak = Chr(13) & Chr(10);
+			//var linebreak = '\n';
+			/*bulk api body example
+				{"index":{"_id":"1"}}
+				{"name": "John Doe" }
+				{"index":{"_id":"2"}}
+				{"name": "Jane Doe" }
+				{"index":{"_id":"3"}}
+				{"name": "Bob Doe" }
+				{"index":{"_id":"4"}}
+				{"name": "Bobby Doe" }
+				
+				NOTE: always end body with a carriage return as elastic search reads this on a line by line basis
+			*/
+			for(var record in collectionRecords){
+				requestBody &='{"index":{"_id":"#record[collectionPrimaryIDName]#"}}' & linebreak;
+				requestBody &=serializeJson(record) & linebreak;
+			}
+			requestBody &= linebreak;
+			var requestBean = newElasticSearchRequestBean();
+			requestBean.setAction('_bulk');
+			requestBean.setIndex('collection');
+			requestBean.setType('#arguments.collectionEntity.getCollectionID()#');
+			requestBean.setMethod('POST');
 			
-			NOTE: always end body with a carriage return as elastic search reads this on a line by line basis
-		*/
-		for(var record in collectionRecords){
-			requestBody &='{"index":{"_id":"#record[collectionPrimaryIDName]#"}}' & linebreak;
-			requestBody &=serializeJson(record) & linebreak;
-		}
-		requestBody &= linebreak;
-		var requestBean = newElasticSearchRequestBean();
-		requestBean.setAction('_bulk');
-		requestBean.setIndex('collection');
-		requestBean.setType('#arguments.collectionEntity.getCollectionID()#');
-		requestBean.setMethod('POST');
-		
-		requestBean.setBody(requestBody);
-		var responseBean = requestBean.getResponseBean();
-		if(structKeyExists(responseBean.getData(),'errors') && responseBean.getData().errors == 'YES'){
-			logHibachi('collectionIndexFailed: collection/#arguments.collectionEntity.getCollectionID()#/_bulk',true);
-		}		
+			requestBean.setBody(requestBody);
+			var responseBean = requestBean.getResponseBean();
+			if(structKeyExists(responseBean.getData(),'errors') && responseBean.getData().errors == 'YES'){
+				logHibachi('collectionIndexFailed: collection/#arguments.collectionEntity.getCollectionID()#/_bulk',true);
+			}	
+		}	
 	}
 
 	// =====================  END: Logical Methods ============================
