@@ -126,14 +126,14 @@ component extends="Slatwall.model.service.HibachiService" persistent="false" acc
 			//keywords
 			
 			if(len(arguments.collectionEntity.getKeywords())){
-				queryJson['query']['query_string'] = {};
-				queryJson['query']['query_string']['query']=arguments.collectionEntity.getKeywords();
-				queryJson['query']['query_string']['fields']=searchableFields;
+				body['query']['query_string'] = {};
+				body['query']['query_string']['query']=arguments.collectionEntity.getKeywords();
+				body['query']['query_string']['fields']=searchableFields;
 			}else{
-				queryJson['query']['match_all']={};
+				body['query']['match_all']={};
 			}
 			
-			var jsonBody = serializeJson(queryJson);
+			var jsonBody = serializeJson(body);
 			requestBean.setBody(jsonBody);
 		
 		}
@@ -169,7 +169,7 @@ component extends="Slatwall.model.service.HibachiService" persistent="false" acc
 		//order end
 		
 		var responseBean = requestBean.getResponseBean();
-		writedump(var=responseBean,top=2);abort;
+		
 		var pageRecords = [];
 		for(var hit in responseBean.getData().hits.hits){
 			arrayAppend(pageRecords,hit['_source']);
