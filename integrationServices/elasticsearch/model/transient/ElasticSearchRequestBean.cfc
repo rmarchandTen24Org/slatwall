@@ -48,6 +48,7 @@ Notes:
 */
 component extends="Slatwall.model.transient.data.DataRequestBean" persistent="false" accessors="true" output="false" {
 	property name="index" type="string" default="";
+	property name="feature" type="string" default="";
 	property name="type" type="string" default="";
 	property name="ID" type="string" default="";
 	property name="action" type="string" default="";
@@ -66,6 +67,10 @@ component extends="Slatwall.model.transient.data.DataRequestBean" persistent="fa
 		
 		if(len(getIndex())){
 			urlString &= "/#getIndex()#";
+		}
+		
+		if(len(getFeature())){
+			urlString &= "/#getFeature()#";
 		}
 		
 		//type depends on index

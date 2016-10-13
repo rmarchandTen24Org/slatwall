@@ -1024,7 +1024,7 @@ component displayname="Collection" entityname="SlatwallCollection" table="SwColl
 				
 				if( !structKeyExists(variables, "pageRecords") || arguments.refresh eq true) {
 					
-					if(getHibachiScope().hasService('elasticSearchService') && getCollectionObject() == 'Account'){
+					if(getHibachiScope().hasService('elasticSearchService')){
 						arguments.collectionEntity = this;
 						if(!getHibachiScope().getService('elasticSearchService').indexExists('collection',getCollectionID())){
 							

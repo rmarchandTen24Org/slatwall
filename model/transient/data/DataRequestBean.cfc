@@ -107,6 +107,10 @@ component accessors="true" output="false" extends="Slatwall.model.transient.Requ
 			if(len(getContentType())){
 				httpRequest.addParam(type="header",name='Content-Type',value=getContentType());
 			}
+			if(len(getBody())){
+				httpRequest.addParam(type="header",name='Content-Length',value=len(getBody));
+			}
+			
 			if(len(getIfUnmodifiedSince())){
 				httpRequest.addParam(type="header",name="If-Unmodified-Since",value=getIfUnmodifiedSince());
 			}

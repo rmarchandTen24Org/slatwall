@@ -49,7 +49,7 @@ Notes:
 component extends="Slatwall.model.service.HibachiService" persistent="false" accessors="true" output="false" {
 	property name="integrationCFC" type="any";
 	property name="settingService" type="any";
-	
+
 
 	// ===================== START: Logical Methods ===========================
 
@@ -77,18 +77,18 @@ component extends="Slatwall.model.service.HibachiService" persistent="false" acc
 
 		return responseBean;
 	}
-	
-	public boolean function indexExists(required index, required type){
+
+	public boolean function indexWithTypeExists(required index, required type){
 		var requestBean = newElasticSearchRequestBean();
 		requestBean.setAction('_search/exists');
 		requestBean.setType(arguments.type);
 		requestBean.setIndex(arguments.index);
-		
+
 		var responseBean = requestBean.getResponseBean();
-		
-		return responseBean.getData().exists;		
+		writedump(var=responseBean.getData(),top=3);abort;
+		return responseBean.getData().exists;
 	}
-	
+
 	public array function getPageRecords(required any collectionEntity){
 		var requestBean = newElasticSearchRequestBean();
 		var body = {};
@@ -99,16 +99,16 @@ component extends="Slatwall.model.service.HibachiService" persistent="false" acc
 		body['size']=arguments.collectionEntity.getPageRecordsShow();
 		body['from']=arguments.collectionEntity.getPageRecordsStart();
 		body['_source']=true;
-		
+
 		var collectionConfig = arguments.collectionEntity.getcollectionConfigStruct();
 		//column begin
 		var fields = "";
-		
+
 		if(!isNull(collectionConfig.columns) && arrayLen(collectionConfig.columns)){
 			var columnsCount = arraylen(collectionConfig.columns);
-			
+
 			var searchableFields = [];
-			
+
 			for(var i=1;i < columnsCount; i++){
 				var column = collectionConfig.columns[i];
 				var alias = arguments.collectionEntity.getColumnAlias(column);
@@ -117,14 +117,14 @@ component extends="Slatwall.model.service.HibachiService" persistent="false" acc
 				}else{
 					fields &= alias & ',';
 				}
-				
+
 				if(structKeyExists(column,'isSearchable') && column.isSearchable){
 					arrayAppend(searchableFields,alias);
 				}
 			}
-			
+
 			//keywords
-			
+
 			if(len(arguments.collectionEntity.getKeywords())){
 				body['query']['query_string'] = {};
 				body['query']['query_string']['query']=arguments.collectionEntity.getKeywords();
@@ -132,19 +132,19 @@ component extends="Slatwall.model.service.HibachiService" persistent="false" acc
 			}else{
 				body['query']['match_all']={};
 			}
-			
+
 			var jsonBody = serializeJson(body);
 			requestBean.setBody(jsonBody);
-		
+
 		}
 		if(len(fields)){
 			body['fields']=fields;
 		}
 		//column end
-		
+
 		//order begin
 		var sort = "";
-		
+
 		if(!isNull(collectionConfig.orderBy) && len(collectionConfig.orderBy)){
 			var orderByCount = arraylen(collectionConfig.orderBy);
 			for(var i = 1; i <= orderByCount; i++){
@@ -153,38 +153,185 @@ component extends="Slatwall.model.service.HibachiService" persistent="false" acc
 				if(!isnull(ordering.direction)){
 					direction = ordering.direction;
 				}
-	
+
 				sort &= '#ordering.propertyIdentifier#:#direction# ';
-	
+
 				//check whether a comma is needed
 				if(i != orderByCount){
 					sort &= ',';
 				}
 			}
 		}
-		
+
 		if(len(sort)){
 			body['sort']=sort;
 		}
 		//order end
-		
+
 		var responseBean = requestBean.getResponseBean();
-		
+
 		var pageRecords = [];
 		for(var hit in responseBean.getData().hits.hits){
 			arrayAppend(pageRecords,hit['_source']);
 		}
 		return pageRecords;
+
+	}
+
+	public void function createIndex(required string index, string type="", struct properties){
+		var requestBean = newElasticSearchRequestBean();
+		requestBean.setIndex(arguments.index);
+		requestBean.setMethod('POST');
 		
+		var requestBody = getMappings(argumentCollection=arguments);
+		requestBean.setBody(serializeJson(requestBody));
+		
+		var responseBean = requestBean.getResponseBean();
+		if(structKeyExists(responseBean.getData(),'errors') && responseBean.getData().errors == 'YES'){
+			logHibachi('createIndexFailed: #arguments.index#/#arguments.type#',true);
+		}
+	}
+
+	public void function deleteIndex(required index){
+		var requestBean = newElasticSearchRequestBean();
+		requestBean.setIndex(arguments.index);
+		requestBean.setMethod('DELETE');
+		var responseBean = requestBean.getResponseBean();
+		if(structKeyExists(responseBean.getData(),'errors') && responseBean.getData().errors == 'YES'){
+			logHibachi('deleteIndexFailed: #arguments.index#',true);
+		}
+	}
+
+	public void function updateMapping(required index, required type, required struct properties){
+		/*
+		PUT my_index
+		{
+		  "mappings": {
+		    "user": {
+		      "properties": {
+		        "name": {
+		          "properties": {
+		            "first": {
+		              "type": "string"
+		            }
+		          }
+		        },
+		        "user_id": {
+		          "type": "string",
+		          "index": "not_analyzed"
+		        }
+		      }
+		    }
+		  }
+		}
+		*/
+
+		var requestBean = newElasticSearchRequestBean();
+		requestBean.setIndex(arguments.index);
+		requestBean.setAction('_mapping');
+		requestBean.setType(arguments.type);
+		requestBean.setMethod('PUT');
+
+		var requestBody['properties'] = arguments.properties;
+		requestBean.setBody(serializeJson(requestBody));
+		
+
+		var responseBean = requestBean.getResponseBean();
+		writedump(var=responseBean,top=4);abort;
+		if(structKeyExists(responseBean.getData(),'errors') && responseBean.getData().errors == 'YES'){
+			logHibachi('updateMappingFailed: #arguments.index#/#arguments.type#',true);
+		}
 	}
 	
+	public struct function getMappings(required string type, required struct properties){
+		var mappings = {};
+		mappings['mappings']={};
+		mappings['mappings'][arguments.type] = {};
+		if(!isNull(arguments.properties)){
+			mappings['mappings'][arguments.type]['properties'] = arguments.properties;	
+		}
+		return mappings;
+	}
+
+
+	public string function getElasticDataType(required string ormtype){
+		var datatype = 'string';
+		switch(lcase(arguments.ormtype)){
+			case "integer":
+			case "int":
+				datatype="integer";
+				break;
+			case "big_decimal":
+			case "float":
+			case "double":
+				datatype="double";
+				break;
+			case "timestamp":
+			case "date":
+				datatype='date';
+				break;
+			case "boolean":
+			case "yes_no":
+			case "true_false":
+				datatype="boolean";
+				break;
+			case "string":
+			case "text":
+				datatype="string";
+				break;
+			case "character":
+			case "char":
+				datatype="byte";
+				break;
+			case "short":
+				datatype="short";
+				break;
+			case "long":
+				datatype="long";
+				break;
+			case "binary":
+			case "serializable":
+			case "blob":
+			case "clob":
+				datatype="binary";
+				break;
+		}
+		return datatype;
+	}
+	
+	public struct function getPropertyMappingsByCollection(required any collectionEntity){
+		var properties = {};
+		for(var column in arguments.collectionEntity.getcollectionConfigStruct().columns){
+			var alias = arguments.collectionEntity.getColumnAlias(column);
+			properties[alias] = {};
+			properties[alias]['type'] = getElasticDataType(column.ormtype);
+		}
+		return properties;
+	}
+	
+	public boolean function indexExists(required string index){
+		var requestBean = newElasticSearchRequestBean();
+		requestBean.setIndex(arguments.index);
+		requestBean.setMethod('HEAD');
+
+		var responseBean = requestBean.getResponseBean();
+		
+		return responseBean.getStatusCode() CONTAINS 404;
+	}
+
 	public void function indexCollection(required any collectionEntity){
+		//if we don't have a collection then take the opportunity to create the index and mappings
+		if(!indexExists('collection')){
+			var properties = getPropertyMappingsByCollection(arguments.collectionEntity);
+			createIndex('collection',arguments.collectionEntity.getCollectionID(),properties);
+		}
+		//pump data into collection
 		lock name="elasticSearchIndex#arguments.collectionEntity.getCollectionID()#" timeout="200" {
 			var collectionRecords = arguments.collectionEntity.getRecords(formatRecords=false);
 			var collectionExampleEntity = collectionEntity.getCollectionEntityObject();
 			var collectionPrimaryIDName = collectionExampleEntity.getPrimaryIDPropertyName();
-			
-			
+
+
 			//var linebreak = '\n';
 			/*bulk api body example
 				{"index":{"_id":"1"}}
@@ -195,19 +342,19 @@ component extends="Slatwall.model.service.HibachiService" persistent="false" acc
 				{"name": "Bob Doe" }
 				{"index":{"_id":"4"}}
 				{"name": "Bobby Doe" }
-				
+
 				NOTE: always end body with a carriage return as elastic search reads this on a line by line basis
 			*/
 			var linebreak = Chr(13) & Chr(10);
 			var collectionRecordsCount = arraylen(collectionRecords);
 			var requestBody = "";
-			
-			for(var i=1; i < collectionRecordsCount;i++){
+
+			for(var i=1; i <= collectionRecordsCount;i++){
 				var record = collectionRecords[i];
 				requestBody &='{"index":{"_id":"#record[collectionPrimaryIDName]#"}}' & linebreak;
 				requestBody &=serializeJson(record) & linebreak;
-				
-				if(i % 1000 == 0){
+
+				if(i % 1000 == 0 || i == collectionRecordsCount){
 					var threadName = "indexCollection-#createHibachiUUID()#";
 					thread name="#threadName#" action="run" requestBody="#requestBody#" collectionID="#arguments.collectionEntity.getCollectionID()#" lineBreak="#lineBreak#"{
 						attributes.requestBody &= attributes.linebreak;
@@ -216,19 +363,19 @@ component extends="Slatwall.model.service.HibachiService" persistent="false" acc
 						requestBean.setIndex('collection');
 						requestBean.setType('#attributes.collectionID#');
 						requestBean.setMethod('POST');
-						
+
 						requestBean.setBody(attributes.requestBody);
 						var responseBean = requestBean.getResponseBean();
 						if(structKeyExists(responseBean.getData(),'errors') && responseBean.getData().errors == 'YES'){
 							logHibachi('collectionIndexFailed: collection/#attributes.collectionID#/_bulk',true);
-						}	
+						}
 					}
 					requestBody = "";
 				}
 			}
 			thread action="join";
-			
-		}	
+
+		}
 	}
 
 	// =====================  END: Logical Methods ============================
