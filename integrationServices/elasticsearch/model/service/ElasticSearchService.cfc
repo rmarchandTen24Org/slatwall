@@ -180,11 +180,11 @@ component extends="Slatwall.model.service.HibachiService" persistent="false" acc
 	
 	public void function indexCollection(required any collectionEntity){
 		lock name="elasticSearchIndex#arguments.collectionEntity.getCollectionID()#" timeout="200" {
-			var collectionRecords = arguments.collectionEntity.getRecords(indexing=true);
+			var collectionRecords = arguments.collectionEntity.getRecords(formatRecords=false);
 			var collectionExampleEntity = collectionEntity.getCollectionEntityObject();
 			var collectionPrimaryIDName = collectionExampleEntity.getPrimaryIDPropertyName();
-			var requestBody = "";
-			var linebreak = Chr(13) & Chr(10);
+			
+			
 			//var linebreak = '\n';
 			/*bulk api body example
 				{"index":{"_id":"1"}}
@@ -198,22 +198,36 @@ component extends="Slatwall.model.service.HibachiService" persistent="false" acc
 				
 				NOTE: always end body with a carriage return as elastic search reads this on a line by line basis
 			*/
-			for(var record in collectionRecords){
+			var linebreak = Chr(13) & Chr(10);
+			var collectionRecordsCount = arraylen(collectionRecords);
+			var requestBody = "";
+			
+			for(var i=1; i < collectionRecordsCount;i++){
+				var record = collectionRecords[i];
 				requestBody &='{"index":{"_id":"#record[collectionPrimaryIDName]#"}}' & linebreak;
 				requestBody &=serializeJson(record) & linebreak;
+				
+				if(i % 1000 == 0){
+					var threadName = "indexCollection-#createHibachiUUID()#";
+					thread name="#threadName#" action="run" requestBody="#requestBody#" collectionID="#arguments.collectionEntity.getCollectionID()#" lineBreak="#lineBreak#"{
+						attributes.requestBody &= attributes.linebreak;
+						var requestBean = newElasticSearchRequestBean();
+						requestBean.setAction('_bulk');
+						requestBean.setIndex('collection');
+						requestBean.setType('#attributes.collectionID#');
+						requestBean.setMethod('POST');
+						
+						requestBean.setBody(attributes.requestBody);
+						var responseBean = requestBean.getResponseBean();
+						if(structKeyExists(responseBean.getData(),'errors') && responseBean.getData().errors == 'YES'){
+							logHibachi('collectionIndexFailed: collection/#attributes.collectionID#/_bulk',true);
+						}	
+					}
+					requestBody = "";
+				}
 			}
-			requestBody &= linebreak;
-			var requestBean = newElasticSearchRequestBean();
-			requestBean.setAction('_bulk');
-			requestBean.setIndex('collection');
-			requestBean.setType('#arguments.collectionEntity.getCollectionID()#');
-			requestBean.setMethod('POST');
+			thread action="join";
 			
-			requestBean.setBody(requestBody);
-			var responseBean = requestBean.getResponseBean();
-			if(structKeyExists(responseBean.getData(),'errors') && responseBean.getData().errors == 'YES'){
-				logHibachi('collectionIndexFailed: collection/#arguments.collectionEntity.getCollectionID()#/_bulk',true);
-			}	
 		}	
 	}
 
