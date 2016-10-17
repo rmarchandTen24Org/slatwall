@@ -238,6 +238,7 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 					}
 					
 					if(directoryExists("#getApplicationValue("applicationRootMappingPath")#/integrationServices/#integrationPackage#/model")) {
+						var beanFactory = getBeanFactory();
 						//if we have entities then copy them into root model/entity
 						if(directoryExists("#getApplicationValue("applicationRootMappingPath")#/integrationServices/#integrationPackage#/model/entity")){
 							var modelList = directoryList( expandPath("/Slatwall") & "/integrationServices/#integrationPackage#/model/entity" );
@@ -246,10 +247,8 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 								var beanName = listFirst(beanCFC,'.');
 								var modelDestinationPath = expandPath("/Slatwall") & "/model/entity/" & beanCFC;
 								FileCopy(modelFilePath,modelDestinationPath);
-								if(!getBeanFactory().containsBean(beanName)){
-									var entityBeanFactory = getBeanFactory();
-									entityBeanFactory.declareBean(beanName, "#getHibachiDao().getApplicationValue('applicationKey')#.model.entity.#beanName#",false);
-									setBeanFactory(entityBeanFactory);
+								if(!beanFactory.containsBean(beanName)){
+									beanFactory.declareBean(beanName, "#getHibachiDao().getApplicationValue('applicationKey')#.model.entity.#beanName#",false);
 								}
 							}
 						}
@@ -267,16 +266,17 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 								&& structKeyExists(integrationBFBeans.beanInfo[beanName], "isSingleton")
 							) {
 								if(len(beanName) > len(integrationPackage) && left(beanName, len(integrationPackage)) eq integrationPackage) {
-									var beanFactory = getBeanFactory().declareBean( beanName, integrationBFBeans.beanInfo[ beanName ].cfc, integrationBFBeans.beanInfo[ beanName ].isSingleton );
+									beanFactory.declareBean( beanName, integrationBFBeans.beanInfo[ beanName ].cfc, integrationBFBeans.beanInfo[ beanName ].isSingleton );
 								} else {
-									var beanFactory = getBeanFactory().declareBean( "#integrationPackage##beanName#", integrationBFBeans.beanInfo[ beanName ].cfc, integrationBFBeans.beanInfo[ beanName ].isSingleton );	
+									beanFactory.declareBean( "#integrationPackage##beanName#", integrationBFBeans.beanInfo[ beanName ].cfc, integrationBFBeans.beanInfo[ beanName ].isSingleton );	
 								}
-								setBeanFactory(beanFactory);							
+															
 							}
 							
 						}
-						
+						setBeanFactory(beanFactory);
 					}
+					
 				}
 				
 			}
