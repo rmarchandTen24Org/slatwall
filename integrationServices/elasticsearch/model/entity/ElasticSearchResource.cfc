@@ -46,16 +46,16 @@
 Notes:
 
 */
-component displayname="ElasticResource" entityname="SlatwallElasticResource" table="SwElasticResource" persistent="true" output="false" accessors="true" extends="Slatwall.model.entity.HibachiEntity" cacheuse="transactional" hb_serviceName="elasticSearchService" hb_permission="this"  {
+component displayname="ElasticSearchResource" entityname="SlatwallElasticSearchResource" table="SwElasticSearchResource" persistent="true" output="false" accessors="true" extends="Slatwall.model.entity.HibachiEntity" cacheuse="transactional" hb_serviceName="elasticSearchService" hb_permission="this"  {
 
 	// Persistent Properties
-	property name="elasticResourceID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
-	property name="elasticResourceIndex" ormtype="string";
-	property name="elasticResourceType" ormtype="string";
+	property name="elasticSearchResourceID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
+	property name="elasticSearchResourceIndex" ormtype="string";
+	property name="elasticSearchResourceType" ormtype="string";
 	property name="collectionConfig" ormtype="string";
 	
 	// Related Object Properties (many-to-one)
-	//property name="collection" cfc="Collection" fieldtype="many-to-one" fkcolumn="collectionID";
+	property name="collection" cfc="Collection" fieldtype="many-to-one" fkcolumn="collectionID";
 
 	// Related Object Properties (one-to-many)
 
