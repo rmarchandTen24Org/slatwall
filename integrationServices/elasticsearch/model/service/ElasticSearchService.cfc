@@ -111,15 +111,22 @@ component extends="Slatwall.model.service.HibachiService" persistent="false" acc
 
 			for(var i=1;i < columnsCount; i++){
 				var column = collectionConfig.columns[i];
-				var alias = arguments.collectionEntity.getColumnAlias(column);
-				if(i == columnsCount){
-					fields &= alias;
-				}else{
-					fields &= alias & ',';
-				}
-
-				if(structKeyExists(column,'isSearchable') && column.isSearchable){
-					arrayAppend(searchableFields,alias);
+				if(
+					isNumeric(arguments.collectionEntity.getKeywords())
+					|| (
+						!isNumeric(arguments.collectionEntity.getKeywords())
+						&& "big_decimal,int,integer,float,double" DOES NOT CONTAIN column.ormtype
+					)
+				){
+					var alias = arguments.collectionEntity.getColumnAlias(column);
+					if(i == columnsCount){
+						fields &= alias;
+					}else{
+						fields &= alias & ',';
+					}
+					if(structKeyExists(column,'isSearchable') && column.isSearchable){
+						arrayAppend(searchableFields,alias);
+					}
 				}
 			}
 
@@ -132,7 +139,6 @@ component extends="Slatwall.model.service.HibachiService" persistent="false" acc
 			}else{
 				body['query']['match_all']={};
 			}
-
 			var jsonBody = serializeJson(body);
 			requestBean.setBody(jsonBody);
 
