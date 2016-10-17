@@ -673,7 +673,9 @@
 			arguments.entityName = getProperlyCasedShortEntityName(arguments.entityName);
 			
 			if(structKeyExists(getEntitiesMetaData(), arguments.entityName) && structKeyExists(getEntitiesMetaData()[arguments.entityName], "hb_serviceName")) {
-				return getService( getEntitiesMetaData()[ arguments.entityName ].hb_serviceName );
+				if(hasService(getEntitiesMetaData()[ arguments.entityName ].hb_serviceName)){
+					return getService( getEntitiesMetaData()[ arguments.entityName ].hb_serviceName );	
+				}
 			}
 			
 			// By default just return the base hibachi service
