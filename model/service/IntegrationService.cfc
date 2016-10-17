@@ -238,7 +238,21 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 					}
 					
 					if(directoryExists("#getApplicationValue("applicationRootMappingPath")#/integrationServices/#integrationPackage#/model")) {
-						
+						//if we have entities then copy them into root model/entity
+						if(directoryExists("#getApplicationValue("applicationRootMappingPath")#/integrationServices/#integrationPackage#/model/entity")){
+							var modelList = directoryList( expandPath("/Slatwall") & "/integrationServices/#integrationPackage#/model/entity" );
+							for(var modelFilePath in modelList){
+								var beanCFC = listLast(modelFilePath,'/');
+								var beanName = listFirst(beanCFC,'.');
+								var modelDestinationPath = expandPath("/Slatwall") & "/model/entity/" & beanCFC;
+								FileCopy(modelFilePath,modelDestinationPath);
+								if(!getBeanFactory().containsBean(beanName)){
+									var entityBeanFactory = getBeanFactory();
+									entityBeanFactory.declareBean(beanName, "#getHibachiDao().getApplicationValue('applicationKey')#.model.entity.#beanName#",false);
+									setBeanFactory(entityBeanFactory);
+								}
+							}
+						}
 						
 						var integrationBF = new Slatwall.org.Hibachi.DI1.ioc("/Slatwall/integrationServices/#integrationPackage#/model", {
 							transients=["process", "transient", "report"],
@@ -257,10 +271,11 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 								} else {
 									var beanFactory = getBeanFactory().declareBean( "#integrationPackage##beanName#", integrationBFBeans.beanInfo[ beanName ].cfc, integrationBFBeans.beanInfo[ beanName ].isSingleton );	
 								}
-																
+								setBeanFactory(beanFactory);							
 							}
 							
 						}
+						
 					}
 				}
 				
