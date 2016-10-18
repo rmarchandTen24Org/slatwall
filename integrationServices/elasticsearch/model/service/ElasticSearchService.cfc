@@ -183,7 +183,7 @@ component extends="Slatwall.model.service.HibachiService" persistent="false" acc
 		return pageRecords;
 
 	}
-
+	
 	public void function createIndex(required string index, string type="", struct properties){
 		var requestBean = newElasticSearchRequestBean();
 		requestBean.setIndex(arguments.index);
@@ -327,10 +327,18 @@ component extends="Slatwall.model.service.HibachiService" persistent="false" acc
 
 	public void function indexCollection(required any collectionEntity){
 		//if we don't have a collection then take the opportunity to create the index and mappings
-		if(!indexExists('collection')){
-			var properties = getPropertyMappingsByCollection(arguments.collectionEntity);
-			createIndex('collection',arguments.collectionEntity.getCollectionID(),properties);
+		var indexName = "entity";
+		var typeName = arguments.collection.getCollectionObject();
+		if(!arguments.collectionEntity.getNewFlag()){
+			indexName = "collection";			
+			typeName = arguments.collectionEntity.getCollectionID();
 		}
+		
+		if(!indexExists(indexName)){
+			var properties = getPropertyMappingsByCollection(arguments.collectionEntity);
+			createIndex(indexName,typeName,properties);
+		}
+		
 		//pump data into collection
 		lock name="elasticSearchIndex#arguments.collectionEntity.getCollectionID()#" timeout="200" {
 			var collectionRecords = arguments.collectionEntity.getRecords(formatRecords=false);
@@ -362,18 +370,23 @@ component extends="Slatwall.model.service.HibachiService" persistent="false" acc
 
 				if(i % 1000 == 0 || i == collectionRecordsCount){
 					var threadName = "indexCollection-#createHibachiUUID()#";
-					thread name="#threadName#" action="run" requestBody="#requestBody#" collectionID="#arguments.collectionEntity.getCollectionID()#" lineBreak="#lineBreak#"{
+					thread name="#threadName#" action="run" 
+						   requestBody="#requestBody#" 
+						   lineBreak="#lineBreak#"
+						   indexName="#indexName#"
+						   typeName="#typeName#"
+					{
 						attributes.requestBody &= attributes.linebreak;
 						var requestBean = newElasticSearchRequestBean();
 						requestBean.setAction('_bulk');
-						requestBean.setIndex('collection');
-						requestBean.setType('#attributes.collectionID#');
+						requestBean.setIndex(attributes.indexName);
+						requestBean.setType('#attributes.typeName#');
 						requestBean.setMethod('POST');
 
 						requestBean.setBody(attributes.requestBody);
 						var responseBean = requestBean.getResponseBean();
 						if(structKeyExists(responseBean.getData(),'errors') && responseBean.getData().errors == 'YES'){
-							logHibachi('collectionIndexFailed: collection/#attributes.collectionID#/_bulk',true);
+							logHibachi('collectionIndexFailed: #attribtues.indexName#/#attributes.typeName#/_bulk',true);
 						}
 					}
 					requestBody = "";

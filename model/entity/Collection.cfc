@@ -1026,10 +1026,16 @@ component displayname="Collection" entityname="SlatwallCollection" table="SwColl
 					
 					if(getHibachiScope().hasService('elasticSearchService')){
 						arguments.collectionEntity = this;
-						if(!getHibachiScope().getService('elasticSearchService').indexExists('collection',getCollectionID())){
-							
-							getHibachiScope().getService('elasticSearchService').indexCollection(this);								
+						if(this.getNewFlag()){
+							if(!getHibachiScope().getService('elasticSearchService').indexExists('entity',getCollectionObject())){
+								getHibachiScope().getService('elasticSearchService').indexCollection(this);		
+							}
+						}else{
+							if(!getHibachiScope().getService('elasticSearchService').indexExists('collection',getCollectionID())){
+								getHibachiScope().getService('elasticSearchService').indexCollection(this);								
+							}
 						}
+						
 						variables.pageRecords = getHibachiScope().getService('elasticSearchService').getPageRecords(argumentCollection=arguments);
 					}else{
 						var HQL = '';
