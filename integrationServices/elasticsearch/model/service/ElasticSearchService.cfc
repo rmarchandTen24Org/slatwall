@@ -184,6 +184,26 @@ component extends="Slatwall.model.service.HibachiService" persistent="false" acc
 
 	}
 	
+	public void function processElasticSearchResource_Index(required any elasticSearchResource, required any processObject){
+		this.saveElasticSearchResource(arguments.elasticSearchResource);
+	}
+	
+	public any function saveElasticSearchResource(required any elasticSearchResource, struct data={}){
+		arguments.elasticSearchResource = super.save(arguments.elasticSearchResource, arguments.data);
+		
+		if(!arguments.elasticSearchResource.hasErrors()){
+			var collectionEntity = getCollectionList(arguments.elasticSearchResource.getElasticSearchResourceType());
+			if(!isNull(elasticSearchResource.getCollectionConfig())){
+				collectionEntity.setCollectionConfig(elasticSearchResource.getCollectionConfig());
+				var elasticSearchResourceCollectionConfigStruct = deserializeJson(elasticSearchResource.getCollectionConfig());	
+				collectionEntity.setCollectionConfigStruct(elasticSearchResourceCollectionConfigStruct);
+			}
+			
+			indexCollection(collectionEntity);
+		}
+		return arguments.elasticSearchResource;
+	}
+	
 	public void function createIndex(required string index, string type="", struct properties){
 		var requestBean = newElasticSearchRequestBean();
 		requestBean.setIndex(arguments.index);
@@ -324,11 +344,13 @@ component extends="Slatwall.model.service.HibachiService" persistent="false" acc
 		
 		return responseBean.getStatusCode() CONTAINS 404;
 	}
+	
+	
 
 	public void function indexCollection(required any collectionEntity){
 		//if we don't have a collection then take the opportunity to create the index and mappings
 		var indexName = "entity";
-		var typeName = arguments.collection.getCollectionObject();
+		var typeName = arguments.collectionEntity.getCollectionObject();
 		if(!arguments.collectionEntity.getNewFlag()){
 			indexName = "collection";			
 			typeName = arguments.collectionEntity.getCollectionID();

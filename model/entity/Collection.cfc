@@ -95,11 +95,16 @@ component displayname="Collection" entityname="SlatwallCollection" table="SwColl
 	property name="collectionEntityObject" type="any" persistent="false";
 	property name="hasDisplayAggregate" type="boolean" persistent="false";
 	property name="hasManyRelationFilter" type="boolean" persistent="false";
+	property name="useElasticSearch" type="boolean" persistent="false";
 	
 	//property name="entityNameOptions" persistent="false" hint="an array of name/value structs for the entity's metaData";
 	property name="collectionObjectOptions" persistent="false";
 
 	// ============ START: Non-Persistent Property Methods =================
+	
+	public boolean function getUseElasticSearch(){
+		return variables.useElasticSearch && getHibachiScope().hasService('elasticSearchService');
+	}
 	
 	public any function getCollectionEntityObject(){
 		if(!structKeyExists(variables,'collectionEntityObject')){
@@ -107,7 +112,7 @@ component displayname="Collection" entityname="SlatwallCollection" table="SwColl
 		}
 		return variables.collectionEntityObject;
 	}
-
+	
 	//add Filter
 	public void function addFilter(
 		required string propertyIdentifier,
@@ -386,6 +391,7 @@ component displayname="Collection" entityname="SlatwallCollection" table="SwColl
 		variables.processObjects = [];
 		variables.hasDisplayAggregate = false;
 		variables.hasManyRelationFilter = false;
+		variables.useElasticSearch = false;
 	}
 
 	public void function setCollectionObject(required string collectionObject, boolean addDefaultColumns=true){
@@ -1024,7 +1030,7 @@ component displayname="Collection" entityname="SlatwallCollection" table="SwColl
 				
 				if( !structKeyExists(variables, "pageRecords") || arguments.refresh eq true) {
 					
-					if(getHibachiScope().hasService('elasticSearchService')){
+					if(getUseElasticSearch()){
 						arguments.collectionEntity = this;
 						if(this.getNewFlag()){
 							if(!getHibachiScope().getService('elasticSearchService').indexExists('entity',getCollectionObject())){
