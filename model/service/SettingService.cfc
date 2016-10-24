@@ -53,7 +53,8 @@ globalEncryptionKeySize
 component extends="HibachiService" output="false" accessors="true" {
 
 	property name="settingDAO" type="any";
-
+	
+	property name="hibachiEventService" type="any";
 	property name="contentService" type="any";
 	property name="currencyService" type="any";
 	property name="emailService" type="any";
@@ -101,7 +102,7 @@ component extends="HibachiService" output="false" accessors="true" {
 			sku = ["product.productID", "product.productType.productTypeIDPath&product.brand.brandID", "product.productType.productTypeIDPath"],
 			product = ["productType.productTypeIDPath&brand.brandID", "productType.productTypeIDPath"],
 			productType = ["productTypeIDPath"],
-			content = ["contentIDPath","contentID","site.siteID"],
+			content = ["contentIDPath","site.siteID"],
 			email = ["emailTemplate.emailTemplateID"],
 			shippingMethodRate = ["shippingMethod.shippingMethodID"],
 			accountAuthentication = [ "integration.integrationID" ],
@@ -207,6 +208,8 @@ component extends="HibachiService" output="false" accessors="true" {
 			globalCopyCartToNewSessionOnLogout = {fieldtype="yesno", defaultValue=0},
 			globalUseShippingIntegrationForTrackingNumberOption = {fieldtype="yesno", defaultValue=0},
 			globalSmartListGetAllRecordsLimit = {fieldType="text",defaultValue=250},
+			globalAllowCustomBranchUpdates={fieldType="yesno",defaultValue=0},
+			
 			// Image
 			imageAltString = {fieldType="text",defaultValue=""},
 			imageMissingImagePath = {fieldType="text",defaultValue="/assets/images/missingimage.jpg"},
@@ -244,6 +247,9 @@ component extends="HibachiService" output="false" accessors="true" {
 			siteVerifyAccountEmailAddressEmailTemplate = {fieldType="select", defaultValue="61d29dd9f6ca76d9e352caf55500b458"},
 			siteOrderOrigin = {fieldType="select"},
             siteMissingImagePath = {fieldType="text", defaultValue="/assets/images/missingimage.jpg"},
+            siteRecaptchaSiteKey = {fieldType="text"},
+			siteRecaptchaSecretKey = {fieldType="text"},
+			siteRecaptchaProtectedEvents = {fieldType="multiselect", defaultValue=""},
 			
 			// Shipping Method
 			shippingMethodQualifiedRateSelection = {fieldType="select", defaultValue="lowest"},
@@ -342,7 +348,7 @@ component extends="HibachiService" output="false" accessors="true" {
 		){
 			var packageName = extractPackageNameBySettingName(arguments.settingName);
 			var integration = getService('integrationService').getIntegrationByIntegrationPackage(trim(packageName));
-			if(structkeyExists(integration.getIntegrationCFC(),"getSettingOptions")){
+			if(!isNull(integration) && structkeyExists(integration.getIntegrationCFC(),"getSettingOptions")){
 				return integration.getIntegrationCFC().getSettingOptions(arguments.settingName);
 			}
 		}
@@ -451,7 +457,8 @@ component extends="HibachiService" output="false" accessors="true" {
 				return getEmailService().getEmailTemplateOptions( "Task" );
 			case "taskSuccessEmailTemplate":
 				return getEmailService().getEmailTemplateOptions( "Task" );
-
+			case "siteRecaptchaProtectedEvents":
+				return getHibachiEventService().getEntityEventNameOptions('before');
 		}
 
 		if(structKeyExists(getSettingMetaData(arguments.settingName), "valueOptions")) {
@@ -462,7 +469,7 @@ component extends="HibachiService" output="false" accessors="true" {
 	}
 
 	public any function getSettingOptionsSmartList(required string settingName) {
-		return getServiceByEntityName( getSettingMetaData(arguments.settingName).listingMultiselectEntityName ).invokeMethod("get#getSettingMetaData(arguments.settingName).listingMultiselectEntityName#SmartList");
+			return getServiceByEntityName( getSettingMetaData(arguments.settingName).listingMultiselectEntityName ).invokeMethod("get#getSettingMetaData(arguments.settingName).listingMultiselectEntityName#SmartList");	
 	}
 
 	public array function getCustomIntegrationOptions() {
@@ -803,11 +810,18 @@ component extends="HibachiService" output="false" accessors="true" {
 				if(settingMetaData.fieldType == "listingMultiselect") {
 					settingDetails.settingValueFormatted = "";
 					for(var i=1; i<=listLen(settingDetails.settingValue); i++) {
-						var thisID = listGetAt(settingDetails.settingValue, i);
-						var thisEntity = getServiceByEntityName( settingMetaData.listingMultiselectEntityName ).invokeMethod("get#settingMetaData.listingMultiselectEntityName#", {1=thisID});
-						if(!isNull(thisEntity)) {
-							settingDetails.settingValueFormatted = listAppend(settingDetails.settingValueFormatted, " " & thisEntity.getSimpleRepresentation());
+						if(structKeyExists(settingMetaData,'listingMultiselectEntityName')){
+							var thisID = listGetAt(settingDetails.settingValue, i);
+							var thisEntity = getServiceByEntityName( settingMetaData.listingMultiselectEntityName ).invokeMethod("get#settingMetaData.listingMultiselectEntityName#", {1=thisID});
+							if(!isNull(thisEntity)) {
+								settingDetails.settingValueFormatted = listAppend(settingDetails.settingValueFormatted, " " & thisEntity.getSimpleRepresentation());
+							}
+						}else if(structKeyExists(settingMetaData,'listingMultiselectServiceName')){
+							//value is comma delimited list of words mapped to service method to get rbkey from value from it
+							var thisValue = listGetAt(settingDetails.settingValue, i);
+							settingDetails.settingValueFormatted = listAppend(settingDetails.settingValueFormatted, " " & getServiceByEntityName(settingMetaData.listingMultiselectServiceName).invokeMethod(settingMetaData.listingMultiselectServiceMethod));
 						}
+						
 					}
 				// Select
 				} else if (settingMetaData.fieldType == "select") {
@@ -886,7 +900,7 @@ component extends="HibachiService" output="false" accessors="true" {
 
 			getHibachiDAO().flushORMSession();
 
-			getHibachiCacheService().resetCachedKeyByPrefix('setting_#settingName#');
+			getHibachiCacheService().resetCachedKeyByPrefix('setting_#settingName#',true);
 
 			// If calculation is needed, then we should do it
 			if(calculateStockNeeded) {

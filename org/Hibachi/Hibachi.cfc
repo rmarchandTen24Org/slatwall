@@ -211,6 +211,11 @@ component extends="FW1.framework" {
 			// Verify that the session is setup
 			getHibachiScope().getService("hibachiSessionService").setProperSession();
 			
+			var AuthToken = "";
+			if(structKeyExists(GetHttpRequestData().Headers,'Auth-Token')){
+				AuthToken = GetHttpRequestData().Headers['Auth-Token'];
+			}
+			
 			// If there is no account on the session, then we can look for an Access-Key, Access-Key-Secret, to setup that account for this one request.
 			if(!getHibachiScope().getLoggedInFlag() &&
 				structKeyExists(httpRequestData, "headers") &&
@@ -222,19 +227,21 @@ component extends="FW1.framework" {
 				var accessKey 		= httpRequestData.headers["Access-Key"];
 				var accessKeySecret = httpRequestData.headers["Access-Key-Secret"];
 
-				// Attempt to find an account by accessKey & accessKeySecret
+				// Attempt to find an account by accessKey & accessKeySecret and set a default JWT if found.
 				var account = getHibachiScope().getService("AccountService").getAccountByAccessKeyAndSecret( accessKey=accessKey, accessKeySecret=accessKeySecret );
-
+				
 				// If an account was found, then set that account in the session for this request.  This should not persist
 				if (!isNull(account)){
 					getHibachiScope().getSession().setAccount( account );
+					AuthToken = 'Bearer '& getHibachiScope().getService('HibachiJWTService').createToken();
 				}
+				
 			}
 			
 			//check if we have the authorization header
-			if(structKeyExists(GetHttpRequestData().Headers,'Auth-Token')){
+			if(len(AuthToken)){
 				
-				var authorizationHeader = GetHttpRequestData().Headers['Auth-Token'];
+				var authorizationHeader = AuthToken;
 				var prefix = 'Bearer ';
 				//get token by stripping prefix
 				var token = right(authorizationHeader,len(authorizationHeader) - len(prefix));
@@ -249,12 +256,13 @@ component extends="FW1.framework" {
 				}
 			// If there is no account on the session, then we can look for an authToken to setup that account for this one request
 			}else if(!getHibachiScope().getLoggedInFlag() && structKeyExists(request, "context") && structKeyExists(request.context, "authToken") && len(request.context.authToken)) {
+				try{
 				var authTokenAccount = getHibachiScope().getDAO('hibachiDAO').getAccountByAuthToken(authToken=request.context.authToken);
 				if(!isNull(authTokenAccount)) {
 					getHibachiScope().getSession().setAccount( authTokenAccount );
 				}
+				}catch(any e){}//supress errors here.
 			}
-			
 			// Call the onEveryRequest() Method for the parent Application.cfc
 			onEveryRequest();
 		}
@@ -581,7 +589,9 @@ component extends="FW1.framework" {
 					if(!coreBF.containsBean("hibachiEntityParser")){
 						coreBF.declareBean("hibachiEntityParser", "#variables.framework.applicationKey#.org.Hibachi.hibachiEntityParser",false);
 					}
-					
+					if(!coreBF.containsBean("hibachiRecaptcha")){
+						coreBF.declareBean("hibachiRecaptcha", "#variables.framework.applicationKey#.org.Hibachi.hibachiRecaptcha",false);
+					}
 					
 					// Setup the custom bean factory
 					if(directoryExists("#getHibachiScope().getApplicationValue("applicationRootMappingPath")#/custom/model")) {
@@ -618,6 +628,7 @@ component extends="FW1.framework" {
 						setBeanFactory(coreBF);
 					}
 					writeLog(file="#variables.framework.applicationKey#", text="General Log - Bean Factory Set");
+					
 					//========================= END: IOC SETUP ===============================
 					
 					// Call the onFirstRequest() Method for the parent Application.cfc
@@ -638,8 +649,8 @@ component extends="FW1.framework" {
 						getHibachiScope().getService("hibachiTagService").cfsetting(requesttimeout=600);
 						
 						//Update custom properties
-						var success = getHibachiScope().getService('updateService').updateEntitiesWithCustomProperties();
 						
+						var success = getHibachiScope().getService('updateService').updateEntitiesWithCustomProperties();
 						getHibachiScope().getService("hibachiEventService").announceEvent(eventName="afterUpdateEntitiesWithCustomProperties");
 						if (success){
 							writeLog(file="Slatwall", text="General Log - Attempting to update entities with custom properties.");
@@ -682,16 +693,29 @@ component extends="FW1.framework" {
 		}
 	}
 	
+	public void function populateAPIHeaders(){
+		param name="request.context.headers" default="#structNew()#"; 
+		if(!structKeyExists(request.context.headers,'Content-Type')){
+			request.context.headers['Content-Type'] = 'application/json';
+		}
+		var context = getPageContext();
+		context.getOut().clearBuffer();
+		var response = context.getResponse();
+		if(structKeyExists(request.context,'headers')){
+			for(var header in request.context.headers){
+				response.setHeader(header,request.context.headers[header]);
+			}
+		}
+	}
+	
 	public void function renderApiResponse(){
-		param name="request.context.headers.contentType" default="application/json";
+		
 		param name="request.context.apiResponse.content" default="#structNew()#"; 
 		//need response header for api
 		var context = getPageContext();
 		context.getOut().clearBuffer();
 		var response = context.getResponse();
-		for(var header in request.context.headers){
-			response.setHeader(header,request.context.headers[header]);
-		}
+		populateAPIHeaders();
 		var responseString = '';
 		
 		if(structKeyExists(request.context, "messages")) {
@@ -708,7 +732,7 @@ component extends="FW1.framework" {
 		}
 		
 		//leaving a note here in case we ever wish to support XML for api responses
-		if(isStruct(request.context.apiResponse.content) && request.context.headers.contentType eq 'application/json'){
+		if(isStruct(request.context.apiResponse.content) && request.context.headers['Content-Type'] eq 'application/json'){
 			responseString = serializeJSON(request.context.apiResponse.content);
 			
 			// If running CF9 we need to fix strings that were improperly cast to numbers
@@ -716,7 +740,7 @@ component extends="FW1.framework" {
 				responseString = getHibachiScope().getService("hibachiUtilityService").updateCF9SerializeJSONOutput(responseString);
 			}
 		}
-		if(isStruct(request.context.apiResponse.content) && request.context.headers.contentType eq 'application/xml'){
+		if(isStruct(request.context.apiResponse.content) && request.context.headers['Content-Type'] eq 'application/xml'){
 			//response String to xml placeholder
 		}
 		writeOutput( responseString );
@@ -740,6 +764,7 @@ component extends="FW1.framework" {
 		}		
 		// Check for an Ajax Response
 		if(request.context.ajaxRequest && !structKeyExists(request, "exception")) {
+			populateAPIHeaders();
 			if(isStruct(request.context.ajaxResponse)){
 				if(structKeyExists(request.context, "messages")) {
 					request.context.ajaxResponse["messages"] = request.context.messages;	

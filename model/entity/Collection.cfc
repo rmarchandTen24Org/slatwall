@@ -701,7 +701,7 @@ component displayname="Collection" entityname="SlatwallCollection" table="SwColl
 			//add propertyKey and value to HQLParams
 			//if using a like parameter we need to add % to the value using angular
 			var logicalOperator = '';
-			if(structKeyExists(filter,"logicalOperator") && !isFirstFilter){
+			if(structKeyExists(filter,"logicalOperator") && len(filter.logicalOperator) && !isFirstFilter){
 				logicalOperator = filter.logicalOperator;
 			}
 			if(!isnull(filter.collectionID) || !isNull(filter.collection)){
@@ -713,6 +713,8 @@ component displayname="Collection" entityname="SlatwallCollection" table="SwColl
 
 					filterGroupHQL &= getFilterGroupsHQL([filter]);
 				} else {
+					
+					if(structKeyExists(filter,'comparisonOperator') && len(filter.comparisonOperator)){
 					var comparisonOperator = getComparisonOperator(filter.comparisonOperator);
 
 
@@ -723,12 +725,20 @@ component displayname="Collection" entityname="SlatwallCollection" table="SwColl
 
 					var predicate = getPredicate(filter);
 					if(isnull(filter.attributeID)){
-						filterGroupHQL &= " #logicalOperator# #filter.propertyIdentifier# #comparisonOperator# #predicate# ";
+							if(structKeyExists(filter,'propertyIdentifier') && len(filter.propertyIdentifier)){
+								var propertyIdentifier = filter.propertyIdentifier;
+								if(ListFind('<>,!=,NOT IN,NOT LIKE',comparisonOperator) > 0){
+									propertyIdentifier = "COALESCE(#propertyIdentifier#,'')";
+								}
+								filterGroupHQL &= " #logicalOperator# #propertyIdentifier# #comparisonOperator# #predicate# ";
+							}
 					}else{
 						var attributeHQL = getFilterAttributeHQL(filter);
 						filterGroupHQL &= " #logicalOperator# #attributeHQL# #comparisonOperator# #predicate# ";
 					}
 				}
+
+			}
 
 			}
 			isFirstFilter = false;
@@ -1481,7 +1491,8 @@ component displayname="Collection" entityname="SlatwallCollection" table="SwColl
 				}
 				return Replace(Replace(arguments.column.propertyIdentifier,'.','_','all'),'_'&lcase(Replace(getCollectionObject(),'#getDao('hibachiDAO').getApplicationKey()#',''))&'_','');
 			}
-		}
+		} 
+					
 	}
 
 	public any function createHQLFromCollectionObject(required any collectionObject,

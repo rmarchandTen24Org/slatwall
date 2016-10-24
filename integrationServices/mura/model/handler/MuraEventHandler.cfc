@@ -610,6 +610,8 @@
 				// If the "Add Sku" was selected, then we call that process method
 				if(structKeyExists(contentData, "addSku") && contentData.addSku && structKeyExists(contentData, "addSkuDetails")) {
 					contentData.addSkuDetails.productCode = muraContent.getFilename();
+					contentData.addSkuDetails.skuName = muraContent.getTitle();
+					
 					slatwallContent = $.slatwall.getService("contentService").processContent(slatwallContent, contentData.addSkuDetails, "createSku");
 				}
 			}
@@ -695,9 +697,11 @@
 				
 				// Login Slatwall Account
 				var account = $.slatwall.getService("accountService").getAccountByCMSAccountID($.currentUser('userID'));
-				var accountAuth = ormExecuteQuery("SELECT aa FROM SlatwallAccountAuthentication aa WHERE aa.integration.integrationID = ? AND aa.account.accountID = ?", [getMuraIntegrationID(), account.getAccountID()]);
-				if (!isNull(account) && arrayLen(accountAuth)) {
-					$.slatwall.getService("hibachiSessionService").loginAccount(account=account, accountAuthentication=accountAuth[1]);
+				if (!isNull(account) ) {
+					var accountAuth = ormExecuteQuery("SELECT aa FROM SlatwallAccountAuthentication aa WHERE aa.integration.integrationID = ? AND aa.account.accountID = ?", [getMuraIntegrationID(), account.getAccountID()]);
+					if (arrayLen(accountAuth)) {
+						$.slatwall.getService("hibachiSessionService").loginAccount(account=account, accountAuthentication=accountAuth[1]);
+					}
 				}
 				
 			} else if ( $.slatwall.getLoggedInFlag()
