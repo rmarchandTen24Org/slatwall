@@ -330,13 +330,15 @@ Notes:
 			<section class="content s-body-margin" id="j-main-content">
 
 				<div class="col-md-12">
+
+					<cfdump var="#getHttpRequestData()#" />
+					<cfdump var="#cgi#" />
+					
 					<cfif structKeyExists(url, 'ng')>
 						<ng-view></ng-view>
 					<cfelse>
 						#body#
 					</cfif>
-					<cfdump var="#getHttpRequestData()#" />
-					<cfdump var="#cgi#" />
 
 				</div>
 
