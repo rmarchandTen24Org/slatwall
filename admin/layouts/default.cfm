@@ -294,29 +294,29 @@ Notes:
 									<li><a title="Developer Docs" href="http://docs.getslatwall.com/##developer" target="_blank">#$.slatwall.rbKey('define.developerDocs')#</a></li>
 									<hb:HibachiActionCaller action="admin:main.about" type="list">
 									<li class="divider"></li>
-									<hb:HibachiActionCaller action="admin:main.changelanguage" 
-										queryString="?rbLocale=en_us&redirectURL=#urlEncodedFormat($.slatwall.getURL())#" 
-										text="<i class='flag-icon flag-icon-us'></i> #$.slatwall.rbKey('define.language.en_us')#" 
+									<hb:HibachiActionCaller action="admin:main.changelanguage"
+										queryString="?rbLocale=en_us&redirectURL=#urlEncodedFormat($.slatwall.getURL())#"
+										text="<i class='flag-icon flag-icon-us'></i> #$.slatwall.rbKey('define.language.en_us')#"
 										type="list"
 										ignoreHTMLEditFormat="true"
 									>
-									<hb:HibachiActionCaller action="admin:main.changelanguage" 
-										queryString="?rbLocale=en_gb&redirectURL=#urlEncodedFormat($.slatwall.getURL())#" 
-										text="<i class='flag-icon flag-icon-gb'></i> #$.slatwall.rbKey('define.language.en_gb')#" 
+									<hb:HibachiActionCaller action="admin:main.changelanguage"
+										queryString="?rbLocale=en_gb&redirectURL=#urlEncodedFormat($.slatwall.getURL())#"
+										text="<i class='flag-icon flag-icon-gb'></i> #$.slatwall.rbKey('define.language.en_gb')#"
 										type="list"
 										ignoreHTMLEditFormat="true"
 									>
-									<hb:HibachiActionCaller action="admin:main.changelanguage" 
-										queryString="?rbLocale=fr_fr&redirectURL=#urlEncodedFormat($.slatwall.getURL())#" 
-										text="<i class='flag-icon flag-icon-fr'></i> #$.slatwall.rbKey('define.language.fr_fr')#" 
+									<hb:HibachiActionCaller action="admin:main.changelanguage"
+										queryString="?rbLocale=fr_fr&redirectURL=#urlEncodedFormat($.slatwall.getURL())#"
+										text="<i class='flag-icon flag-icon-fr'></i> #$.slatwall.rbKey('define.language.fr_fr')#"
 										type="list"
 										ignoreHTMLEditFormat="true"
 									>
-									<hb:HibachiActionCaller action="admin:main.changelanguage" 
-										queryString="?rbLocale=de_de&redirectURL=#urlEncodedFormat($.slatwall.getURL())#" 
-										text="<i class='flag-icon flag-icon-de'></i> #$.slatwall.rbKey('define.language.de_de')#" 
+									<hb:HibachiActionCaller action="admin:main.changelanguage"
+										queryString="?rbLocale=de_de&redirectURL=#urlEncodedFormat($.slatwall.getURL())#"
+										text="<i class='flag-icon flag-icon-de'></i> #$.slatwall.rbKey('define.language.de_de')#"
 										type="list"
-										ignoreHTMLEditFormat="true"	
+										ignoreHTMLEditFormat="true"
 									>
 								</hb:HibachiActionCallerDropdown>
 							</ul>
@@ -335,6 +335,9 @@ Notes:
 					<cfelse>
 						#body#
 					</cfif>
+					<cfdump var="#getHttpRequestData()#" />
+					<cfdump var="#cgi#" />
+
 				</div>
 
 			</section>
@@ -390,10 +393,10 @@ Notes:
 				</span>
 			</span>
 		</span>
-		
-		<cfif 	
+
+		<cfif
 			(structKeyExists(request,'isWysiwygPage') AND request.isWysiwygPage)
-			|| (structKeyExists(rc,'edit'))	
+			|| (structKeyExists(rc,'edit'))
 		>
 			<script type="text/javascript" src="#request.slatwallScope.getBaseURL()#/org/Hibachi/ckeditor/ckeditor.js"></script>
 			<script type="text/javascript" src="#request.slatwallScope.getBaseURL()#/org/Hibachi/ckeditor/adapters/jquery.js"></script>
