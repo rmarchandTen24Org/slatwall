@@ -870,18 +870,19 @@
 					var serviceMetaData = getMetaData(bean);
 					if(structKeyExists(serviceMetaData,'functions')){
 						for(var functionItem in serviceMetaData.functions){
-							
 							if(
 								(!structKeyExists(functionItem,'access') || functionItem.access == 'public') 
 								&& lcase(left(functionItem.name,7))=='process'
 							){
-								var processObjectName = mid(functionItem.name,7,len(functionItem.name));
+								var processObjectName = mid(functionItem.name,8,len(functionItem.name));
 				    			var entityName = listFirst(processObjectName,'_');
 				    			var processName = listLast(processObjectName,"_");
 				    			if(!structKeyExists(variables.entitiesProcessContexts,entityName)){
 				    				variables.entitiesProcessContexts[entityName] = [];
 				    			}
-				    			arrayAppend(variables.entitiesProcessContexts[entityName],processName);
+				    			if(!arrayFind(variables.entitiesProcessContexts[entityName],processName)){
+									arrayAppend(variables.entitiesProcessContexts[entityName],processName);				    				
+				    			}
 							}
 						}
 					}

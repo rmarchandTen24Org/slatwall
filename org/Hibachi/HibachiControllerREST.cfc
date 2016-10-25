@@ -444,6 +444,7 @@ component output="false" accessors="true" extends="HibachiController" {
 	public void function getProcessMethodOptionsByEntityName(required struct rc){
 		var processOptions = [];
 		var allProcessMethods = getHibachiService().getEntitiesProcessContexts();
+		
 		if(structKeyExists(allProcessMethods, arguments.rc.entityName)){
 			for(var processMethod in allProcessMethods[arguments.rc.entityName]){
 				arrayAppend(processOptions, {
