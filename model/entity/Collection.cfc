@@ -1199,7 +1199,7 @@ component displayname="Collection" entityname="SlatwallCollection" table="SwColl
 							}
 						}
 						
-						var recordsCount = getHibachiScope().getService('elasticSearchService').getRecordsCount(argumentCollection=arguments);
+						var recordCount = getHibachiScope().getService('elasticSearchService').getRecordsCount(argumentCollection=arguments);
 					}else{
 						var HQL = '';
 						if(hasAggregateFilter()){

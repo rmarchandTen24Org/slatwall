@@ -97,17 +97,20 @@ component extends="Slatwall.model.service.HibachiService" persistent="false" acc
 		return responseBean.getData().exists;
 	}
 	
-	public numeric function getRecordsCount(required any collectionEntity){
-		
-	}
-	
 	public any function getRecordsRequestBean(required collectionEntity, numeric size, numeric from){
 		var requestBean = newElasticSearchRequestBean();
 		var body = {};
 		requestBean.setMethod('POST');
 		requestBean.setAction('_search');
-		requestBean.setIndex('collection');
-		requestBean.setType(arguments.collectionEntity.getCollectionID());
+		if(arguments.collectionEntity.getNewFlag()){
+			requestBean.setIndex('entity');
+			requestBean.setType(arguments.collectionEntity.getCollectionObject());
+		}else{
+			requestBean.setIndex('collection');
+			requestBean.setType(arguments.collectionEntity.getCollectionID());
+		}
+		
+		
 		if(structKeyExists(arguments,'size')){
 			body['size']=arguments.size;
 		}
@@ -193,6 +196,13 @@ component extends="Slatwall.model.service.HibachiService" persistent="false" acc
 
 		
 		return requestBean;
+	}
+	
+	public numeric function getRecordsCount(required any collectionEntity){
+		var requestBean = getRecordsRequestBean(argumentCollection=arguments);
+		requestBean.setAction('_count');
+		var responseBean = requestBean.getResponseBean();
+		return responseBean.getData()['count'];
 	}
 	
 	public array function getRecords(required any collectionEntity, numeric size, numeric from){
