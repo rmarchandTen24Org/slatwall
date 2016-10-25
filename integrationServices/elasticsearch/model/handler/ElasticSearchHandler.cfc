@@ -15,7 +15,7 @@ component extends="Slatwall.org.Hibachi.HibachiEventHandler" {
 				arguments.eventName=='after#arguments.entity.getClassName()#SaveSuccess' 
 			){
 				//index collections via bulk api
-				if(arguments.entity.getClassName() == 'Collection'){
+				if(arguments.entity.getClassName() == 'Collection' && arguments.entity.getUseElasticSearch()){
 					getHibachiScope().getService('elasticSearchService').indexCollection(arguments.entity);
 				}else{
 					

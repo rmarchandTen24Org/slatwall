@@ -180,8 +180,8 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 	}
 	
 	public void function loadDataFromIntegrations(){
+		
 		var integrationCollectionList = getService('hibachiService').getIntegrationCollectionList();
-		integrationCollectionList.addFilter('integrationTypeList','data');
 		integrationCollectionList.addFilter('activeFlag',1);
 		integrationCollectionList.setDisplayProperties('integrationPackage');
 		var integrations = integrationCollectionList.getRecords();
