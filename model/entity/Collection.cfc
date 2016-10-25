@@ -1187,13 +1187,28 @@ component displayname="Collection" entityname="SlatwallCollection" table="SwColl
 				variables.recordsCount = application.entityCollection[ getCacheName() ].recordsCount;
 			} else {
 				if(!structKeyExists(variables,"records")) {
-					var HQL = '';
-					if(hasAggregateFilter()){
-						HQL = 'SELECT count(DISTINCT id) FROM  #getService('hibachiService').getProperlyCasedFullEntityName(getCollectionObject())#  WHERE id in ( SELECT DISTINCT #getCollectionConfigStruct().baseEntityAlias#.id #getHQL(true)# )';
+					if(getUseElasticSearch() && getHibachiScope().hasService('elasticSearchService')){
+						arguments.collectionEntity = this;
+						if(this.getNewFlag()){
+							if(!getHibachiScope().getService('elasticSearchService').indexExists('entity',getCollectionObject())){
+								getHibachiScope().getService('elasticSearchService').indexCollection(this);		
+							}
+						}else{
+							if(!getHibachiScope().getService('elasticSearchService').indexExists('collection',getCollectionID())){
+								getHibachiScope().getService('elasticSearchService').indexCollection(this);								
+							}
+						}
+						
+						var recordsCount = getHibachiScope().getService('elasticSearchService').getRecordsCount(argumentCollection=arguments);
 					}else{
-						HQL = getSelectionCountHQL() & getHQL(true);
+						var HQL = '';
+						if(hasAggregateFilter()){
+							HQL = 'SELECT count(DISTINCT id) FROM  #getService('hibachiService').getProperlyCasedFullEntityName(getCollectionObject())#  WHERE id in ( SELECT DISTINCT #getCollectionConfigStruct().baseEntityAlias#.id #getHQL(true)# )';
+						}else{
+							HQL = getSelectionCountHQL() & getHQL(true);
+						}
+						var recordCount = ormExecuteQuery(HQL, getHQLParams(), true, {ignoreCase="true"});
 					}
-					var recordCount = ormExecuteQuery(HQL, getHQLParams(), true, {ignoreCase="true"});
 					if(isNull(recordCount)){
 						recordCount = 0;
 					}
