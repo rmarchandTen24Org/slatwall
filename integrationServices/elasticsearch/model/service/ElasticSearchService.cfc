@@ -361,9 +361,13 @@ component extends="Slatwall.model.service.HibachiService" persistent="false" acc
 		//if we don't have a collection then take the opportunity to create the index and mappings
 		var indexName = "entity";
 		var typeName = arguments.collectionEntity.getCollectionObject();
+		var lockName = "elasticSearchIndex";
 		if(!arguments.collectionEntity.getNewFlag()){
 			indexName = "collection";			
 			typeName = arguments.collectionEntity.getCollectionID();
+			lockName &= arguments.collectionEntity.getCollectionID();
+		}else{
+			lockName &= arguments.collectionEntity.getCollectionObject();
 		}
 		
 		if(!indexExists(indexName)){
@@ -372,7 +376,7 @@ component extends="Slatwall.model.service.HibachiService" persistent="false" acc
 		}
 		
 		//pump data into collection
-		lock name="elasticSearchIndex#arguments.collectionEntity.getCollectionID()#" timeout="200" {
+		lock name="#lockName#" timeout="200" {
 			var collectionRecords = arguments.collectionEntity.getRecords(formatRecords=false);
 			var collectionExampleEntity = collectionEntity.getCollectionEntityObject();
 			var collectionPrimaryIDName = collectionExampleEntity.getPrimaryIDPropertyName();
