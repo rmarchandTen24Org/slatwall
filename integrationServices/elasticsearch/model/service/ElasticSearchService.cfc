@@ -94,19 +94,23 @@ component extends="Slatwall.model.service.HibachiService" persistent="false" acc
 		requestBean.setIndex(arguments.index);
 
 		var responseBean = requestBean.getResponseBean();
-		writedump(var=responseBean.getData(),top=3);abort;
 		return responseBean.getData().exists;
 	}
-
-	public array function getPageRecords(required any collectionEntity){
+	
+	public array function getRecords(required any collectionEntity, numeric size, numeric from){
 		var requestBean = newElasticSearchRequestBean();
 		var body = {};
 		requestBean.setMethod('POST');
 		requestBean.setAction('_search');
 		requestBean.setIndex('collection');
 		requestBean.setType(arguments.collectionEntity.getCollectionID());
-		body['size']=arguments.collectionEntity.getPageRecordsShow();
-		body['from']=arguments.collectionEntity.getPageRecordsStart();
+		if(structKeyExists(arguments,'size')){
+			body['size']=arguments.size;
+		}
+		if(structKeyExists(arguments,'from')){
+			body['from']=arguments.from;
+		}
+		
 		body['_source']=true;
 
 		var collectionConfig = arguments.collectionEntity.getcollectionConfigStruct();
@@ -185,12 +189,15 @@ component extends="Slatwall.model.service.HibachiService" persistent="false" acc
 
 		var responseBean = requestBean.getResponseBean();
 
-		var pageRecords = [];
+		var records = [];
 		for(var hit in responseBean.getData().hits.hits){
-			arrayAppend(pageRecords,hit['_source']);
+			arrayAppend(records,hit['_source']);
 		}
-		return pageRecords;
+		return records;
+	}
 
+	public array function getPageRecords(required any collectionEntity){
+		return getRecords(collectionEntity=arguments.collectionEntity,size=arguments.collectionEntity.getPageRecordsShow(),from=arguments.collectionEntity.getPageRecordsStart());
 	}
 	
 	public any function processElasticSearchResource_Index(required any elasticSearchResource, any processObject){
@@ -273,7 +280,6 @@ component extends="Slatwall.model.service.HibachiService" persistent="false" acc
 		
 
 		var responseBean = requestBean.getResponseBean();
-		writedump(var=responseBean,top=4);abort;
 		if(structKeyExists(responseBean.getData(),'errors') && responseBean.getData().errors == 'YES'){
 			logHibachi('updateMappingFailed: #arguments.index#/#arguments.type#',true);
 		}
@@ -352,7 +358,7 @@ component extends="Slatwall.model.service.HibachiService" persistent="false" acc
 
 		var responseBean = requestBean.getResponseBean();
 		
-		return responseBean.getStatusCode() CONTAINS 404;
+		return !responseBean.getStatusCode() CONTAINS 404;
 	}
 	
 	

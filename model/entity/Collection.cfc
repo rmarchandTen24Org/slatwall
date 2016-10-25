@@ -102,10 +102,6 @@ component displayname="Collection" entityname="SlatwallCollection" table="SwColl
 
 	// ============ START: Non-Persistent Property Methods =================
 	
-	public boolean function getUseElasticSearch(){
-		return variables.useElasticSearch && getHibachiScope().hasService('elasticSearchService');
-	}
-	
 	public any function getCollectionEntityObject(){
 		if(!structKeyExists(variables,'collectionEntityObject')){
 			variables.collectionEntityObject = getService('hibachiService').getEntityObject(getCollectionObject());
@@ -1040,7 +1036,7 @@ component displayname="Collection" entityname="SlatwallCollection" table="SwColl
 				
 				if( !structKeyExists(variables, "pageRecords") || arguments.refresh eq true) {
 					
-					if(getUseElasticSearch()){
+					if(getUseElasticSearch() && getHibachiScope().hasService('elasticSearchService')){
 						arguments.collectionEntity = this;
 						if(this.getNewFlag()){
 							if(!getHibachiScope().getService('elasticSearchService').indexExists('entity',getCollectionObject())){
@@ -1127,14 +1123,20 @@ component displayname="Collection" entityname="SlatwallCollection" table="SwColl
 //			try{
 				//If we are returning only the exportable records, then check and pass through.
 				if( !structKeyExists(variables, "records") || arguments.refresh == true) {
-//					if(getHibachiScope().hasService('elasticSearchService') &&  getCollectionObject() == 'Account'){
-//						
-//						arguments.collectionEntity = this;
-//						if(!getHibachiScope().getService('elasticSearchService').indexExists('collection',getCollectionID())){
-//							getHibachiScope().getService('elasticSearchService').indexCollection(this);								
-//						}
-//						variables.records = getHibachiScope().getService('elasticSearchService').getRecords(argumentCollection=arguments);
-//					}else{
+					if(getUseElasticSearch() && getHibachiScope().hasService('elasticSearchService')){
+						arguments.collectionEntity = this;
+						if(this.getNewFlag()){
+							if(!getHibachiScope().getService('elasticSearchService').indexExists('entity',getCollectionObject())){
+								getHibachiScope().getService('elasticSearchService').indexCollection(this);		
+							}
+						}else{
+							if(!getHibachiScope().getService('elasticSearchService').indexExists('collection',getCollectionID())){
+								getHibachiScope().getService('elasticSearchService').indexCollection(this);								
+							}
+						}
+						
+						variables.records = getHibachiScope().getService('elasticSearchService').getRecords(argumentCollection=arguments);
+					}else{
 						var HQL = '';
 						var HQLParams = {};
 						if(this.getNonPersistentColumn()){
@@ -1167,7 +1169,7 @@ component displayname="Collection" entityname="SlatwallCollection" table="SwColl
 							}
 						}
 					}
-				//}
+				}
 //			}
 //			catch(any e){
 //				variables.records = [{'failedCollection'='failedCollection'}];
