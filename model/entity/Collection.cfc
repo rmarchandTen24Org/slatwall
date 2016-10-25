@@ -1210,6 +1210,7 @@ component displayname="Collection" entityname="SlatwallCollection" table="SwColl
 	}
 
 	public array function getPrimaryIDs(){
+		var baseEntityObject = getService('hibachiService').getEntityObject( getCollectionObject() );
 		var primaryIDName = baseEntityObject.getPrimaryIDPropertyName();
 		
 		return getPropertyNameValues(primaryIDName);

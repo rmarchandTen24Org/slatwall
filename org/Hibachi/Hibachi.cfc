@@ -186,6 +186,7 @@ component extends="FW1.framework" {
 	}
 	
 	public any function reloadApplication() {
+		
 		setupApplicationWrapper();
 		
 		lock name="application_#getHibachiInstanceApplicationScopeKey()#_initialized" timeout="10" {
@@ -272,6 +273,7 @@ component extends="FW1.framework" {
 	}
 	
 	public void function setupRequest() {
+		
 		var status = 200;
 		setupGlobalRequest();
 		var httpRequestData = getHTTPRequestData();
@@ -968,6 +970,7 @@ component extends="FW1.framework" {
 	
 	// @hint private helper method
 	public any function getHibachiScope() {
+		
 		return request["#variables.framework.applicationKey#Scope"];
 	}
 	

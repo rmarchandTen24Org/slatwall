@@ -49,9 +49,18 @@ Notes:
 component extends="Slatwall.model.service.HibachiService" persistent="false" accessors="true" output="false" {
 	property name="integrationCFC" type="any";
 	property name="settingService" type="any";
+	property name="integrationService" type="any";
 
 
 	// ===================== START: Logical Methods ===========================
+	
+	public void function init(any integrationService=getService('integrationService'), any settingService=getService('settingService')){
+		setIntegrationService(arguments.integrationService);
+		setSettingService(arguments.settingService);
+		var integration = getIntegrationService().getIntegrationByIntegrationPackage('elasticsearch');
+		var integrationCFC = getService('integrationService').getIntegrationCFC(integration);
+		setIntegrationCFC(integrationCFC);
+	}
 
 	public any function newElasticSearchRequestBean(){
 		var requestBean = new Slatwall.integrationServices.elasticsearch.model.transient.ElasticSearchRequestBean();
@@ -184,8 +193,9 @@ component extends="Slatwall.model.service.HibachiService" persistent="false" acc
 
 	}
 	
-	public void function processElasticSearchResource_Index(required any elasticSearchResource, required any processObject){
-		this.saveElasticSearchResource(arguments.elasticSearchResource);
+	public any function processElasticSearchResource_Index(required any elasticSearchResource, any processObject){
+		arguments.elasticSearchResource = this.saveElasticSearchResource(arguments.elasticSearchResource);
+		return arguments.elasticSearchResource;
 	}
 	
 	public any function saveElasticSearchResource(required any elasticSearchResource, struct data={}){
@@ -391,30 +401,51 @@ component extends="Slatwall.model.service.HibachiService" persistent="false" acc
 				requestBody &=serializeJson(record) & linebreak;
 
 				if(i % 1000 == 0 || i == collectionRecordsCount){
-					var threadName = "indexCollection-#createHibachiUUID()#";
-					thread name="#threadName#" action="run" 
-						   requestBody="#requestBody#" 
-						   lineBreak="#lineBreak#"
-						   indexName="#indexName#"
-						   typeName="#typeName#"
+					if(getService('hibachiUtilityService').isInThread())
 					{
-						attributes.requestBody &= attributes.linebreak;
+					  //do something...
+					  	requestBody &= linebreak;
 						var requestBean = newElasticSearchRequestBean();
 						requestBean.setAction('_bulk');
-						requestBean.setIndex(attributes.indexName);
-						requestBean.setType('#attributes.typeName#');
+						requestBean.setIndex(indexName);
+						requestBean.setType('#typeName#');
 						requestBean.setMethod('POST');
 
-						requestBean.setBody(attributes.requestBody);
+						requestBean.setBody(requestBody);
 						var responseBean = requestBean.getResponseBean();
 						if(structKeyExists(responseBean.getData(),'errors') && responseBean.getData().errors == 'YES'){
-							logHibachi('collectionIndexFailed: #attribtues.indexName#/#attributes.typeName#/_bulk',true);
+							logHibachi('collectionIndexFailed: #indexName#/#typeName#/_bulk',true);
+						}
+					}else{
+						var threadName = "indexCollection-#createHibachiUUID()#";
+						thread name="#threadName#" action="run" 
+							   requestBody="#requestBody#" 
+							   lineBreak="#lineBreak#"
+							   indexName="#indexName#"
+							   typeName="#typeName#"
+						{
+							attributes.requestBody &= attributes.linebreak;
+							var requestBean = newElasticSearchRequestBean();
+							requestBean.setAction('_bulk');
+							requestBean.setIndex(attributes.indexName);
+							requestBean.setType('#attributes.typeName#');
+							requestBean.setMethod('POST');
+	
+							requestBean.setBody(attributes.requestBody);
+							var responseBean = requestBean.getResponseBean();
+							if(structKeyExists(responseBean.getData(),'errors') && responseBean.getData().errors == 'YES'){
+								logHibachi('collectionIndexFailed: #attribtues.indexName#/#attributes.typeName#/_bulk',true);
+							}
 						}
 					}
+					
 					requestBody = "";
 				}
 			}
-			thread action="join";
+			if(!getService('hibachiUtilityService').isInThread()){
+				thread action="join";	
+			}
+			
 
 		}
 	}

@@ -12,7 +12,7 @@
 			workflowTaskID="ff80808157f873450157fc391c990022"	
 			activeFlag="1"	
 			taskName="Index Elastic Resource"
-			taskConditionsConfig="{'filterGroups':[{'filterGroup':[]}],'baseEntityAlias':'ElasticSearchResource','baseEntityName':'ElasticSearchResource'}"		
+			taskConditionsConfig='{"filterGroups":[{"filterGroup":[]}],"baseEntityAlias":"ElasticSearchResource","baseEntityName":"ElasticSearchResource"}'		
 			workflowID="ff80808157f873450157fc133259000c"	
 		/>
 	</Records>
