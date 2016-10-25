@@ -97,7 +97,11 @@ component extends="Slatwall.model.service.HibachiService" persistent="false" acc
 		return responseBean.getData().exists;
 	}
 	
-	public array function getRecords(required any collectionEntity, numeric size, numeric from){
+	public numeric function getRecordsCount(required any collectionEntity){
+		
+	}
+	
+	public any function getRecordsRequestBean(required collectionEntity, numeric size, numeric from){
 		var requestBean = newElasticSearchRequestBean();
 		var body = {};
 		requestBean.setMethod('POST');
@@ -187,6 +191,12 @@ component extends="Slatwall.model.service.HibachiService" persistent="false" acc
 		}
 		//order end
 
+		
+		return requestBean;
+	}
+	
+	public array function getRecords(required any collectionEntity, numeric size, numeric from){
+		var requestBean = getRecordsRequestBean(argumentCollection=arguments);
 		var responseBean = requestBean.getResponseBean();
 
 		var records = [];
