@@ -160,7 +160,7 @@ component displayname="Collection" entityname="SlatwallCollection" table="SwColl
 		var _propertyIdentifier = '';
 		var propertyIdentifierParts = ListToArray(arguments.propertyIdentifier, '.');
 		var current_object = getService('hibachiService').getPropertiesStructByEntityName(getCollectionObject());
-
+		var ormtype = "";
 		for (var i = 1; i <= arraylen(propertyIdentifierParts); i++) {
 			if(structKeyExists(current_object, propertyIdentifierParts[i]) && structKeyExists(current_object[propertyIdentifierParts[i]], 'cfc')){
 				if(structKeyExists(current_object[propertyIdentifierParts[i]], 'singularname')){
@@ -174,6 +174,10 @@ component displayname="Collection" entityname="SlatwallCollection" table="SwColl
 					'alias' = alias & _propertyIdentifier
 				});
 			}else{
+				if(structKeyExists(current_object[propertyIdentifierParts[i]],'ormtype')){
+					ormtype = current_object[propertyIdentifierParts[i]].ormtype;	
+				}
+				
 				_propertyIdentifier &= '.' & propertyIdentifierParts[i];
 			}
 		}
@@ -184,7 +188,11 @@ component displayname="Collection" entityname="SlatwallCollection" table="SwColl
 			"comparisonOperator" = arguments.comparisonOperator,
 			"value" = arguments.value
 		};
+		if(len(ormtype)){
+			filter['ormtype']= ormtype;
+		}
 		variables.filterAliasMap[arguments.propertyIdentifier] = alias & _propertyIdentifier;
+		
 		if(len(aggregate)){
 			filter["aggregate"] = aggregate;
 		}

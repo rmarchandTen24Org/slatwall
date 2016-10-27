@@ -161,8 +161,7 @@ component extends="Slatwall.model.service.HibachiService" persistent="false" acc
 			}else{
 				body['query']['match_all']={};
 			}*/
-			var jsonBody = serializeJson(body);
-			requestBean.setBody(jsonBody);
+			
 
 		}
 		if(len(fields)){
@@ -175,8 +174,7 @@ component extends="Slatwall.model.service.HibachiService" persistent="false" acc
 		if(structKeyExists(collectionConfig,'filterGroups')){
 			//assumes event scoring for filters
 			body['query']['constant_score'] ={};
-			body['query']['contant_scoring']['filter'] = getFilterGroupsPacket(collectionConfig.filterGroups);
-			
+			body['query']['constant_score']['filter'] = getFilterGroupsPacket(collectionConfig.filterGroups);
 		}
 		
 		//filter end
@@ -206,7 +204,9 @@ component extends="Slatwall.model.service.HibachiService" persistent="false" acc
 			body['sort']=sort;
 		}
 		//order end
-
+		
+		var jsonBody = serializeJson(body);
+		requestBean.setBody(jsonBody);
 		
 		return requestBean;
 	}
@@ -237,79 +237,82 @@ component extends="Slatwall.model.service.HibachiService" persistent="false" acc
 		var elasticFilter ={};
 		var filtertype = "";
 		var filterContents = {};
+		var propertyIdentifier = listRest(ReReplace(replace(filter.propertyIdentifier,'_',''),'_','.'),'.');
+		
 		switch(arguments.filter.comparisonOperator){
 			case "=":
 			case "!=":
 			case "<>":
 				filtertype ="term";
-				filterContents[filter.propertyIdentifier] = filter.value;
+				filterContents[propertyIdentifier] = filter.value;
 			break;
 			case ">":
-				filterContents[filter.propertyIdentifier] = {};
-				filterContents[filter.propertyIdentifier]['gt'] = filter.value;
+				filterContents[propertyIdentifier] = {};
+				filterContents[propertyIdentifier]['gt'] = filter.value;
 				filtertype ="range";
 			break;
 			case "<":
-				filterContents[filter.propertyIdentifier] = {};
-				filterContents[filter.propertyIdentifier]['lt'] = filter.value;
+				filterContents[propertyIdentifier] = {};
+				filterContents[propertyIdentifier]['lt'] = filter.value;
 				filtertype ="range";
 			break;
 			case "<=":
-				filterContents[filter.propertyIdentifier] = {};
-				filterContents[filter.propertyIdentifier]['lte'] = filter.value;
+				filterContents[propertyIdentifier] = {};
+				filterContents[propertyIdentifier]['lte'] = filter.value;
 				filtertype ="range";
 			break;
 			case ">=":
-				filterContents[filter.propertyIdentifier] = {};
-				filterContents[filter.propertyIdentifier]['gte'] = filter.value;
+				filterContents[propertyIdentifier] = {};
+				filterContents[propertyIdentifier]['gte'] = filter.value;
 				filtertype ="range";
 			break;
 			
 			case "like":
 			case "not like":
 				filtertype ='wildcard';
-				filterContents[filter.propertyIdentifier] = rereplace(filter.value,'%','*','ALL');
+				filterContents[propertyIdentifier] = rereplace(filter.value,'%','*','ALL');
 			break;
 			case "in":
 			case "not in":
 				filtertype ="terms";
-				filterContents[filter.propertyIdentifier] = listToArray(filter.value);
+				filterContents[propertyIdentifier] = listToArray(filter.value);
 			break;
 			case "between":
 			case "not between":
 				filtertype ="range";
-				if(arguments.filter.value){
+				if(arguments.filter.ormtype eq 'timestamp'){
 					if(listLen(arguments.filter.value,'-') > 1){
 						//convert unix timestamp
 						var fromDate = DateAdd("s", listFirst(arguments.filter.value,'-')/1000, "January 1 1970 00:00:00");
 						var fromValue = dateFormat(fromDate,"yyyy-mm-dd") & " " & timeFormat(fromDate, "HH:MM:SS");
 						var toDate = DateAdd("s", listLast(arguments.filter.value,'-')/1000, "January 1 1970 00:00:00");
 						var toValue = dateFormat(toDate,"yyyy-mm-dd") & " " & timeFormat(toDate, "HH:MM:SS");
-						filterContents[filter.propertyIdentifier] = {};
-						filterContents[filter.propertyIdentifier]['gte'] = toValue;
-						filterContents[filter.propertyIdentifier]['lte'] = fromValue;
+						filterContents[propertyIdentifier] = {};
+						filterContents[propertyIdentifier]['lte'] = toValue;
+						filterContents[propertyIdentifier]['gte'] = fromValue;
 					}else{
 						//if list length is 1 then we treat it as a date range From Now() - Days to Now()
 						var fromValue = DateAdd("d",-arguments.filter.value,Now());
 						var toValue = Now();
 	
-						filterContents[filter.propertyIdentifier] = {};
-						filterContents[filter.propertyIdentifier]['gte'] = toValue;
-						filterContents[filter.propertyIdentifier]['lte'] = fromValue;
+						filterContents[propertyIdentifier] = {};
+						filterContents[propertyIdentifier]['lte'] = toValue;
+						filterContents[propertyIdentifier]['gte'] = fromValue;
 					}
 				}else if(listFind('integer,float,big_decimal',arguments.filter.ormtype)){
+					
 					var fromValue = listFirst(arguments.filter.value,'-');
 					var toValue = listLast(arguments.filter.value,'-');
-					filterContents[filter.propertyIdentifier] = {};
-					filterContents[filter.propertyIdentifier]['gte'] = toValue;
-					filterContents[filter.propertyIdentifier]['lte'] = fromValue;
+					filterContents[propertyIdentifier] = {};
+					filterContents[propertyIdentifier]['lte'] = toValue;
+					filterContents[propertyIdentifier]['gte'] = fromValue;
 				}
 			break;
 			//reserved for is null/is not null where value is null in json
 			case "is":
 			case "is not":
 				filtertype ="exists";
-				filterContents['field'] = filter.propertyIdentifier;
+				filterContents['field'] = propertyIdentifier;
 			break;
 		}
 		elasticFilter[filterType] = filterContents;
@@ -344,12 +347,8 @@ component extends="Slatwall.model.service.HibachiService" persistent="false" acc
 		//assumes only must filters without negation
 		filterGroupsPacket['bool']['must'] = [];
 		for(var filterGroup in arguments.filterGroups){
-			
-			
 			var filterGroupPacket = getFilterGroupPacket(filterGroup.filterGroup);
 			arrayAppend(filterGroupsPacket['bool']['must'],filterGroupPacket);
-			
-			
 		}
 		
 		return filterGroupsPacket;
