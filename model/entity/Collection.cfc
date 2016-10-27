@@ -1180,6 +1180,10 @@ component displayname="Collection" entityname="SlatwallCollection" table="SwColl
 
 		return variables.records;
 	}
+	
+	public void function setRecordsCount(required numeric total){
+		variables.recordsCount = arguments.total;
+	}
 
 	public any function getRecordsCount() {
 		if(!structKeyExists(variables, "recordsCount")) {

@@ -66,16 +66,16 @@ component extends="Slatwall.model.transient.data.DataRequestBean" persistent="fa
 		var urlString = getUrlString();
 		
 		if(len(getIndex())){
-			urlString &= "/#getIndex()#";
+			urlString &= "/#lcase(getIndex())#";
 		}
 		
 		if(len(getFeature())){
-			urlString &= "/#getFeature()#";
+			urlString &= "/#lcase(getFeature())#";
 		}
 		
 		//type depends on index
 		if(len(getIndex()) && len(getType())){
-			urlString &= "/#getType()#";
+			urlString &= "/#lcase(getType())#";
 		}
 		
 		//ID depneds on type depends on index
@@ -84,7 +84,7 @@ component extends="Slatwall.model.transient.data.DataRequestBean" persistent="fa
 		}
 		
 		if(len(getAction())){
-			urlString &= "/#getAction()#";
+			urlString &= "/#lcase(getAction())#";
 		}
 		
 		httpRequest.setUrl(urlString);
