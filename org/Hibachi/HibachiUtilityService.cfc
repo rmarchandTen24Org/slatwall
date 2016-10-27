@@ -83,6 +83,21 @@
 			return currentThread.getThreadGroup().getName() == "cfthread";
 		}
 
+		public boolean function isInThread(){
+			//java 8
+			try{
+				var ThreadAPI = createObject("java","java.lang.Thread");
+			//java 7
+			}catch(any e){
+				var ThreadAPI = createObject("java","java.lang.thread");
+			}
+
+
+			var currentThread = ThreadAPI.currentThread();
+
+			return currentThread.getThreadGroup().getName() == "cfthread";
+		}
+
 		// @hint this method will sanitize a struct of data
 		public void function sanitizeData(required any data){
 			for(var key in data){

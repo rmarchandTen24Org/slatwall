@@ -1,5 +1,5 @@
 <cfcomponent accessors="true" output="false" extends="HibachiObject">
-	
+	 
 	<!--- Import all of the Hibachi services and DAO's --->
 	<cfproperty name="hibachiDAO" type="any">
 	<cfproperty name="hibachiAuthenticationService" type="any">
