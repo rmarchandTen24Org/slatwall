@@ -214,7 +214,7 @@ component extends="Slatwall.model.service.HibachiService" persistent="false" acc
 			arrayAppend(records,hit['_source']);
 		}
 		if(structKeyExists(responseBean.getData().hits,'total')){
-			arguments.collection.setRecordsCount(requestBean.getData().hits.total);
+			arguments.collectionEntity.setRecordsCount(responseBean.getData().hits.total);
 		}
 		
 		return records;
