@@ -54,6 +54,13 @@ Notes:
 <cfset contentDisabled = "" />
 <cfset subscriptionDisabled = "" />
 
+<cfset productCollection = $.slatwall.getService('hibachiService').getCollectionList('product')/>
+<cfset productCollection.setUseElasticSearch(true)/>
+<cfset productCollection.addFilter('productName','AGiftCardProductName')/>
+
+
+<cfset pagerecords = productCollection.getRecords()/>
+<cfdump var="#pagerecords#" top=4/><cfabort>
 <cfoutput>
 	<hb:HibachiEntityActionBar type="listing" object="#rc.productSmartList#" showCreate="false">
 	
