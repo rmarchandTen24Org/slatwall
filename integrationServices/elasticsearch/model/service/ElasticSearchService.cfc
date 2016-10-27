@@ -97,8 +97,11 @@ component extends="Slatwall.model.service.HibachiService" persistent="false" acc
 		return responseBean.getData().exists;
 	}
 	
+	
+	
 	public any function getRecordsRequestBean(required collectionEntity, numeric size, numeric from){
 		var requestBean = newElasticSearchRequestBean();
+		
 		var body = {};
 		requestBean.setMethod('POST');
 		requestBean.setAction('_search');
@@ -109,7 +112,6 @@ component extends="Slatwall.model.service.HibachiService" persistent="false" acc
 			requestBean.setIndex('collection');
 			requestBean.setType(arguments.collectionEntity.getCollectionID());
 		}
-		
 		
 		if(structKeyExists(arguments,'size')){
 			body['size']=arguments.size;
@@ -167,6 +169,18 @@ component extends="Slatwall.model.service.HibachiService" persistent="false" acc
 			body['fields']=fields;
 		}
 		//column end
+		
+		//filter begin
+		
+		if(structKeyExists(collectionConfig,'filterGroups')){
+			var filteringPacket = {};
+			//assumes event scoring for filters
+			filteringPacket['contant_scoring'] ={};
+			filteringPacket['contant_scoring']['filter'] = getFilterGroupsPacket(collectionConfig.filterGroups);
+			
+		}
+		
+		//filter end
 
 		//order begin
 		var sort = "";
@@ -197,6 +211,150 @@ component extends="Slatwall.model.service.HibachiService" persistent="false" acc
 		
 		return requestBean;
 	}
+	/*
+	{
+	   "bool" : {
+	      "must" :     [],
+	      "should" :   [],
+	      "must_not" : [],
+	      "filter":    []
+	   }
+	}
+	*/
+	public string function getBoolFilter(required string logicalOperator){
+		
+		switch(arguments.logicalOperator){
+			case "or":
+				return "should";
+			break;
+			case "and":
+				return "must";
+			break;
+		}
+		return 'must';
+	}
+	
+	public any function getFilter(required string filter){
+		var filter ={};
+		var filtertype = "";
+		var filterContents = {};
+		switch(arguments.filter.comparisonOperator){
+			case "=":
+			case "!=":
+			case "<>":
+				filtertype ="term";
+				filterContents[filter.propertyIdentifier] = filter.value;
+			break;
+			case ">":
+				filterContents[filter.propertyIdentifier] = {};
+				filterContents[filter.propertyIdentifier]['gt'] = filter.value;
+				filtertype ="range";
+			break;
+			case "<":
+				filterContents[filter.propertyIdentifier] = {};
+				filterContents[filter.propertyIdentifier]['lt'] = filter.value;
+				filtertype ="range";
+			break;
+			case "<=":
+				filterContents[filter.propertyIdentifier] = {};
+				filterContents[filter.propertyIdentifier]['lte'] = filter.value;
+				filtertype ="range";
+			break;
+			case ">=":
+				filterContents[filter.propertyIdentifier] = {};
+				filterContents[filter.propertyIdentifier]['gte'] = filter.value;
+				filtertype ="range";
+			break;
+			
+			case "like":
+			case "not like":
+				filtertype ='wildcard';
+				filterContents[filter.propertyIdentifier] = rereplace(filter.value,'%','*','ALL');
+			break;
+			case "in":
+			case "not in":
+				filtertype ="terms";
+				filterContents[filter.propertyIdentifier] = listToArray(filter.value);
+			break;
+			case "between":
+			case "not between":
+				filtertype ="range";
+				if(arguments.filter.value){
+					if(listLen(arguments.filter.value,'-') > 1){
+						//convert unix timestamp
+						var fromDate = DateAdd("s", listFirst(arguments.filter.value,'-')/1000, "January 1 1970 00:00:00");
+						var fromValue = dateFormat(fromDate,"yyyy-mm-dd") & " " & timeFormat(fromDate, "HH:MM:SS");
+						var toDate = DateAdd("s", listLast(arguments.filter.value,'-')/1000, "January 1 1970 00:00:00");
+						var toValue = dateFormat(toDate,"yyyy-mm-dd") & " " & timeFormat(toDate, "HH:MM:SS");
+						filterContents[filter.propertyIdentifier] = {};
+						filterContents[filter.propertyIdentifier]['gte'] = toValue;
+						filterContents[filter.propertyIdentifier]['lte'] = fromValue;
+					}else{
+						//if list length is 1 then we treat it as a date range From Now() - Days to Now()
+						var fromValue = DateAdd("d",-arguments.filter.value,Now());
+						var toValue = Now();
+	
+						filterContents[filter.propertyIdentifier] = {};
+						filterContents[filter.propertyIdentifier]['gte'] = toValue;
+						filterContents[filter.propertyIdentifier]['lte'] = fromValue;
+					}
+				}else if(listFind('integer,float,big_decimal',arguments.filter.ormtype)){
+					var fromValue = listFirst(arguments.filter.value,'-');
+					var toValue = listLast(arguments.filter.value,'-');
+					filterContents[filter.propertyIdentifier] = {};
+					filterContents[filter.propertyIdentifier]['gte'] = toValue;
+					filterContents[filter.propertyIdentifier]['lte'] = fromValue;
+				}
+			break;
+			//reserved for is null/is not null where value is null in json
+			case "is":
+			case "is not":
+				filtertype ="exists";
+				filterContents['field'] = filter.propertyIdentifier;
+			break;
+		}
+		filter[filterType] = filterContents;
+		
+		
+		return filter;
+	}
+	
+	public any function getFilterGroupPacket(required array filterGroup){
+		var filterGroupPacket = {};
+		var filterGroupPacket['bool'] ={};
+		var filterGroupPacket['bool']['must'] = [];
+		
+		for(var filter in arguments.filterGroup){
+			//loop over and figure out the type that the filter belongs to
+			//currently assumes only filteres and not filter groups
+			if(
+				structKeyExists(filter,'comparisonOperator')
+				&& len(filter.comparisonOperator)
+			){
+				
+				var filter = getFilter(filter);
+				arrayAppend(filterGroupPacket,filter);
+			}
+		}
+	}
+	
+	//Phase one assumes that we don't use more than one filter group
+	public any function getFilterGroupsPacket(required array filterGroups){
+		var filterGroupsPacket = {};
+		filterGroupsPacket['bool'] = {};
+		//assumes only must filters without negation
+		filterGroupsPacket['bool']['must'] = [];
+		for(var filterGroup in arguments.filterGroups){
+			
+			
+			var filterGroupPacket = getFilterGroupPacket(filterGroup.filterGroup);
+			arrayAppend(filterGroupsPacket['bool']['must'],filterGroupPacket);
+			
+			
+		}
+		
+		return filterGroupPacket;
+	}
 	
 	public numeric function getRecordsCount(required any collectionEntity){
 		var requestBean = getRecordsRequestBean(argumentCollection=arguments);
@@ -206,9 +364,10 @@ component extends="Slatwall.model.service.HibachiService" persistent="false" acc
 	}
 	
 	public array function getRecords(required any collectionEntity, numeric size, numeric from){
+		
 		var requestBean = getRecordsRequestBean(argumentCollection=arguments);
 		var responseBean = requestBean.getResponseBean();
-
+		
 		var records = [];
 		for(var hit in responseBean.getData().hits.hits){
 			arrayAppend(records,hit['_source']);
@@ -371,6 +530,7 @@ component extends="Slatwall.model.service.HibachiService" persistent="false" acc
 			var alias = arguments.collectionEntity.getColumnAlias(column);
 			properties[alias] = {};
 			properties[alias]['type'] = getElasticDataType(column.ormtype);
+			properties[alias]['index'] = 'not_analyzed';
 		}
 		return properties;
 	}
