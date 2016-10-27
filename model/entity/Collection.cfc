@@ -711,30 +711,30 @@ component displayname="Collection" entityname="SlatwallCollection" table="SwColl
 				} else {
 					
 					if(structKeyExists(filter,'comparisonOperator') && len(filter.comparisonOperator)){
-					var comparisonOperator = getComparisonOperator(filter.comparisonOperator);
-
-
-					if (structKeyExists(filter, 'aggregate') && isnull(filter.attributeID)){
-						addAggregateFilter(filter);
-						continue;
-					}
-
-					var predicate = getPredicate(filter);
-					if(isnull(filter.attributeID)){
-							if(structKeyExists(filter,'propertyIdentifier') && len(filter.propertyIdentifier)){
-								var propertyIdentifier = filter.propertyIdentifier;
-								if(ListFind('<>,!=,NOT IN,NOT LIKE',comparisonOperator) > 0){
-									propertyIdentifier = "COALESCE(#propertyIdentifier#,'')";
+						var comparisonOperator = getComparisonOperator(filter.comparisonOperator);
+	
+	
+						if (structKeyExists(filter, 'aggregate') && isnull(filter.attributeID)){
+							addAggregateFilter(filter);
+							continue;
+						}
+	
+						var predicate = getPredicate(filter);
+						if(isnull(filter.attributeID)){
+								if(structKeyExists(filter,'propertyIdentifier') && len(filter.propertyIdentifier)){
+									var propertyIdentifier = filter.propertyIdentifier;
+									if(ListFind('<>,!=,NOT IN,NOT LIKE',comparisonOperator) > 0){
+										propertyIdentifier = "COALESCE(#propertyIdentifier#,'')";
+									}
+									filterGroupHQL &= " #logicalOperator# #propertyIdentifier# #comparisonOperator# #predicate# ";
 								}
-								filterGroupHQL &= " #logicalOperator# #propertyIdentifier# #comparisonOperator# #predicate# ";
-							}
-					}else{
-						var attributeHQL = getFilterAttributeHQL(filter);
-						filterGroupHQL &= " #logicalOperator# #attributeHQL# #comparisonOperator# #predicate# ";
+						}else{
+							var attributeHQL = getFilterAttributeHQL(filter);
+							filterGroupHQL &= " #logicalOperator# #attributeHQL# #comparisonOperator# #predicate# ";
+						}
 					}
+	
 				}
-
-			}
 
 			}
 			isFirstFilter = false;
@@ -1125,6 +1125,7 @@ component displayname="Collection" entityname="SlatwallCollection" table="SwColl
 				if( !structKeyExists(variables, "records") || arguments.refresh == true) {
 					if(getUseElasticSearch() && getHibachiScope().hasService('elasticSearchService')){
 						arguments.collectionEntity = this;
+						
 						if(this.getNewFlag()){
 							if(!getHibachiScope().getService('elasticSearchService').indexExists('entity',getCollectionObject())){
 								getHibachiScope().getService('elasticSearchService').indexCollection(this);		

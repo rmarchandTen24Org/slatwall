@@ -154,13 +154,13 @@ component extends="Slatwall.model.service.HibachiService" persistent="false" acc
 
 			//keywords
 
-			if(len(arguments.collectionEntity.getKeywords())){
+			/*if(len(arguments.collectionEntity.getKeywords())){
 				body['query']['query_string'] = {};
 				body['query']['query_string']['query']=arguments.collectionEntity.getKeywords();
 				body['query']['query_string']['fields']=searchableFields;
 			}else{
 				body['query']['match_all']={};
-			}
+			}*/
 			var jsonBody = serializeJson(body);
 			requestBean.setBody(jsonBody);
 
@@ -173,10 +173,9 @@ component extends="Slatwall.model.service.HibachiService" persistent="false" acc
 		//filter begin
 		
 		if(structKeyExists(collectionConfig,'filterGroups')){
-			var filteringPacket = {};
 			//assumes event scoring for filters
-			filteringPacket['contant_scoring'] ={};
-			filteringPacket['contant_scoring']['filter'] = getFilterGroupsPacket(collectionConfig.filterGroups);
+			body['query']['constant_score'] ={};
+			body['query']['contant_scoring']['filter'] = getFilterGroupsPacket(collectionConfig.filterGroups);
 			
 		}
 		
@@ -234,8 +233,8 @@ component extends="Slatwall.model.service.HibachiService" persistent="false" acc
 		return 'must';
 	}
 	
-	public any function getFilter(required string filter){
-		var filter ={};
+	public any function getElasticFilter(required struct filter){
+		var elasticFilter ={};
 		var filtertype = "";
 		var filterContents = {};
 		switch(arguments.filter.comparisonOperator){
@@ -313,10 +312,10 @@ component extends="Slatwall.model.service.HibachiService" persistent="false" acc
 				filterContents['field'] = filter.propertyIdentifier;
 			break;
 		}
-		filter[filterType] = filterContents;
+		elasticFilter[filterType] = filterContents;
 		
 		
-		return filter;
+		return elasticFilter;
 	}
 	
 	public any function getFilterGroupPacket(required array filterGroup){
@@ -331,11 +330,11 @@ component extends="Slatwall.model.service.HibachiService" persistent="false" acc
 				structKeyExists(filter,'comparisonOperator')
 				&& len(filter.comparisonOperator)
 			){
-				
-				var filter = getFilter(filter);
-				arrayAppend(filterGroupPacket,filter);
+				var filter = getElasticFilter(filter);
+				arrayAppend(filterGroupPacket['bool']['must'],filter);
 			}
 		}
+		return filterGroupPacket;
 	}
 	
 	//Phase one assumes that we don't use more than one filter group
@@ -353,7 +352,7 @@ component extends="Slatwall.model.service.HibachiService" persistent="false" acc
 			
 		}
 		
-		return filterGroupPacket;
+		return filterGroupsPacket;
 	}
 	
 	public numeric function getRecordsCount(required any collectionEntity){
