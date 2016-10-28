@@ -126,6 +126,22 @@ component displayname="Collection" entityname="SlatwallCollection" table="SwColl
 		variables.hasManyRelationFilter = false;
 		variables.filterAliasMaps = {};
 	}
+	
+	public void function setFilterAggregates(required struct aggregations){
+		variables.filterAggregates = arguments.aggregations;
+	}
+	
+	public struct function getFilterAggregates(){
+		if(!structKeyExists(variables,'filterAggregates')){	
+			if(
+				getUseElasticSearch() && hasService('elasticSearchService')
+			){
+				
+				getService('elasticSearchService').getFilterAggregates(this);
+			}
+		}
+		return variables.filterAggregates;
+	}
 
 	public any function getCollectionEntityObject(){
 		if(!structKeyExists(variables,'collectionEntityObject')){
@@ -140,6 +156,56 @@ component displayname="Collection" entityname="SlatwallCollection" table="SwColl
 			filterAlias = variables.filterAliasMap[arguments.propertyIdentifier];
 		}
 		return filterAlias;
+	}
+	
+	
+	public void function addFilterAggregate(
+		required string filterAggregateName,
+		required string propertyIdentifier,
+		required string value,
+		string comparisonOperator="="
+		
+	){
+		var collectionConfig = this.getCollectionConfigStruct();
+		
+		var alias = collectionConfig.baseEntityAlias;
+
+		if(!structKeyExists(collectionConfig,'filterGroups')){
+			collectionConfig["filterGroups"] = [{"filterGroup"=[]}];
+		}
+
+		var _propertyIdentifier = '';
+		var propertyIdentifierParts = ListToArray(arguments.propertyIdentifier, '.');
+		var current_object = getService('hibachiService').getPropertiesStructByEntityName(getCollectionObject());
+		var ormtype = "";
+		for (var i = 1; i <= arraylen(propertyIdentifierParts); i++) {
+			if(structKeyExists(current_object, propertyIdentifierParts[i]) && structKeyExists(current_object[propertyIdentifierParts[i]], 'cfc')){
+				current_object = getService('hibachiService').getPropertiesStructByEntityName(current_object[propertyIdentifierParts[i]]['cfc']);
+				_propertyIdentifier &= '_' & propertyIdentifierParts[i];
+			}else{
+				if(structKeyExists(current_object[propertyIdentifierParts[i]],'ormtype')){
+					ormtype = current_object[propertyIdentifierParts[i]].ormtype;	
+				}
+				_propertyIdentifier &= '.' & propertyIdentifierParts[i];
+			}
+		}
+
+		//create filter Group
+		var filterAggregate = {
+			"filterAggregateName" = arguments.filterAggregateName,
+			"propertyIdentifier" = alias & _propertyIdentifier,
+			"comparisonOperator" = arguments.comparisonOperator,
+			"value" = arguments.value
+		};
+		if(len(ormtype)){
+			filter['ormtype']= ormtype;
+		}
+		
+		if(!structKeyExists(collectionConfig,'filterAggregates')){
+			collectionConfig.filterAggregates = [];
+		}
+		
+		arrayAppend(collectionConfig.filterAggregates,filterAggregate);
 	}
 
 	//add Filter

@@ -178,6 +178,17 @@ component extends="Slatwall.model.service.HibachiService" persistent="false" acc
 		}
 		
 		//filter end
+		
+		//filter aggregates begin
+		if(structKeyExists(collectionConfig,'filterAggregates')){
+			body['aggregations'] = {};
+			for(var filterAggregate in collectionConfig.filterAggregates){
+				body['aggregations'][filterAggregate.filterAggregateName] = {};
+				body['aggregations'][filterAggregate.filterAggregateName] = getFilterAggregatePacket(filterAggregate);
+			}
+			
+		}		
+		//filter aggregates end
 
 		//order begin
 		var sort = "";
@@ -204,12 +215,57 @@ component extends="Slatwall.model.service.HibachiService" persistent="false" acc
 			body['sort']=sort;
 		}
 		//order end
-		
 		var jsonBody = serializeJson(body);
 		requestBean.setBody(jsonBody);
 		
 		return requestBean;
 	}
+	
+	public struct function getFilterAggregatePacket(required struct filterAggregate){
+		var propertyIdentifier = listRest(ReReplace(replace(arguments.filterAggregate.propertyIdentifier,'_',''),'_','.'),'.');
+		var filterAggregatePacket = {};
+		/*
+		
+    	"range":{
+        	"field":"sortOrder",
+            "ranges":[
+              {
+                  "from": 200,
+                  "to": 250
+              },
+              {
+              	"from":250,
+                "to":300
+              }
+            ]
+        }
+        
+		*/
+		if(lcase(arguments.filterAggregate.comparisonOperator) == 'between'){
+			filterAggregatePacket['range'] = {};
+			filterAggregatePacket['range']['field'] = propertyIdentifier;
+			filterAggregatePacket['range']['ranges'] = [];
+			var fromValue = listFirst(arguments.filterAggregate.value,'-');
+			var toValue = listLast(arguments.filterAggregate.value,'-');
+			var range = {};
+			range['to'] = toValue;
+			range['from'] = fromValue;
+			arrayAppend(filterAggregatePacket['range']['ranges'],range);
+		/*
+		"filter":{
+    		"term":{
+              "productName":"AGiftCardProductName"
+              
+          	}
+        }
+		*/
+		}else if(arguments.filterAggregate.comparisonOperator == '='){
+			filterAggregatePacket['filter'] = {};
+			filterAggregatePacket['filter'][propertyIdentifier] = arguments.filterAggregate.value;
+		}
+		return filterAggregatePacket;
+	}
+	
 	/*
 	{
 	   "bool" : {
@@ -304,7 +360,7 @@ component extends="Slatwall.model.service.HibachiService" persistent="false" acc
 					var fromValue = listFirst(arguments.filter.value,'-');
 					var toValue = listLast(arguments.filter.value,'-');
 					filterContents[propertyIdentifier] = {};
-					filterContents[propertyIdentifier]['lte'] = toValue;
+					filterContents[propertyIdentifier]['lte'] = toValue;	
 					filterContents[propertyIdentifier]['gte'] = fromValue;
 				}
 			break;
@@ -354,6 +410,10 @@ component extends="Slatwall.model.service.HibachiService" persistent="false" acc
 		return filterGroupsPacket;
 	}
 	
+	public void function getFilterAggregates(required any collectionEntity, numeric size=0){
+		getRecords(argumentCollection=arguments);
+	}
+	
 	public numeric function getRecordsCount(required any collectionEntity){
 		var requestBean = getRecordsRequestBean(argumentCollection=arguments);
 		requestBean.setAction('_count');
@@ -372,6 +432,11 @@ component extends="Slatwall.model.service.HibachiService" persistent="false" acc
 		}
 		if(structKeyExists(responseBean.getData().hits,'total')){
 			arguments.collectionEntity.setRecordsCount(responseBean.getData().hits.total);
+		}
+			
+		if(structKeyExists(responseBean.getData(),'aggregations')){
+		
+			arguments.collectionEntity.setFilterAggregates(responseBean.getData().aggregations);
 		}
 		
 		return records;
@@ -626,7 +691,7 @@ component extends="Slatwall.model.service.HibachiService" persistent="false" acc
 							requestBean.setBody(attributes.requestBody);
 							var responseBean = requestBean.getResponseBean();
 							if(structKeyExists(responseBean.getData(),'errors') && responseBean.getData().errors == 'YES'){
-								logHibachi('collectionIndexFailed: #attribtues.indexName#/#attributes.typeName#/_bulk',true);
+								logHibachi('collectionIndexFailed: #attributes.indexName#/#attributes.typeName#/_bulk',true);
 							}
 						}
 					}
