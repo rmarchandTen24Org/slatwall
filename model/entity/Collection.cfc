@@ -125,6 +125,7 @@ component displayname="Collection" entityname="SlatwallCollection" table="SwColl
 		variables.hasDisplayAggregate = false;
 		variables.hasManyRelationFilter = false;
 		variables.filterAliasMaps = {};
+		variables.useElasticSearch = false;
 	}
 	
 	public void function setFilterAggregates(required struct aggregations){
