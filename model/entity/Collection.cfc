@@ -45,7 +45,7 @@ component displayname="Collection" entityname="SlatwallCollection" table="SwColl
 	property name="collectionDescription" ormtype="string";
 	property name="collectionObject" ormtype="string" hb_formFieldType="select";
 	property name="collectionConfig" ormtype="string" length="8000" hb_auditable="false" hb_formFieldType="json" hint="json object used to construct the base collection HQL query";
-	//property name="indexing" ormtype="boolean"; 
+
 	// Calculated Properties
 
 	// Related Object Properties (many-to-one)
