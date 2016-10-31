@@ -9,21 +9,26 @@ component extends="Slatwall.org.Hibachi.HibachiEventHandler" {
 	
 	public void function onEvent(required any eventName, required struct eventData={}){
 		
-		if(structKeyExists(arguments,'entity')){
+		if(structKeyExists(arguments,'entity') && !isNull(arguments.entity) && getHibachiScope().hasService('elasticSearchService')){
 			//is this an entitysavesuccess 
 			if(
 				arguments.eventName=='after#arguments.entity.getClassName()#SaveSuccess' 
 			){
+				
 				//index collections via bulk api
 				if(arguments.entity.getClassName() == 'Collection' && arguments.entity.getUseElasticSearch()){
-					getHibachiScope().getService('elasticSearchService').indexCollection(arguments.entity);
-				}else{
 					
+					getHibachiScope().getService('elasticSearchService').indexCollection(arguments.entity);
 				}
+				
+				getHibachiScope().getService('elasticSearchService').indexEntityRecord(arguments.entity);
+				
+				
 			//if delete then 
 			}else if(
 				arguments.eventName=='after#arguments.entity.getClassName()#DeleteSuccess' 
 			){
+				getHibachiScope().getService('elasticSearchService').deleteRecordFromIndex('entity',arguments.entity.getClassName(),arguments.entity.getPrimaryIDValue());
 			}
 		}
 		

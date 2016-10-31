@@ -490,6 +490,43 @@ component extends="Slatwall.model.service.HibachiService" persistent="false" acc
 			logHibachi('deleteIndexFailed: #arguments.index#',true);
 		}
 	}
+	
+	public void function deleteRecordFromIndex(required index, required type, required id){
+		var requestBean = newElasticSearchRequestBean();
+		requestBean.setIndex(arguments.index);
+		requestBean.setType(arguments.type);
+		requestBean.setID(arguments.id);
+		requestBean.setMethod('DELETE');
+		var responseBean = requestBean.getResponseBean();
+		if(structKeyExists(responseBean.getData(),'errors') && responseBean.getData().errors == 'YES'){
+			logHibachi('deleteIndexFailed: #arguments.index#',true);
+		}
+	}
+	
+	public void function indexEntityRecord(required any entity){
+		
+		var indexName = 'entity';
+		var typeName = arguments.entity.getClassName();
+		var idValue = arguments.entity.getPrimaryIDValue();
+		
+		var elasticSearchResource = getService('hibachiService').getElasticSearchResourceByElasticSearchResourceType('#lcase(typeName)#',true);
+		if(!elasticSearchResource.getNewFlag()){
+			var requestBean = newElasticSearchRequestBean();
+	
+			requestBean.setIndex(indexName);
+			requestBean.setType(typeName);
+			requestBean.setID(idValue);
+			//check if index exists
+			if(indexRecordExists(indexName,typeName,idValue)){
+				requestBean.setMethod('PUT');
+			}else{
+				requestBean.setMethod('POST');
+			}
+			
+			
+			var responseBean = requestBean.getResponseBean();
+		}
+	}
 
 	public void function updateMapping(required index, required type, required struct properties){
 		/*
@@ -603,6 +640,18 @@ component extends="Slatwall.model.service.HibachiService" persistent="false" acc
 		requestBean.setIndex(arguments.index);
 		requestBean.setMethod('HEAD');
 
+		var responseBean = requestBean.getResponseBean();
+		
+		return !responseBean.getStatusCode() CONTAINS 404;
+	}
+	
+	public boolean function indexRecordExists(required string index, required string type, required string id){
+		var requestBean = newElasticSearchRequestBean();
+		requestBean.setIndex(arguments.index);
+		requestBean.setType(arguments.type);
+		requestBean.setID(arguments.id);
+		requestBean.setMethod('HEAD');
+		
 		var responseBean = requestBean.getResponseBean();
 		
 		return !responseBean.getStatusCode() CONTAINS 404;
