@@ -522,8 +522,28 @@ component extends="Slatwall.model.service.HibachiService" persistent="false" acc
 			}else{
 				requestBean.setMethod('POST');
 			}
+			var collectionEntity = getCollectionList(elasticSearchResource.getElasticSearchResourceType());
 			
 			
+			if(!isNull(elasticSearchResource.getCollectionConfig())){
+				collectionEntity.setCollectionConfig(elasticSearchResource.getCollectionConfig());
+				var elasticSearchResourceCollectionConfigStruct = deserializeJson(elasticSearchResource.getCollectionConfig());	
+				collectionEntity.setCollectionConfigStruct(elasticSearchResourceCollectionConfigStruct);
+			}
+			
+			var requestBodyStruct = {};
+			
+			for(var column in collectionEntity.getCollectionConfigStruct().columns){
+				var propertyIdentifier = listRest(ReReplace(replace(column.propertyIdentifier,'_',''),'_','.'),'.');
+				
+				var value = arguments.entity.getValueByPropertyIdentifier(propertyIdentifier);
+				if(!isNull(value) && len(value)){
+					requestBodyStruct[propertyIdentifier] = value;	
+				}
+											
+			}
+			
+			requestBean.setBody(serializeJson(requestBodyStruct));
 			var responseBean = requestBean.getResponseBean();
 		}
 	}
@@ -682,77 +702,77 @@ component extends="Slatwall.model.service.HibachiService" persistent="false" acc
 			var collectionRecords = arguments.collectionEntity.getRecords(formatRecords=false);
 			var collectionExampleEntity = collectionEntity.getCollectionEntityObject();
 			var collectionPrimaryIDName = collectionExampleEntity.getPrimaryIDPropertyName();
+			indexEntityRecords(collectionRecords,collectionPrimaryIDName);
+		}
+	}
+	
+	public void function indexEntityRecords(required array collectionRecords, required string collectionPrimaryIDName){
+		//var linebreak = '\n';
+		/*bulk api body example
+			{"index":{"_id":"1"}}
+			{"name": "John Doe" }
+			{"index":{"_id":"2"}}
+			{"name": "Jane Doe" }
+			{"index":{"_id":"3"}}
+			{"name": "Bob Doe" }
+			{"index":{"_id":"4"}}
+			{"name": "Bobby Doe" }
 
+			NOTE: always end body with a carriage return as elastic search reads this on a line by line basis
+		*/
+		var linebreak = Chr(13) & Chr(10);
+		var collectionRecordsCount = arraylen(arguments.collectionRecords);
+		var requestBody = "";
 
-			//var linebreak = '\n';
-			/*bulk api body example
-				{"index":{"_id":"1"}}
-				{"name": "John Doe" }
-				{"index":{"_id":"2"}}
-				{"name": "Jane Doe" }
-				{"index":{"_id":"3"}}
-				{"name": "Bob Doe" }
-				{"index":{"_id":"4"}}
-				{"name": "Bobby Doe" }
+		for(var i=1; i <= collectionRecordsCount;i++){
+			var record = arguments.collectionRecords[i];
+			requestBody &='{"index":{"_id":"#record[arguments.collectionPrimaryIDName]#"}}' & linebreak;
+			requestBody &=serializeJson(record) & linebreak;
 
-				NOTE: always end body with a carriage return as elastic search reads this on a line by line basis
-			*/
-			var linebreak = Chr(13) & Chr(10);
-			var collectionRecordsCount = arraylen(collectionRecords);
-			var requestBody = "";
+			if(i % 1000 == 0 || i == collectionRecordsCount){
+				if(getService('hibachiUtilityService').isInThread())
+				{
+				  //do something...
+				  	requestBody &= linebreak;
+					var requestBean = newElasticSearchRequestBean();
+					requestBean.setAction('_bulk');
+					requestBean.setIndex(indexName);
+					requestBean.setType('#typeName#');
+					requestBean.setMethod('POST');
 
-			for(var i=1; i <= collectionRecordsCount;i++){
-				var record = collectionRecords[i];
-				requestBody &='{"index":{"_id":"#record[collectionPrimaryIDName]#"}}' & linebreak;
-				requestBody &=serializeJson(record) & linebreak;
-
-				if(i % 1000 == 0 || i == collectionRecordsCount){
-					if(getService('hibachiUtilityService').isInThread())
+					requestBean.setBody(requestBody);
+					var responseBean = requestBean.getResponseBean();
+					if(structKeyExists(responseBean.getData(),'errors') && responseBean.getData().errors == 'YES'){
+						logHibachi('collectionIndexFailed: #indexName#/#typeName#/_bulk',true);
+					}
+				}else{
+					var threadName = "indexCollection-#createHibachiUUID()#";
+					thread name="#threadName#" action="run" 
+						   requestBody="#requestBody#" 
+						   lineBreak="#lineBreak#"
+						   indexName="#indexName#"
+						   typeName="#typeName#"
 					{
-					  //do something...
-					  	requestBody &= linebreak;
+						attributes.requestBody &= attributes.linebreak;
 						var requestBean = newElasticSearchRequestBean();
 						requestBean.setAction('_bulk');
-						requestBean.setIndex(indexName);
-						requestBean.setType('#typeName#');
+						requestBean.setIndex(attributes.indexName);
+						requestBean.setType('#attributes.typeName#');
 						requestBean.setMethod('POST');
 
-						requestBean.setBody(requestBody);
+						requestBean.setBody(attributes.requestBody);
 						var responseBean = requestBean.getResponseBean();
 						if(structKeyExists(responseBean.getData(),'errors') && responseBean.getData().errors == 'YES'){
-							logHibachi('collectionIndexFailed: #indexName#/#typeName#/_bulk',true);
-						}
-					}else{
-						var threadName = "indexCollection-#createHibachiUUID()#";
-						thread name="#threadName#" action="run" 
-							   requestBody="#requestBody#" 
-							   lineBreak="#lineBreak#"
-							   indexName="#indexName#"
-							   typeName="#typeName#"
-						{
-							attributes.requestBody &= attributes.linebreak;
-							var requestBean = newElasticSearchRequestBean();
-							requestBean.setAction('_bulk');
-							requestBean.setIndex(attributes.indexName);
-							requestBean.setType('#attributes.typeName#');
-							requestBean.setMethod('POST');
-	
-							requestBean.setBody(attributes.requestBody);
-							var responseBean = requestBean.getResponseBean();
-							if(structKeyExists(responseBean.getData(),'errors') && responseBean.getData().errors == 'YES'){
-								logHibachi('collectionIndexFailed: #attributes.indexName#/#attributes.typeName#/_bulk',true);
-							}
+							logHibachi('collectionIndexFailed: #attributes.indexName#/#attributes.typeName#/_bulk',true);
 						}
 					}
-					
-					requestBody = "";
 				}
+				
+				requestBody = "";
 			}
-			if(!getService('hibachiUtilityService').isInThread()){
-				thread action="join";	
-			}
-			
-
+		}
+		if(!getService('hibachiUtilityService').isInThread()){
+			thread action="join";	
 		}
 	}
 
