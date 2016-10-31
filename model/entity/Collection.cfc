@@ -1199,7 +1199,7 @@ component displayname="Collection" entityname="SlatwallCollection" table="SwColl
 
 			variables.pageRecords =	formattedRecords;
 		}else{
-			//try{
+			try{
 				
 				if( !structKeyExists(variables, "pageRecords") || arguments.refresh eq true) {
 					
@@ -1255,12 +1255,12 @@ component displayname="Collection" entityname="SlatwallCollection" table="SwColl
 						}
 					}
 				}
-//			}
-//			catch(any e){
-//				variables.pageRecords = [{'failedCollection'='failedCollection'}];
-//				writelog(file="collection",text="Error:#e.message#");
-//				writelog(file="collection",text="HQL:#HQL#");
-//			}
+			}
+			catch(any e){
+				variables.pageRecords = [{'failedCollection'='failedCollection'}];
+				writelog(file="collection",text="Error:#e.message#");
+				writelog(file="collection",text="HQL:#HQL#");
+			}
 
 		}
 		return variables.pageRecords;
@@ -1287,7 +1287,7 @@ component displayname="Collection" entityname="SlatwallCollection" table="SwColl
 
 			variables.records =	formattedRecords;
 		}else{
-//			try{
+			try{
 				//If we are returning only the exportable records, then check and pass through.
 				if( !structKeyExists(variables, "records") || arguments.refresh == true) {
 					if(getUseElasticSearch() && getHibachiScope().hasService('elasticSearchService')){
@@ -1338,12 +1338,12 @@ component displayname="Collection" entityname="SlatwallCollection" table="SwColl
 						}
 					}
 				}
-//			}
-//			catch(any e){
-//				variables.records = [{'failedCollection'='failedCollection'}];
-//				writelog(file="collection",text="Error:#e.message#");
-//				writelog(file="collection",text="HQL:#HQL#");
-//			}
+			}
+			catch(any e){
+				variables.records = [{'failedCollection'='failedCollection'}];
+				writelog(file="collection",text="Error:#e.message#");
+				writelog(file="collection",text="HQL:#HQL#");
+			}
 		}
 
 		return variables.records;
