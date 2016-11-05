@@ -521,9 +521,6 @@ component extends="FW1.framework" {
 					if(!coreBF.containsBean("hibachiCacheService")) {
 						coreBF.declareBean("hibachiCacheService", "#variables.framework.applicationKey#.org.Hibachi.HibachiCacheService", true);	
 					}
-					if(!coreBF.containsBean("hibachiDataService")) {
-						coreBF.declareBean("hibachiDataService", "#variables.framework.applicationKey#.org.Hibachi.HibachiDataService", true);	
-					}
 					if(!coreBF.containsBean("hibachiDocsService")) {
 						coreBF.declareBean("hibachiDocsService", "#variables.framework.applicationKey#.org.Hibachi.HibachiDocsService", true);
 					}
