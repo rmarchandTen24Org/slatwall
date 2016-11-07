@@ -1,5 +1,6 @@
 slatwallweb:
   build: .
+  image: slatwallci_slatwallweb_1
   ports:
    - "80:8888"
   volumes:
@@ -15,7 +16,7 @@ slatwallweb:
    LUCEE_PASSWORD: CiPassword
    LUCEE_JAVA_OPTS: -Xms1024m -Xmx1024m
 slatwalldb:
-  image: mysql
+  image: mysql:5.7.12
   environment:
    MYSQL_ROOT_PASSWORD : CiPassword
    MYSQL_DATABASE : Slatwall
