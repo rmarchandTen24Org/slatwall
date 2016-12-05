@@ -50,6 +50,25 @@ Notes:
 	
 	<cfproperty name="hibachiCacheService" type="any" />
 	
+	<cffunction name="getSkuDefinitionForMerchandiseBySkuID">
+		<cfargument name="skuID" required="true"/>
+		
+		<cfscript>
+			var skuDefinition = "";
+			var optionSmartList = getService('optionService').getOptionSmartList();
+			optionSmartList.addSelect('optionGroup.optionGroupName','optionGroupName');
+			optionSmartList.addSelect('optionName','optionName');
+			optionSmartList.addFilter('skus.skuID',arguments.skuID);
+			optionSmartList.setSelectDistinctFlag(true);
+			
+			for(var item in optionSmartList.getRecords()) {
+				skuDefinition = listAppend(skuDefinition, " #item['optionGroupName']#: #item['optionName']#", ",");
+			}
+			
+			return skuDefinition;
+		</cfscript>
+	</cffunction>
+	
 	<cffunction name="getTransactionExistsFlag" returntype="boolean" output="false">
 		<cfargument name="productID" />
 		<cfargument name="skuID" />
@@ -61,7 +80,7 @@ Notes:
 		<cfelse>
 			<cfset hql &= "ss.product.productID = :productID" />
 		</cfif>
-		
+
 		<cfset hql &= " AND (
 				EXISTS( SELECT a.orderItemID as id FROM SlatwallOrderItem a WHERE sku.skuID = ss.skuID )
 				  OR
@@ -83,7 +102,7 @@ Notes:
 			  	  OR
 			  	EXISTS( SELECT a.vendorOrderItemID as id FROM SlatwallVendorOrderItem a WHERE stock.sku.skuID = ss.skuID )
 			  )" />
-		
+
 		<cfif structKeyExists(arguments, "skuID") && !isNull(arguments.skuID)>
 			<cfset var results = ormExecuteQuery(hql, {skuID = arguments.skuID}) />
 		<cfelse>
@@ -216,6 +235,53 @@ Notes:
 		</cfif>
 		
 		<cfreturn nogSortOrder />
+	</cffunction>
+	
+	<!--- Retuns a list of all locationID's used during a given time range --->
+	<cffunction name="getUsedLocationIdsByEventDates" returntype="any" access="public" >
+		<cfargument name="eventStartDateTime" type="date" />
+		<cfargument name="eventEndDateTime" type="date" />
+	 
+		<cfquery name="getUsedLocationIdsByEventDates" >
+			SELECT
+				DISTINCT lc.LocationID 
+			FROM 
+				SwSku
+			LEFT OUTER JOIN 
+				SwProduct 
+			ON 
+				SwSku.productID=SwProduct.productID 
+			LEFT OUTER JOIN 
+				SwSkuLocationConfiguration slc
+			ON 
+				SwSku.skuID = slc.skuID
+			LEFT OUTER JOIN 
+				SwLocationConfiguration lc
+			ON 
+				slc.locationConfigurationID = lc.locationConfigurationID
+			WHERE 
+				SwSku.activeFlag=1
+			AND 
+				SwProduct.activeFlag=1 
+			AND 
+				SwSku.bundleFlag=0 
+			AND
+				(	
+					(	
+						SwSku.eventStartDateTime <= <cfqueryparam cfsqltype="CF_SQL_TIMESTAMP" value="#arguments.eventStartDateTime#">
+							AND 
+						SwSku.eventEndDateTime >= <cfqueryparam cfsqltype="CF_SQL_TIMESTAMP" value="#arguments.eventEndDateTime#">
+					)
+					OR
+					(
+						SwSku.eventStartDateTime BETWEEN <cfqueryparam cfsqltype="CF_SQL_TIMESTAMP" value="#arguments.eventStartDateTime#"> AND <cfqueryparam cfsqltype="CF_SQL_TIMESTAMP" value="#arguments.eventEndDateTime#"> 
+							OR 
+						SwSku.eventEndDateTime BETWEEN <cfqueryparam cfsqltype="CF_SQL_TIMESTAMP" value="#arguments.eventStartDateTime#"> AND <cfqueryparam cfsqltype="CF_SQL_TIMESTAMP" value="#arguments.eventEndDateTime#">
+					)
+				)
+		</cfquery> 
+		
+		<cfreturn valueList(getUsedLocationIdsByEventDates.LocationID) />
 	</cffunction>
 	
 </cfcomponent>

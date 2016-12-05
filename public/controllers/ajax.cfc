@@ -46,7 +46,7 @@
 Notes:
 
 */
-component output="false" accessors="true" {
+component output="false" accessors="true" extends="Slatwall.org.Hibachi.HibachiController"{
 
 	property name="fw" type="any";
 
@@ -59,6 +59,7 @@ component output="false" accessors="true" {
 
 	public void function before() {
 		getFW().setView("public:main.blank");
+		arguments.rc.ajaxRequest = true;
 	}
 
 	public void function account( struct rc ) {

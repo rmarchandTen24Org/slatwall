@@ -10,6 +10,7 @@ import {optiongroupmodule} from "../optiongroup/optiongroup.module";
 import {orderitemmodule} from "../orderitem/orderitem.module";
 import {productmodule} from "../product/product.module";
 import {productbundlemodule} from "../productbundle/productbundle.module";
+import {skumodule} from "../sku/sku.module";
 
 //constant
 import {SlatwallPathBuilder} from "./services/slatwallpathbuilder";
@@ -34,6 +35,7 @@ var slatwalladminmodule = angular.module('slatwalladmin',[
   orderitemmodule.name,
   productmodule.name,
   productbundlemodule.name,
+  skumodule.name, 
   workflowmodule.name
 ])
 .constant("baseURL", $.slatwall.getConfig().baseURL)
@@ -67,17 +69,10 @@ var slatwalladminmodule = angular.module('slatwalladmin',[
             dialogService.removePageDialog( index );
         };
 
-        // $rootScope.loadedResourceBundle = false;
-        // $rootScope.loadedResourceBundle = $hibachi.hasResourceBundle();
         $rootScope.createID = utilityService.createID;
 
-        // var rbListener = $rootScope.$watch('loadedResourceBundle',function(newValue,oldValue){
-        //     if(newValue !== oldValue){
-        //         $rootScope.$broadcast('hasResourceBundle');
-        //         rbListener();
-        //     }
-        // });
-
+        $rootScope.slatwall = $rootScope.hibachiScope;
+        $rootScope.slatwall.getProcessObject = $hibachi.newEntity;
     }])
  //services
 //directives

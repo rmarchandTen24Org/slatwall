@@ -10,8 +10,12 @@ class SWListingControlsController {
     private backupColumnsConfig;
     private displayOptionsClosed:boolean=true;
     private filtersClosed:boolean=true;
+    private showFilters:boolean; 
+    private showToggleFilters:boolean; 
+    private showToggleDisplayOptions:boolean; 
     private newFilterPosition;
     private itemInUse;
+    private getCollection;
 
     //@ngInject
     constructor(
@@ -20,7 +24,17 @@ class SWListingControlsController {
         public collectionService,
         public observerService
     ) {
+        if(angular.isUndefined(this.showToggleFilters)){
+            this.showToggleFilters = true; 
+        }
+        if(angular.isUndefined(this.showToggleDisplayOptions)){
+            this.showToggleDisplayOptions = true; 
+        }
+        if(angular.isUndefined(this.showFilters)){
+            this.showFilters = false;
+        }
         this.backupColumnsConfig = this.collectionConfig.getColumns();
+    
         this.filterPropertiesList = {};
 
         $hibachi.getFilterPropertiesByBaseEntityName(this.collectionConfig.baseEntityAlias).then((value)=> {
@@ -39,33 +53,8 @@ class SWListingControlsController {
         this.filtersClosed = true;
     };
 
-    public selectSearchColumn = (column?)=>{
-        this.selectedSearchColumn = column;
-        if(this.searchText){
-            this.search();
-        }
-    };
-
     public getSelectedSearchColumnName = () =>{
         return (angular.isUndefined(this.selectedSearchColumn)) ? 'All' : this.selectedSearchColumn.title;
-    };
-
-    private search =()=>{
-        if(angular.isDefined(this.selectedSearchColumn)){
-            this.backupColumnsConfig = angular.copy(this.collectionConfig.getColumns());
-            var collectionColumns = this.collectionConfig.getColumns();
-            for(var i = 0; i < collectionColumns.length; i++){
-                if(collectionColumns[i].propertyIdentifier != this.selectedSearchColumn.propertyIdentifier){
-                    collectionColumns[i].isSearchable = false;
-                }
-            }
-            this.collectionConfig.setKeywords(this.searchText);
-            this.paginator.setCurrentPage(1);
-            this.collectionConfig.setColumns(this.backupColumnsConfig);
-        }else{
-                this.collectionConfig.setKeywords(this.searchText);
-            this.paginator.setCurrentPage(1);
-        }
     };
 
     private addSearchFilter=()=>{
@@ -75,7 +64,10 @@ class SWListingControlsController {
         for(var i = 0; i < keywords.length; i++){
             this.collectionConfig.addLikeFilter(
                 this.selectedSearchColumn.propertyIdentifier,
-                keywords[i]
+                keywords[i],
+                '%w%',
+                undefined,
+                this.selectedSearchColumn.title
             );
         }
 
@@ -84,8 +76,12 @@ class SWListingControlsController {
         this.paginator.setCurrentPage(1);
     };
 
-    public toggleDisplayOptions=()=>{
-        this.displayOptionsClosed = !this.displayOptionsClosed;
+    public toggleDisplayOptions=(closeButton:boolean=false)=>{
+        if(this.displayOptionsClosed) {
+            this.displayOptionsClosed = false;
+        }else if(closeButton){
+            this.displayOptionsClosed = true;
+        }
     };
 
     private setItemInUse = (booleanValue)=>{
@@ -111,6 +107,10 @@ class SWListingControlsController {
         this.collectionService.selectFilterItem(filterItem);
     };
 
+    public saveCollection = ()=>{
+        this.getCollection()();
+    };
+
 }
 
 class SWListingControls  implements ng.IDirective{
@@ -123,7 +123,10 @@ class SWListingControls  implements ng.IDirective{
     public bindToController =  {
         collectionConfig : "=",
         paginator : "=",
-        getCollection : "&"
+        getCollection : "&",
+        showFilters : "=?",
+        showToggleFilters : "=?", 
+        showToggleDisplayOptions : "=?"
     };
     public controller = SWListingControlsController;
     public controllerAs = 'swListingControls';

@@ -1150,7 +1150,7 @@
 
 		<!--- Create the filename variables --->
 		<cfset var filename = "" />
-		<cfif not isNull(getReportEntity())>
+		<cfif !isNull(getReportEntity()) && !isNull(getReportEntity().getReportTitle()) >
 			<cfset filename = getService("HibachiUtilityService").createSEOString(getReportEntity().getReportTitle()) />
 			<cfset filename &= "_" />
 		<cfelse>
@@ -1187,7 +1187,7 @@
 
 			<!--- Add the column headers --->
 			<cfset spreadsheetAddRow(spreadsheet, getSpreadsheetHeaderRow()) />
-			<cfset spreadsheetrowcount &= 1 />
+			<cfset spreadsheetrowcount += 1 />
 			<cfset spreadsheetFormatRow(spreadsheet, {bold=true}, 1) />
 
 			<!--- Add compare row --->
@@ -1200,7 +1200,7 @@
 				</cfloop>
 
 				<cfset spreadsheetAddRow(spreadsheet, getSpreadsheetHeaderCompareRow()) />
-				<cfset spreadsheetrowcount &= 1 />
+				<cfset spreadsheetrowcount += 1 />
 
 				<cfset spreadsheetFormatRow(spreadsheet, {fontsize=8}, spreadsheet.rowcount) />
 				<cfset spreadsheetMergeCells(spreadsheet, spreadsheetrowcount, spreadsheetrowcount, 1, listLen(getDimensions()) ) />
@@ -1212,11 +1212,11 @@
 			<!--- Add the data --->
 			<cfset var dataQuery = getSpreadsheetData() />
 			<cfset spreadsheetAddRows(spreadsheet, dataQuery) />
-			<cfset spreadsheetrowcount &= dataQuery.recordcount />
+			<cfset spreadsheetrowcount += dataQuery.recordcount />
 
 			<!--- Add the totals --->
 			<cfset spreadsheetAddRow(spreadsheet, getSpreadsheetTotals()) />
-			<cfset spreadsheetrowcount &= 1 />
+			<cfset spreadsheetrowcount += 1 />
 
 			<cfset spreadsheetMergeCells(spreadsheet, spreadsheetrowcount, spreadsheetrowcount, 1, listLen(getDimensions())) />
 			<cfset spreadsheetSetCellValue(spreadsheet, rbKey('define.totals'), spreadsheetrowcount, 1) />
@@ -1225,7 +1225,7 @@
 			<!--- Add Totals border --->
 			<cfset spreadsheetFormatCellRange (spreadsheet, {topborder='thin'}, spreadsheetrowcount, 1, spreadsheetrowcount, totalColumns) />
 
-			<cfset spreadsheetWrite( spreadsheet, fullFilename ) />
+			<cfset spreadsheetWrite( spreadsheet, fullFilename, true ) />
 			<cfset getService("hibachiUtilityService").downloadFile( filename, fullFilename, "application/msexcel", true ) />
 			<cfcatch>
 				<cfif (structKeyExists(server, "railo") or structKeyExists(server, "lucee")) and cfcatch.message eq "No matching function [SPREADSHEETADDROW] found">

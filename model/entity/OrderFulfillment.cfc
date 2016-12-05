@@ -78,6 +78,9 @@ component displayname="Order Fulfillment" entityname="SlatwallOrderFulfillment" 
 
 	// Related Object Properties (many-to-many - inverse)
 
+	// Calculated properties
+	property name="calculatedSelectedShippingMethodOption" cfc="ShippingMethodOption" fieldtype="many-to-one" fkcolumn="selectedShippingMethodOptionID" cascade="delete";
+
 	// Remote properties
 	property name="remoteID" ormtype="string";
 
@@ -101,6 +104,8 @@ component displayname="Order Fulfillment" entityname="SlatwallOrderFulfillment" 
 	property name="orderStatusCode" type="numeric" persistent="false";
 	property name="quantityUndelivered" type="numeric" persistent="false";
 	property name="quantityDelivered" type="numeric" persistent="false";
+	property name="selectedShippingMethodOption" type="any" persistent="false";
+	property name="eligibleShippingMethodRates" type="any" persistent="false"; 
 	property name="shippingMethodRate" type="array" persistent="false";
 	property name="shippingMethodOptions" type="array" persistent="false";
 	property name="subtotal" type="numeric" persistent="false" hb_formatType="currency";
@@ -109,7 +114,8 @@ component displayname="Order Fulfillment" entityname="SlatwallOrderFulfillment" 
 	property name="taxAmount" type="numeric" persistent="false" hb_formatType="currency";
 	property name="totalShippingWeight" type="numeric" persistent="false" hb_formatType="weight";
     property name="totalShippingQuantity" type="numeric" persistent="false" hb_formatType="weight";
-    
+    property name="shipmentItemMultiplier" type="numeric" persistent="false";
+
 	// Deprecated
 	property name="discountTotal" persistent="false";
 	property name="shippingCharge" persistent="false";
@@ -169,7 +175,7 @@ component displayname="Order Fulfillment" entityname="SlatwallOrderFulfillment" 
 		}
 	}
 
-	public boolean function hasGiftCardRecipients(){
+	public boolean function hasFulfillmentItemsWithAssignedRecipients(){
 		for(var item in this.getOrderFulfillmentItems()){
 			if(!item.hasAllGiftCardsAssigned()){
 				return false;
@@ -179,7 +185,7 @@ component displayname="Order Fulfillment" entityname="SlatwallOrderFulfillment" 
 	}
 
 	public boolean function needsEmailForFulfillment(){
-		return !hasGiftCardRecipients();
+		return !hasFulfillmentItemsWithAssignedRecipients();
 	}
 
 	public any function getNumberOfNeededGiftCardCodes(){
@@ -212,16 +218,32 @@ component displayname="Order Fulfillment" entityname="SlatwallOrderFulfillment" 
 
 	// ============ START: Non-Persistent Property Methods =================
 
+	public any function getShipmentItemMultiplier(){
+
+		//weight overrides quantity
+		if(getTotalShippingWeight() > 0){
+			return ceiling(getTotalShippingWeight()); //round up.
+		}
+		else if (getTotalShippingQuantity() > 0){
+			return getTotalShippingQuantity();
+		}
+
+		return 0;
+	}
+
     public any function getAccountAddressOptions() {
     	if( !structKeyExists(variables, "accountAddressOptions")) {
     		variables.accountAddressOptions = [];
-			var s = getService("accountService").getAccountAddressSmartList();
-			s.addFilter(propertyIdentifier="account.accountID",value=getOrder().getAccount().getAccountID(),fetch="false");
-			s.addOrder("accountAddressName|ASC");
-			var r = s.getRecords();
-			for(var i=1; i<=arrayLen(r); i++) {
-				arrayAppend(variables.accountAddressOptions, {name=r[i].getSimpleRepresentation(), value=r[i].getAccountAddressID()});
+			if(!isNull(getOrder().getAccount())){
+				var s = getService("accountService").getAccountAddressSmartList();
+				s.addFilter(propertyIdentifier="account.accountID",value=getOrder().getAccount().getAccountID(),fetch="false");
+				s.addOrder("accountAddressName|ASC");
+				var r = s.getRecords();
+				for(var i=1; i<=arrayLen(r); i++) {
+					arrayAppend(variables.accountAddressOptions, {name=r[i].getSimpleRepresentation(), value=r[i].getAccountAddressID()});
+				}
 			}
+			arrayPrepend(variables.accountAddressOptions, {name=rbKey("define.none"), value=""});
 		}
 		return variables.accountAddressOptions;
 	}
@@ -334,10 +356,8 @@ component displayname="Order Fulfillment" entityname="SlatwallOrderFulfillment" 
     public any function getShippingMethodOptions() {
     	if( !structKeyExists(variables, "shippingMethodOptions")) {
 
-    		// If there aren't any shippingMethodOptions available, then try to populate this fulfillment
-    		if( !arrayLen(getFulfillmentShippingMethodOptions()) ) {
-    			getService("shippingService").updateOrderFulfillmentShippingMethodOptions( this );
-    		}
+			//update the shipping method options with the shipping service to insure qualifiers are re-evaluated    		
+			getService("shippingService").updateOrderFulfillmentShippingMethodOptions( this );
 
     		// At this point they have either been populated just before, or there were already options
     		var optionsArray = [];
@@ -376,7 +396,7 @@ component displayname="Order Fulfillment" entityname="SlatwallOrderFulfillment" 
     		}
 
     		if(!arrayLen(optionsArray)) {
-    			arrayPrepend(optionsArray, {name=rbKey('define.none'), value=''});
+    			arrayPrepend(optionsArray, {name=rbKey('define.select'), value=''});
     		}
 
     		variables.shippingMethodOptions = optionsArray;
@@ -389,6 +409,19 @@ component displayname="Order Fulfillment" entityname="SlatwallOrderFulfillment" 
     		return getSelectedShippingMethodOption().getShippingMethodRate();
     	}
     }
+
+	public string function getShippingIntegrationName() { 
+		if(!isNull(getShippingIntegration())){
+			return getShippingIntegration().getIntegrationName(); 
+		}
+		return ''; 
+	} 
+
+	public any function getShippingIntegration() { 
+		if(!isNull(getShippingMethodRate()) && !isNull(getShippingMethodRate().getShippingIntegration())){
+				return getShippingMethodRate().getShippingIntegration(); 
+		} 
+	}	
 
     public any function getSelectedShippingMethodOption() {
     	if(!structKeyExists(variables, "selectedShippingMethodOption")) {
@@ -419,7 +452,9 @@ component displayname="Order Fulfillment" entityname="SlatwallOrderFulfillment" 
   		if( !structKeyExists(variables,"subtotal") ) {
 	    	variables.subtotal = 0;
 	    	for( var i=1; i<=arrayLen(getOrderFulfillmentItems()); i++ ) {
-	    		variables.subtotal = precisionEvaluate(variables.subtotal + getOrderFulfillmentItems()[i].getExtendedPrice());
+				if(getOrderFulfillmentItems()[i].isRootOrderItem()){
+				    variables.subtotal = precisionEvaluate(variables.subtotal + getOrderFulfillmentItems()[i].getExtendedPrice());	    	
+	    		}
 	    	}
   		}
     	return variables.subtotal;
@@ -453,8 +488,31 @@ component displayname="Order Fulfillment" entityname="SlatwallOrderFulfillment" 
 
     	return totalShippingWeight;
     }
-    
-    
+
+    public boolean function hasOrderWithMinAmountRecievedRequiredForFulfillment() {
+    	return  (   !isNull(this.getOrder())
+    				&& (
+    				  	this.getOrder().getTotal() == 0
+    				  		|| (
+		    				  	!isNull(this.getFulfillmentMethod())
+		    				  	&& this.getFulfillmentMethod().setting('fulfillmentMethodAutoMinReceivedPercentage')
+		    						<= precisionEvaluate( this.getOrder().getPaymentAmountReceivedTotal() * 100 / this.getOrder().getTotal() )
+		    				)
+    				  )
+    			);
+    }
+
+     public boolean function isAutoFulfillment() {
+		return (this.getFulfillmentMethodType() == "auto" || (
+		        !isNull(this.getFulfillmentMethod()) &&
+                !isNull(this.getFulfillmentMethod().getAutoFulfillFlag()) &&
+                		this.getFulfillmentMethod().getAutoFulfillFlag()));
+    }
+
+    public boolean function isAutoFulfillmentReadyToBeFulfilled(){
+		return this.isAutoFulfillment() && this.hasOrderWithMinAmountRecievedRequiredForFulfillment() && this.hasFulfillmentItemsWithAssignedRecipients();
+    }
+
     public numeric function getTotalShippingQuantity() {
         var totalShippingQuantity = 0;
 
@@ -666,13 +724,13 @@ component displayname="Order Fulfillment" entityname="SlatwallOrderFulfillment" 
     // ==================  START: Validation Methods  ======================
     public boolean function hasQuantityOfOrderFulfillmentsWithinMaxOrderQuantity() {
         var settingVal = getService("settingService").getSettingValue(settingName='globalMaximumFulfillmentsPerOrder');
-        if (!isNull(settingVal) 
-        	&& !isNull(getOrder()) 
+        if (!isNull(settingVal)
+        	&& !isNull(getOrder())
         ){
-           return (arrayLen(getOrder().getOrderFulfillments()) <= settingVal);  
+           return (arrayLen(getOrder().getOrderFulfillments()) <= settingVal);
         }
         return false;
-    } 
+    }
     // ==================  END: Validation Methods  ========================
 
 	// =================== START: ORM Event Hooks  =========================

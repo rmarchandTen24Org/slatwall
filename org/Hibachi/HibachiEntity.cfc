@@ -118,11 +118,38 @@ component output="false" accessors="true" persistent="false" extends="HibachiTra
 		return variables[ "requestNewPropertyEntity#arguments.propertyName#" ];
 	} 
 	
-	public any function duplicate() {
+	public any function duplicate(boolean onlyPersistent=false) {
 		var newEntity = getService("hibachiService").getServiceByEntityName(getEntityName()).invokeMethod("new#replace(getEntityName(),getApplicationValue('applicationKey'),'')#");
 		var properties = getProperties();
+		var propertyIsPersistent = true;
+		
 		for(var p=1; p<=arrayLen(properties); p++) {
-			if( properties[p].name != getPrimaryIDPropertyName() && (!structKeyExists(properties[p], "fieldType") || ( properties[p].fieldType != "one-to-many" && properties[p].fieldType != "many-to-many")) ) {
+			if(
+				arguments.onlyPersistent
+				&& structKeyExists(properties[p],'persistent')
+			){
+				propertyIsPersistent = properties[p].persistent;
+			}else{
+				propertyIsPersistent = true;
+			}
+			
+			if( 
+				(
+					!arguments.onlyPersistent 
+					|| (
+						arguments.onlyPersistent
+						&& propertyIsPersistent
+					)
+				)
+				&& properties[p].name != getPrimaryIDPropertyName() 
+				&& (
+					!structKeyExists(properties[p], "fieldType") 
+					|| ( properties[p].fieldType != "one-to-many" && properties[p].fieldType != "many-to-many")
+				)
+				&&(
+					structKeyExists(this,'set#properties[p].name#')
+				) 
+			) {
 				var value = invokeMethod('get#properties[p].name#');
 				if(!isNull(value)) {
 					newEntity.invokeMethod("set#properties[p].name#", {1=value});
@@ -507,6 +534,34 @@ component output="false" accessors="true" persistent="false" extends="HibachiTra
 		return variables[ cacheKey ];
 	}
 	
+	// @hint returns a collection list of the current values for a given one-to-many or many-to-many property
+	public any function getPropertyCollectionList( required string propertyName ) {
+		var cacheKey = "#arguments.propertyName#CollectionList";
+		
+		if(!structKeyExists(variables, cacheKey)) {
+			
+			var entityService = getService("hibachiService").getServiceByEntityName( listLast(getPropertyMetaData( arguments.propertyName ).cfc,'.') );
+			var collectionList = entityService.invokeMethod("get#listLast(getPropertyMetaData( arguments.propertyName ).cfc,'.')#CollectionList");
+			
+			// Create an example entity so that we can read the meta data
+			var exampleEntity = entityNew("#getApplicationValue('applicationKey')##listLast(getPropertyMetaData( arguments.propertyName ).cfc,'.')#");
+			
+			// If its a one-to-many, then add filter
+			if(getPropertyMetaData( arguments.propertyName ).fieldtype == "one-to-many") {
+				// Loop over the properties in the example entity to 
+				for(var i=1; i<=arrayLen(exampleEntity.getProperties()); i++) {
+					if( structKeyExists(exampleEntity.getProperties()[i], "fkcolumn") && exampleEntity.getProperties()[i].fkcolumn == getPropertyMetaData( arguments.propertyName ).fkcolumn ) {
+						collectionList.addFilter("#exampleEntity.getProperties()[i].name#.#getPrimaryIDPropertyName()#", getPrimaryIDValue());
+					}
+				}
+			} 
+			
+			variables[ cacheKey ] = collectionList;
+		}
+		
+		return variables[ cacheKey ];
+	}
+	
 	// @hint returns a struct of the current entities in a given property.  The struck is key'd based on the primaryID of the entities
 	public struct function getPropertyStruct( required string propertyName ) {
 		var cacheKey = "#arguments.propertyName#Struct";
@@ -665,6 +720,11 @@ component output="false" accessors="true" persistent="false" extends="HibachiTra
 			return getPropertySmartList( propertyName=left(right(arguments.missingMethodName, len(arguments.missingMethodName)-3), len(arguments.missingMethodName)-12) );
 			
 		// getXXXStruct()		Where XXX is a one-to-many or many-to-many property where we want a key delimited struct
+		} else if ( left(arguments.missingMethodName, 3) == "get" && right(arguments.missingMethodName, 14) == "CollectionList") {
+			
+			return getPropertyCollectionList( propertyName=left(right(arguments.missingMethodName, len(arguments.missingMethodName)-3), len(arguments.missingMethodName)-17) );
+			
+		// getXXXStruct()		Where XXX is a one-to-many or many-to-many property where we want a key delimited struct
 		} else if ( left(arguments.missingMethodName, 3) == "get" && right(arguments.missingMethodName, 6) == "Struct") {
 			
 			return getPropertyStruct( propertyName=left(right(arguments.missingMethodName, len(arguments.missingMethodName)-3), len(arguments.missingMethodName)-9) );
@@ -804,13 +864,13 @@ component output="false" accessors="true" persistent="false" extends="HibachiTra
 			}
 			
 			// Set createdByAccount
-			if(structKeyExists(this,"setCreatedByAccountID") && !getHibachiScope().getAccount().isNew() && getHibachiScope().getAccount().getAdminAccountFlag() ){
+			if(structKeyExists(this,"setCreatedByAccountID") && !getHibachiScope().getAccount().isNew() ){
 				setCreatedByAccountID( getHibachiScope().getAccount().getAccountID() );	
 			}
 			
 			// Set modifiedByAccount
-			if(structKeyExists(this,"setModifiedByAccountID") && !getHibachiScope().getAccount().isNew() && getHibachiScope().getAccount().getAdminAccountFlag() ){
-				setModifiedByAccount( getHibachiScope().getAccount().getAccountID() );
+			if(structKeyExists(this,"setModifiedByAccountID") && !getHibachiScope().getAccount().isNew() ){
+				setModifiedByAccountID( getHibachiScope().getAccount().getAccountID() );
 			}
 			
 			// Log audit only if admin user
@@ -846,8 +906,8 @@ component output="false" accessors="true" persistent="false" extends="HibachiTra
 		if(getHibachiScope().hasApplicationValue("initialized") && getHibachiScope().getApplicationValue("initialized")) {
 		
 			// Set modifiedByAccount
-			if(structKeyExists(this,"setModifiedByAccountID") && !getHibachiScope().getAccount().isNew() && getHibachiScope().getAccount().getAdminAccountFlag() ){
-				setModifiedByAccount(getHibachiScope().getAccount().getAccountID());
+			if(structKeyExists(this,"setModifiedByAccountID") && !getHibachiScope().getAccount().isNew() ){
+				setModifiedByAccountID(getHibachiScope().getAccount().getAccountID());
 			}
 			
 			// Log audit only if admin user or there are prevous audit recods
@@ -881,12 +941,19 @@ component output="false" accessors="true" persistent="false" extends="HibachiTra
 		return defaultProperties;
 	}
 	
-	public any function getFilterProperties(string includesList = "", string excludesList = ""){
+	public any function getFilterProperties(string includesList = "", string excludesList = "", includeNonPersistent = false){
 		var properties = getProperties();
 		var defaultProperties = [];
+
 		for(var p=1; p<=arrayLen(properties); p++) {
-			if((len(includesList) && ListFind(arguments.includesList,properties[p].name) && !ListFind(arguments.excludesList,properties[p].name)) 
-			|| (!structKeyExists(properties[p], "persistent") || properties[p].persistent)){
+			if((len(includesList) && ListFind(arguments.includesList,properties[p].name) && !ListFind(arguments.excludesList,properties[p].name))
+				||
+				(
+					(!structKeyExists(properties[p], "persistent") || properties[p].persistent)
+					||
+					(includeNonPersistent == true && structKeyExists(properties[p], "persistent") && properties[p].persistent == false && structKeyExists(properties[p], "ormtype"))
+				)
+			){
 				properties[p]['displayPropertyIdentifier'] = getPropertyTitle(properties[p].name);
 				arrayAppend(defaultProperties,properties[p]);	
 			}

@@ -64,7 +64,12 @@ Notes:
 		<swa:SlatwallSetting settingName="globalNoSessionPersistDefault" />
 		<swa:SlatwallSetting settingName="globalRemoteIDShowFlag" />
 		<swa:SlatwallSetting settingName="globalRemoteIDEditFlag" />
-		<swa:SlatwallSetting settingName="globalDisplayIntegrationProcessingErrors">
+		<swa:SlatwallSetting settingName="globalDisplayIntegrationProcessingErrors" />
+		<swa:SlatwallSetting settingName="globalFileTypeWhiteList" />
+		<swa:SlatwallSetting settingName="globalMIMETypeWhiteList" />
+		<swa:SlatwallSetting settingName="globalUseShippingIntegrationForTrackingNumberOption" />
+		<swa:SlatwallSetting settingName="globalSmartListGetAllRecordsLimit" />
+		<swa:SlatwallSetting settingName="globalAllowCustomBranchUpdates"/>
 	</swa:SlatwallSettingTable>
 </cfoutput>
 

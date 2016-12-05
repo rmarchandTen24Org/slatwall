@@ -491,7 +491,7 @@
 							
 							//Build the ID LIst
 							var newIDList = parentCategory.getCategoryIDPath();
-							listAppend(newIDList, slatwallCategory.getCategoryID() );
+							newIDList = listAppend(newIDList, slatwallCategory.getCategoryID() );
 							
 							//Set the new categoryIDPath
 							slatwallCategory.setCategoryIDPath(newIDList);
@@ -523,8 +523,11 @@
 			var slatwallCategory = $.slatwall.getService("contentService").getCategoryByCMSCategoryID($.event('categoryID'));
 			if(!isNull(slatwallCategory)) {
 				if(slatwallCategory.isDeletable()) {
-					$.slatwall.getService("contentService").deleteCategory( slatwallCategory );
-					ormFlush();
+					//cannot use ORM because slatwall orm behavior will cascade delete child categories
+					//$.slatwall.getService("contentService").deleteCategory( slatwallCategory );
+					//ormFlush();
+					$.slatwall.getService('contentService').deleteCategoryByCMSCategoryID($.event('categoryID'));
+					
 				} else {
 					slatwallCategory.setActiveFlag(0);
 				}	
@@ -610,6 +613,8 @@
 				// If the "Add Sku" was selected, then we call that process method
 				if(structKeyExists(contentData, "addSku") && contentData.addSku && structKeyExists(contentData, "addSkuDetails")) {
 					contentData.addSkuDetails.productCode = muraContent.getFilename();
+					contentData.addSkuDetails.skuName = muraContent.getTitle();
+					
 					slatwallContent = $.slatwall.getService("contentService").processContent(slatwallContent, contentData.addSkuDetails, "createSku");
 				}
 			}
@@ -695,9 +700,11 @@
 				
 				// Login Slatwall Account
 				var account = $.slatwall.getService("accountService").getAccountByCMSAccountID($.currentUser('userID'));
-				var accountAuth = ormExecuteQuery("SELECT aa FROM SlatwallAccountAuthentication aa WHERE aa.integration.integrationID = ? AND aa.account.accountID = ?", [getMuraIntegrationID(), account.getAccountID()]);
-				if (!isNull(account) && arrayLen(accountAuth)) {
-					$.slatwall.getService("hibachiSessionService").loginAccount(account=account, accountAuthentication=accountAuth[1]);
+				if (!isNull(account) ) {
+					var accountAuth = ormExecuteQuery("SELECT aa FROM SlatwallAccountAuthentication aa WHERE aa.integration.integrationID = ? AND aa.account.accountID = ?", [getMuraIntegrationID(), account.getAccountID()]);
+					if (arrayLen(accountAuth)) {
+						$.slatwall.getService("hibachiSessionService").loginAccount(account=account, accountAuthentication=accountAuth[1]);
+					}
 				}
 				
 			} else if ( $.slatwall.getLoggedInFlag()
@@ -1101,13 +1108,14 @@
 			FROM
 				SwCategory
 			WHERE
-				categoryIDPath <> <cfqueryparam cfsqltype="cf_sql_varchar" value="#oldCategoryIDPath#" />
-			  AND
+				
 				categoryIDPath LIKE <cfqueryparam cfsqltype="cf_sql_varchar" value="#oldCategoryIDPath#%" />
 		</cfquery>
 		
 		
 		<cfloop query="rs">
+			
+			
 			<cfquery name="rs2">
 				UPDATE
 					SwCategory

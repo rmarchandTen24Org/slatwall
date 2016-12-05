@@ -55,10 +55,12 @@ component entityname="SlatwallShippingMethodRate" table="SwShippingMethodRate" p
 	property name="maximumShipmentWeight" ormtype="float" hb_nullRBKey="define.unlimited";
 	property name="minimumShipmentQuantity" ormtype="float" hb_nullRBKey="define.0";
     property name="maximumShipmentQuantity" ormtype="float" hb_nullRBKey="define.unlimited";
-	property name="minimumShipmentItemPrice" ormtype="big_decimal" hb_nullRBKey="define.0";
-	property name="maximumShipmentItemPrice" ormtype="big_decimal" hb_nullRBKey="define.unlimited";
+	property name="minimumShipmentItemPrice" ormtype="big_decimal" hb_formatType="currency"  hb_nullRBKey="define.0";
+	property name="maximumShipmentItemPrice" ormtype="big_decimal" hb_formatType="currency" hb_nullRBKey="define.unlimited";
+	property name="rateMultiplierAmount" ormtype="big_decimal" hb_formatType="currency" hb_nullRBKey="define.0";
 	property name="defaultAmount" ormtype="big_decimal" hb_formatType="currency" hb_nullRBKey="define.0";
 	property name="shippingIntegrationMethod" ormtype="string";
+	property name="splitShipmentWeight" ormtype="float" hb_nullRBKey="define.unlimited";
 	property name="activeFlag" ormtype="boolean";
 	
 	// Related Object Properties (many-to-one)
@@ -92,8 +94,9 @@ component entityname="SlatwallShippingMethodRate" table="SwShippingMethodRate" p
 	property name="shippingMethodRateName" type="string" persistent="false";
 	property name="hasPriceGroups" type="string" persistent="false";
 	
-	
 	// ============ START: Non-Persistent Property Methods =================
+	
+	
 	
 	public array function getAddressZoneOptions() {
 		if(!structKeyExists(variables, "addressZoneOptions")) {

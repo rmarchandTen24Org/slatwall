@@ -435,6 +435,46 @@ component extends="HibachiService"  accessors="true" output="false"
         }
     }
     
+     /**
+      * Adds a new account address.
+      */
+     public void function addNewAccountAddress(required data){
+     	param name="data.countrycode" default="US";
+     	
+     	var accountAddress = getService("AccountService").newAccountAddress();
+     	if (structKeyExists(data, "accountAddressName")){
+     		accountAddress.setAccountAddressName(data.accountAddressName);
+     	}
+     	
+     	var newAddress = getService("AddressService").newAddress();
+     	newAddress = getService("AddressService").saveAddress(newAddress, data, "full");
+      	
+      	if (!newAddress.hasErrors()){
+      		accountAddress.setAddress(newAddress);
+      		accountAddress.setAccount(getHibachiScope().getAccount());	
+      		var savedAccountAddress = getService("AccountService").saveAccountAddress(accountAddress);
+ 	     	if (!savedAccountAddress.hasErrors()){
+ 	     		ormFlush();
+ 	     	}
+      	}
+     }
+     
+     /**
+      * Updates an address.
+      */
+     public void function updateAddress(required data){
+     	param name="data.countrycode" default="US";
+     	param name="data.addressID" default="";
+     	
+     	
+     	var newAddress = getService("AddressService").getAddress(data.addressID, true);
+     	newAddress = getService("AddressService").saveAddress(newAddress, data, "full");
+      	
+      	if (!isNull(newAddress) && !newAddress.hasErrors()){
+ 	     	ormFlush();
+      	}
+     }
+    
     /** 
      * @http-context deleteAccountAddress
      * @description Account Payment Method - Delete 
@@ -455,7 +495,7 @@ component extends="HibachiService"  accessors="true" output="false"
     }
     
     public any function addOrderShippingAddress(required data){
-        param name="data.saveAsAccountAddressFlag" default="1";
+        param name="data.saveAsAccountAddressFlag" default="0";
         param name="data.saveShippingAsBilling" default="1";
         
         /** add a shipping address */
@@ -476,17 +516,15 @@ component extends="HibachiService"  accessors="true" output="false"
                 }
                 
                 if (structKeyExists(data, "saveAsAccountAddressFlag") && data.saveAsAccountAddressFlag){
-                    var accountAddresses = getHibachiScope().account().getAccountAddresses();
-                    if (!isNull(accountAddresses) && arrayLen(accountAddresses)){
-                        var accountAddress = getService('AddressService').getAccountAddress(accountAddresses[1].getAccountAddressID());
-                    }else{
-                        var accountAddress = getService("AccountService").newAccountAddress();
-                    }
-                    
-                    if (len(accountAddress.getAccountAddressID())){
-                        data.accountAddressID = accountAddress.getAccountAddressID();
-                        addShippingAddressUsingAccountAddress();
-                    }
+                   
+                 	var accountAddress = getService("AccountService").newAccountAddress();
+                 	accountAddress.setAddress(shippingAddress);
+                 	accountAddress.setAccount(getHibachiScope().getAccount());
+                 	var savedAccountAddress = getService("AccountService").saveAccountAddress(accountAddress);
+                 	if (!savedAddress.hasErrors()){
+                 		ormFlush();
+                 	}
+                  
                 }
                 
                 getOrderService().saveOrder(order);
@@ -503,11 +541,13 @@ component extends="HibachiService"  accessors="true" output="false"
     public void function addShippingAddressUsingAccountAddress(required data){
         var accountAddressId = data.accountAddressID;
         if (isNull(accountAddressID)){
-            return;
+            this.addErrors(arguments.data, "Could not add account address. address id empty."); //add the basic errors
+            getHibachiScope().addActionResult( "public:cart.addShippingAddressUsingAccountAddress", true);
+       		return;
         }
         var accountAddress = getService('AddressService').getAccountAddress(accountAddressID);
         
-        if (isObject(accountAddress) && !accountAddress.hasErrors()){
+        if (!isNull(accountAddress) && !accountAddress.hasErrors()){
             //save the address at the order level.
             var order = getHibachiScope().cart();
             order.setShippingAddress(accountAddress.getAddress());
@@ -522,6 +562,10 @@ component extends="HibachiService"  accessors="true" output="false"
     /** Sets the shipping method to an order shippingMethodID */
     public void function addShippingMethodUsingShippingMethodID(required data){
         var shippingMethodId = data.shippingMethodID;
+        var orderFulfillmentWithShippingMethodOptions = 1;
+        if (!isNull(data.orderFulfillmentWithShippingMethodOptions)){
+        	orderFulfillmentWithShippingMethodOptions = data.orderFulfillmentWithShippingMethodOptions + 1; //from js to cf
+        }
         if (isNull(shippingMethodId)){
             return;
         }
@@ -529,27 +573,29 @@ component extends="HibachiService"  accessors="true" output="false"
         
         if (isObject(shippingMethod) && !shippingMethod.hasErrors()){
             var order = getHibachiScope().cart();
-            var orderFulfillment = order.getOrderFulfillments()[1];
+            var orderFulfillment = order.getOrderFulfillments()[orderFulfillmentWithShippingMethodOptions];
             orderFulfillment.setShippingMethod(shippingMethod);
-            getOrderService().saveOrder(order);            
+            getOrderService().saveOrder(order); 
+            ormFlush();           
         }else{
             this.addErrors(arguments.data, shippingMethod.getErrors()); //add the basic errors
             getHibachiScope().addActionResult( "public:cart.addShippingMethodUsingShippingMethodID", shippingMethod.hasErrors());
         }
+        
     }
     
     /** adds a billing address to an order. 
     @ProcessMethod Address_Save
     */
     public void function addBillingAddress(required data){
-        param name="data.saveAsAccountAddressFlag" default="1"; 
+        param name="data.saveAsAccountAddressFlag" default="0"; 
         //if we have that data and don't have any suggestions to make, than try to populate the address
             billingAddress = getService('AddressService').newAddress();    
             
             //get a new address populated with the data.
-            var savedAddress = getService('AddressService').saveAddress(billingAddress, arguments.data, "billing");
+            var savedAddress = getService('AddressService').saveAddress(billingAddress, arguments.data, "full");
             
-            if (isObject(savedAddress) && !savedAddress.hasErrors()){
+            if (!isNull(savedAddress) && !savedAddress.hasErrors()){
                 //save the address at the order level.
                 var order = getHibachiScope().cart();
                 order.setBillingAddress(savedAddress);
@@ -558,7 +604,7 @@ component extends="HibachiService"  accessors="true" output="false"
             }
             if(savedAddress.hasErrors()){
                     this.addErrors(arguments.data, savedAddress.getErrors()); //add the basic errors
-                    getHibachiScope().addActionResult( "public:cart.AddBillingAddress", savedAddress.hasErrors());
+            	    getHibachiScope().addActionResult( "public:cart.AddBillingAddress", true);
             }
     }
     
@@ -783,11 +829,35 @@ component extends="HibachiService"  accessors="true" output="false"
         }
     }
     
+    /**
+     * Will add multiple orderItems at once given a list of skuIDs or skuCodes.
+     */
+    public void function addOrderItems(required any data){
+    	param name="data.skuIds" default="";
+    	param name="data.skuCodes" default="";
+    	
+    	
+    	//add skuids
+    	if (!isNull(data.skuIds)){
+    		for (var sku in data.skuIds){
+    			data["skuID"]=sku; data["quantity"]=1;
+    			addOrderItem(data=data);
+    		}
+    	}
+    	//add skuCodes
+    	if (!isNull(data.skuCodes)){
+    		for (var sku in data.skuCodes){
+    			data["skuCode"]=sku; data["quantity"]=1;
+    			addOrderItem(data=data);
+    		}
+    	}
+    }
+    
     /** 
      * @http-context addOrderItem
      * @description Add Order Item to an Order
      * @http-return <b>(200)</b> Successfully Updated or <b>(400)</b> Bad or Missing Input Data
-     @ProcessMethod Order_addOrderItem
+     * @ProcessMethod Order_addOrderItem
      */
     public void function addOrderItem(required any data) {
         // Setup the frontend defaults
@@ -922,7 +992,6 @@ component extends="HibachiService"  accessors="true" output="false"
         param name="data.newOrderPayment.saveShippingAsBilling" default="0";
         param name="data.accountAddressID" default="";
         param name="data.accountPaymentMethodID" default="";
-        param name="data.newOrderPayment.orderPaymentType.typeID"  default='444df2f0fed139ff94191de8fcd1f61b';
         param name="data.newOrderPayment.paymentMethod.paymentMethodID" default="444df303dedc6dab69dd7ebcc9b8036a";
        
         // Make sure that someone isn't trying to pass in another users orderPaymentID
@@ -933,7 +1002,7 @@ component extends="HibachiService"  accessors="true" output="false"
             }
         }
         
-        if (!data.newOrderPayment.saveShippingAsBilling){
+        if (data.newOrderPayment.saveShippingAsBilling == true){
             //use this billing information
             this.addBillingAddress(data.newOrderPayment.billingAddress, "billing");
         }
@@ -1031,6 +1100,11 @@ component extends="HibachiService"  accessors="true" output="false"
     }
     
     public any function addErrors( required struct data , errors){
+        
+        if (!structKeyExists(arguments.data, "ajaxResponse")){
+            arguments.data["ajaxResponse"] = {};
+        }
+        
         if (!structKeyExists(arguments.data.ajaxResponse, "errors")){
             arguments.data.ajaxResponse["errors"] = {};
         }

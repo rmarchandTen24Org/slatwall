@@ -289,7 +289,7 @@ component entityname="SlatwallOrderPayment" table="SwOrderPayment" persistent="t
 	// ============ START: Non-Persistent Property Methods =================
 
 	public boolean function getDynamicAmountFlag() {
-		if(isNull(variables.amount)) {
+		if(isNull(variables.amount) && !this.hasGiftCard()) {
 			return true;
 		}
 		return false;
@@ -402,12 +402,34 @@ component entityname="SlatwallOrderPayment" table="SwOrderPayment" persistent="t
 		return yearOptions;
 	}
 
+	public boolean function hasGiftCard(){
+		if(!isNull(this.getGiftCard())){
+			return true;
+		}
+		return false;
+	}
+
 	public any function getGiftCard(){
 		if(!isNull(this.getGiftCardNumberEncrypted())){
 			return getService("GiftCardService").getGiftCard(getDAO("GiftCardDAO").getIDbyCode(this.getGiftCardNumberEncrypted()));
 		}
 		return;
 	}
+
+	public boolean function giftCardNotAppliedToOrder(){
+ 		var orderPayments = getOrder().getOrderPayments();
+ 		if(this.hasGiftCard()){	
+ 			for(var payment in orderPayments){
+ 				if( payment.getOrderPaymentID() != this.getOrderPaymentID() &&
+ 					this.getGiftCard().getGiftCardCode() == payment.getGiftCardNumberEncrypted() &&
+ 				    payment.getStatusCode() == 'opstActive'
+ 				){
+ 					return false; 
+ 				}
+ 			}	
+ 		}
+ 		return true; 
+ 	}
 
 	public string function getPaymentMethodType() {
 		if(!isNull(getPaymentMethod())) {

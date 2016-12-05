@@ -331,13 +331,13 @@ Notes:
 			<cfif len(arguments.linkColumn)>
 				<!--- set if current link is the home page, set empty link (to go to site root) --->
                 <cfif (Q[arguments.linkColumn][Q.CurrentRow] neq arguments.homelink)>
-                    <cfset thislink = "/" & arguments.linkPrefix & HTMLEditFormat(Q[arguments.linkColumn][Q.CurrentRow]) & arguments.linkSuffix />
+                    <cfset thislink = "/" & arguments.linkPrefix & hibachiHTMLEditFormat(Q[arguments.linkColumn][Q.CurrentRow]) & arguments.linkSuffix />
                 <cfelse>
                     <cfset thislink = arguments.baseURL />
                 </cfif>
-				<cfset Ret = Ret & itemTag & '<a href="' &  thislink & '">' & innerTagOpen & HTMLEditFormat(Q[arguments.displayColumn][Q.CurrentRow]) & innerTagClose & '</a>' /><!--- item will be closed in later loop iteration --->
+				<cfset Ret = Ret & itemTag & '<a href="' &  thislink & '">' & innerTagOpen & hibachiHTMLEditFormat(Q[arguments.displayColumn][Q.CurrentRow]) & innerTagClose & '</a>' /><!--- item will be closed in later loop iteration --->
 			<cfelse>
-				<cfset Ret = Ret & itemTag & innerTagOpen & HTMLEditFormat(Q[arguments.displayColumn][Q.CurrentRow]) & innerTagClose /><!--- item will be closed in later loop iteration --->
+				<cfset Ret = Ret & itemTag & innerTagOpen & hibachiHTMLEditFormat(Q[arguments.displayColumn][Q.CurrentRow]) & innerTagClose /><!--- item will be closed in later loop iteration --->
 			</cfif>
 			<cfset LastDepth = ThisDepth />
 		</cfloop>
@@ -474,8 +474,7 @@ Notes:
 
 	// @hint utility function to sort array of ojbects can be used to override getCollection() method to add sorting.
 	// From Aaron Greenlee http://cookbooks.adobe.com/post_How_to_sort_an_array_of_objects_or_entities_with_C-17958.html
-	public array function sortObjectArray(required array objects, required string orderby, string sorttype="text", string direction = "asc") {
-		var property = arguments.orderby;
+	public array function sortObjectArray(required array objects, required string orderByProperty, string sortType="text", string direction = "asc") {
 		var sortedStruct = {};
 		var sortedArray = [];
         for (var i=1; i <= arrayLen(arguments.objects); i++) {
@@ -483,36 +482,55 @@ Notes:
                 // {VALUE}.{RAND NUMBER} This is important otherwise any objects
                 // with the same value would be lost.
                 var rn = randRange(1,100);
-                var sortedStruct[ evaluate("arguments.objects[i].get#property#() & '.' & rn") ] = objects[i];
+                var sortedStruct[ evaluate("arguments.objects[i].get#arguments.orderByProperty#() & '.' & rn") ] = objects[i];
 		}
 		var keyArray = structKeyArray(sortedStruct);
-		arraySort(keyArray,arguments.sorttype,arguments.direction);
+		arraySort(keyArray,arguments.sortType,arguments.direction);
 		for(var i=1; i<=arrayLen(keyArray);i++) {
 			arrayAppend(sortedArray, sortedStruct[keyArray[i]]);
 		}
 		return sortedArray;
 	}
 
+	/**
+	* Sorts an array of structures based on a key in the structures.
+	*/
+	function structArraySort(arrayOfStructs,key,sortType="numeric", sortOrder="asc"){
+	        var tempStruct = {};
+	        var structArrayLength = arrayLen(arrayOfStructs);
+	        for(var i=1; i<=structArrayLength; i++){
+	        	tempStruct[i] = StructCopy(arrayOfStructs[i]);
+	        }
+	        var keys = StructSort(tempStruct, sortType, sortOrder, key);
+	        var sortedArray = arrayNew(1);
+	        for(var i=1; i<=structArrayLength; i++){
+	        	arrayAppend(sortedArray, tempStruct[keys[i]]);
+	        }
+	        return sortedArray;
+	}
 
-
-	public struct function queryToStructOfStructures(theQuery, primaryKey){
+	// remove primary key from cols listing 
+	public struct function queryToStructOfStructures(required query theQuery, 
+													required string primaryKey, boolean retainSort=false){
        var theStructure  = structnew();
-       /* remove primary key from cols listing */
-       var cols          = ListToArray(ListDeleteAt(theQuery.columnlist, ListFindNoCase(theQuery.columnlist, primaryKey)));
+       var indexToDelete = ListFindNoCase(arguments.theQuery.columnlist, arguments.primaryKey);
+	   var newList = ListDeleteAt(arguments.theQuery.columnlist, indexToDelete);		
+       var cols = ListToArray(newList);
        var row           = 1;
        var thisRow       = "";
        var col           = 1;
-       var retainSort = false;
-       if(arrayLen(arguments) GT 2) retainSort = arguments[3];
-       if(retainSort){
+       
+       if(!isNull(arguments.retainSort)){
                theStructure = CreateObject("java", "java.util.LinkedHashMap").init();
        }
-       for(row = 1; row LTE theQuery.recordcount; row = row + 1){
+       
+       for(row = 1; row <= arguments.theQuery.recordcount; row = row + 1){
                thisRow = structnew();
-               for(col = 1; col LTE arraylen(cols); col = col + 1){
-                       thisRow[cols[col]] = theQuery[cols[col]][row];
+               for(col = 1; col <= arraylen(cols); col = col + 1){
+                       thisRow[cols[col]] = arguments.theQuery[cols[col]][row];
                }
-               theStructure[theQuery[primaryKey][row]] = duplicate(thisRow);
+              
+               theStructure[arguments.theQuery[arguments.primaryKey][row]] = duplicate(thisRow);
        }
        return(theStructure);
 	}

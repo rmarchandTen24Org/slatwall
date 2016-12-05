@@ -243,17 +243,17 @@
 					<cfset thisPropertyMeta = attributes.hibachiScope.getService("hibachiService").getPropertyByEntityNameAndPropertyName( thisEntityName, thisPropertyName ) />
 
 					<!--- Setup automatic search, sort, filter & range --->
-					<cfif not len(column.search) && (!structKeyExists(thisPropertyMeta, "persistent") || thisPropertyMeta.persistent) && (!structKeyExists(thisPropertyMeta, "ormType") || thisPropertyMeta.ormType eq 'string')>
+					<cfif !isNull(thisPropertyMeta) && not len(column.search) && (!structKeyExists(thisPropertyMeta, "persistent") || thisPropertyMeta.persistent) && (!structKeyExists(thisPropertyMeta, "ormType") || thisPropertyMeta.ormType eq 'string')>
 						<cfset column.search = true />
 					<cfelseif !isBoolean(column.search)>
 						<cfset column.search = false />
 					</cfif>
-					<cfif not len(column.sort) && (!structKeyExists(thisPropertyMeta, "persistent") || thisPropertyMeta.persistent)>
+					<cfif !isNull(thisPropertyMeta) && not len(column.sort) && (!structKeyExists(thisPropertyMeta, "persistent") || thisPropertyMeta.persistent)>
 						<cfset column.sort = true />
 					<cfelseif !isBoolean(column.sort)>
 						<cfset column.sort = false />
 					</cfif>
-					<cfif not len(column.filter) && (!structKeyExists(thisPropertyMeta, "persistent") || thisPropertyMeta.persistent)>
+					<cfif !isNull(thisPropertyMeta) && not len(column.filter) && (!structKeyExists(thisPropertyMeta, "persistent") || thisPropertyMeta.persistent)>
 						<cfset column.filter = false />
 
 						<cfif structKeyExists(thisPropertyMeta, "ormtype") && thisPropertyMeta.ormtype eq 'boolean'>
@@ -275,7 +275,7 @@
 					<cfelseif !isBoolean(column.filter)>
 						<cfset column.filter = false />
 					</cfif>
-					<cfif not len(column.range) && (!structKeyExists(thisPropertyMeta, "persistent") || thisPropertyMeta.persistent) && structKeyExists(thisPropertyMeta, "ormType") && (thisPropertyMeta.ormType eq 'integer' || thisPropertyMeta.ormType eq 'big_decimal' || thisPropertyMeta.ormType eq 'timestamp')>
+					<cfif !isNull(thisPropertyMeta) && not len(column.range) && (!structKeyExists(thisPropertyMeta, "persistent") || thisPropertyMeta.persistent) && structKeyExists(thisPropertyMeta, "ormType") && (thisPropertyMeta.ormType eq 'integer' || thisPropertyMeta.ormType eq 'big_decimal' || thisPropertyMeta.ormType eq 'timestamp')>
 						<cfset column.range = true />
 					<cfelseif !isBoolean(column.range)>
 						<cfset column.range = false />
@@ -329,10 +329,10 @@
 
 			<div class="col-xs-6 s-table-view-options s-no-padding-right pull-right">
 				<ul class="list-inline list-unstyled">
-					<li>
+					<li class="s-table-action">
 						<div class="btn-group navbar-left dropdown">
 
-							<button type="button" class="btn btn-xs btn-no-style dropdown-toggle"><i class="fa fa-cogs"></i></button>
+							<button type="button" class="btn btn-no-style dropdown-toggle"><i class="fa fa-cog"></i></button>
 
 							<ul class="dropdown-menu pull-right" role="menu">
 								<hb:HibachiActionCaller action="#attributes.exportAction#" text="#attributes.hibachiScope.rbKey('define.exportlist')#" type="list">
@@ -367,7 +367,7 @@
 					</li>
 					<li class="s-table-header-search">
 						<cfif not thistag.expandable>
-							<input type="text" name="search" class="form-control input-xs general-listing-search" placeholder="#attributes.hibachiScope.rbKey('define.search')#" value="" tableid="LD#replace(attributes.smartList.getSavedStateID(),'-','','all')#" >
+							<input type="text" name="search" class="form-control input-sm general-listing-search" placeholder="#attributes.hibachiScope.rbKey('define.search')#" value="" tableid="LD#replace(attributes.smartList.getSavedStateID(),'-','','all')#" >
 						</cfif>
 					</li>
 				</ul>
@@ -507,11 +507,22 @@
 							<cfloop array="#thistag.columns#" index="column">
 								<!--- Expandable Check --->
 								<cfif column.tdclass eq "primary" and thistag.expandable>
-									<td class="#column.tdclass#"><a href="##" class="table-action-expand depth0" data-depth="0"><i class="glyphicon glyphicon-plus"></i></a> #record.getValueByPropertyIdentifier( propertyIdentifier=column.propertyIdentifier, formatValue=true )#</td>
+									<td class="#column.tdclass#"><a href="##" class="table-action-expand depth0" data-depth="0"><i class="glyphicon glyphicon-plus"></i></a> 
+										<cfif record.getFieldTypeByPropertyIdentifier(column.propertyIdentifier) eq 'wysiwyg'>
+											#record.getValueByPropertyIdentifier( propertyIdentifier=column.propertyIdentifier, formatValue=true )#
+										<cfelse>
+											#attributes.hibachiScope.hibachiHTMLEditFormat(record.getValueByPropertyIdentifier( propertyIdentifier=column.propertyIdentifier, formatValue=true ))#
+										</cfif>
+										
+									</td>
 								<cfelse>
 									<td class="#column.tdclass#">
 										<cfif len(column.propertyIdentifier)>
+											<cfif record.getFieldTypeByPropertyIdentifier(column.propertyIdentifier) eq 'wysiwyg'>
 											#record.getValueByPropertyIdentifier( propertyIdentifier=column.propertyIdentifier, formatValue=true )#
+											<cfelse>
+												#attributes.hibachiScope.hibachiHTMLEditFormat(record.getValueByPropertyIdentifier( propertyIdentifier=column.propertyIdentifier, formatValue=true ))#
+											</cfif>
 										<cfelseif len(column.processObjectProperty)>
 											<cfset attData = duplicate(column) />
 											<cfset attData.object = thisRecordProcessObject />
@@ -627,9 +638,12 @@
 				<li><a href="##" class="show-option" data-show="25">25</a></li>
 				<li><a href="##" class="show-option" data-show="50">50</a></li>
 				<li><a href="##" class="show-option" data-show="100">100</a></li>
-				<li><a href="##" class="show-option" data-show="500">500</a></li>
-				<li><a href="##" class="show-option" data-show="ALL">ALL</a></li>
-
+				<li><a href="##" class="show-option" data-show="250">250</a></li>
+				<cfif attributes.hibachiScope.setting('globalSmartListGetAllRecordsLimit') eq 0 
+					|| attributes.hibachiScope.setting('globalSmartListGetAllRecordsLimit') gte attributes.smartList.getRecordsCount()
+				>
+					<li><a href="##" class="show-option" data-show="ALL">ALL</a></li>
+				</cfif>
 				<cfif attributes.smartList.getCurrentPage() gt 1>
 					<li><a href="##" class="listing-pager page-option prev" data-page="#attributes.smartList.getCurrentPage() - 1#">&laquo;</a></li>
 				<cfelse>

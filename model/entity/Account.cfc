@@ -46,7 +46,7 @@
 Notes:
 
 */
-component displayname="Account" entityname="SlatwallAccount" table="SwAccount" persistent="true" output="false" accessors="true" extends="HibachiEntity" cacheuse="transactional" hb_serviceName="accountService" hb_permission="this" hb_processContexts="addAccountLoyalty,addAccountPayment,createPassword,changePassword,create,forgotPassword,lock,login,logout,resetPassword,setupInitialAdmin,unlock,updatePassword,generateAuthToken" {
+component displayname="Account" entityname="SlatwallAccount" table="SwAccount" persistent="true" output="false" accessors="true" extends="HibachiEntity" cacheuse="transactional" hb_serviceName="accountService" hb_permission="this" hb_processContexts="addAccountLoyalty,addAccountPayment,createPassword,changePassword,create,forgotPassword,lock,login,logout,resetPassword,setupInitialAdmin,unlock,updatePassword,generateAPIAccessKey" {
 
 	// Persistent Properties
 	property name="accountID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
@@ -57,7 +57,11 @@ component displayname="Account" entityname="SlatwallAccount" table="SwAccount" p
 	property name="loginLockExpiresDateTime" hb_populateEnabled="false" ormtype="timestamp";
 	property name="failedLoginAttemptCount" hb_populateEnabled="false" ormtype="integer" hb_auditable="false";
 	property name="taxExemptFlag" ormtype="boolean";
-
+	property name="organizationFlag" ormtype="boolean";
+	property name="testAccountFlag" ormtype="boolean";
+	property name="accountCode" ormtype="string" hb_populateEnabled="public" index="PI_ACCOUNTCODE";
+	//calucluated property
+	property name="calculatedFullName" ormtype="string";
 	// CMS Properties
 	property name="cmsAccountID" ormtype="string" hb_populateEnabled="false" index="RI_CMSACCOUNTID";
 
@@ -69,11 +73,16 @@ component displayname="Account" entityname="SlatwallAccount" table="SwAccount" p
 	property name="primaryPaymentMethod" hb_populateEnabled="public" cfc="AccountPaymentMethod" fieldtype="many-to-one" fkcolumn="primaryPaymentMethodID";
 	property name="primaryShippingAddress" hb_populateEnabled="public" cfc="AccountAddress" fieldtype="many-to-one" fkcolumn="primaryShippingAddressID";
 	property name="accountCreatedSite" hb_populateEnabled="public" cfc="Site" fieldtype="many-to-one" fkcolumn="accountCreatedSiteID";
+	property name="ownerAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="ownerAccountID";
+	
 
 	// Related Object Properties (one-to-many)
+	property name="childAccountRelationships" singularname="childAccountRelationship" fieldType="one-to-many" type="array" fkcolumn="parentAccountID" cfc="AccountRelationship";
+	property name="parentAccountRelationships" singularname="parentAccountRelationship" fieldType="one-to-many" type="array" fkcolumn="childAccountID"   cfc="AccountRelationship";
 	property name="accountAddresses" hb_populateEnabled="public" singularname="accountAddress" fieldType="one-to-many" type="array" fkColumn="accountID" cfc="AccountAddress" inverse="true" cascade="all-delete-orphan";
 	property name="accountAuthentications" singularname="accountAuthentication" cfc="AccountAuthentication" type="array" fieldtype="one-to-many" fkcolumn="accountID" cascade="all-delete-orphan" inverse="true";
 	property name="accountContentAccesses" hb_populateEnabled="false" singularname="accountContentAccess" cfc="AccountContentAccess" type="array" fieldtype="one-to-many" fkcolumn="accountID" inverse="true" cascade="all-delete-orphan";
+	property name="accountCollections" hb_populateEnabled="false" singularname="accountCollection" cfc="AccountCollection" type="array" fieldtype="one-to-many" fkcolumn="accountID" inverse="true" cascade="all-delete-orphan";
 	property name="accountEmailAddresses" hb_populateEnabled="public" singularname="accountEmailAddress" type="array" fieldtype="one-to-many" fkcolumn="accountID" cfc="AccountEmailAddress" cascade="all-delete-orphan" inverse="true";
 	property name="accountLoyalties" singularname="accountLoyalty" type="array" fieldtype="one-to-many" fkcolumn="accountID" cfc="AccountLoyalty" cascade="all-delete-orphan" inverse="true";
 	property name="accountPaymentMethods" hb_populateEnabled="public" singularname="accountPaymentMethod" cfc="AccountPaymentMethod" type="array" fieldtype="one-to-many" fkcolumn="accountID" inverse="true" cascade="all-delete-orphan";
@@ -135,6 +144,10 @@ component displayname="Account" entityname="SlatwallAccount" table="SwAccount" p
 	}
 
 	// ============ START: Non-Persistent Property Methods =================
+	
+	public boolean function canDeleteByOwner(){
+		return isNull(getOwnerAccount()) || getHibachiScope().getAccount().getAccountID() == this.getOwnerAccount().getAccountID();
+	}
 
 	public any function getPrimaryEmailAddressesNotInUseFlag() {
 		if(!structKeyExists(variables, "primaryEmailAddressNotInUseFlag")) {
@@ -145,6 +158,7 @@ component displayname="Account" entityname="SlatwallAccount" table="SwAccount" p
 				} else {
 					variables.primaryEmailAddressNotInUseFlag = getService("accountService").getPrimaryEmailAddressNotInUseFlag( emailAddress=getEmailAddress(), accountID=getAccountID() );
 				}
+				
 			}
 		}
 		return variables.primaryEmailAddressNotInUseFlag;
@@ -158,20 +172,18 @@ component displayname="Account" entityname="SlatwallAccount" table="SwAccount" p
 			variables.saveablePaymentMethodsSmartList.addInFilter('paymentMethodType', 'creditCard,giftCard,external,termPayment');
 			if(len(setting('accountEligiblePaymentMethods'))) {
 				variables.saveablePaymentMethodsSmartList.addInFilter('paymentMethodID', setting('accountEligiblePaymentMethods'));
-			} else {
-				variables.saveablePaymentMethodsSmartList.addFilter('paymentMethodID', 'none');
 			}
 		}
 		return variables.saveablePaymentMethodsSmartList;
 	}
 
-	public any function getEligibleAccountPaymentMethodsSmartList() {
+	public any function getEligibleAccountPaymentMethodsSmartList() {		
 		// These are the payment methods that are allowed only when adding an account payment
 		if(!structKeyExists(variables, "eligibleAccountPaymentMethodsSmartList")) {
 			var sl = getService("paymentService").getPaymentMethodSmartList();
-
-			// Prevent 'termPayment' from displaying as account payment method option
-			sl.addInFilter('paymentMethodType', 'cash,check,creditCard,external,giftCard');
+			
+			// Prevent 'termPayment' from displaying as account payment method option			
+			sl.addInFilter('paymentMethodType', 'cash,check,creditCard,external,giftCard');			
 			sl.addInFilter('paymentMethodID', setting('accountEligiblePaymentMethods'));
 			sl.addFilter('activeFlag', 1);
 
@@ -210,7 +222,17 @@ component displayname="Account" entityname="SlatwallAccount" table="SwAccount" p
 	}
 
 	public string function getFullName() {
-		return "#getFirstName()# #getLastName()#";
+		var fullName = "";
+		if(!isNull(getFirstName())){
+			fullName &= getFirstName();
+		}
+		if(len(fullName)){
+			fullName &= ' ';
+		}
+		if(!isNull(getLastName())){
+			fullName &= getLastName();
+		}
+		return fullName;
 	}
 
 	public string function getGravatarURL(numeric size=80) {
@@ -232,7 +254,7 @@ component displayname="Account" entityname="SlatwallAccount" table="SwAccount" p
 
 		return giftCardSmartList;
 	}
-	
+
 	public any function getOrdersPlacedSmartList() {
 		if(!structKeyExists(variables, "ordersPlacedSmartList")) {
 			var osl = getService("orderService").getOrderSmartList();
@@ -245,12 +267,12 @@ component displayname="Account" entityname="SlatwallAccount" table="SwAccount" p
 		return variables.ordersPlacedSmartList;
 	}
 
-	public any function getOrdersNotPlacedSmartList() {
+	public any function getOrdersNotPlacedSmartList() {//this function never been used
 		if(!structKeyExists(variables, "ordersNotPlacedSmartList")) {
 			var osl = getService("orderService").getOrderSmartList();
 			osl.addFilter('account.accountID', getAccountID());
 			osl.addInFilter('orderStatusType.systemCode', 'ostNotPlaced');
-			osl.addOrder("lastModifiedDateTime|DESC");
+			osl.addOrder("modifiedDateTime|DESC");
 
 			variables.ordersNotPlacedSmartList = osl;
 		}
@@ -270,13 +292,17 @@ component displayname="Account" entityname="SlatwallAccount" table="SwAccount" p
 			variables.slatwallAuthenticationExistsFlag = false;
 			var authArray = getAccountAuthentications();
 			for(auth in authArray) {
-				if(isNull(auth.getIntegration()) && !isNull(auth.getPassword()) && auth.getActiveFlag() ) {
+				if(isNull(auth.getIntegration()) && !isNull(auth.getPassword())  && !isNull(auth.getActiveFlag()) && auth.getActiveFlag() ) {
 					variables.slatwallAuthenticationExistsFlag = true;
 					break;
 				}
 			}
 		}
 		return variables.slatwallAuthenticationExistsFlag;
+	}
+	
+	public void function setSlatwallAuthenticationExistsFlag(required boolean slatwallAuthenticationExistsFlag){
+		variables.slatwallAuthenticationExistsFlag = arguments.slatwallAuthenticationExistsFlag;
 	}
 
 
@@ -307,7 +333,7 @@ component displayname="Account" entityname="SlatwallAccount" table="SwAccount" p
 			}
 		}
 
-		// Now look for the unasigned payment amount
+		// Now look for the unassigned payment amount
 		for(var accountPayment in getAccountPayments()) {
 			termAccountBalance = precisionEvaluate(termAccountBalance - accountPayment.getAmountUnassigned());
 		}
@@ -332,10 +358,18 @@ component displayname="Account" entityname="SlatwallAccount" table="SwAccount" p
 
 			var smartList = getService("loyaltyService").getLoyaltySmartList();
 			smartList.addFilter('activeFlag', 1);
-			smartList.addWhereCondition(" NOT EXISTS( FROM SlatwallAccountLoyalty al WHERE al.loyalty.loyaltyID = aslatwallloyalty.loyaltyID and al.account.accountID = '#getAccountID()#')");
-
+			smartList.addWhereCondition(" NOT EXISTS
+				( 
+					FROM SlatwallAccountLoyalty al 
+					WHERE al.loyalty.loyaltyID = aslatwallloyalty.loyaltyID 
+					and al.account.accountID = '#getAccountID()#'
+				)
+			");
 			for(var loyaltyPrograms in smartList.getRecords()) {
-				arrayAppend(variables.unenrolledAccountLoyaltyOptions,{name=loyaltyPrograms.getLoyaltyName(),value=loyaltyPrograms.getLoyaltyID()});
+				arrayAppend(variables.unenrolledAccountLoyaltyOptions,
+								{name=loyaltyPrograms.getLoyaltyName(),
+								value=loyaltyPrograms.getLoyaltyID()}
+							);
 			}
 		}
 
@@ -347,10 +381,15 @@ component displayname="Account" entityname="SlatwallAccount" table="SwAccount" p
 
 		var activeAuthentications = [];
 
-		for (i = ArrayLen(authentications); i >= 1; i--){
+		for (var i = ArrayLen(authentications); i >= 1; i--){
 			var authentication = authentications[i];
 
-			if( !(isNull(authentication.getIntegration()) && !isNull(authentication.getPassword()) && authentication.getActiveFlag() == false)){
+			if( 
+                !isNull(authentication.getIntegration())
+                || isNull(authentication.getPassword())
+                || isNull(authentication.getActiveFlag())
+                || authentication.getActiveFlag() == true
+            ){
 				arrayAppend(activeAuthentications, authentication);
 			}
 		}
