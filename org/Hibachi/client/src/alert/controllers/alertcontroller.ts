@@ -1,13 +1,17 @@
 /// <reference path='../../../typings/hibachiTypescript.d.ts' />
 /// <reference path='../../../typings/tsd.d.ts' />
+import {Alert} from "../model/alert";
+interface IAlertControllerScope extends ng.IScope{
+	alerts:Alert[]
+}
 class AlertController{
 	//@ngInject
 	constructor(
-		$scope,
+		$scope:IAlertControllerScope,
 		alertService
 	){
-		$scope.$id="alertController";
+
 		$scope.alerts = alertService.getAlerts();
 	}
 }
-export{AlertController}
+export{AlertController,IAlertControllerScope}
