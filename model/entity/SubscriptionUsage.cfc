@@ -59,7 +59,8 @@ component entityname="SlatwallSubscriptionUsage" table="SwSubsUsage" persistent=
 	property name="nextReminderEmailDate" ormtype="timestamp" hb_formatType="date" hb_formFieldType="date";
 	property name="expirationDate" ormtype="timestamp" hb_formatType="date" hb_formFieldType="date";
 	property name="emailAddress" hb_populateEnabled="public" ormtype="string";
-
+	property name="fulfillmentCharge" ormtype="big_decimal";
+	
 	// Related Object Properties (many-to-one)
 	property name="account" cfc="Account" fieldtype="many-to-one" fkcolumn="accountID";
 	property name="accountPaymentMethod" hb_populateEnabled="public" cfc="AccountPaymentMethod" fieldtype="many-to-one" fkcolumn="accountPaymentMethodID";
