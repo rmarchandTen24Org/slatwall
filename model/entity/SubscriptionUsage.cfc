@@ -158,6 +158,7 @@ component entityname="SlatwallSubscriptionUsage" table="SwSubsUsage" persistent=
 		//Copy the shipping information from order fulfillment.
 		var orderFulfillment = orderItem.getOrderFulfillment();
 		if (!isNull(orderFulfillment)){
+			setFulfillmentCharge( orderFulfillment.getFulfillmentCharge() );
 			setEmailAddress( orderFulfillment.getEmailAddress() );
 			setShippingAccountAddress( orderFulfillment.getAccountAddress() );
 			setShippingMethod( orderFulfillment.getShippingMethod() );
@@ -393,7 +394,13 @@ component entityname="SlatwallSubscriptionUsage" table="SwSubsUsage" persistent=
 		return getService("addressService").newAddress();
 	}
 	// ==================  END:  Overridden Methods ========================
-
+	public numeric function getFulfillmentCharge() {
+		if(!structKeyExists(variables, "fulfillmentCharge")) {
+			variables.fulfillmentCharge = 0;
+		}
+		return variables.fulfillmentCharge;
+	}
+	
 	// =================== START: ORM Event Hooks  =========================
 
 	// ===================  END:  ORM Event Hooks  =========================
