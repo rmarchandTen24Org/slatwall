@@ -3500,10 +3500,6 @@
 	            .resolve(['$http', '$q', '$timeout', function ($http, $q, $timeout) {
 	                _this.$http = $http;
 	                _this.$q = $q;
-	                var cacheState = {
-	                    instantiationKey: false,
-	                    attributeCacheKey: false
-	                };
 	                var baseURL = hibachiConfig.baseURL;
 	                if (baseURL.length && baseURL.slice(-1) !== '/') {
 	                    baseURL += '/';
@@ -3514,7 +3510,8 @@
 	                    var invalidCache = [];
 	                    try {
 	                        var hashedData = md5(localStorage.getItem('attributeMetaData'));
-	                        if (resp.data.data['attributeMetaData'] === hashedData.toUpperCase()) {
+	                        console.log(hashedData);
+	                        if (resp.data.data['attributeCacheKey'] === hashedData.toUpperCase()) {
 	                            core_module_1.coremodule.constant('attributeMetaData', JSON.parse(localStorage.getItem('attributeMetaData')));
 	                        }
 	                        else {
@@ -3525,10 +3522,6 @@
 	                        invalidCache.push('attributeCacheKey');
 	                    }
 	                    invalidCache.push('instantiationKey');
-	                    if (invalidCache.length > 0) {
-	                        return _this.getData(invalidCache);
-	                    }
-	                    invalidCache = Object.keys(cacheState);
 	                    return _this.getData(invalidCache);
 	                });
 	            }])
