@@ -85,6 +85,10 @@ class SWListingColumn implements ng.IDirective{
     }
 
     public link:ng.IDirectiveLinkFn = (scope:any, element:any, attrs:any) =>{
+  
+        if(angular.isUndefined(scope.swListingColumn.isVisible)){
+            scope.swListingColumn.isVisible = true; 
+        }
 
         var column:any = {
             columnID: "C" + this.utilityService.createID(31),
@@ -101,7 +105,7 @@ class SWListingColumn implements ng.IDirective{
             buttonGroup:scope.swListingColumn.buttonGroup,
             hasCellView:scope.swListingColumn.hasCellView,
             hasHeaderView:scope.swListingColumn.hasHeaderView, 
-            isVisible:scope.swListingColumn.isVisible || true
+            isVisible:scope.swListingColumn.isVisible
         };
 
         if(scope.swListingColumn.hasCellView){
