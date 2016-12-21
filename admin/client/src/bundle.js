@@ -12948,6 +12948,9 @@
 	        this.controller = SWListingColumnController;
 	        this.controllerAs = "swListingColumn";
 	        this.link = function (scope, element, attrs) {
+	            if (angular.isUndefined(scope.swListingColumn.isVisible)) {
+	                scope.swListingColumn.isVisible = true;
+	            }
 	            var column = {
 	                columnID: "C" + _this.utilityService.createID(31),
 	                propertyIdentifier: scope.swListingColumn.propertyIdentifier,
@@ -12963,7 +12966,7 @@
 	                buttonGroup: scope.swListingColumn.buttonGroup,
 	                hasCellView: scope.swListingColumn.hasCellView,
 	                hasHeaderView: scope.swListingColumn.hasHeaderView,
-	                isVisible: scope.swListingColumn.isVisible || true
+	                isVisible: scope.swListingColumn.isVisible
 	            };
 	            if (scope.swListingColumn.hasCellView) {
 	                column.cellView = scope.swListingColumn.cellView;
