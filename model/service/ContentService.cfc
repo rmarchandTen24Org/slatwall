@@ -255,7 +255,7 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 		if(arguments.category.isDeletable()) {
 
 			getContentDAO().removeCategoryFromContentAssociation( categoryID=arguments.category.getCategoryID() );
-
+			getContentDao().removeCategoryFromProductAssociation(category=arguments.category);
 			return delete(arguments.category);
 		}
 

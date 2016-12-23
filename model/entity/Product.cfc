@@ -82,7 +82,7 @@ component displayname="Product" entityname="SlatwallProduct" table="SwProduct" p
 
 	// Related Object Properties (many-to-many - owner)
 	property name="listingPages" singularname="listingPage" cfc="Content" fieldtype="many-to-many" linktable="SwProductListingPage" fkcolumn="productID" inversejoincolumn="contentID";
-	property name="categories" singularname="category" cfc="Category" fieldtype="many-to-many" linktable="SwProductCategory" fkcolumn="productID" inversejoincolumn="categoryID";
+	property name="categories" singularname="category" cfc="Category" type="array" fieldtype="many-to-many" linktable="SwProductCategory" fkcolumn="productID" inversejoincolumn="categoryID";
 	property name="relatedProducts" singularname="relatedProduct" cfc="Product" type="array" fieldtype="many-to-many" linktable="SwRelatedProduct" fkcolumn="productID" inversejoincolumn="relatedProductID";
 
 	// Related Object Properties (many-to-many - inverse)

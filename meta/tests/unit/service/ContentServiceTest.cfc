@@ -54,6 +54,77 @@ component extends="Slatwall.meta.tests.unit.SlatwallUnitTestBase" {
 		variables.service = request.slatwallScope.getBean("contentService");
 	}
 	
+	public void function deleteCategory_removes_product_assignments() {
+		var productData = {
+			productID="",
+			productCode="productTest"&createUUID(),
+			productName="productTest"&createUUID(),
+			urlTitle="productTest"&createUUID()
+		};
+		var product = createPersistedTestEntity( 'Product' ,productData);
+		
+		var productData2 = {
+			productID="",
+			productCode="productTest"&createUUID(),
+			productName="productTest"&createUUID(),
+			urlTitle="productTest"&createUUID()
+		};
+		var product2 = createPersistedTestEntity( 'Product' ,productData2);
+		
+		var parentCategoryData = {
+			categoryID=""
+		};
+		// Create a content & category
+		var parentCategory = createPersistedTestEntity( 'Category' ,parentCategoryData);
+		
+		// Create a content & category
+		
+		
+		var categoryData = {
+			categoryID="",
+			parentCategory={
+				parentCategoryID=parentCategory.getCategoryID()
+			}
+		};
+		var category = createPersistedTestEntity( 'Category',categoryData );
+		
+		// Add the Many-to-Many relationship
+		product.addCategory( category );
+		category.addProduct( product );
+		
+		product2.addCategory( parentCategory );
+		parentCategory.addProduct( product2 );
+		
+		// Persist the relationship
+		var deleteOK = variables.service.deleteCategory( category );
+		
+		assert(deleteOK);
+		ormflush();
+	}
+	
+	public void function deleteCategory_removes_parentCategory_assignments() {
+		var parentCategoryData = {
+			categoryID=""
+		};
+		// Create a content & category
+		var parentCategory = createPersistedTestEntity( 'Category' ,parentCategoryData);
+		
+		var categoryData = {
+			categoryID="",
+			parentCategory={
+				parentCategoryID=parentCategory.getCategoryID()
+			}
+		};
+		var category = createPersistedTestEntity( 'Category',categoryData );
+		
+		
+		// Persist the relationship
+		var deleteOK = variables.service.deleteCategory( category );
+		
+		assert(deleteOK);
+		ormflush();
+	}
+	
 	public void function deleteCategory_removes_content_assignments() {
 		
 		// Create a content & category
@@ -70,6 +141,7 @@ component extends="Slatwall.meta.tests.unit.SlatwallUnitTestBase" {
 		var deleteOK = variables.service.deleteCategory( category );
 		
 		assert(deleteOK);
+		ormflush();
 	}
 	
 //	public void function processContent_duplicateContent_Test(){

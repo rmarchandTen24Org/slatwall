@@ -139,6 +139,15 @@ Notes:
 		<cfreturn ormExecuteQuery(" FROM SlatwallContent WHERE contentTemplateType.systemCode = ?", ["ctt#arguments.templateType#"], false, {ignoreCase=true}) />
 	</cffunction>
 	
+	<cffunction name="removeCategoryFromProductAssociation" access="public">
+		<cfargument name="category" type="any" required="true" >
+		
+		<cfset categoryIDList = arrayToList(OrmExecuteQuery("SELECT c.categoryID FROM SlatwallCategory c WHERE c.categoryIDPath like '#arguments.category.getCategoryIDPath()#%'"))/>
+		<cfquery name="rs">
+			DELETE FROM SwProductCategory WHERE categoryID IN ('#categoryIDList#')
+		</cfquery>
+	</cffunction>
+	
 	<cffunction name="removeCategoryFromContentAssociation" access="public">
 		<cfargument name="categoryID" type="string" required="true" >
 		
