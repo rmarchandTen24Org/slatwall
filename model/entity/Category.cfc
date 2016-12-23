@@ -141,5 +141,11 @@ component displayname="Category" entityname="SlatwallCategory" table="SwCategory
 		setCategoryIDPath( buildIDPathList( "parentCategory" ) );
 	}
 	
+	public any function getChildCategoriesSmartList(){
+		var sl = getService('ContentService').getCategorySmartList();
+		sl.addFilter('parentCategory.categoryID',this.getCategoryID());
+		return sl;
+	}
+	
 	// ===================  END:  ORM Event Hooks  =========================
 }
