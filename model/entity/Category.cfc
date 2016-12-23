@@ -123,6 +123,13 @@ component displayname="Category" entityname="SlatwallCategory" table="SwCategory
 		structDelete(variables, "parentCategory");
 	}
 	
+	public string function getCategoryIDPath() {
+		if(isNull(variables.categoryIDPath)) {
+			variables.categoryIDPath = buildIDPathList( "parentCategory" );
+		}
+		return variables.categoryIDPath;
+	}
+	
 	// =============  END:  Bidirectional Helper Methods ===================
 
 	// ================== START: Overridden Methods ========================

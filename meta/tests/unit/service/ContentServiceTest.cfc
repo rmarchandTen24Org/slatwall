@@ -94,7 +94,7 @@ component extends="Slatwall.meta.tests.unit.SlatwallUnitTestBase" {
 		
 		product2.addCategory( parentCategory );
 		parentCategory.addProduct( product2 );
-		
+		ormflush();
 		// Persist the relationship
 		var deleteOK = variables.service.deleteCategory( category );
 		
@@ -116,7 +116,7 @@ component extends="Slatwall.meta.tests.unit.SlatwallUnitTestBase" {
 			}
 		};
 		var category = createPersistedTestEntity( 'Category',categoryData );
-		
+		ormflush();
 		
 		// Persist the relationship
 		var deleteOK = variables.service.deleteCategory( category );
