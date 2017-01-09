@@ -17,6 +17,7 @@ import {SWValidationRegex} from "./components/swvalidationregex";
 import {SWValidationRequired} from "./components/swvalidationrequired";
 import {SWValidationUnique} from "./components/swvalidationunique";
 import {SWValidationUniqueOrNull} from "./components/swvalidationuniqueornull";
+import {SWValidationEmail} from "./components/swvalidationemail";
 //services
 import {ValidationService} from "./services/validationservice";
 import {coremodule} from "../core/core.module";
@@ -39,6 +40,7 @@ var validationmodule = angular.module('hibachi.validation', [coremodule.name])
 .directive("swvalidationrequired",SWValidationRequired.Factory())
 .directive("swvalidationunique",SWValidationUnique.Factory())
 .directive("swvalidationuniqueornull",SWValidationUniqueOrNull.Factory())
+.directive("swValidationEmail", SWValidationEmail.Factory())
 //services
 .service("validationService",ValidationService)
 ;
