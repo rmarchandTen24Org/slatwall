@@ -21,8 +21,8 @@ class test{
                         return {
                             validateEmail: (value)=>{
                                 console.log(value);
-                                console.log('test: ', MY_EMAIL_REGEXP.test('value'))
-                                return MY_EMAIL_REGEXP.test('value');
+                                console.log('test: ', MY_EMAIL_REGEXP.test(value))
+                                return MY_EMAIL_REGEXP.test(value);
                             }
                         }
                     })
@@ -41,19 +41,26 @@ class test{
             }));
 
             it('Should be valid if given a valid email',()=>{
-                console.log("validationmodule", validationmodule)
-
                 form.emailInput.$setViewValue('ryan.marchand@ten24web.com');
                 $rootScope.$digest();
-                console.log("inspect dis 1=>", form.emailInput.$error)
+                expect(form.emailInput.$error.swvalidationemail).toBeFalsy();
+
+                form.emailInput.$setViewValue('chucky&cheese.37+testing@eee.corn');
+                $rootScope.$digest();
                 expect(form.emailInput.$error.swvalidationemail).toBeFalsy();
             });
 
             it('Should be invalid if given an invalid email', ()=>{
                 form.emailInput.$setViewValue('ryan.marchandten24web.com');
                 $rootScope.$digest();
-                console.log(element)
-                console.log("inspect dis =>", form.emailInput.$error)
+                expect(form.emailInput.$error.swvalidationemail).toBeTruthy();
+
+                form.emailInput.$setViewValue('ryan.marchandten24web.com@');
+                $rootScope.$digest();
+                expect(form.emailInput.$error.swvalidationemail).toBeTruthy();
+
+                form.emailInput.$setViewValue('@yan.marchandten24web.com');
+                $rootScope.$digest();
                 expect(form.emailInput.$error.swvalidationemail).toBeTruthy();
             })
         });
