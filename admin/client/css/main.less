@@ -909,7 +909,15 @@ table .s-edit-elements a:hover {  background-color: #E6E6E6;border-color: #D1D1D
 .nav-tabs>li>a:hover {background:none;border:none;color:#555;}
 .s-properties label {font-family: @font-family-semibold;}
 .s-properties .tooltip {width:200px !important;}
+
+/*Form Elements*/
 .form-control {color: #767676;box-shadow:none;box-shadow:none;font-weight:normal;.border-radius();border-color: #dddddd;font-size: 12px;}
+.s-switcher {display: inline-block;height: 34px;padding: 4px;background: #fff;width: 85px;border-radius: 3px;border: solid 1px #ddd;position: relative;}
+.s-switcher-input {display: none;}
+.s-switcher-label {float: left;width: 50%;font-size: 12px;line-height: 26px;color: #666;text-align: center;cursor: pointer;position: inherit;z-index: 10;transition: color 0.2s cubic-bezier(0.4, 0.0, 0.2, 1);}
+.s-switcher-toggle {position: absolute;float: left;height: 28px;width: 50%;font-size: 12px;line-height: 30px;cursor: pointer;background-color: #3071a9;border-radius: 2px;left: 2px;top: 2px;transition: left 0.25s cubic-bezier(0.4, 0.0, 0.2, 1);will-change: transform;}
+.s-switcher-input:checked + .s-switcher-label {color: #fff;}
+.s-switcher-input-false:checked ~ .s-switcher-toggle {left: 39px;}
 
 /*Custom CSS*/
 .s-pannel-group .panel {border:none;.border-radius();box-shadow: 0 2px 4px rgba(0,0,0,0.1);}

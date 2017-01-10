@@ -296,23 +296,20 @@
 							            <input type="file" class="file" name="file" />
 							        </div>
 									<div class="form-group">
-										<label for="file">Toggle:</label><br/>
-										<div class="s-toggle-switch">
-                                            <input name="t4" type="hidden" value="0" />
-                                            <input id="t4" name="t4" type="checkbox" value="1" checked />
-                                            <div class="btn">
-                                                <label for='t4'>
-                                                    <div class="s-toggle-switch-on btn btn-success"> 
-                                                        Active
-                                                    </div>
-                                                    <div class="s-toggle-switch-handle btn btn-default"></div>
-                                                    <div class="s-toggle-switch-off btn">
-                                                        Disabled 
-                                                    </div>
-                                                </label>
-                                            </div>
+										<label style="width: 100%;">Switch:</label>
+										<div class="s-switcher">
+											<input type="radio" name="balance" value="yes" id="yes" class="s-switcher-input s-switcher-input-true" checked="">
+											<label for="yes" class="s-switcher-label">Yes</label>
+
+											<input type="radio" name="balance" value="no" id="no" class="s-switcher-input s-switcher-input-false">
+											<label for="no" class="s-switcher-label">No</label>
+
+											<span class="s-switcher-toggle"></span>
+											</div>
+
 										</div>
-							        </div>
+									</div>
+									
 								</div>
 				
 							</div>
@@ -1263,6 +1260,15 @@
 				};
 			});
 
+		</script>
+		<script>
+			//Sample js for switch selection verification
+			$('input.s-switcher-input').change(function(){
+				setTimeout(
+				  function(){
+				    alert('You selected ' + $('input.s-switcher-input:checked').val());
+				}, 300);
+			});
 		</script>
 	</body>
 </html>
