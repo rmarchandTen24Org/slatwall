@@ -194,6 +194,7 @@ Notes:
 	<cffunction name="runScripts">
 		<cfset var scripts = this.listUpdateScriptOrderByLoadOrder() />
 		<cfloop array="#scripts#" index="local.script">
+		<cftransaction>
 			<cfif isNull(script.getSuccessfulExecutionCount())>
 				<cfset script.setSuccessfulExecutionCount(0) />
 			</cfif>
@@ -224,6 +225,7 @@ Notes:
 				<cfset script.setLastExecutedDateTime(now()) />
 				<cfset this.saveUpdateScript(script) />
 			</cfif>
+		</cftransaction>
 		</cfloop>
 	</cffunction>
 
