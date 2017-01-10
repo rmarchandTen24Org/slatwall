@@ -110,16 +110,24 @@ class ValidationService{
         return (value <= comparisonValue);
     }
 
-    public validateMaxLength=(value:number|string,comparisonValue:number|string=0):boolean=>{
-        return this.validateLte(value,comparisonValue);
+    public validateMaxLength=(value:string,comparisonValue:number|string=0):boolean=>{
+        var length = 0
+        if(value && value.length){
+            length = value.length
+        }
+        return this.validateLte(length,comparisonValue);
     }
 
     public validateMaxValue=(value:number|string,comparisonValue:number|string=0):boolean=>{
         return this.validateLte(value,comparisonValue);
     }
 
-    public validateMinLength=(value:number|string,comparisonValue:number|string=0):boolean=>{
-        return this.validateGte(value,comparisonValue);
+    public validateMinLength=(value:string,comparisonValue:number|string=0):boolean=>{
+        var length = 0
+        if(value && value.length){
+            length = value.length
+        }
+        return this.validateGte(length,comparisonValue);
     }
 
     public validateMinValue=(value:number|string,comparisonValue:number|string=0):boolean=>{

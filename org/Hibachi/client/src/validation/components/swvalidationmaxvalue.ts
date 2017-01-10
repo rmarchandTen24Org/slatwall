@@ -15,7 +15,7 @@ class SWValidationMaxValue{
                     if(viewValue == null){
                         return true; 
                     }
-                    validationService.validateMaxValue(viewValue,attributes.swvalidationmaxvalue);
+                    return validationService.validateMaxValue(viewValue,attributes.swvalidationmaxvalue);
                 };
             }
         };

@@ -12,9 +12,9 @@ class SWValidationGte{
             restrict: "A",
             require: "^ngModel",
             link: function(scope, element, attributes, ngModel) {
-                    ngModel.$validators.swvalidationGte =
+                    ngModel.$validators.swValidationGte =
                     function(modelValue, viewValue) {
-                        return validationService.validateGte(modelValue,attributes.swvalidationGte);
+                        return validationService.validateGte(modelValue,attributes.swValidationGte);
                 };//<--end function
             }//<--end link
         };

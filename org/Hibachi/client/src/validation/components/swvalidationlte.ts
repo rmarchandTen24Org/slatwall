@@ -12,9 +12,9 @@ class SWValidationLte{
             restrict: "A",
             require: "^ngModel",
             link: function(scope, element, attributes, ngModel) {
-                    ngModel.$validators.swvalidationlte =
+                    ngModel.$validators.swValidationLte =
                     function(modelValue, viewValue) {
-                        return validationService.validateLte(modelValue,attributes.swvalidationlte);
+                        return validationService.validateLte(modelValue,attributes.swValidationLte);
                     };
             }
         };

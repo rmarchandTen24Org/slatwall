@@ -7,7 +7,7 @@ class test{
     constructor(
 
     ){
-        describe('swvalidationemail Test',()=>{
+        describe('swValidationEmail Test',()=>{
             var $compile,$rootScope, form, element;
             beforeEach(()=>{
                 angular.module('ngAnimate',[]);
@@ -20,8 +20,6 @@ class test{
                         const MY_EMAIL_REGEXP =  /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
                         return {
                             validateEmail: (value)=>{
-                                console.log(value);
-                                console.log('test: ', MY_EMAIL_REGEXP.test(value))
                                 return MY_EMAIL_REGEXP.test(value);
                             }
                         }
@@ -43,25 +41,25 @@ class test{
             it('Should be valid if given a valid email',()=>{
                 form.emailInput.$setViewValue('ryan.marchand@ten24web.com');
                 $rootScope.$digest();
-                expect(form.emailInput.$error.swvalidationemail).toBeFalsy();
+                expect(form.emailInput.$error.swValidationEmail).toBeFalsy();
 
                 form.emailInput.$setViewValue('chucky&cheese.37+testing@eee.corn');
                 $rootScope.$digest();
-                expect(form.emailInput.$error.swvalidationemail).toBeFalsy();
+                expect(form.emailInput.$error.swValidationEmail).toBeFalsy();
             });
 
             it('Should be invalid if given an invalid email', ()=>{
                 form.emailInput.$setViewValue('ryan.marchandten24web.com');
                 $rootScope.$digest();
-                expect(form.emailInput.$error.swvalidationemail).toBeTruthy();
+                expect(form.emailInput.$error.swValidationEmail).toBeTruthy();
 
                 form.emailInput.$setViewValue('ryan.marchandten24web.com@');
                 $rootScope.$digest();
-                expect(form.emailInput.$error.swvalidationemail).toBeTruthy();
+                expect(form.emailInput.$error.swValidationEmail).toBeTruthy();
 
                 form.emailInput.$setViewValue('@yan.marchandten24web.com');
                 $rootScope.$digest();
-                expect(form.emailInput.$error.swvalidationemail).toBeTruthy();
+                expect(form.emailInput.$error.swValidationEmail).toBeTruthy();
             })
         });
     }

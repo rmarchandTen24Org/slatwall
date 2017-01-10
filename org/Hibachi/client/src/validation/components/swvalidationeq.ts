@@ -26,9 +26,9 @@ class SWValidationEq{
             restrict: "A",
             require: "^ngModel",
             link: function(scope, element, attributes, ngModel) {
-                    ngModel.$validators.swvalidationeq =
+                    ngModel.$validators.swValidationEq =
                     function(modelValue, viewValue) {
-                        return validationService.validateEq(modelValue,attributes.swvalidationeq);
+                        return validationService.validateEq(modelValue,attributes.swValidationEq);
                 };//<--end function
             }//<--end link
         };

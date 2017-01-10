@@ -29,8 +29,8 @@ class SWValidationEmail{
                 var isValidFunction = (modelValue):boolean=> {
                     return validationService.validateEmail(modelValue);
                 };
-                ngModel.$validators.swvalidationemail = isValidFunction;
-                ngModel.$validators['swvalidationemail'] = isValidFunction;
+                ngModel.$validators.swValidationEmail = isValidFunction;
+                ngModel.$validators['swValidationEmail'] = isValidFunction;
             }
         };
     }

@@ -23139,20 +23139,20 @@
 	    .run([function () {
 	    }])
 	    .directive('swValidate', swvalidate_1.SWValidate.Factory())
-	    .directive('swvalidationminlength', swvalidationminlength_1.SWValidationMinLength.Factory())
-	    .directive('swvalidationdatatype', swvalidationdatatype_1.SWValidationDataType.Factory())
-	    .directive('swvalidationeq', swvalidationeq_1.SWValidationEq.Factory())
-	    .directive("swvalidationgte", swvalidationgte_1.SWValidationGte.Factory())
-	    .directive("swvalidationlte", swvalidationlte_1.SWValidationLte.Factory())
-	    .directive('swvalidationmaxlength', swvalidationmaxlength_1.SWValidationMaxLength.Factory())
-	    .directive("swvalidationmaxvalue", swvalidationmaxvalue_1.SWValidationMaxValue.Factory())
-	    .directive("swvalidationminvalue", swvalidationminvalue_1.SWValidationMinValue.Factory())
-	    .directive("swvalidationneq", swvalidationneq_1.SWValidationNeq.Factory())
-	    .directive("swvalidationnumeric", swvalidationnumeric_1.SWValidationNumeric.Factory())
-	    .directive("swvalidationregex", swvalidationregex_1.SWValidationRegex.Factory())
-	    .directive("swvalidationrequired", swvalidationrequired_1.SWValidationRequired.Factory())
-	    .directive("swvalidationunique", swvalidationunique_1.SWValidationUnique.Factory())
-	    .directive("swvalidationuniqueornull", swvalidationuniqueornull_1.SWValidationUniqueOrNull.Factory())
+	    .directive('swValidationMinlength', swvalidationminlength_1.SWValidationMinLength.Factory())
+	    .directive('swValidationDatatype', swvalidationdatatype_1.SWValidationDataType.Factory())
+	    .directive('swValidationEq', swvalidationeq_1.SWValidationEq.Factory())
+	    .directive("swValidationGte", swvalidationgte_1.SWValidationGte.Factory())
+	    .directive("swValidationLte", swvalidationlte_1.SWValidationLte.Factory())
+	    .directive('swValidationMaxLength', swvalidationmaxlength_1.SWValidationMaxLength.Factory())
+	    .directive("swValidationMaxValue", swvalidationmaxvalue_1.SWValidationMaxValue.Factory())
+	    .directive("swValidationMinValue", swvalidationminvalue_1.SWValidationMinValue.Factory())
+	    .directive("swValidationNeq", swvalidationneq_1.SWValidationNeq.Factory())
+	    .directive("swValidationNumeric", swvalidationnumeric_1.SWValidationNumeric.Factory())
+	    .directive("swValidationRegex", swvalidationregex_1.SWValidationRegex.Factory())
+	    .directive("swValidationRequired", swvalidationrequired_1.SWValidationRequired.Factory())
+	    .directive("swValidationUnique", swvalidationunique_1.SWValidationUnique.Factory())
+	    .directive("swValidationUniqueOrNull", swvalidationuniqueornull_1.SWValidationUniqueOrNull.Factory())
 	    .directive("swValidationEmail", swvalidationemail_1.SWValidationEmail.Factory())
 	    .service("validationService", validationservice_1.ValidationService);
 	exports.validationmodule = validationmodule;
@@ -23558,11 +23558,7 @@
 	            link: function (scope, element, attributes, ngModel) {
 	                ngModel.$validators.swvalidationminlength =
 	                    function (modelValue, viewValue) {
-	                        var length = 0;
-	                        if (viewValue && viewValue.length) {
-	                            length = viewValue.length;
-	                        }
-	                        return validationService.validateMinLength(length || 0, attributes.swvalidationminlength);
+	                        return validationService.validateMinLength(viewValue, attributes.swvalidationminlength);
 	                    };
 	            }
 	        };
@@ -23619,9 +23615,9 @@
 	            restrict: "A",
 	            require: "^ngModel",
 	            link: function (scope, element, attributes, ngModel) {
-	                ngModel.$validators.swvalidationeq =
+	                ngModel.$validators.swValidationEq =
 	                    function (modelValue, viewValue) {
-	                        return validationService.validateEq(modelValue, attributes.swvalidationeq);
+	                        return validationService.validateEq(modelValue, attributes.swValidationEq);
 	                    }; //<--end function
 	            } //<--end link
 	        };
@@ -23649,9 +23645,9 @@
 	            restrict: "A",
 	            require: "^ngModel",
 	            link: function (scope, element, attributes, ngModel) {
-	                ngModel.$validators.swvalidationGte =
+	                ngModel.$validators.swValidationGte =
 	                    function (modelValue, viewValue) {
-	                        return validationService.validateGte(modelValue, attributes.swvalidationGte);
+	                        return validationService.validateGte(modelValue, attributes.swValidationGte);
 	                    }; //<--end function
 	            } //<--end link
 	        };
@@ -23677,9 +23673,9 @@
 	            restrict: "A",
 	            require: "^ngModel",
 	            link: function (scope, element, attributes, ngModel) {
-	                ngModel.$validators.swvalidationlte =
+	                ngModel.$validators.swValidationLte =
 	                    function (modelValue, viewValue) {
-	                        return validationService.validateLte(modelValue, attributes.swvalidationlte);
+	                        return validationService.validateLte(modelValue, attributes.swValidationLte);
 	                    };
 	            }
 	        };
@@ -23705,13 +23701,9 @@
 	            restrict: "A",
 	            require: "^ngModel",
 	            link: function (scope, element, attributes, ngModel) {
-	                ngModel.$validators.swvalidationmaxlength =
+	                ngModel.$validators.swValidationMaxLength =
 	                    function (modelValue, viewValue) {
-	                        var length = 0;
-	                        if (viewValue && viewValue.length) {
-	                            length = viewValue.length;
-	                        }
-	                        return validationService.validateMaxLength(length || 0, attributes.swvalidationmaxlength);
+	                        return validationService.validateMaxLength(viewValue, attributes.swValidationMaxLength);
 	                    };
 	            }
 	        };
@@ -23742,7 +23734,7 @@
 	                        if (viewValue == null) {
 	                            return true;
 	                        }
-	                        validationService.validateMaxValue(viewValue, attributes.swvalidationmaxvalue);
+	                        return validationService.validateMaxValue(viewValue, attributes.swvalidationmaxvalue);
 	                    };
 	            }
 	        };
@@ -23986,8 +23978,8 @@
 	                var isValidFunction = function (modelValue) {
 	                    return validationService.validateEmail(modelValue);
 	                };
-	                ngModel.$validators.swvalidationemail = isValidFunction;
-	                ngModel.$validators['swvalidationemail'] = isValidFunction;
+	                ngModel.$validators.swValidationEmail = isValidFunction;
+	                ngModel.$validators['swValidationEmail'] = isValidFunction;
 	            }
 	        };
 	    }
@@ -24117,7 +24109,11 @@
 	        };
 	        this.validateMaxLength = function (value, comparisonValue) {
 	            if (comparisonValue === void 0) { comparisonValue = 0; }
-	            return _this.validateLte(value, comparisonValue);
+	            var length = 0;
+	            if (value && value.length) {
+	                length = value.length;
+	            }
+	            return _this.validateLte(length, comparisonValue);
 	        };
 	        this.validateMaxValue = function (value, comparisonValue) {
 	            if (comparisonValue === void 0) { comparisonValue = 0; }
@@ -24125,7 +24121,11 @@
 	        };
 	        this.validateMinLength = function (value, comparisonValue) {
 	            if (comparisonValue === void 0) { comparisonValue = 0; }
-	            return _this.validateGte(value, comparisonValue);
+	            var length = 0;
+	            if (value && value.length) {
+	                length = value.length;
+	            }
+	            return _this.validateGte(length, comparisonValue);
 	        };
 	        this.validateMinValue = function (value, comparisonValue) {
 	            if (comparisonValue === void 0) { comparisonValue = 0; }
@@ -31803,7 +31803,12 @@
 		"./admin/client/src/orderfulfillment/orderfulfillment.module.spec.ts": 277,
 		"./org/Hibachi/client/src/alert/controllers/alertcontroller.spec.ts": 278,
 		"./org/Hibachi/client/src/alert/service/alertservice.spec.ts": 280,
-		"./org/Hibachi/client/src/validation/components/swvalidationemail.spec.ts": 281
+		"./org/Hibachi/client/src/validation/components/swvalidationemail.spec.ts": 281,
+		"./org/Hibachi/client/src/validation/components/swvalidationeq.spec.ts": 282,
+		"./org/Hibachi/client/src/validation/components/swvalidationgte.spec.ts": 283,
+		"./org/Hibachi/client/src/validation/components/swvalidationlte.spec.ts": 284,
+		"./org/Hibachi/client/src/validation/components/swvalidationmaxlength.spec.ts": 285,
+		"./org/Hibachi/client/src/validation/services/validationservice.spec.ts": 286
 	};
 	function webpackContext(req) {
 		return __webpack_require__(webpackContextResolve(req));
@@ -35318,7 +35323,7 @@
 	__webpack_require__(279);
 	var test = (function () {
 	    function test() {
-	        describe('swvalidationemail Test', function () {
+	        describe('swValidationEmail Test', function () {
 	            var $compile, $rootScope, form, element;
 	            beforeEach(function () {
 	                angular.module('ngAnimate', []);
@@ -35331,8 +35336,6 @@
 	                        var MY_EMAIL_REGEXP = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
 	                        return {
 	                            validateEmail: function (value) {
-	                                console.log(value);
-	                                console.log('test: ', MY_EMAIL_REGEXP.test(value));
 	                                return MY_EMAIL_REGEXP.test(value);
 	                            }
 	                        };
@@ -35350,21 +35353,453 @@
 	            it('Should be valid if given a valid email', function () {
 	                form.emailInput.$setViewValue('ryan.marchand@ten24web.com');
 	                $rootScope.$digest();
-	                expect(form.emailInput.$error.swvalidationemail).toBeFalsy();
+	                expect(form.emailInput.$error.swValidationEmail).toBeFalsy();
 	                form.emailInput.$setViewValue('chucky&cheese.37+testing@eee.corn');
 	                $rootScope.$digest();
-	                expect(form.emailInput.$error.swvalidationemail).toBeFalsy();
+	                expect(form.emailInput.$error.swValidationEmail).toBeFalsy();
 	            });
 	            it('Should be invalid if given an invalid email', function () {
 	                form.emailInput.$setViewValue('ryan.marchandten24web.com');
 	                $rootScope.$digest();
-	                expect(form.emailInput.$error.swvalidationemail).toBeTruthy();
+	                expect(form.emailInput.$error.swValidationEmail).toBeTruthy();
 	                form.emailInput.$setViewValue('ryan.marchandten24web.com@');
 	                $rootScope.$digest();
-	                expect(form.emailInput.$error.swvalidationemail).toBeTruthy();
+	                expect(form.emailInput.$error.swValidationEmail).toBeTruthy();
 	                form.emailInput.$setViewValue('@yan.marchandten24web.com');
 	                $rootScope.$digest();
-	                expect(form.emailInput.$error.swvalidationemail).toBeTruthy();
+	                expect(form.emailInput.$error.swValidationEmail).toBeTruthy();
+	            });
+	        });
+	    }
+	    return test;
+	}());
+	new test();
+
+
+/***/ },
+/* 282 */
+/***/ function(module, exports, __webpack_require__) {
+
+	/// <reference path='../../../typings/hibachiTypescript.d.ts' />
+	/// <reference path='../../../typings/tsd.d.ts' />
+	"use strict";
+	__webpack_require__(279);
+	var test = (function () {
+	    function test() {
+	        describe('swValidationEq Test', function () {
+	            var $compile, $rootScope, form, element;
+	            beforeEach(function () {
+	                angular.module('ngAnimate', []);
+	                angular.module('ngSanitize', []);
+	                angular.module('ui.bootstrap', []);
+	                angular.module('hibachi.core', ['ngAnimate', 'ngSanitize', 'ui.bootstrap']);
+	                angular.mock.module('hibachi.validation');
+	                angular.mock.module(function ($provide) {
+	                    $provide.service('validationService', function () {
+	                        return {
+	                            validateEq: function (value, expectedValue) {
+	                                return (value === expectedValue);
+	                            }
+	                        };
+	                    });
+	                });
+	            });
+	            beforeEach(inject(function (_$compile_, _$rootScope_) {
+	                $compile = _$compile_;
+	                $rootScope = _$rootScope_;
+	                var elString = '<form name="form"><input type="text" sw-validation-eq="theExpectedValue" ng-model="model.value" name="valueInput"></form>';
+	                $rootScope.model = { email: null };
+	                element = element = $compile(elString)($rootScope);
+	                form = $rootScope.form;
+	            }));
+	            it('Should be valid if value equals expected value', function () {
+	                form.valueInput.$setViewValue('theExpectedValue');
+	                $rootScope.$digest();
+	                expect(form.valueInput.$error.swValidationEq).toBeFalsy();
+	            });
+	            it('Should be invalid if value does not equal expected value', function () {
+	                form.valueInput.$setViewValue('unexpectedValue');
+	                $rootScope.$digest();
+	                expect(form.valueInput.$error.swValidationEq).toBeTruthy();
+	                form.valueInput.$setViewValue('somethingElse');
+	                $rootScope.$digest();
+	                expect(form.valueInput.$error.swValidationEq).toBeTruthy();
+	                form.valueInput.$setViewValue('a third thing');
+	                $rootScope.$digest();
+	                expect(form.valueInput.$error.swValidationEq).toBeTruthy();
+	            });
+	        });
+	    }
+	    return test;
+	}());
+	new test();
+
+
+/***/ },
+/* 283 */
+/***/ function(module, exports, __webpack_require__) {
+
+	/// <reference path='../../../typings/hibachiTypescript.d.ts' />
+	/// <reference path='../../../typings/tsd.d.ts' />
+	"use strict";
+	__webpack_require__(279);
+	var test = (function () {
+	    function test() {
+	        describe('swValidationGte Test', function () {
+	            var $compile, $rootScope, form, element;
+	            beforeEach(function () {
+	                angular.module('ngAnimate', []);
+	                angular.module('ngSanitize', []);
+	                angular.module('ui.bootstrap', []);
+	                angular.module('hibachi.core', ['ngAnimate', 'ngSanitize', 'ui.bootstrap']);
+	                angular.mock.module('hibachi.validation');
+	                angular.mock.module(function ($provide) {
+	                    $provide.service('validationService', function () {
+	                        return {
+	                            validateGte: function (value, comparisonValue) {
+	                                if (angular.isString(value)) {
+	                                    value = parseInt(value);
+	                                }
+	                                if (angular.isString(comparisonValue)) {
+	                                    comparisonValue = parseInt(comparisonValue);
+	                                }
+	                                return (value >= comparisonValue);
+	                            }
+	                        };
+	                    });
+	                });
+	            });
+	            beforeEach(inject(function (_$compile_, _$rootScope_) {
+	                $compile = _$compile_;
+	                $rootScope = _$rootScope_;
+	                var elString = '<form name="form"><input type="text" sw-validation-gte="10" ng-model="model.value" name="valueInput"></form>';
+	                $rootScope.model = { email: null };
+	                element = element = $compile(elString)($rootScope);
+	                form = $rootScope.form;
+	            }));
+	            it('Should be valid if value equals comparison value', function () {
+	                form.valueInput.$setViewValue('10');
+	                $rootScope.$digest();
+	                expect(form.valueInput.$error.swValidationGte).toBeFalsy();
+	            });
+	            it('Should be valid if value is greater than comparison value', function () {
+	                form.valueInput.$setViewValue('11');
+	                $rootScope.$digest();
+	                expect(form.valueInput.$error.swValidationGte).toBeFalsy();
+	            });
+	            it('Should be invalid if value is less than comparison value', function () {
+	                form.valueInput.$setViewValue('8');
+	                $rootScope.$digest();
+	                expect(form.valueInput.$error.swValidationGte).toBeTruthy();
+	                form.valueInput.$setViewValue('9.9');
+	                $rootScope.$digest();
+	                expect(form.valueInput.$error.swValidationGte).toBeTruthy();
+	            });
+	            it('Should be invalid if value cannot be parsed to an integer', function () {
+	                form.valueInput.$setViewValue('elGuapo');
+	                $rootScope.$digest();
+	                expect(form.valueInput.$error.swValidationGte).toBeTruthy();
+	            });
+	        });
+	    }
+	    return test;
+	}());
+	new test();
+
+
+/***/ },
+/* 284 */
+/***/ function(module, exports, __webpack_require__) {
+
+	/// <reference path='../../../typings/hibachiTypescript.d.ts' />
+	/// <reference path='../../../typings/tsd.d.ts' />
+	"use strict";
+	__webpack_require__(279);
+	var test = (function () {
+	    function test() {
+	        describe('swValidationLte Test', function () {
+	            var $compile, $rootScope, form, element;
+	            beforeEach(function () {
+	                angular.module('ngAnimate', []);
+	                angular.module('ngSanitize', []);
+	                angular.module('ui.bootstrap', []);
+	                angular.module('hibachi.core', ['ngAnimate', 'ngSanitize', 'ui.bootstrap']);
+	                angular.mock.module('hibachi.validation');
+	                angular.mock.module(function ($provide) {
+	                    $provide.service('validationService', function () {
+	                        return {
+	                            validateLte: function (value, comparisonValue) {
+	                                if (angular.isString(value)) {
+	                                    value = parseInt(value);
+	                                }
+	                                if (angular.isString(comparisonValue)) {
+	                                    comparisonValue = parseInt(comparisonValue);
+	                                }
+	                                return (value <= comparisonValue);
+	                            }
+	                        };
+	                    });
+	                });
+	            });
+	            beforeEach(inject(function (_$compile_, _$rootScope_) {
+	                $compile = _$compile_;
+	                $rootScope = _$rootScope_;
+	                var elString = '<form name="form"><input type="text" sw-validation-lte="10" ng-model="model.value" name="valueInput"></form>';
+	                $rootScope.model = { email: null };
+	                element = element = $compile(elString)($rootScope);
+	                form = $rootScope.form;
+	            }));
+	            it('Should be valid if value equals comparison value', function () {
+	                form.valueInput.$setViewValue('10');
+	                $rootScope.$digest();
+	                expect(form.valueInput.$error.swValidationLte).toBeFalsy();
+	            });
+	            it('Should be invalid if value is greater than comparison value', function () {
+	                form.valueInput.$setViewValue('11');
+	                $rootScope.$digest();
+	                expect(form.valueInput.$error.swValidationLte).toBeTruthy();
+	            });
+	            it('Should be valid if value is less than comparison value', function () {
+	                form.valueInput.$setViewValue('8');
+	                $rootScope.$digest();
+	                expect(form.valueInput.$error.swValidationLte).toBeFalsy();
+	                form.valueInput.$setViewValue('9.9');
+	                $rootScope.$digest();
+	                expect(form.valueInput.$error.swValidationLte).toBeFalsy();
+	            });
+	            it('Should be invalid if value cannot be parsed to an integer', function () {
+	                form.valueInput.$setViewValue('elGuapo');
+	                $rootScope.$digest();
+	                expect(form.valueInput.$error.swValidationLte).toBeTruthy();
+	            });
+	        });
+	    }
+	    return test;
+	}());
+	new test();
+
+
+/***/ },
+/* 285 */
+/***/ function(module, exports, __webpack_require__) {
+
+	/// <reference path='../../../typings/hibachiTypescript.d.ts' />
+	/// <reference path='../../../typings/tsd.d.ts' />
+	"use strict";
+	__webpack_require__(279);
+	var test = (function () {
+	    function test() {
+	        describe('swValidationMaxLength Test', function () {
+	            var $compile, $rootScope, form, element;
+	            beforeEach(function () {
+	                angular.module('ngAnimate', []);
+	                angular.module('ngSanitize', []);
+	                angular.module('ui.bootstrap', []);
+	                angular.module('hibachi.core', ['ngAnimate', 'ngSanitize', 'ui.bootstrap']);
+	                angular.mock.module('hibachi.validation');
+	                angular.mock.module(function ($provide) {
+	                    $provide.service('validationService', function () {
+	                        return {
+	                            validateMaxLength: function (value, maxLength) {
+	                                var length = 0;
+	                                if (value && value.length) {
+	                                    length = value.length;
+	                                }
+	                                if (angular.isString(value)) {
+	                                    value = value.length;
+	                                }
+	                                if (angular.isString(maxLength)) {
+	                                    maxLength = parseInt(maxLength);
+	                                }
+	                                return (value <= maxLength);
+	                            }
+	                        };
+	                    });
+	                });
+	            });
+	            beforeEach(inject(function (_$compile_, _$rootScope_) {
+	                $compile = _$compile_;
+	                $rootScope = _$rootScope_;
+	                var elString = '<form name="form"><input type="text" sw-validation-max-length="6" ng-model="model.value" name="valueInput"></form>';
+	                $rootScope.model = { email: null };
+	                element = element = $compile(elString)($rootScope);
+	                form = $rootScope.form;
+	            }));
+	            it('Should be valid if input length equals max length', function () {
+	                form.valueInput.$setViewValue('Willow');
+	                $rootScope.$digest();
+	                expect(form.valueInput.$error.swValidationMaxLength).toBeFalsy();
+	            });
+	            it('Should be valid if value is less than max length', function () {
+	                form.valueInput.$setViewValue('Park');
+	                $rootScope.$digest();
+	                expect(form.valueInput.$error.swValidationMaxLength).toBeFalsy();
+	                form.valueInput.$setViewValue('9.9');
+	                $rootScope.$digest();
+	                expect(form.valueInput.$error.swValidationMaxLength).toBeFalsy();
+	            });
+	            it('Should be invalid if value is greater than max length', function () {
+	                form.valueInput.$setViewValue('Magnitude');
+	                $rootScope.$digest();
+	                expect(form.valueInput.$error.swValidationMaxLength).toBeTruthy();
+	            });
+	        });
+	    }
+	    return test;
+	}());
+	new test();
+
+
+/***/ },
+/* 286 */
+/***/ function(module, exports, __webpack_require__) {
+
+	/// <reference path='../../../typings/hibachiTypescript.d.ts' />
+	/// <reference path='../../../typings/tsd.d.ts' />
+	"use strict";
+	__webpack_require__(279);
+	var test = (function () {
+	    function test() {
+	        describe('validationService Test', function () {
+	            var $compile, $rootScope, form, element, service;
+	            beforeEach(function () {
+	                angular.module('ngAnimate', []);
+	                angular.module('ngSanitize', []);
+	                angular.module('ui.bootstrap', []);
+	                angular.module('hibachi.core', ['ngAnimate', 'ngSanitize', 'ui.bootstrap']);
+	                angular.mock.module('hibachi.validation');
+	                angular.mock.module(function ($provide) {
+	                    $provide.service('$hibachi', function () {
+	                    });
+	                    $provide.service('$q', function () {
+	                    });
+	                });
+	            });
+	            beforeEach(inject(function (_$compile_, _$rootScope_, _validationService_) {
+	                $compile = _$compile_;
+	                $rootScope = _$rootScope_;
+	                service = _validationService_;
+	            }));
+	            describe('validateEq', function () {
+	                it('Should be valid if value equals expected value', function () {
+	                    expect(service.validateEq(4, 4)).toBe(true);
+	                    expect(service.validateEq(9, 9)).toBe(true);
+	                    expect(service.validateEq('house', 'house')).toBe(true);
+	                });
+	                it('Should be invalid if value does not equal expected value', function () {
+	                    expect(service.validateEq(4, 6)).toBe(false);
+	                    expect(service.validateEq(4, '4')).toBe(false);
+	                    expect(service.validateEq('car', 'house')).toBe(false);
+	                });
+	            });
+	            describe('validateNeq', function () {
+	                it('Should be valid if value does not equal expected value', function () {
+	                    expect(service.validateNeq(4, 6)).toBe(true);
+	                    expect(service.validateNeq(9, '9')).toBe(true);
+	                    expect(service.validateNeq('house', 'boat')).toBe(true);
+	                });
+	                it('Should be invalid if value equals expected value', function () {
+	                    expect(service.validateNeq(4, 4)).toBe(false);
+	                    expect(service.validateNeq(6, 6)).toBe(false);
+	                    expect(service.validateNeq('house', 'house')).toBe(false);
+	                });
+	            });
+	            describe('validateEmail', function () {
+	                it('Should be valid if passed valid email address', function () {
+	                    expect(service.validateEmail('gus.erickson@ten24web.com')).toBe(true);
+	                    expect(service.validateEmail('gus&erickson+900.422-1hello@ten24web.com')).toBe(true);
+	                });
+	                it('Should be invalid if passed invalid email address', function () {
+	                    expect(service.validateEmail('gus.ericksonten24web.com')).toBe(false);
+	                    expect(service.validateEmail('gus.erickson@ten24web.com@')).toBe(false);
+	                    expect(service.validateEmail('@gus.ericksonten24web.com')).toBe(false);
+	                });
+	            });
+	            describe('validateGte', function () {
+	                it('Should be valid if value equals expected value', function () {
+	                    expect(service.validateGte(4, 4)).toBe(true);
+	                    expect(service.validateGte('9', 9)).toBe(true);
+	                });
+	                it('Should be valid if value is greater than expected value', function () {
+	                    expect(service.validateGte('4', 3)).toBe(true);
+	                    expect(service.validateGte(12, 0)).toBe(true);
+	                });
+	                it('Should be invalid if value is less than expected value', function () {
+	                    expect(service.validateGte(3, 4)).toBe(false);
+	                    expect(service.validateGte(0, '40')).toBe(false);
+	                });
+	                it('Should be invalid if value cannot be parsed to an integer', function () {
+	                    expect(service.validateGte('couch', 4)).toBe(false);
+	                });
+	            });
+	            describe('validateLte', function () {
+	                it('Should be valid if value equals expected value', function () {
+	                    expect(service.validateLte(4, 4)).toBe(true);
+	                    expect(service.validateLte('9', 9)).toBe(true);
+	                });
+	                it('Should be valid if value is less than expected value', function () {
+	                    expect(service.validateLte('4', 6)).toBe(true);
+	                    expect(service.validateLte(12, '20')).toBe(true);
+	                });
+	                it('Should be invalid if value is greater than expected value', function () {
+	                    expect(service.validateLte(30, 4)).toBe(false);
+	                    expect(service.validateLte(100, '40')).toBe(false);
+	                });
+	                it('Should be invalid if value cannot be parsed to an integer', function () {
+	                    expect(service.validateLte('couch', 4)).toBe(false);
+	                    expect(service.validateLte(3, 'blind mice')).toBe(false);
+	                });
+	            });
+	            describe('validateMaxLength', function () {
+	                it('Should be valid if input length equals max length', function () {
+	                    expect(service.validateMaxLength('pear', 4)).toBe(true);
+	                    expect(service.validateMaxLength('numbernin', 9)).toBe(true);
+	                });
+	                it('Should be valid if input length is less than max length', function () {
+	                    expect(service.validateMaxLength('4', 6)).toBe(true);
+	                    expect(service.validateMaxLength('hi', '10')).toBe(true);
+	                });
+	                it('Should be invalid if input length is greater than max length', function () {
+	                    expect(service.validateMaxLength('thirty', 4)).toBe(false);
+	                    expect(service.validateMaxLength('squanto', '4')).toBe(false);
+	                });
+	                it('Should be invalid if max length cannot be parsed to an integer', function () {
+	                    expect(service.validateMaxLength('couch', 'four')).toBe(false);
+	                    expect(service.validateMaxLength(3, '')).toBe(false);
+	                });
+	            });
+	            describe('validateMinLength', function () {
+	                it('Should be valid if input length equals min length', function () {
+	                    expect(service.validateMinLength('pear', 4)).toBe(true);
+	                    expect(service.validateMinLength('numbernin', 9)).toBe(true);
+	                });
+	                it('Should be valid if input length is greater than min length', function () {
+	                    expect(service.validateMinLength('letters', 6)).toBe(true);
+	                    expect(service.validateMinLength('ten letters', '10')).toBe(true);
+	                });
+	                it('Should be invalid if input length is less than min length', function () {
+	                    expect(service.validateMinLength('five', 5)).toBe(false);
+	                    expect(service.validateMinLength('squanto', '9')).toBe(false);
+	                });
+	                it('Should be invalid if min length cannot be parsed to an integer', function () {
+	                    expect(service.validateMinLength('couch', 'four')).toBe(false);
+	                    expect(service.validateMinLength(3, '')).toBe(false);
+	                });
+	            });
+	            describe('validateNumeric', function () {
+	                it('Should return true if given a number or a string representation of a number', function () {
+	                    expect(service.validateNumeric(4)).toBe(true);
+	                    expect(service.validateNumeric('9')).toBe(true);
+	                    expect(service.validateNumeric('0')).toBe(true);
+	                    expect(service.validateNumeric(Infinity)).toBe(true);
+	                });
+	                it('Should return false if given something else', function () {
+	                    expect(service.validateNumeric([])).toBe(false);
+	                    expect(service.validateNumeric({})).toBe(false);
+	                    expect(service.validateNumeric('twelve')).toBe(false);
+	                    expect(service.validateNumeric(null)).toBe(false);
+	                    expect(service.validateNumeric(undefined)).toBe(false);
+	                });
 	            });
 	        });
 	    }
