@@ -73,7 +73,6 @@ class ValidationService{
         if (angular.isDate(value) && type === "date"){return true;}
         if (angular.isObject(value) && type === "object"){return true;}
         if (type === 'email'){
-            console.log("Validating email")
             return this.MY_EMAIL_REGEXP.test(value);
         }
         if	(angular.isUndefined(value && type === "undefined")){return true;}
@@ -140,6 +139,7 @@ class ValidationService{
 
     public validateRegex=(value:string,pattern:string):boolean=>{
         var regex:RegExp = new RegExp(pattern);
+        console.log(regex);
         return regex.test(value);
     }
 

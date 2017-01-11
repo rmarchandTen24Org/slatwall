@@ -8,7 +8,7 @@ class test{
 
     ){
         describe('validationService Test',()=>{
-            var $compile,$rootScope, form, element, service;
+            var $compile,$rootScope, form, element, service, objects;
             beforeEach(()=>{
                 angular.module('ngAnimate',[]);
                 angular.module('ngSanitize',[]);
@@ -17,7 +17,16 @@ class test{
                 angular.mock.module('hibachi.validation');
                 angular.mock.module(($provide)=>{
                     $provide.service('$hibachi', ()=>{
+                        return {
+                            checkUniqueValue: (objectName, property, value)=>{
+                                if(value === null) return false;
+                                //if(objects[objectName].hasOwnProperty)
 
+                            },
+                            checkUniqueOrNullValue: (objectName, property, value)=>{
+                                if(value === null) return true;
+                            }
+                        }
                     });
 
                     $provide.service('$q', ()=>{
@@ -175,9 +184,121 @@ class test{
                     expect(service.validateNumeric(null)).toBe(false);
                     expect(service.validateNumeric(undefined)).toBe(false);
                 });
+            })
 
+            describe('validateRequired', ()=>{
+                it('Should return true if a value is supplied', ()=>{
+                    expect(service.validateRequired(4)).toBe(true);
+                    expect(service.validateRequired('ocho')).toBe(true);
+                    expect(service.validateRequired({})).toBe(true);
+                    expect(service.validateRequired([])).toBe(true);
+                    expect(service.validateRequired(Infinity)).toBe(true);
+                    expect(service.validateRequired(0)).toBe(true);
+                });
+                it('Should return false if given nothing',()=>{
+                    expect(service.validateRequired()).toBe(false);
+                });
+            })
+
+            describe('validateRegex', ()=>{
+                it('Should return true if value matches pattern', ()=>{
+                    expect(service.validateRegex('459','\\d+')).toBe(true)
+                });
+                it('Should return false if value does not match pattern',()=>{
+                    expect(service.validateRegex('459','\\D+')).toBe(false)
+                });
+            })
+
+            describe('validateMinValue', ()=>{
+                it('Should be valid if value equals expected value',()=>{
+                    expect(service.validateGte(4,4)).toBe(true);
+                    expect(service.validateGte('9',9)).toBe(true);
+                });
+
+                it('Should be valid if value is greater than expected value',()=>{
+                    expect(service.validateGte('4',3)).toBe(true);
+                    expect(service.validateGte(12,0)).toBe(true);
+                });
+
+                it('Should be invalid if value is less than expected value',()=>{
+                    expect(service.validateGte(3,4)).toBe(false);
+                    expect(service.validateGte(0,'40')).toBe(false);
+                });
+
+                it('Should be invalid if value cannot be parsed to an integer',()=>{
+                    expect(service.validateGte('couch',4)).toBe(false);
+                });
+            })
+
+            describe('validateMaxValue', ()=>{
+                it('Should be valid if value equals expected value',()=>{
+                    expect(service.validateLte(4,4)).toBe(true);
+                    expect(service.validateLte('9',9)).toBe(true);
+                });
+
+                it('Should be valid if value is less than expected value',()=>{
+                    expect(service.validateLte('4',6)).toBe(true);
+                    expect(service.validateLte(12,'20')).toBe(true);
+                });
+
+                it('Should be invalid if value is greater than expected value',()=>{
+                    expect(service.validateLte(30,4)).toBe(false);
+                    expect(service.validateLte(100,'40')).toBe(false);
+                });
+
+                it('Should be invalid if value cannot be parsed to an integer',()=>{
+                    expect(service.validateLte('couch',4)).toBe(false);
+                    expect(service.validateLte(3,'blind mice')).toBe(false);
+                });
             })
             
+            describe('validateDataType', ()=>{
+                it('Should return true if value matches type', ()=>{
+                    expect(service.validateDataType([], 'array')).toBe(true);
+                    expect(service.validateDataType('howdy', 'string')).toBe(true);
+                    expect(service.validateDataType({}, 'object')).toBe(true);
+                    expect(service.validateDataType([], 'array')).toBe(true);
+                    expect(service.validateDataType(new Date, 'date')).toBe(true);
+                    expect(service.validateDataType('email@gmail.com', 'email')).toBe(true);
+                    expect(service.validateDataType(undefined, 'undefined')).toBe(true);
+                });
+                it('Should return false if value does not match type',()=>{
+                    expect(service.validateDataType('howdy', 'array')).toBe(false);
+                    expect(service.validateDataType(8, 'string')).toBe(false);
+                    expect(service.validateDataType([], 'object')).toBe(false);
+                    expect(service.validateDataType({}, 'date')).toBe(false);
+                    expect(service.validateDataType(null, 'undefined')).toBe(false);
+                });
+            })
+
+            describe('validateUnique', ()=>{
+                beforeEach(()=>{
+                    objects = {
+                        circle:{
+                            radius:4
+                        },
+                        square:{
+                            height:5,
+                            width:5
+                        }
+                    }
+                })
+                it('Should return true if value is not already a property on object', ()=>{ //Maybe?
+                    //add assertions here
+                });
+                it('Should return false if value is not unique on object or is null',()=>{
+                    //add assertions here
+                });
+            })
+
+            describe('validateUniqueOrNull', ()=>{
+                it('Should return true if value is unique on object or null', ()=>{ //Maybe?
+                    //add assertions here
+                });
+                it('Should return false if value is not unique on object',()=>{
+                    //add assertions here
+                });
+            })
         });
     }
 }
