@@ -152,7 +152,7 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 		return variables.taxIntegrationCFCs[ arguments.integration.getIntegrationPackage() ];
 	}
 	
-	public any function updateIntegrationsFromDirectory() {
+	public any function updateIntegrationsFromDirectory(any beanFactory) {
 		var dirList = directoryList( expandPath("/Slatwall/integrationServices") );
 		var integrationList = this.listIntegration();
 		var installedIntegrationList = "";
@@ -160,7 +160,7 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 		// Loop over each integration in the integration directory
 		for(var i=1; i<= arrayLen(dirList); i++) {
 			
-			var installedIntegration = updateIntegrationFromDirectory(dirList[i]);
+			var installedIntegration = updateIntegrationFromDirectory(directoryList=dirList[i],beanFactory=beanFactory);
 			if(len(installedIntegration)){
 				installedIntegrationList = listAppend(installedIntegrationList,installedIntegration);
 			}
@@ -176,7 +176,7 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 			}
 		}
 		
-		return getBeanFactory();
+		return arguments.beanFactory;
 	}
 	
 	public void function loadDataFromIntegrations(){
@@ -197,7 +197,7 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 		
 	}
 	
-	public string function updateIntegrationFromDirectory(required string directoryList, any integrationEntity){
+	public string function updateIntegrationFromDirectory(required string directoryList, any integrationEntity, any beanFactory){
 		var fileInfo = getFileInfo(arguments.directoryList);
 		
 		if(fileInfo.type == "directory" && fileExists("#fileInfo.path#/Integration.cfc") ) {
@@ -226,7 +226,7 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 				getHibachiDAO().save( integration );
 				getHibachiDAO().flushORMSession();
 				
-				// If this integration is active lets register all of its event handlers, and decorate the getBeanFactory() with it
+				// If this integration is active lets register all of its event handlers, and decorate the updateIntegrationFromDirectory with it
 				if( integration.getEnabledFlag() ) {
 					
 					for(var e=1; e<=arrayLen(integrationCFC.getEventHandlers()); e++) {
@@ -238,7 +238,7 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 					}
 					
 					if(directoryExists("#getApplicationValue("applicationRootMappingPath")#/integrationServices/#integrationPackage#/model")) {
-						var beanFactory = getBeanFactory();
+						
 						//if we have entities then copy them into root model/entity
 						if(directoryExists("#getApplicationValue("applicationRootMappingPath")#/integrationServices/#integrationPackage#/model/entity")){
 							var modelList = directoryList( expandPath("/Slatwall") & "/integrationServices/#integrationPackage#/model/entity" );
@@ -247,8 +247,8 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 								var beanName = listFirst(beanCFC,'.');
 								var modelDestinationPath = expandPath("/Slatwall") & "/model/entity/" & beanCFC;
 								FileCopy(modelFilePath,modelDestinationPath);
-								if(!beanFactory.containsBean(beanName)){
-									beanFactory.declareBean(beanName, "#getHibachiDao().getApplicationValue('applicationKey')#.model.entity.#beanName#",false);
+								if(!arguments.beanFactory.containsBean(beanName)){
+									arguments.beanFactory.declareBean(beanName, "#getHibachiDao().getApplicationValue('applicationKey')#.model.entity.#beanName#",false);
 								}
 							}
 						}
@@ -259,6 +259,7 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 						});
 						
 						var integrationBFBeans = integrationBF.getBeanInfo();
+						
 						for(var beanName in integrationBFBeans.beanInfo) {
 							if(
 								isStruct(integrationBFBeans.beanInfo[beanName]) 
@@ -266,15 +267,14 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 								&& structKeyExists(integrationBFBeans.beanInfo[beanName], "isSingleton")
 							) {
 								if(len(beanName) > len(integrationPackage) && left(beanName, len(integrationPackage)) eq integrationPackage) {
-									beanFactory.declareBean( beanName, integrationBFBeans.beanInfo[ beanName ].cfc, integrationBFBeans.beanInfo[ beanName ].isSingleton );
+									arguments.beanFactory.declareBean( beanName, integrationBFBeans.beanInfo[ beanName ].cfc, integrationBFBeans.beanInfo[ beanName ].isSingleton );
 								} else {
-									beanFactory.declareBean( "#integrationPackage##beanName#", integrationBFBeans.beanInfo[ beanName ].cfc, integrationBFBeans.beanInfo[ beanName ].isSingleton );
+									arguments.beanFactory.declareBean( "#integrationPackage##beanName#", integrationBFBeans.beanInfo[ beanName ].cfc, integrationBFBeans.beanInfo[ beanName ].isSingleton );
 								}
 
 							}
 							
 						}
-						setBeanFactory(beanFactory);
 					}
 
 				}

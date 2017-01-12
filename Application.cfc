@@ -86,8 +86,6 @@ component extends="org.Hibachi.Hibachi" output="false" {
 		
 		// SET Database Type
 		request.slatwallScope.setApplicationValue("databaseType", this.ormSettings.dialect);
-		
-		
 	}
 	
 	public void function onUpdateRequest() {
@@ -104,8 +102,8 @@ component extends="org.Hibachi.Hibachi" output="false" {
 		writeLog(file="Slatwall", text="General Log - Setting Cache has been cleared because of updated request");
 		
 		// Clear the setting meta cache so that it can be reloaded
-        	getBeanFactory().getBean("hibachiCacheService").resetCachedKeyByPrefix('settingService_');
-        	writeLog(file="Slatwall", text="General Log - Setting Meta cache has been cleared because of updated request");
+    	getBeanFactory().getBean("hibachiCacheService").resetCachedKeyByPrefix('settingService_');
+    	writeLog(file="Slatwall", text="General Log - Setting Meta cache has been cleared because of updated request");
 		
 		// Run Scripts
 		getBeanFactory().getBean("updateService").runScripts();
@@ -113,14 +111,15 @@ component extends="org.Hibachi.Hibachi" output="false" {
 		
 	}
 	
-	public void function onFirstRequestPostUpdate() {
-		
+	public any function afterBeanFactorySet(any beanFactory){
 		// Reload All Integrations, we pass in the beanFactory and it is returned so that it can be updated it with any integration beans prefixed 
-		var beanFactory = getBeanFactory().getBean("integrationService").updateIntegrationsFromDirectory( getBeanFactory() );
-		
-		setBeanFactory( beanFactory );
+		arguments.beanFactory.getBean("integrationService").updateIntegrationsFromDirectory(arguments.beanFactory);
 		
 		writeLog(file="Slatwall", text="General Log - Integrations have been updated & custom beans have been added to bean factory");
+		return arguments.beanFactory;
+	}
+	
+	public void function onFirstRequestPostUpdate() {
 	}
 	
 	// ===================================== END: HIBACHI HOOKS

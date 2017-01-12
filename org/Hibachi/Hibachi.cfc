@@ -510,7 +510,7 @@ component extends="FW1.framework" {
 						transients=["entity", "process", "transient", "report"],
 						transientPattern="Bean$"
 					});
-
+					
 					coreBF.addBean("applicationKey", variables.framework.applicationKey);
 					coreBF.addBean("hibachiInstanceApplicationScopeKey", getHibachiInstanceApplicationScopeKey());
 
@@ -621,18 +621,18 @@ component extends="FW1.framework" {
 								}
 							}
 						}
-
-						setBeanFactory(aggregateBF);
-					} else {
-						setBeanFactory(coreBF);
+						coreBF = aggregateBF;
 					}
+					
+					afterBeanFactorySet(coreBF);
+					setBeanFactory(coreBF);
 					writeLog(file="#variables.framework.applicationKey#", text="General Log - Bean Factory Set");
-
+					
 					//========================= END: IOC SETUP ===============================
-
+					
 					// Call the onFirstRequest() Method for the parent Application.cfc
 					onFirstRequest();
-
+					
 					//==================== START: EVENT HANDLER SETUP ========================
 
 					getBeanFactory().getBean('hibachiEventService').registerEventHandlers();
@@ -671,7 +671,10 @@ component extends="FW1.framework" {
 						writeLog(file="#variables.framework.applicationKey#", text="General Log - ORMReload() started");
 						ormReload();
 						writeLog(file="#variables.framework.applicationKey#", text="General Log - ORMReload() was successful");
-
+						var updateScript = getHibachiScope().getService('hibachiService').newUpdateScript();
+						getHibachiScope().getService('updateService').saveUpdateScript(updateScript);
+						var app = getHibachiScope().getService('hibachiService').newApp();
+						app = getHibachiScope().getService('appService').saveApp(app,{appCode='appcode'&createUUID()});
 						onUpdateRequest();
 
 						// Write File
