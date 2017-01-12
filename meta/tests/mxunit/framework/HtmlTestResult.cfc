@@ -177,7 +177,7 @@
 							<!--- printing incorrect results for MXUnitInstallTest.cfc - could be engine bug --->
 							<cfset classtesturl = CGI.CONTEXT_PATH & "/" & Replace(this.testResults[i].component, ".", "/", "all") & ".cfc?method=runtestremote&amp;output=html">
 
-							<h3><a href="#classtesturl#" title="Run all tests in #this.testResults[i].component#">#this.testResults[i].component#</a></h3>
+							<h3><a href="#replace(classtesturl,'/Slatwall','')#" title="Run all tests in #this.testResults[i].component#">#this.testResults[i].component#</a></h3>
 
 							<table class="results tablesorter #theme#">
 								#tableHead#
@@ -186,7 +186,7 @@
 
 						<tr class="#lCase(this.testResults[i].TestStatus)#">
 							<td class="test">
-								<a href="#classtesturl#&amp;testmethod=#this.testResults[i].TestName#" title="only run the #this.testResults[i].TestName# test">#this.testResults[i].TestName#</a>
+								<a href="#replace(classtesturl,'/Slatwall','')#&amp;testmethod=#this.testResults[i].TestName#" title="only run the #this.testResults[i].TestName# test">#this.testResults[i].TestName#</a>
 							</td>
 							<td class="error">
 								#renderErrorStruct(this.testResults[i].Error)#
