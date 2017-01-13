@@ -31,10 +31,10 @@ gulp.task('runClientTests',function(){
 
 	var wdOpts = { desiredCapabilities: { browserName: 'phantomjs' } }
 
-	phantomjs.run('--webdriver=4444').then(program => {
+	phantomjs.run('--webdriver=4444').then(function(program) {
 	webdriverio.remote(wdOpts).init()
-		.url('http://localhost/meta/tests/unit/client/specrunner.cfc?method=test&spec=my%20first%20test&catch=true&random=false')
-		.getTitle().then(title => {
+		.url('http://localhost/meta/tests/unit/client/specrunner.cfc?method=test')
+		.getTitle().then(function(title) {
 		console.log(title) // 'Mozilla Developer Network'
 		program.kill() // quits PhantomJS
 		})

@@ -37,7 +37,12 @@
 					  <link rel="stylesheet" href="/node_modules/jasmine-core/lib/jasmine-core/jasmine.css">
 
 					  <script src="/node_modules/jasmine-core/lib/jasmine-core/jasmine.js"></script>
-					  <script src="/node_modules/jasmine-core/lib/jasmine-core/jasmine-html.js"></script>
+						<cfif structKeyExists(url,'phantomJS')>
+							<script src="/node_modules/jasmine-core/lib/jasmine-core/jasmine-html.js"></script>
+						<cfelse>
+							<script src="/node_modules/jasmine-core/lib/jasmine-core/jasmine-html.js"></script>
+						</cfif>
+
 
 
 					  <!-- include source files here... -->
