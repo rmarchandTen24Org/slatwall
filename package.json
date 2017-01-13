@@ -14,19 +14,21 @@
     "angular": "*",
     "angular-mocks": "^1.6.0",
     "bower": "*",
-	"less": "*",
     "force-case-sensitivity-webpack-plugin": "^0.1.1",
     "gulp": "*",
     "gulp-chmod": "^1.3.0",
     "gulp-inject": "*",
     "gulp-util": "*",
     "jasmine": "^2.5.2",
+    "less": "*",
     "ng-annotate-webpack-plugin": "*",
+    "phantomjs-prebuilt": "^2.1.14",
     "run-sequence": "^1.1.4",
     "strip-loader": "^0.1.2",
     "tsify": "*",
     "typescript": "*",
     "vinyl-source-stream": "^1.1.0",
+    "webdriverio": "^4.6.1",
     "webpack": "*",
     "webpack-dev-server": "^1.12.1",
     "webpack-stream": "*"
@@ -51,7 +53,7 @@
     "buildFrontend:prod": "cd org/Hibachi/client && webpack --config webpack-frontend-production.config.js -p",
     "buildTestBundle": "cd admin/client && webpack --config webpack-test.config.js",
     "buildTestBundle:dev": "cd admin/client && webpack --config webpack-test-dev.config.js",
-    "buildCSS":"lessc admin/client/css/main.less admin/client/css/main.css"
+    "buildCSS": "lessc admin/client/css/main.less admin/client/css/main.css"
   },
   "jshintConfig": {
     "predef": [

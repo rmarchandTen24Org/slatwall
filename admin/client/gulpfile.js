@@ -24,6 +24,23 @@ gulp.task('watch', function() {
 
 });
 
+
+gulp.task('runClientTests',function(){
+	var phantomjs = require('phantomjs-prebuilt')
+	var webdriverio = require('webdriverio')
+	var wdOpts = { desiredCapabilities: { browserName: 'phantomjs' } }
+
+	phantomjs.run('--webdriver=4444').then(program => {
+	webdriverio.remote(wdOpts).init()
+		.url('http://localhost/meta/tests/unit/client/specrunner.cfc?method=test&spec=my%20first%20test&catch=true&random=false')
+		.getTitle().then(title => {
+		console.log(title) // 'Mozilla Developer Network'
+		program.kill() // quits PhantomJS
+		})
+	})
+});
+
+
 gulp.task('gen-ts-refs', function () {
 
 	setTimeout(function () {
