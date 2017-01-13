@@ -7,7 +7,9 @@ chmod = require('gulp-chmod'),
 runSequence = require('run-sequence'),
 gutil = require('gulp-util'),
 webpack = require('webpack'),
-webpackConfig = require('./webpack.config');
+webpackConfig = require('./webpack.config'),
+phantomjs = require('phantomjs-prebuilt'),
+webdriverio = require('webdriverio');
 
 var config = new Config();
 
@@ -26,8 +28,7 @@ gulp.task('watch', function() {
 
 
 gulp.task('runClientTests',function(){
-	var phantomjs = require('phantomjs-prebuilt')
-	var webdriverio = require('webdriverio')
+
 	var wdOpts = { desiredCapabilities: { browserName: 'phantomjs' } }
 
 	phantomjs.run('--webdriver=4444').then(program => {
