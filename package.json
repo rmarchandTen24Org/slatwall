@@ -49,7 +49,7 @@
     "buildHibachi:prod": "cd org/Hibachi/client && webpack --config webpack-production.config.js -p",
     "buildFrontend": "cd org/Hibachi/client && webpack --config webpack-frontend-develop.config.js",
     "buildFrontend:prod": "cd org/Hibachi/client && webpack --config webpack-frontend-production.config.js -p",
-    "buildSpecBundle": "tsc -p tsconfig-test.json",
+    "buildTestBundle": "cd admin/client && webpack --config webpack-test.config.js",
     "buildCSS":"lessc admin/client/css/main.less admin/client/css/main.css"
   },
   "jshintConfig": {
