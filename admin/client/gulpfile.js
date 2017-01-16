@@ -31,14 +31,16 @@ gulp.task('runClientTests',function(){
 
 	var wdOpts = { desiredCapabilities: { browserName: 'phantomjs' } }
 
-	phantomjs.run('--webdriver=4444').then(function(program) {
-	webdriverio.remote(wdOpts).init()
-		.url('http://localhost/meta/tests/unit/client/specrunner.cfc?method=test')
-		.getTitle().then(function(title) {
-		console.log(title) // 'Mozilla Developer Network'
-		program.kill() // quits PhantomJS
-		})
-	})
+	phantomjs.run('--webdriver=4446').then(function(program) {
+		var test = program.stdout.pipe(process.stdout);
+
+		webdriverio.remote(wdOpts).init()
+			.url('http://cf10.slatwall/meta/tests/unit/client/specrunner.cfc?method=test')
+			.then(function(url) {
+			//console.log(url) // 'Mozilla Developer Network'
+			program.kill() // quits PhantomJS
+		});
+	});
 });
 
 

@@ -36,9 +36,10 @@
 					  <link rel="shortcut icon" type="image/png" href="/node_modules/jasmine-core/images/jasmine_favicon.png">
 					  <link rel="stylesheet" href="/node_modules/jasmine-core/lib/jasmine-core/jasmine.css">
 
-					  <script src="/node_modules/jasmine-core/lib/jasmine-core/jasmine.js"></script>
+					  <script type="text/javascript" src="/node_modules/jasmine-core/lib/jasmine-core/jasmine.js"></script>
 						<cfif structKeyExists(url,'phantomJS')>
 							<script src="/node_modules/jasmine-core/lib/jasmine-core/jasmine-html.js"></script>
+							<script type="text/javascript" src="/node_modules/jasmine-core/lib/console/console.js"></script>
 						<cfelse>
 							<script src="/node_modules/jasmine-core/lib/jasmine-core/jasmine-html.js"></script>
 						</cfif>
@@ -67,8 +68,15 @@
 					</head>
 
 					<body>
-						<script type="text/javascript" src="#request.slatwallScope.getBaseURL()#/admin/client/src/testbundle.js?instantiationKey=#$.slatwall.getApplicationValue('instantiationKey')#" charset="utf-8"></script>
 
+						<script type="text/javascript" src="#request.slatwallScope.getBaseURL()#/admin/client/src/testbundle.js?instantiationKey=#$.slatwall.getApplicationValue('instantiationKey')#" charset="utf-8"></script>
+						<script type="text/javascript">
+						  var console_reporter = new getJasmineRequireObj().ConsoleReporter()
+						 // jasmine.getEnv().addReporter(new getJasmineRequireObj().TrivialReporter());
+						  jasmine.getEnv().addReporter(console_reporter);
+						  jasmine.getEnv().execute();
+
+						</script>
 					</body>
 				</html>
 			</cfoutput>
