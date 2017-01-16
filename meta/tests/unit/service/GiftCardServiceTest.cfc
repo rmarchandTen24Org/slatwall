@@ -65,7 +65,6 @@ component extends="Slatwall.meta.tests.unit.SlatwallUnitTestBase" {
 			creditAmount=15
 		};
 		giftCard = variables.service.processGiftCard(giftCard, creditData, 'addCredit');
-		request.debug(giftCard);
 		assert(giftCard.getBalanceAmount() EQ 15);
 		assert(giftCard.getCalculatedBalanceAmount() EQ 15);
 		
@@ -91,8 +90,7 @@ component extends="Slatwall.meta.tests.unit.SlatwallUnitTestBase" {
 		};
 		
 		giftCard = variables.service.processGiftCard(giftCard, debitData, 'addDebit');
-		request.debug(giftCard);
-		assert(giftCard.getBalanceAmount() EQ 7);
+ 		assert(giftCard.getBalanceAmount() EQ 7);
 		assert(giftCard.getCalculatedBalanceAmount() EQ 7);
 	}
 	
