@@ -4,10 +4,9 @@
     <label ng-if="swfPropertyDisplay.name && swfPropertyDisplay.type !== 'yesno' && swfPropertyDisplay.type !== 'submit' && swfPropertyDisplay.labelText && !swfPropertyDisplay.labelClass " class="{{swfPropertyDisplay.labelClass}}" for="{{swfPropertyDisplay.name}}" ng-bind="swfPropertyDisplay.labelText"></label>
     <label ng-if="swfPropertyDisplay.name && swfPropertyDisplay.type !== 'yesno' && swfPropertyDisplay.type !== 'submit' && swfPropertyDisplay.labelText && swfPropertyDisplay.labelClass "  class="{{swfPropertyDisplay.labelClass}}" for="{{swfPropertyDisplay.name}}" ng-bind="swfPropertyDisplay.labelText"></label>
 
-    <!--- Using the property displat as a configuration, figure out which text of element to display  --->
+    <!-- Using the property displat as a configuration, figure out which text of element to display  -->
     <sw-form-field data-property-display="swfPropertyDisplay.propertyDisplay"></sw-form-field>
 
-    <sw-error-display
-    >
+    <sw-error-display>
     </sw-error-display>
 
