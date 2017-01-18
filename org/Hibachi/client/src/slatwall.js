@@ -19538,8 +19538,12 @@
 	        if (angular.isUndefined(this.isDirty)) {
 	            this.isDirty = false;
 	        }
+	        console.log("running constructor?!");
+	        console.log(this.object);
+	        console.log(this.name);
 	        //object can be either an instance or a string that will become an instance
 	        if (angular.isString(this.object)) {
+	            console.log("Hello??");
 	            var objectNameArray = this.object.split('_');
 	            this.entityName = objectNameArray[0];
 	            //if the object name array has two parts then we can infer that it is a process object
@@ -19553,7 +19557,9 @@
 	            }
 	            //convert the string to an object
 	            this.$timeout(function () {
+	                console.log("running");
 	                _this.object = _this.$hibachi['new' + _this.object]();
+	                console.log("this.object: ", _this.object);
 	            });
 	        }
 	        else {

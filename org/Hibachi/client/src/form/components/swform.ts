@@ -48,9 +48,12 @@ class SWFormController {
             this.isDirty = false;
         }
 
-
+        console.log("running constructor?!")
+        console.log(this.object);
+        console.log(this.name);
         //object can be either an instance or a string that will become an instance
         if(angular.isString(this.object)){
+            console.log("Hello??")
             var objectNameArray = this.object.split('_');
             this.entityName = objectNameArray[0];
             //if the object name array has two parts then we can infer that it is a process object
@@ -63,8 +66,9 @@ class SWFormController {
             }
             //convert the string to an object
             this.$timeout( ()=> {
-
+                console.log("running")
                 this.object = this.$hibachi['new'+this.object]();
+                console.log("this.object: ", this.object);
             });
         }else{
             if(this.object && this.object.metaData){
