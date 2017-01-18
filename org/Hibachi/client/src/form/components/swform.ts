@@ -225,10 +225,12 @@ class SWFormController {
 
     public eventsHandler = (params) => {
         console.log("in eventsHandler")
+        console.log("params:", params);
+        console.log('form name: ', this.name)
         //this will call any form specific functions such as hide,show,refresh,update or whatever else you later add
         for (var e in params.events){
             console.log("in eventsHandler for loop")
-            if ( angular.isDefined(params.events[e].value) && params.events[e].value == this.name.toLowerCase()){
+            if ( angular.isDefined(params.events[e].value)){
                 if(params.events[e].name && this[params.events[e].name]){
                     console.log('calling ' + params.events[e].name)
                     console.log('with params: ', params.events[e].value)

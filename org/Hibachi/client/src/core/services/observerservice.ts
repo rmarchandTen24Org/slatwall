@@ -117,6 +117,7 @@ class ObserverService extends BaseService{
     notify = (event:string, parameters:any):any => {
         console.warn(event); 
         event = event.toLowerCase();
+        console.log(this.observers);
         return this.$timeout(()=>{
             for(var id in this.observers[event]) {
                 for(var callback of this.observers[event][id]) {

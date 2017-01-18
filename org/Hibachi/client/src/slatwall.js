@@ -2018,6 +2018,7 @@
 	            }
 	            if (method == "post") {
 	                data.returnJsonObjects = "cart,account";
+	                console.log('data:', data, 'urlBase:', urlBase);
 	                //post
 	                var request_1 = _this.requestService.newPublicRequest(urlBase, data, method);
 	                request_1.promise.then(function (result) {
@@ -2041,7 +2042,6 @@
 	        };
 	        this.processAction = function (response, request) {
 	            /** update the account and the cart */
-	            console.log('processing action');
 	            _this.account.populate(response.account);
 	            _this.account.request = request;
 	            _this.cart.populate(response.cart);
@@ -3783,6 +3783,7 @@
 	        _this.notify = function (event, parameters) {
 	            console.warn(event);
 	            event = event.toLowerCase();
+	            console.log(_this.observers);
 	            return _this.$timeout(function () {
 	                for (var id in _this.observers[event]) {
 	                    for (var _i = 0, _a = _this.observers[event][id]; _i < _a.length; _i++) {
@@ -19481,10 +19482,12 @@
 	        };
 	        this.eventsHandler = function (params) {
 	            console.log("in eventsHandler");
+	            console.log("params:", params);
+	            console.log('form name: ', _this.name);
 	            //this will call any form specific functions such as hide,show,refresh,update or whatever else you later add
 	            for (var e in params.events) {
 	                console.log("in eventsHandler for loop");
-	                if (angular.isDefined(params.events[e].value) && params.events[e].value == _this.name.toLowerCase()) {
+	                if (angular.isDefined(params.events[e].value)) {
 	                    if (params.events[e].name && _this[params.events[e].name]) {
 	                        console.log('calling ' + params.events[e].name);
 	                        console.log('with params: ', params.events[e].value);
