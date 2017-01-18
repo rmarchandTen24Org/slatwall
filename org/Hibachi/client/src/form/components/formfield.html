@@ -1,6 +1,7 @@
 <span ng-init="labelText = swFormField.labelText.replace(':','')" ></span>
 <!--drive formfield by fieldtype-->
 <span ng-init="fieldTypes = ['email','text','password','number','time','date','datetime','json']"></span>
+<label ng-if="swFormField.labelText" class="control-label">{{labelText}}</label> 
 <sw-input ng-if="fieldTypes.indexOf(swFormField.fieldType.toLowerCase()) >= 0" data-property-display="swFormField"></sw-input>
 
 <ng-switch on="swFormField.fieldType" >

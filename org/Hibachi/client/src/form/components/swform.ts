@@ -48,12 +48,8 @@ class SWFormController {
             this.isDirty = false;
         }
 
-        console.log("running constructor?!")
-        console.log(this.object);
-        console.log(this.name);
         //object can be either an instance or a string that will become an instance
         if(angular.isString(this.object)){
-            console.log("Hello??")
             var objectNameArray = this.object.split('_');
             this.entityName = objectNameArray[0];
             //if the object name array has two parts then we can infer that it is a process object
@@ -66,9 +62,7 @@ class SWFormController {
             }
             //convert the string to an object
             this.$timeout( ()=> {
-                console.log("running")
                 this.object = this.$hibachi['new'+this.object]();
-                console.log("this.object: ", this.object);
             });
         }else{
             if(this.object && this.object.metaData){
@@ -107,6 +101,7 @@ class SWFormController {
         /* handle events
         */
         if (this.onSuccess){
+            console.log("this.onSuccess exists on " + this.name)
             this.parseEventString(this.onSuccess, "onSuccess");
             observerService.attach(this.eventsHandler, "onSuccess");
 
@@ -152,6 +147,8 @@ class SWFormController {
         //
         let request = this.$rootScope.hibachiScope.doAction(action, this.formData)
         .then( (result) =>{
+            console.log("Got a result!")
+            console.log(result);
             if(this.events && this.events.events){
                 if (result.errors) {
                     this.parseErrors(result.errors);
@@ -227,10 +224,14 @@ class SWFormController {
     }
 
     public eventsHandler = (params) => {
+        console.log("in eventsHandler")
         //this will call any form specific functions such as hide,show,refresh,update or whatever else you later add
         for (var e in params.events){
+            console.log("in eventsHandler for loop")
             if ( angular.isDefined(params.events[e].value) && params.events[e].value == this.name.toLowerCase()){
                 if(params.events[e].name && this[params.events[e].name]){
+                    console.log('calling ' + params.events[e].name)
+                    console.log('with params: ', params.events[e].value)
                     this[params.events[e].name](params.events[e].value);
                 }
             }
@@ -254,7 +255,10 @@ class SWFormController {
     }
     /** updates this directive on event */
     public update  = (params) =>{
-       //stub
+        console.log('updating', params)
+       for(var key in params){
+           this[key] = params[key];
+       }
     }
     /** clears this directive on event */
     public clear  = (params) =>{

@@ -41,6 +41,10 @@ class ObserverService extends BaseService{
      * @description adds events listeners
      */
     attach = (callback:any, event:string, id?:string):void => {
+        console.log("attach called");
+        console.log("Callback: ", callback);
+        console.log("event: ", event);
+        console.log("id: ", id);
         if(!id){
             id = this.utilityService.createID();
         }

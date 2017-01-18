@@ -217,7 +217,6 @@ class PublicService {
         }
 
         if (method == "post"){
-
              data.returnJsonObjects = "cart,account";
             //post
             let request:PublicRequest = this.requestService.newPublicRequest(urlBase,data,method)
@@ -248,7 +247,7 @@ class PublicService {
 
     private processAction = (response,request:PublicRequest)=>{
         /** update the account and the cart */
-
+        console.log('processing action');
         this.account.populate(response.account);
         this.account.request = request;
         this.cart.populate(response.cart);

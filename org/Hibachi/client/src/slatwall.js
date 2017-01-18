@@ -1753,7 +1753,6 @@
 	        };
 	        this.buildPartialsPath = function (componentsPath) {
 	            if (angular.isDefined(_this.baseURL) && angular.isDefined(_this.basePartialsPath)) {
-	                console.log(_this.baseURL + ' and ' + _this.basePartialsPath);
 	                // Figure out why this isn't working then put it back!
 	                // return this.baseURL + this.basePartialsPath + componentsPath;
 	                return _this.basePartialsPath + componentsPath;
@@ -2042,6 +2041,7 @@
 	        };
 	        this.processAction = function (response, request) {
 	            /** update the account and the cart */
+	            console.log('processing action');
 	            _this.account.populate(response.account);
 	            _this.account.request = request;
 	            _this.cart.populate(response.cart);
@@ -3713,6 +3713,10 @@
 	         * @description adds events listeners
 	         */
 	        _this.attach = function (callback, event, id) {
+	            console.log("attach called");
+	            console.log("Callback: ", callback);
+	            console.log("event: ", event);
+	            console.log("id: ", id);
 	            if (!id) {
 	                id = _this.utilityService.createID();
 	            }
@@ -19412,6 +19416,8 @@
 	            //
 	            var request = _this.$rootScope.hibachiScope.doAction(action, _this.formData)
 	                .then(function (result) {
+	                console.log("Got a result!");
+	                console.log(result);
 	                if (_this.events && _this.events.events) {
 	                    if (result.errors) {
 	                        _this.parseErrors(result.errors);
@@ -19474,10 +19480,14 @@
 	            }, 0);
 	        };
 	        this.eventsHandler = function (params) {
+	            console.log("in eventsHandler");
 	            //this will call any form specific functions such as hide,show,refresh,update or whatever else you later add
 	            for (var e in params.events) {
+	                console.log("in eventsHandler for loop");
 	                if (angular.isDefined(params.events[e].value) && params.events[e].value == _this.name.toLowerCase()) {
 	                    if (params.events[e].name && _this[params.events[e].name]) {
+	                        console.log('calling ' + params.events[e].name);
+	                        console.log('with params: ', params.events[e].value);
 	                        _this[params.events[e].name](params.events[e].value);
 	                    }
 	                }
@@ -19501,7 +19511,10 @@
 	        };
 	        /** updates this directive on event */
 	        this.update = function (params) {
-	            //stub
+	            console.log('updating', params);
+	            for (var key in params) {
+	                _this[key] = params[key];
+	            }
 	        };
 	        /** clears this directive on event */
 	        this.clear = function (params) {
@@ -19538,12 +19551,8 @@
 	        if (angular.isUndefined(this.isDirty)) {
 	            this.isDirty = false;
 	        }
-	        console.log("running constructor?!");
-	        console.log(this.object);
-	        console.log(this.name);
 	        //object can be either an instance or a string that will become an instance
 	        if (angular.isString(this.object)) {
-	            console.log("Hello??");
 	            var objectNameArray = this.object.split('_');
 	            this.entityName = objectNameArray[0];
 	            //if the object name array has two parts then we can infer that it is a process object
@@ -19557,9 +19566,7 @@
 	            }
 	            //convert the string to an object
 	            this.$timeout(function () {
-	                console.log("running");
 	                _this.object = _this.$hibachi['new' + _this.object]();
-	                console.log("this.object: ", _this.object);
 	            });
 	        }
 	        else {
@@ -19597,6 +19604,7 @@
 	        /* handle events
 	        */
 	        if (this.onSuccess) {
+	            console.log("this.onSuccess exists on " + this.name);
 	            this.parseEventString(this.onSuccess, "onSuccess");
 	            observerService.attach(this.eventsHandler, "onSuccess");
 	        }
