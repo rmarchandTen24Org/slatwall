@@ -71,9 +71,11 @@
 
 						<script type="text/javascript" src="#request.slatwallScope.getBaseURL()#/admin/client/src/testbundle.js?instantiationKey=#$.slatwall.getApplicationValue('instantiationKey')#" charset="utf-8"></script>
 						<script type="text/javascript">
-						  var console_reporter = new getJasmineRequireObj().ConsoleReporter()
+						 // var console_reporter = new getJasmineRequireObj().ConsoleReporter(console.log)
 						 // jasmine.getEnv().addReporter(new getJasmineRequireObj().TrivialReporter());
-						  jasmine.getEnv().addReporter(console_reporter);
+						  //jasmine.getEnv().addReporter(console_reporter);
+						  
+						  jasmine.getEnv().addReporter(new jasmine.ConsoleReporter(console.log));
 						  jasmine.getEnv().execute();
 
 						</script>

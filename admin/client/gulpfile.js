@@ -33,7 +33,8 @@ gulp.task('runClientTests',function(){
 
 	phantomjs.run('--webdriver=4446').then(function(program) {
 		var test = program.stdout.pipe(process.stdout);
-
+		console.log(test);
+		console.log(test._hadError);
 		webdriverio.remote(wdOpts).init()
 			.url('http://cf10.slatwall/meta/tests/unit/client/specrunner.cfc?method=test')
 			.then(function(url) {
