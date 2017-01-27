@@ -50,8 +50,7 @@ test:
     - sudo chmod -R 777 meta/tests/testresults
 	
     # Connect ot SauceLabs for Integration Testing
-    - if [[ ! -z $SAUCE_USERNAME ]] ; then cd sc-*-linux && ./bin/sc --user $SAUCE_USERNAME --api-key $SAUCE_ACCESS_KEY --pidfile sc.pid --readyfile ~/sauce_is_ready --tunnel-identifier $CIRCLE_BUILD_NUM; fi:
-        background: true
+    #- if [[ ! -z $SAUCE_USERNAME ]] ; then cd sc-*-linux && ./bin/sc --user $SAUCE_USERNAME --api-key $SAUCE_ACCESS_KEY --pidfile sc.pid --readyfile ~/sauce_is_ready --tunnel-identifier $CIRCLE_BUILD_NUM; fi: background: true
 
     # Wait for Saucelabs connection
     #- if [[ ! -z $SAUCE_USERNAME ]] ; then while [ ! -e ~/sauce_is_ready ]; do sleep 1; done; fi
