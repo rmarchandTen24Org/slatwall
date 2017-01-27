@@ -4,7 +4,7 @@
  * This validate directive will look at the current element, figure out the context (save, edit, delete) and
  * validate based on that context as defined in the validation properties object.
  */
-import {SWFormController} from "./swForm";
+import {SWFormController} from "./swform";
 import {SWPropertyDisplayController} from "./swpropertydisplay";
 import {SWFPropertyDisplayController} from "./swfpropertydisplay";
 import {SWFormFieldController} from "./swformfield";
@@ -370,13 +370,13 @@ class SWInputController{
 		if (this.object && this.object.metaData && this.object.metaData.className != undefined){
  			var eventNameForUpdateBindingsID = this.object.metaData.className.split('_')[0]+this.property+'updateBindings';
  		}else{
- 			var eventNameForUpdateBindingsID = this.property+this.property+'updateBindings';
+ 			var eventNameForUpdateBindingsID = this.property+'updateBindings';
  		}
         var eventNameForPullBindings = 'pullBindings';
         if (this.object && this.object.metaData && this.object.metaData.className != undefined){
          	var eventNameForPullBindingsID = this.object.metaData.className.split('_')[0]+this.property+'pullBindings';
 		}else{
- 			var eventNameForPullBindingsID = this.property+this.property+'pullBindings';
+ 			var eventNameForPullBindingsID = this.property+'pullBindings';
  		}
 		//attach a successObserver
 		if(this.object){
