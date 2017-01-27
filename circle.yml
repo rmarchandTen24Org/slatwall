@@ -12,9 +12,9 @@ dependencies:
     - git config --global push.default current
 
     # Install node modules for building JS
-    - npm install -g webpack@1.13.3 gulp less
+    - npm install -g webpack@1.13.3 gulp less jasmine phantomjs-prebuilt
 
-    - npm install gulp gulp-inject@3 gulp-chmod@1.3.0 gulp-util run-sequence webpack@1.13.3 force-case-sensitivity-webpack-plugin strip-loader ng-annotate-webpack-plugin tsify typescript ts-loader@1.3.0 md5 blueimp-md5
+    - npm install gulp gulp-inject@3 gulp-chmod@1.3.0 gulp-util run-sequence webpack@1.13.3 force-case-sensitivity-webpack-plugin strip-loader ng-annotate-webpack-plugin tsify typescript ts-loader@1.3.0 md5 blueimp-md5 jasmine phantomjs-prebuilt webdriverio
 
     # Install awscli so that we can push builds to S3
     - pip install awscli
@@ -27,6 +27,8 @@ dependencies:
     - cd admin/client && gulp gen-ts-refs
     # Minify JS
     - cd admin/client && webpack --config webpack-production.config.js -p --display-error-details 
+    # Build JS Test bundle
+    - cd admin/client && webpack --config webpack-test-dev.config.js --display-error-details
     # Minify 
     - cd admin/client/css && lessc main.less main.css
     # Update docker-compose
@@ -48,8 +50,7 @@ test:
     - sudo chmod -R 777 meta/tests/testresults
 
     # Connect ot SauceLabs for Integration Testing
-    - if [[ ! -z $SAUCE_USERNAME ]] ; then cd sc-*-linux && ./bin/sc --user $SAUCE_USERNAME --api-key $SAUCE_ACCESS_KEY --pidfile sc.pid --readyfile ~/sauce_is_ready --tunnel-identifier $CIRCLE_BUILD_NUM; fi:
-        background: true
+    #- if [[ ! -z $SAUCE_USERNAME ]] ; then cd sc-*-linux && ./bin/sc --user $SAUCE_USERNAME --api-key $SAUCE_ACCESS_KEY --pidfile sc.pid --readyfile ~/sauce_is_ready --tunnel-identifier $CIRCLE_BUILD_NUM; fi: background: true
 
     # Wait for Saucelabs connection
     #- if [[ ! -z $SAUCE_USERNAME ]] ; then while [ ! -e ~/sauce_is_ready ]; do sleep 1; done; fi
@@ -62,7 +63,9 @@ test:
   override:
     # Run Sauce Labs Integration Admin Tests, 2 side by side at a time
     #- if [[ ! -z $SAUCE_USERNAME ]] ; then node meta/tests/integration/se-interpreter/interpreter.js --parallel=5 --listener=meta/tests/integration/se-interpreter/utils/se_sauce_junit_listener.js --listener-path=meta/tests/testresults/xml/integration meta/tests/integration/admin_config.json --silent; fi
-
+	# Run JS Unit Tests
+    #- cd admin/client && gulp runClientTests
+    - phantomjs run-jasmine.js http://cf10.slatwall/meta/tests/unit/client/specrunner.cfc\?method\=test
     # Run Unit Tests
     - sudo lxc-attach -n "$(docker inspect --format '{{.Id}}' slatwallci_slatwallweb_1)" -- ant -f /var/www/meta/tests/build.xml runUnitTests
   post:
