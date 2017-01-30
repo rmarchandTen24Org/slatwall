@@ -73,5 +73,27 @@ component extends="Slatwall.meta.tests.unit.SlatwallUnitTestBase" {
 		assert(allLowercaseFileNames,offenders);
 		
 	}
+	
+	public void function precisionEvalTest(){
+		var mathString = "(1.3 + (2 * 4)/7)writedump('test');abort;";
+		//outside of numbers, operators, and parenthesis
+		var illegalCharacterRegex = '[^\+\-\*\%\=\^\(\)\:\.\!\/0-9]+';
+		
+		mathString = replace(mathString,' ','','ALL');
+		
+		var result = REFIND(illegalCharacterRegex,mathString);
+		assert(result);
+		
+		mathString = "(1.3 + (2 * 4)/7)";
+		mathString = replace(mathString,' ','','ALL');
+		
+		result = REFIND(illegalCharacterRegex,mathString);
+		assertFalse(result);
+	}
+	
+	public void function IIFTest(){
+		var IIFValue = iif(false, de(''), de(' hide'));
+		request.debug(IIFValue);
+	}
 
 }
