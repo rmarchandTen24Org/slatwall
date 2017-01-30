@@ -75,8 +75,8 @@
 						 // jasmine.getEnv().addReporter(new getJasmineRequireObj().TrivialReporter());
 						  //jasmine.getEnv().addReporter(console_reporter);
 						  
-						  jasmine.getEnv().addReporter(new jasmine.ConsoleReporter(console.log));
-						  jasmine.getEnv().execute();
+						  //jasmine.getEnv().addReporter(new jasmine.ConsoleReporter(console.log));
+						  //jasmine.getEnv().execute();
 
 						</script>
 					</body>

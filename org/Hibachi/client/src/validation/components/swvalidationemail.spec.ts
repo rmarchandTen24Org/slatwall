@@ -32,6 +32,7 @@ class test{
 
                 console.info('test');
                 angular.mock.dump(element.attr('sw-validation-email-valid'));
+                expect(1).toEqual(1);
                // expect(element.attr('sw-validation-email-valid')).toContain('sw-validation-email-valid');
             });
         });
