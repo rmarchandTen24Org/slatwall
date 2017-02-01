@@ -561,7 +561,7 @@ component displayname="Collection" entityname="SlatwallCollection" table="SwColl
 				var comparison = "=";
 				try{
 					comparison = key.split(':')[3];
-				}catch(any e){
+				}catch(var e){
 					comparison = "=";
 				}
 				if (!isNull(comparison)){
@@ -1325,8 +1325,8 @@ component displayname="Collection" entityname="SlatwallCollection" table="SwColl
 		var groupByList = '';
 		var groupBysArray = listToArray(arguments.groupBys);
 		var groupByCount = arrayLen(groupBysArray);
-		if(groupByCount){
-			var collectionConfig = getCollectionConfigStruct();
+		var collectionConfig = getCollectionConfigStruct();
+		if(groupByCount && getApplicationValue("databaseType") != "MySQL"){
 			if(structKeyExists(collectionConfig, 'columns') && arraylen(collectionConfig.columns) > 0) {
 				for (var i = 1; i <= arraylen(collectionConfig.columns); i++) {
 					if (structKeyExists(collectionConfig.columns[i], 'aggregate')
@@ -1346,7 +1346,11 @@ component displayname="Collection" entityname="SlatwallCollection" table="SwColl
 				var orderBy = getDefaultOrderBy();
 				groupByList = listAppend(groupByList,orderBy.propertyIdentifier);
 			}
-		}
+		} else if(groupByCount) {
+			groupByList = arguments.groupBys;
+		} else {
+			return ' '; 
+		}  
 		variables.groupBys = groupByList;
 		return ' GROUP BY ' & groupByList;
 	}
@@ -1742,36 +1746,36 @@ component displayname="Collection" entityname="SlatwallCollection" table="SwColl
 			if(arguments.filter.ormtype eq 'timestamp'){
 				
 				
-				if(structKeyExists(arguments.filter, 'measureCriteria') && arguments.filter.measureCriteria == 'exactDate' && structKeyExists(arguments.filter, 'measureType')) {
+				if(structKeyExists(arguments.filter, 'measureType') && structKeyExists(arguments.filter, 'measureCriteria')) {
 
-					switch (arguments.filter.measureType) {
-						case 'd':
-							var currentdatetime = DateAdd('d', - arguments.filter.criteriaNumberOf, now());
-							var fromValue = CreateDateTime(year(currentdatetime), month(currentdatetime), day(currentdatetime), 0, 0, 0);
-							var toValue = CreateDateTime(year(currentdatetime), month(currentdatetime), day(currentdatetime), 23, 59, 59);
-							break;
-						case 'm':
-							var currentdatetime = DateAdd('m', - arguments.filter.criteriaNumberOf, now());
-							var fromValue = CreateDateTime(year(currentdatetime), month(currentdatetime), 1, 0, 0, 0);
-							var toValue = CreateDateTime(year(currentdatetime), month(currentdatetime), DaysInMonth(currentdatetime), 23, 59, 59);
-							break;
-						case 'y':
-							var currentdatetime = DateAdd('yyyy', - arguments.filter.criteriaNumberOf, now());
-							var fromValue = CreateDateTime(year(currentdatetime), 1, 1, 0, 0, 0);
-							var toValue = CreateDateTime(year(currentdatetime), 12, 31, 23, 59, 59);
-							break;
+					if (arguments.filter.measureCriteria == 'exactDate') {
+
+						switch (arguments.filter.measureType) {
+							case 'd':
+								var currentdatetime = DateAdd('d', - arguments.filter.criteriaNumberOf, now());
+								var fromValue = CreateDateTime(year(currentdatetime), month(currentdatetime), day(currentdatetime), 0, 0, 0);
+								var toValue = CreateDateTime(year(currentdatetime), month(currentdatetime), day(currentdatetime), 23, 59, 59);
+								break;
+							case 'm':
+								var currentdatetime = DateAdd('m', - arguments.filter.criteriaNumberOf, now());
+								var fromValue = CreateDateTime(year(currentdatetime), month(currentdatetime), 1, 0, 0, 0);
+								var toValue = CreateDateTime(year(currentdatetime), month(currentdatetime), DaysInMonth(currentdatetime), 23, 59, 59);
+								break;
+							case 'y':
+								var currentdatetime = DateAdd('yyyy', - arguments.filter.criteriaNumberOf, now());
+								var fromValue = CreateDateTime(year(currentdatetime), 1, 1, 0, 0, 0);
+								var toValue = CreateDateTime(year(currentdatetime), 12, 31, 23, 59, 59);
+								break;
+						}
+
+						var fromParamID = getParamID();
+						addHQLParam(fromParamID, fromValue);
+						var toParamID = getParamID();
+						addHQLParam(toParamID, toValue);
+
+						predicate = ":#fromParamID# AND :#toParamID#";
 					}
-
 				}
-
-				var fromParamID = getParamID();
-				addHQLParam(fromParamID, fromValue);
-				var toParamID = getParamID();
-				addHQLParam(toParamID, toValue);
-
-				predicate = ":#fromParamID# AND :#toParamID#";
-
-
 			}else if(listFind('integer,float,big_decimal',arguments.filter.ormtype)){
 				var ranges = listToArray(arguments.filter.value,'-');
 				if(arraylen(ranges) > 1){
@@ -2049,23 +2053,24 @@ component displayname="Collection" entityname="SlatwallCollection" table="SwColl
 				)
 			){
 				var groupBys = [];
-				//add a group by for all selects that are not aggregates
-				for(var column in collectionConfig.columns){
-					if(!structKeyExists(column,'aggregate') && !structKeyExists(column,'persistent')){
-						arrayAppend(groupBys,column.propertyIdentifier);
+				//add a group by for all selects that are not aggregates if the db is not mysql
+				if(getApplicationValue("DatabaseType") != "MySQL"){
+					for(var column in collectionConfig.columns){
+						if(!structKeyExists(column,'aggregate') && !structKeyExists(column,'persistent')){
+							arrayAppend(groupBys,column.propertyIdentifier);
+						}
 					}
-				}
 
-				if(!structKeyExists(collectionConfig,'orderBy') || !arrayLen(collectionConfig.orderBy)){
-					arrayAppend(groupBys,'_' & lcase(getService('hibachiService').getProperlyCasedShortEntityName(getCollectionObject())) & '.' & "createdDateTime");
-				}else{
-					//add a group by for all order bys
-					for(var orderBy in collectionConfig.orderBy){
-						arrayAppend(groupBys,orderBy.propertyIdentifier);
+					if(!structKeyExists(collectionConfig,'orderBy') || !arrayLen(collectionConfig.orderBy)){
+						arrayAppend(groupBys,'_' & lcase(getService('hibachiService').getProperlyCasedShortEntityName(getCollectionObject())) & '.' & "createdDateTime");
+					}else{
+						//add a group by for all order bys
+						for(var orderBy in collectionConfig.orderBy){
+							arrayAppend(groupBys,orderBy.propertyIdentifier);
+						}
 					}
-				}
-				collectionConfig.groupBys = arrayToList(groupBys);
-
+					collectionConfig.groupBys = arrayToList(groupBys);
+				} 
 			}
 
 			//where clauses are actually the collection of all parent/child where clauses
@@ -2103,7 +2108,7 @@ component displayname="Collection" entityname="SlatwallCollection" table="SwColl
 				joins = collectionConfig.joins;
 			}
 
-			if(structKeyExists(collectionConfig,'groupBys')){
+			if(structKeyExists(collectionConfig,'groupBys') && len(collectionConfig.groupBys) > 0){
 				groupByHQL = getGroupByHQL(collectionConfig.groupBys);
 			}
 
