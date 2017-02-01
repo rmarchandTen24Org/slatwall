@@ -224,7 +224,7 @@ component displayname="Order" entityname="SlatwallOrder" table="SwOrder" persist
 	public struct function getAddPaymentRequirementDetails() {
 		if(!structKeyExists(variables, "addPaymentRequirementDetails")) {
 			variables.addPaymentRequirementDetails = {};
-			var requiredAmount = precisionEvaluate(getTotal() - getPaymentAmountTotal());
+			var requiredAmount = javacast('bigdecimal',getTotal()).subtract(javacast('bigdecimal',getPaymentAmountTotal()));
 
 			if(requiredAmount > 0) {
 				variables.addPaymentRequirementDetails.amount = requiredAmount;
@@ -469,13 +469,16 @@ component displayname="Order" entityname="SlatwallOrder" table="SwOrder" persist
 
 				if(orderItem.getQuantityDelivered()) {
 
-					variables.deliveredItemsAmountTotal = precisionEvaluate(variables.deliveredItemsAmountTotal + ((orderItem.getQuantityDelivered() / orderItem.getQuantity()) * orderItem.getItemTotal()));
+					variables.deliveredItemsAmountTotal = javacast('bigdecimal',variables.deliveredItemsAmountTotal).add(
+						javacast('bigdecimal',orderItem.getQuantityDelivered()).divide(javacast('bigdecimal',orderItem.getQuantity()))
+						.multiply(javacast('bigdecimal',orderItem.getItemTotal()))
+					);
 
 					if(!listFindNoCase(fulfillmentChargeAddedList, orderItem.getOrderFulfillment().getOrderFulfillmentID())) {
 
 						listAppend(fulfillmentChargeAddedList, orderItem.getOrderFulfillment().getOrderFulfillmentID());
 
-						variables.deliveredItemsAmountTotal = precisionEvaluate(variables.deliveredItemsAmountTotal + orderItem.getOrderFulfillment().getChargeAfterDiscount());
+						variables.deliveredItemsAmountTotal = javacast('bigdecimal',variables.deliveredItemsAmountTotal).add(javacast('bigdecimal',orderItem.getOrderFulfillment().getChargeAfterDiscount()));
 					}
 				}
 			}
@@ -484,7 +487,7 @@ component displayname="Order" entityname="SlatwallOrder" table="SwOrder" persist
 	}
 
 	public numeric function getDiscountTotal() {
-		return precisionEvaluate(getItemDiscountAmountTotal() + getFulfillmentDiscountAmountTotal() + getOrderDiscountAmountTotal());
+		return javacast('bigdecimal',getItemDiscountAmountTotal()).add(javacast('bigdecimal',getFulfillmentDiscountAmountTotal())).add('bigdecimal',getOrderDiscountAmountTotal());
 
 	}
 
@@ -500,9 +503,9 @@ component displayname="Order" entityname="SlatwallOrder" table="SwOrder" persist
 		var orderItems = getRootOrderItems(); 
 		for(var i=1; i<=arrayLen(orderItems); i++) {
 			if( listFindNoCase("oitSale,oitDeposit",orderItems[i].getTypeCode()) ) {
-				discountTotal = precisionEvaluate(discountTotal + orderItems[i].getDiscountAmount());
+				discountTotal = javacast('bigdecimal',discountTotal).add(javacast('bigdecimal',orderItems[i].getDiscountAmount()));
 			} else if ( orderItems[i].getTypeCode() == "oitReturn" ) {
-				discountTotal = precisionEvaluate(discountTotal - orderItems[i].getDiscountAmount());
+				discountTotal = javacast('bigdecimal',discountTotal).subtract(javacast('bigdecimal',orderItems[i].getDiscountAmount()));
 			} else {
 				throw("there was an issue calculating the itemDiscountAmountTotal because of a orderItemType associated with one of the items");
 			}
