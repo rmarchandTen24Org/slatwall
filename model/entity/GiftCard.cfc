@@ -117,9 +117,9 @@ component displayname="Gift Card" entityname="SlatwallGiftCard" table="SwGiftCar
 		var balance = 0;
 		for(var transaction in transactions){
 			if(!isNull(transaction.getCreditAmount())){
-				balance = precisionEvaluate(balance + transaction.getCreditAmount());
+				balance = javacast('bigdecimal',balance).add(javacast('bigdecimal',transaction.getCreditAmount()));
 			} else if(!isNull(transaction.getDebitAmount())){
-				balance = precisionEvaluate(balance - transaction.getDebitAmount());
+				balance = javacast('bigdecimal',balance).subtract(javacast('bigdecimal',transaction.getDebitAmount()));
 			}
 		}
 		return balance;
