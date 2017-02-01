@@ -290,7 +290,7 @@ component displayname="Account" entityname="SlatwallAccount" table="SwAccount" p
 	public numeric function getTermAccountAvailableCredit() {
 		var termAccountAvailableCredit = setting('accountTermCreditLimit');
 
-		termAccountAvailableCredit = precisionEvaluate(termAccountAvailableCredit - getTermAccountBalance());
+		termAccountAvailableCredit = javacast('bigdecimal',termAccountAvailableCredit).subtract(javacast('bigdecimal',getTermAccountBalance()));
 
 		return termAccountAvailableCredit;
 	}
@@ -301,13 +301,13 @@ component displayname="Account" entityname="SlatwallAccount" table="SwAccount" p
 		// First look at all the unreceived open order payment
 		for(var termAccountOrderPayment in getTermAccountOrderPayments()) {
 			if(!termAccountOrderPayment.getNewFlag()){
-				termAccountBalance = precisionEvaluate(termAccountBalance + termAccountOrderPayment.getAmountUnreceived());
+				termAccountBalance = javacast('bigdecimal',termAccountBalance).add(javacast('bigdecimal',termAccountOrderPayment.getAmountUnreceived()));
 			}
 		}
 
 		// Now look for the unassigned payment amount
 		for(var accountPayment in getAccountPayments()) {
-			termAccountBalance = precisionEvaluate(termAccountBalance - accountPayment.getAmountUnassigned());
+			termAccountBalance = javacast('bigdecimal',termAccountBalance).subtract(javacast('bigdecimal',accountPayment.getAmountUnassigned()));
 		}
 
 		return termAccountBalance;

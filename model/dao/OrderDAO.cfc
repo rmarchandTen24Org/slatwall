@@ -150,7 +150,7 @@ Notes:
 	</cffunction>
 
 	<cffunction name="getGiftCardOrderPaymentAmountReceived">
-        <cfargument name="orderID" required="true"> 
+        <cfargument name="orderID" required="true">
 
         <cfquery name="local.giftCardOrderPaymentAmountReceived">
             SELECT SUM(pt.amountReceived) amountReceived FROM SwPaymentTransaction pt
@@ -163,11 +163,11 @@ Notes:
         </cfquery>
         <cfif local.giftCardOrderPaymentAmountReceived.amountReceived[1] eq "">
             <cfreturn 0 />
-        </cfif> 
-        <cfreturn local.giftCardOrderPaymentAmountReceived.amountReceived[1] /> 
+        </cfif>
+        <cfreturn local.giftCardOrderPaymentAmountReceived.amountReceived[1] />
 
 	</cffunction>
-	
+
 	<cffunction name="getOrderPaymentNonNullAmountTotal" access="public" returntype="numeric" output="false">
 		<cfargument name="orderID" type="string" required="true" />
 
@@ -192,9 +192,9 @@ Notes:
 
 		<cfloop query="rs">
 			<cfif rs.systemCode eq "optCharge">
-				<cfset total = precisionEvaluate(total + rs.amount) />
+				<cfset total = javacast('bigdecimal',total).add(javacast('bigdecimal',rs.amount)) />
 			<cfelse>
-				<cfset total = precisionEvaluate(total - rs.amount) />
+				<cfset total = javacast('bigdecimal',total).subtract(javacast('bigdecimal',rs.amount)) />
 			</cfif>
 		</cfloop>
 

@@ -47,16 +47,18 @@ Notes:
 
 */
 component extends="Slatwall.meta.tests.unit.SlatwallUnitTestBase" {
-
 	public void function setUp() {
 		super.setup();
 		
-		variables.service = request.slatwallScope.getBean("shippingService");
-		variables.integrationService = request.slatwallScope.getBean("integrationService");
+		variables.transient = request.slatwallScope.getBean("ShippingRequestBean");
 	}
 	
-	public void function calculateShippingRateAdjustmentTest(){
-		
+	// getEntity()
+	public void function getTotalWeightTest() {
+//		var shippingItemRequestBean = request.slatwallScope.getBean("ShippingItemRequestBean");
+//		shippingItemRequestBean.setQuantity(5);
+//		variables.transient.
+//		request.debug(variables.transient.getTotalWeight());
 	}
 	
 }

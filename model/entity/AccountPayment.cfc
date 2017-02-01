@@ -228,7 +228,7 @@ component displayname="Account Payment" entityname="SlatwallAccountPayment" tabl
 		var totalAmt = 0;
 		
 		for(var i=1; i<=arrayLen(getAppliedAccountPayments()); i++) {
-			totalAmt = precisionEvaluate(totalAmt + getAppliedAccountPayments()[i].getAmount());
+			totalAmt = javacast('bigdecimal',totalAmt).add(javacast('bigdecimal',getAppliedAccountPayments()[i].getAmount()));
 		}
 		
 		return totalAmt;
@@ -241,7 +241,7 @@ component displayname="Account Payment" entityname="SlatwallAccountPayment" tabl
 		if( getAccountPaymentType().getSystemCode() == "aptCharge" ) {
 			
 			for(var i=1; i<=arrayLen(getPaymentTransactions()); i++) {
-				amountReceived = precisionEvaluate(amountReceived + getPaymentTransactions()[i].getAmountReceived());
+				amountReceived = javacast('bigdecimal',amountReceived).add(javacast('bigdecimal',getPaymentTransactions()[i].getAmountReceived()));
 			}
 			
 		}
@@ -256,7 +256,7 @@ component displayname="Account Payment" entityname="SlatwallAccountPayment" tabl
 		if( getAccountPaymentType().getSystemCode() == "aptCredit" ) {
 			
 			for(var i=1; i<=arrayLen(getPaymentTransactions()); i++) {
-				amountCredited = precisionEvaluate(amountCredited + getPaymentTransactions()[i].getAmountCredited());
+				amountCredited = javacast('bigdecimal',amountCredited).add(javacast('bigdecimal',getPaymentTransactions()[i].getAmountCredited()));
 			}
 			
 		}
@@ -271,7 +271,7 @@ component displayname="Account Payment" entityname="SlatwallAccountPayment" tabl
 		if( getAccountPaymentType().getSystemCode() == "aptCharge" ) {
 			for(var i=1; i<=arrayLen(getPaymentTransactions()); i++) {
 				if(isNull(getPaymentTransactions()[i].getAuthorizationCodeInvalidFlag()) || !getPaymentTransactions()[i].getAuthorizationCodeInvalidFlag()) {
-					amountAuthorized = precisionEvaluate(amountAuthorized + getPaymentTransactions()[i].getAmountAuthorized());
+					amountAuthorized = javacast('bigdecimal',amountAuthorized).add(javacast('bigdecimal',getPaymentTransactions()[i].getAmountAuthorized()));
 				}
 			}
 		}
@@ -282,8 +282,8 @@ component displayname="Account Payment" entityname="SlatwallAccountPayment" tabl
 	public numeric function getAmountUnauthorized() {
 		var unauthroized = 0;
 		
-		if ( getOrderPaymentType().getSystemCode() == "optCharge" ) {
-			unauthroized = precisionEvaluate(getAmount() - getAmountReceived() - getAmountAuthorized());
+		if ( getAccountPaymentType().getSystemCode() == "optCharge" ) {
+			unauthroized = javacast('bigdecimal',getAmount()).subtract(javacast('bigdecimal',getAmountReceived())).subtract(javacast('bigdecimal',getAmountAuthorized()));
 		}
 		
 		return unauthroized;
@@ -292,8 +292,8 @@ component displayname="Account Payment" entityname="SlatwallAccountPayment" tabl
 	public numeric function getAmountUncaptured() {
 		var uncaptured = 0;
 		
-		if ( getOrderPaymentType().getSystemCode() == "optCharge" ) {
-			uncaptured = precisionEvaluate(getAmountAuthorized() - getAmountReceived());
+		if ( getAccountPaymentType().getSystemCode() == "optCharge" ) {
+			uncaptured = javacast('bigdecimal',getAmountAuthorized()).subtract(javacast('bigdecimal',getAmountReceived()));
 		}
 		
 		return uncaptured;
@@ -302,8 +302,8 @@ component displayname="Account Payment" entityname="SlatwallAccountPayment" tabl
 	public numeric function getAmountUnreceived() {
 		var unreceived = 0;
 		
-		if ( getOrderPaymentType().getSystemCode() == "optCharge" ) {
-			unreceived = precisionEvaluate(getAmount() - getAmountReceived());
+		if ( getAccountPaymentType().getSystemCode() == "optCharge" ) {
+			unreceived = javacast('bigdecimal',getAmount()).subtract(javacast('bigdecimal',getAmountReceived()));
 		}
 		
 		return unreceived;
@@ -312,8 +312,8 @@ component displayname="Account Payment" entityname="SlatwallAccountPayment" tabl
 	public numeric function getAmountUncredited() {
 		var uncredited = 0;
 		
-		if ( getOrderPaymentType().getSystemCode() == "optCredit" ) {
-			uncredited = precisionEvaluate(getAmount() - getAmountCredited());
+		if ( getAccountPaymentType().getSystemCode() == "optCredit" ) {
+			uncredited = javacast('bigdecimal',getAmount()).subtract(javacast('bigdecimal',getAmountCredited()));
 		}
 		
 		return uncredited;
@@ -326,12 +326,12 @@ component displayname="Account Payment" entityname="SlatwallAccountPayment" tabl
 			if(isNull(accountPaymentApplied.getOrderPayment())) {
 				if(accountPaymentApplied.getAccountPaymentType().getSystemCode() == "aptCharge") {
 					if(getAmountReceived()>0){
-						amountUnassigned = precisionEvaluate(amountUnassigned + accountPaymentApplied.getAmount());
+						amountUnassigned = javacast('bigdecimal',amountUnassigned).add(javacast('bigdecimal',accountPaymentApplied.getAmount()));
 					}
 							
 				} else {
 					if(getAMountCredited() > 0){
-						amountUnassigned = precisionEvaluate(amountUnassigned - accountPaymentApplied.getAmount());	
+						amountUnassigned = javacast('bigdecimal',amountUnassigned).subtract(javacast('bigdecimal',accountPaymentApplied.getAmount()));	
 					}
 				}
 			}
