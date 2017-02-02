@@ -679,7 +679,7 @@ component displayname="Order" entityname="SlatwallOrder" table="SwOrder" persist
 
 	public any function getDynamicChargeOrderPaymentAmount() {
 		var nonNullPayments = getOrderService().getOrderPaymentNonNullAmountTotal(orderID=getOrderID());
-		var orderPaymentAmountNeeded = precisionEvaluate(getTotal() - nonNullPayments);
+		var orderPaymentAmountNeeded = javacast('bigdecimal',getTotal()).subtract(javacast('bigdecimal',nonNullPayments));
 
 		if(orderPaymentAmountNeeded gt 0) {
 			return orderPaymentAmountNeeded;

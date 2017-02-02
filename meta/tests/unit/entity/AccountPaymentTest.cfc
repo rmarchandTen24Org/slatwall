@@ -130,7 +130,7 @@ component extends="Slatwall.meta.tests.unit.entity.SlatwallEntityTestBase" {
 		};
 		var PaymentTransaction2 = createPersistedTestEntity('PaymentTransaction',PaymentTransactionData2);
 		
-		assert(8.5573,accountPayment.getAmountReceived());
+		assertEquals(8.5573,accountPayment.getAmountReceived());
 	}
 	
 	public void function getAmountCreditedTest(){
@@ -162,7 +162,7 @@ component extends="Slatwall.meta.tests.unit.entity.SlatwallEntityTestBase" {
 		};
 		var PaymentTransaction2 = createPersistedTestEntity('PaymentTransaction',PaymentTransactionData2);
 		
-		assert(8.5573,accountPayment.getAmountCredited());
+		assertEquals(8.5573,accountPayment.getAmountCredited());
 	}
 	
 	public void function getAmountAuthorizedTest(){
@@ -194,7 +194,7 @@ component extends="Slatwall.meta.tests.unit.entity.SlatwallEntityTestBase" {
 		};
 		var PaymentTransaction2 = createPersistedTestEntity('PaymentTransaction',PaymentTransactionData2);
 		
-		assert(8.5573,accountPayment.getAmountAuthorized());
+		assertEquals(8.5573,accountPayment.getAmountAuthorized());
 	}
 	
 //	public void function getAmountUnassignedTest(){

@@ -246,13 +246,13 @@ component displayname="Order Fulfillment" entityname="SlatwallOrderFulfillment" 
 	}
 
 	public numeric function getChargeAfterDiscount() {
-		return precisionEvaluate(getFulfillmentCharge() - getDiscountAmount());
+		return javacast('bigdecimal',getFulfillmentCharge()).subtract(javacast('bigdecimal',getDiscountAmount()));
 	}
 
 	public numeric function getDiscountAmount() {
 		discountAmount = 0;
 		for(var i=1; i<=arrayLen(getAppliedPromotions()); i++) {
-			discountAmount = precisionEvaluate(discountAmount + getAppliedPromotions()[i].getDiscountAmount());
+			discountAmount = javacast('bigdecimal',discountAmount).add(javacast('bigdecimal',getAppliedPromotions()[i].getDiscountAmount()));
 		}
 		return discountAmount;
 	}
@@ -262,14 +262,14 @@ component displayname="Order Fulfillment" entityname="SlatwallOrderFulfillment" 
 	}
 
     public numeric function getFulfillmentTotal() {
-    	return precisionEvaluate(getSubtotalAfterDiscountsWithTax() + getChargeAfterDiscount());
+    	return javacast('bigdecimal',getSubtotalAfterDiscountsWithTax()).add(javacast('bigdecimal',getChargeAfterDiscount()));
     }
 
    	public numeric function getItemDiscountAmountTotal() {
    		if(!structKeyExists(variables, "itemDiscountAmountTotal")) {
    			variables.itemDiscountAmountTotal = 0;
    			for(var i=1; i<=arrayLen(getOrderFulfillmentItems()); i++) {
-				variables.itemDiscountAmountTotal = precisionEvaluate(variables.itemDiscountAmountTotal + getOrderFulfillmentItems()[i].getDiscountAmount());
+				variables.itemDiscountAmountTotal = javacast('bigdecimal',variables.itemDiscountAmountTotal).add(javacast('bigdecimal',getOrderFulfillmentItems()[i].getDiscountAmount()));
 			}
    		}
 		return variables.itemDiscountAmountTotal;
@@ -464,7 +464,7 @@ component displayname="Order Fulfillment" entityname="SlatwallOrderFulfillment" 
 	    	variables.subtotal = 0;
 	    	for( var i=1; i<=arrayLen(getOrderFulfillmentItems()); i++ ) {
 				if(getOrderFulfillmentItems()[i].isRootOrderItem()){
-				    variables.subtotal = precisionEvaluate(variables.subtotal + getOrderFulfillmentItems()[i].getExtendedPrice());	    	
+				    variables.subtotal = javacast('bigdecimal',variables.subtotal).add(javacast('bigdecimal',getOrderFulfillmentItems()[i].getExtendedPrice()));	    	
 	    		}
 	    	}
   		}
@@ -472,18 +472,18 @@ component displayname="Order Fulfillment" entityname="SlatwallOrderFulfillment" 
     }
 
     public numeric function getSubtotalAfterDiscounts() {
-    	return precisionEvaluate(getSubtotal() - getItemDiscountAmountTotal());
+    	return javacast('bigdecimal',getSubtotal()).subtract(javacast('bigdecimal',getItemDiscountAmountTotal()));
     }
 
     public numeric function getSubtotalAfterDiscountsWithTax() {
-    	return precisionEvaluate(getSubtotal() - getItemDiscountAmountTotal() + getTaxAmount());
+    	return javacast('bigdecimal',getSubtotal()).subtract(javacast('bigdecimal',getItemDiscountAmountTotal())).add(javacast('bigdecimal',getTaxAmount()));
     }
 
     public numeric function getTaxAmount() {
     	if( !structkeyExists(variables, "taxAmount") ) {
     		variables.taxAmount = 0;
 	    	for( var i=1; i<=arrayLen(getOrderFulfillmentItems()); i++ ) {
-	    		variables.taxAmount = precisionEvaluate(variables.taxAmount + getOrderFulfillmentItems()[i].getTaxAmount());
+	    		variables.taxAmount = javacast('bigdecimal',variables.taxAmount).add(javacast('bigdecimal',getOrderFulfillmentItems()[i].getTaxAmount()));
 	    	}
     	}
     	return variables.taxAmount;
@@ -494,7 +494,7 @@ component displayname="Order Fulfillment" entityname="SlatwallOrderFulfillment" 
 
     	for( var orderItem in getOrderFulfillmentItems()) {
     		var convertedWeight = getService("measurementService").convertWeightToGlobalWeightUnit(orderItem.getSku().setting('skuShippingWeight'), orderItem.getSku().setting('skuShippingWeightUnitCode'));
-    		totalShippingWeight = precisionEvaluate(totalShippingWeight + (convertedWeight * orderItem.getQuantity()));
+    		totalShippingWeight = javacast('bigdecimal',totalShippingWeight).add(javacast('bigdecimal',convertedWeight).multiply(javacast('bigdecimal',orderItem.getQuantity())));
     	}
 
     	return totalShippingWeight;
@@ -507,7 +507,7 @@ component displayname="Order Fulfillment" entityname="SlatwallOrderFulfillment" 
     				  		|| (
 		    				  	!isNull(this.getFulfillmentMethod())
 		    				  	&& this.getFulfillmentMethod().setting('fulfillmentMethodAutoMinReceivedPercentage')
-		    						<= precisionEvaluate( this.getOrder().getPaymentAmountReceivedTotal() * 100 / this.getOrder().getTotal() )
+		    						<= javacast('bigdecimal', this.getOrder().getPaymentAmountReceivedTotal()).multiply(javacast('bigdecimal',100)).divide(javacast('bigdecimal',this.getOrder().getTotal()))
 		    				)
     				  )
     			);

@@ -425,9 +425,17 @@ Notes:
 			<cfif orderItemDiscountsQuery.salePriceDiscountType EQ "amount">
 				<cfset querySetCell(orderItemDiscountsQuery, "salePrice", orderItemDiscountsQuery.amount, orderItemDiscountsQuery.currentRow )  >
 			<cfelseif orderItemDiscountsQuery.salePriceDiscountType EQ "amountOff">
-				<cfset querySetCell(orderItemDiscountsQuery, "salePrice", precisionEvaluate(orderItemDiscountsQuery.originalPrice - orderItemDiscountsQuery.amount), orderItemDiscountsQuery.currentRow )>
+				<cfset var value = javacast('bigdecimal',orderItemDiscountsQuery.originalPrice).subtract(javacast('bigdecimal', orderItemDiscountsQuery.amount)) />
+				<cfset querySetCell(orderItemDiscountsQuery, "salePrice", value, orderItemDiscountsQuery.currentRow )>
 			<cfelseif orderItemDiscountsQuery.salePriceDiscountType EQ "percentageOff" >
-				<cfset querySetCell(orderItemDiscountsQuery, "salePrice", precisionEvaluate(orderItemDiscountsQuery.originalPrice - ( orderItemDiscountsQuery.originalPrice * (round(orderItemDiscountsQuery.amount / 100)*100)/100)), orderItemDiscountsQuery.currentRow )>
+				<cfset var value = 
+					javacast('bigdecimal',orderItemDiscountsQuery.originalPrice).subtract( 
+						javacast('bigdecimal',orderItemDiscountsQuery.originalPrice).multiply(
+							javacast('bigdecimal',round(javacast('bigdecimal',orderItemDiscountsQuery.amount).divide(javacast('bigdecimal',100)))).multiply(javacast('bigdecimal',100))
+						).divide(javacast('bigdecimal',100))
+					)
+				/>
+				<cfset querySetCell(orderItemDiscountsQuery, "salePrice", value, orderItemDiscountsQuery.currentRow )>
 			</cfif>
 		</cfloop>
 
