@@ -20,7 +20,7 @@ describe('AlertController',()=>{
         });
 
         it('addAlerts test',()=>{
-            expect($scope.alerts.length).toBe(2);
+            expect($scope.alerts.length).toBe(0);
         });
     });
 
