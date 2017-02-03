@@ -57,6 +57,18 @@ page.onConsoleMessage = function(msg) {
     }
 };
 
+page.onError = function(msg, trace) {
+  // never display errors
+   var msgStack = ['SITE ERROR: ' + msg];
+  if (trace && trace.length) {
+    msgStack.push('TRACE:');
+    trace.forEach(function(t) {
+      msgStack.push(' -> ' + (t.file || t.sourceURL) + ': ' + t.line + (t.function ? ' (in function ' + t.function +')' : ''));
+    });
+  }
+  console.error(msgStack.join('\n'));
+}
+
 page.open(system.args[1], function(status){
     if (status !== "success") {
         console.log("Unable to open " + system.args[1]);

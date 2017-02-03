@@ -40,6 +40,7 @@
 						<cfif structKeyExists(url,'phantomJS')>
 							<script src="/node_modules/jasmine-core/lib/jasmine-core/jasmine-html.js"></script>
 							<script type="text/javascript" src="/node_modules/jasmine-core/lib/console/console.js"></script>
+
 						<cfelse>
 							<script src="/node_modules/jasmine-core/lib/jasmine-core/jasmine-html.js"></script>
 						</cfif>
@@ -74,11 +75,21 @@
 						 // var console_reporter = new getJasmineRequireObj().ConsoleReporter(console.log)
 						 // jasmine.getEnv().addReporter(new getJasmineRequireObj().TrivialReporter());
 						  //jasmine.getEnv().addReporter(console_reporter);
-						  
+
 						  //jasmine.getEnv().addReporter(new jasmine.ConsoleReporter(console.log));
 						  //jasmine.getEnv().execute();
 
 						</script>
+						<script type="text/javascript">
+							var ConsoleReporter = jasmineRequire.ConsoleReporter();
+							var options = {
+								timer: new jasmine.Timer,
+								print: function () {
+										console.log.apply(console,arguments)
+							}};
+							consoleReporter = new ConsoleReporter(options); // initialize ConsoleReporter
+							jasmine.getEnv().addReporter(consoleReporter);
+							</script>
 					</body>
 				</html>
 			</cfoutput>
@@ -86,6 +97,7 @@
 		<cfscript>
 			writeoutput(local.specrunnerOutput);abort;
 		</cfscript>
+
 	</cffunction>
 
 </cfcomponent>
