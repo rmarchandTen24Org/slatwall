@@ -405,6 +405,7 @@
 	
 			if ( entityName.matches( '(?i).+by.+' ) ) {
 				var tokens = entityName.split( '(?i)by', 2 );
+				request.debug(tokens);
 				entityName = tokens[ 1 ];
 				if( tokens[ 2 ].matches( '.+AND.+' ) ) {
 					tokens = tokens[ 2 ].split( 'AND' );
@@ -412,6 +413,7 @@
 					for(var i = 1; i <= arrayLen(tokens); i++) {
 						filter[ tokens[ i ] ] = missingMethodArguments[ 1 ][ i ];
 					}
+					request.debug(filter);
 					return get( entityName, filter, isReturnNewOnNotFound );
 				} else {
 					var filter = { '#tokens[ 2 ]#' = missingMethodArguments[ 1 ] };

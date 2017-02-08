@@ -48,52 +48,16 @@ Notes:
 */
 component extends="Slatwall.meta.tests.unit.SlatwallUnitTestBase" {
 
+
 	public void function setUp() {
 		super.setup();
 		
-		variables.service = request.slatwallScope.getService("hibachiCacheService");
+		variables.dao = request.slatwallScope.getDAO("hibachiCacheDAO");
 	}
 	
-	// hasCachedValue()
-	public void function hasCachedValue_returns_false() {
-		assertFalse( variables.service.hasCachedValue("test-cache-key-never-set") );
+	public void function getServerCacheExpiredTest_whennull(){
+		//request.debug(request.slatwallScope.getService('hibachiCacheService').getServerCacheByServerCacheKeyAndServerCacheIPAddress('test','test','test'));
+		//var test = isNull(request.slatwallScope.getService('hibachiCacheService').getServerCacheByServerCacheKeyANDServerCacheIPAddress('test','test'));
+//		request.debug(isNull(test));
 	}
-	
-	public void function hasCachedValue_returns_true_if_exists() {
-		variables.service.setCachedValue("test-cache-key-set", "valid-value");
-		assert( variables.service.hasCachedValue("test-cache-key-set") );
-	}
-	
-	// getCachedValue()
-	public void function getCachedValue_returns_null_when_not_exists() {
-		assert( isNull(variables.service.getCachedValue('test-cache-key-never-set')) );
-	}
-	
-	public void function getCachedValue_returns_correct_value_when_set() {
-		variables.service.setCachedValue("test-cache-key-set", "valid-value");
-		assert( variables.service.getCachedValue('test-cache-key-set') eq "valid-value" );
-	}
-	
-	// resetCachedKey()
-	public void function resetCachedKey_makes_hasCacheValue_false() {
-		variables.service.setCachedValue("test-cache-key-set", "valid-value");
-		variables.service.resetCachedKey('test-cache-key-set');
-		assertFalse( variables.service.hasCachedValue("test-cache-key-set") );
-	}
-	
-	public void function resetCachedKey_makes_getCacheValue_return_value() {
-		variables.service.setCachedValue("test-cache-key-set", "valid-value");
-		variables.service.resetCachedKey('test-cache-key-set');
-		assertFalse(variables.service.hasCachedValue('test-cache-key-set'));
-		assert( variables.service.getCachedValue('test-cache-key-set') eq "valid-value" );
-	}
-	
-	public void function test(){
-//		makepublic(variables.service,'getFullIPAddressForServer');
-//		request.debug(CGI);
-//		request.debug(variables.service.getFullIPAddressForServer());
-	}
-	
 }
-
-

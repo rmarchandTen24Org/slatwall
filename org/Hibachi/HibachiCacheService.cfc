@@ -22,8 +22,17 @@ component accessors="true" output="false" extends="HibachiService" {
 
 	public any function hasCachedValue( required string key ) {
 		// If using the internal cache, then check there
-		if( getInternalCacheFlag() && structKeyExists(getCache(), arguments.key) && structKeyExists(getCache()[ arguments.key ], "reset") && !getCache()[ arguments.key ].reset ) {
-			return true;
+		if( getInternalCacheFlag() 
+		) {
+			//check db to see if cache is invalid
+			
+			if(
+				structKeyExists(getCache(), arguments.key) 
+				&& structKeyExists(getCache()[ arguments.key ], "reset") 
+				&& !getCache()[ arguments.key ].reset 
+			){
+				return true;				
+			}
 			
 		// If using the external cache, then check there
 		} else if ( !getInternalCacheFlag() && getRailoFlag() && cacheKeyExists(arguments.key) ) {
@@ -42,6 +51,10 @@ component accessors="true" output="false" extends="HibachiService" {
 		
 		// By default return false
 		return false;
+	}
+	
+	private any function getFullIPAddressForServer(){
+		return CGI.REMOTE_HOST&':'&CGI.SERVER_PORT;
 	}
 	
 	public any function getCachedValue( required string key ) {
