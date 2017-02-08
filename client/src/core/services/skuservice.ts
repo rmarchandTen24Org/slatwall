@@ -2,7 +2,7 @@
 /// <reference path='../../../typings/tsd.d.ts' />
 
 import {BaseEntityService} from "./baseentityservice";
-class OrderService extends BaseEntityService{
+class SkuService extends BaseEntityService{
     public entity:any;
 
     //@ngInject
@@ -11,13 +11,10 @@ class OrderService extends BaseEntityService{
         public $hibachi,
         public utilityService
     ){
-        super($injector,$hibachi,utilityService,'Order');
+        super($injector,$hibachi,utilityService,'Sku');
     }
 
-    public newOrder_AddOrderPayment = ()=>{
-        return this.newProcessObject('Order_AddOrderPayment');
-    }
 }
 export {
-    OrderService
+    SkuService
 }
