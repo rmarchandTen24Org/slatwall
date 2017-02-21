@@ -106,6 +106,16 @@ component extends="Slatwall.meta.tests.unit.SlatwallUnitTestBase" {
 		assertFalse(hasUnscopedVars);
 	}
 	
+	public void function cflintTest(){
+		var jarArray = [
+			ExpandPath("/Slatwall/meta/cflint/CFLint-1.0.0-all.jar")
+		];
+		var classLoader = CreateObject("component", "Slatwall.meta.cflint.javaloader.JavaLoader").init(jarArray);
+		var cflintMain = classLoader.create("com.cflint.main.CFLintMain");
+		cflintMain.main(["-folder","#expandPath('/Slatwall')#/model/entity/App.cfc","-jsonfile","test.json"]);
+		request.debug(cflintMain.folder);
+	}
+	
 	
 
 //	private void function processDirectory(required string startingDirectory, string recursive=false){

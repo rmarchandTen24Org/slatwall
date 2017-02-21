@@ -1,0 +1,436 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<title>CFLint Report</title>
+<style type="text/css">
+		.tablerow0 {
+			background: #EEEEEE;
+		}
+
+		.tablerow1 {
+			background: white;
+		}
+
+		.detailrow0 {
+			background: #EEEEEE;
+		}
+
+		.detailrow1 {
+			background: white;
+		}
+
+		.tableheader {
+			background: #b9b9fe;
+			font-size: larger;
+		}
+		</style>
+</head>
+<body>
+<h1>CFLint Report</h1>
+<p>Produced using <a href="https://github.com/ryaneberly/CFLint">CFLint</a>1.0.0.</p>
+<p>Project: 
+			</p>
+<h2>Metrics</h2>
+<h2>Summary</h2>
+<table width="500" cellpadding="5" cellspacing="2">
+<tr class="tableheader">
+<th align="left">Warning Type</th>
+<th align="right">Number</th>
+</tr>
+<tr class="tablerow0">
+<td>
+<a href="#Warnings_CFLint">CFLint Warnings</a>
+</td>
+<td align="right">19</td>
+</tr>
+<tr class="tablerow1">
+<td>
+<b>Total</b>
+</td>
+<td align="right">
+<b>19</b>
+</td>
+</tr>
+</table>
+<p>
+<br/>
+<br/>
+</p>
+<h1>Warnings</h1>
+<p>Click on each warning link to see a full description of the issue, and
+	    details of how to resolve it.</p>
+<h2>
+<a name="Warnings_CFLint">CFLint Warnings</a>
+</h2>
+<table class="warningtable" width="100%" cellspacing="2" cellpadding="5">
+<tr class="tableheader">
+<th align="left">Warning</th>
+<th align="left">Severity</th>
+<th align="left">Details</th>
+</tr>
+<tr class="tablerow1">
+<td width="20%" valign="top">
+<a href="#CFLint">Argument Integration is not required and does not define a default value.</a>
+</td>
+<td width="10%" valign="top">Warning</td>
+<td width="70%">
+<p>Argument Integration is not required and does not define a default value.<br/>
+<br/>
+<br/>In file App.cfc,
+					
+						line 108<br/>In /Users/ryanmarchand/Sites/cf10slatwall/meta/cflint/../../model/entity/App.cfc<br/>In function removeIntegration()<br/>At line : 108<br/>Expression: public void function removeIntegration(Integration)   {
+    if(!structKeyExists(arguments, 'Integration') )       {
+arguments.Integration = variables.Integration;
+
+      };
+    var index = arrayFind(a</p>
+</td>
+</tr>
+<tr class="tablerow0">
+<td width="20%" valign="top">
+<a href="#CFLint">Argument site is any. Please change to be the correct type.</a>
+</td>
+<td width="10%" valign="top">Warning</td>
+<td width="70%">
+<p>Argument site is any. Please change to be the correct type.<br/>
+<br/>
+<br/>In file App.cfc,
+					
+						line 94<br/>In /Users/ryanmarchand/Sites/cf10slatwall/meta/cflint/../../model/entity/App.cfc<br/>In function addSite()<br/>At line : 94<br/>Expression: public void function addSite(required site)   {
+arguments.site.setApp(this);
+
+  }</p>
+</td>
+</tr>
+<tr class="tablerow1">
+<td width="20%" valign="top">
+<a href="#CFLint">Argument site is any. Please change to be the correct type.</a>
+</td>
+<td width="10%" valign="top">Warning</td>
+<td width="70%">
+<p>Argument site is any. Please change to be the correct type.<br/>
+<br/>
+<br/>In file App.cfc,
+					
+						line 97<br/>In /Users/ryanmarchand/Sites/cf10slatwall/meta/cflint/../../model/entity/App.cfc<br/>In function removeSite()<br/>At line : 97<br/>Expression: public void function removeSite(required site)   {
+arguments.site.removeApp(this);
+
+  }</p>
+</td>
+</tr>
+<tr class="tablerow0">
+<td width="20%" valign="top">
+<a href="#CFLint">Argument Integration is any. Please change to be the correct type.</a>
+</td>
+<td width="10%" valign="top">Warning</td>
+<td width="70%">
+<p>Argument Integration is any. Please change to be the correct type.<br/>
+<br/>
+<br/>In file App.cfc,
+					
+						line 102<br/>In /Users/ryanmarchand/Sites/cf10slatwall/meta/cflint/../../model/entity/App.cfc<br/>In function setIntegration()<br/>At line : 102<br/>Expression: public void function setIntegration(required Integration)   {
+variables.Integration = arguments.Integration;
+    if(isNew() or !arguments.Integration.hasApp(this) )       {
+arrayAppend(arguments.Integ</p>
+</td>
+</tr>
+<tr class="tablerow1">
+<td width="20%" valign="top">
+<a href="#CFLint">Argument Integration is any. Please change to be the correct type.</a>
+</td>
+<td width="10%" valign="top">Warning</td>
+<td width="70%">
+<p>Argument Integration is any. Please change to be the correct type.<br/>
+<br/>
+<br/>In file App.cfc,
+					
+						line 108<br/>In /Users/ryanmarchand/Sites/cf10slatwall/meta/cflint/../../model/entity/App.cfc<br/>In function removeIntegration()<br/>At line : 108<br/>Expression: public void function removeIntegration(Integration)   {
+    if(!structKeyExists(arguments, 'Integration') )       {
+arguments.Integration = variables.Integration;
+
+      };
+    var index = arrayFind(a</p>
+</td>
+</tr>
+<tr class="tablerow0">
+<td width="20%" valign="top">
+<a href="#CFLint">Argument site is missing a hint.  Use javadoc style annotations on cfscript functions.</a>
+</td>
+<td width="10%" valign="top">Info</td>
+<td width="70%">
+<p>Argument site is missing a hint.  Use javadoc style annotations on cfscript functions.<br/>
+<br/>
+<br/>In file App.cfc,
+					
+						line 94<br/>In /Users/ryanmarchand/Sites/cf10slatwall/meta/cflint/../../model/entity/App.cfc<br/>In function addSite()<br/>At line : 94<br/>Expression: public void function addSite(required site)   {
+arguments.site.setApp(this);
+
+  }</p>
+</td>
+</tr>
+<tr class="tablerow1">
+<td width="20%" valign="top">
+<a href="#CFLint">Argument site is missing a hint.  Use javadoc style annotations on cfscript functions.</a>
+</td>
+<td width="10%" valign="top">Info</td>
+<td width="70%">
+<p>Argument site is missing a hint.  Use javadoc style annotations on cfscript functions.<br/>
+<br/>
+<br/>In file App.cfc,
+					
+						line 97<br/>In /Users/ryanmarchand/Sites/cf10slatwall/meta/cflint/../../model/entity/App.cfc<br/>In function removeSite()<br/>At line : 97<br/>Expression: public void function removeSite(required site)   {
+arguments.site.removeApp(this);
+
+  }</p>
+</td>
+</tr>
+<tr class="tablerow0">
+<td width="20%" valign="top">
+<a href="#CFLint">Argument Integration is missing a hint.  Use javadoc style annotations on cfscript functions.</a>
+</td>
+<td width="10%" valign="top">Info</td>
+<td width="70%">
+<p>Argument Integration is missing a hint.  Use javadoc style annotations on cfscript functions.<br/>
+<br/>
+<br/>In file App.cfc,
+					
+						line 102<br/>In /Users/ryanmarchand/Sites/cf10slatwall/meta/cflint/../../model/entity/App.cfc<br/>In function setIntegration()<br/>At line : 102<br/>Expression: public void function setIntegration(required Integration)   {
+variables.Integration = arguments.Integration;
+    if(isNew() or !arguments.Integration.hasApp(this) )       {
+arrayAppend(arguments.Integ</p>
+</td>
+</tr>
+<tr class="tablerow1">
+<td width="20%" valign="top">
+<a href="#CFLint">Argument Integration is missing a hint.  Use javadoc style annotations on cfscript functions.</a>
+</td>
+<td width="10%" valign="top">Info</td>
+<td width="70%">
+<p>Argument Integration is missing a hint.  Use javadoc style annotations on cfscript functions.<br/>
+<br/>
+<br/>In file App.cfc,
+					
+						line 108<br/>In /Users/ryanmarchand/Sites/cf10slatwall/meta/cflint/../../model/entity/App.cfc<br/>In function removeIntegration()<br/>At line : 108<br/>Expression: public void function removeIntegration(Integration)   {
+    if(!structKeyExists(arguments, 'Integration') )       {
+arguments.Integration = variables.Integration;
+
+      };
+    var index = arrayFind(a</p>
+</td>
+</tr>
+<tr class="tablerow0">
+<td width="20%" valign="top">
+<a href="#CFLint"> is not a valid name. Please use CamelCase or underscores.</a>
+</td>
+<td width="10%" valign="top">Info</td>
+<td width="70%">
+<p> is not a valid name. Please use CamelCase or underscores.<br/>
+<br/>
+<br/>In file App.cfc,
+					
+						line 102<br/>In /Users/ryanmarchand/Sites/cf10slatwall/meta/cflint/../../model/entity/App.cfc<br/>In function setIntegration()<br/>At line : 102<br/>Expression: public void function setIntegration(required Integration)   {
+variables.Integration = arguments.Integration;
+    if(isNew() or !arguments.Integration.hasApp(this) )       {
+arrayAppend(arguments.Integ</p>
+</td>
+</tr>
+<tr class="tablerow1">
+<td width="20%" valign="top">
+<a href="#CFLint"> is not a valid name. Please use CamelCase or underscores.</a>
+</td>
+<td width="10%" valign="top">Info</td>
+<td width="70%">
+<p> is not a valid name. Please use CamelCase or underscores.<br/>
+<br/>
+<br/>In file App.cfc,
+					
+						line 108<br/>In /Users/ryanmarchand/Sites/cf10slatwall/meta/cflint/../../model/entity/App.cfc<br/>In function removeIntegration()<br/>At line : 108<br/>Expression: public void function removeIntegration(Integration)   {
+    if(!structKeyExists(arguments, 'Integration') )       {
+arguments.Integration = variables.Integration;
+
+      };
+    var index = arrayFind(a</p>
+</td>
+</tr>
+<tr class="tablerow0">
+<td width="20%" valign="top">
+<a href="#CFLint">Function getAppPath is missing a hint.</a>
+</td>
+<td width="10%" valign="top">Info</td>
+<td width="70%">
+<p>Function getAppPath is missing a hint.<br/>
+<br/>
+<br/>In file App.cfc,
+					
+						line 79<br/>In /Users/ryanmarchand/Sites/cf10slatwall/meta/cflint/../../model/entity/App.cfc<br/>In function getAppPath()<br/>At line : 79<br/>Expression: public string function getAppPath()   {
+    if(!structKeyExists(variables, 'appPath') )       {
+        var appsPath = expandPath('/Slatwall/custom/apps');
+variables.appPath = appsPath &amp; '/' &amp; getAppC</p>
+</td>
+</tr>
+<tr class="tablerow1">
+<td width="20%" valign="top">
+<a href="#CFLint">Function addSite is missing a hint.</a>
+</td>
+<td width="10%" valign="top">Info</td>
+<td width="70%">
+<p>Function addSite is missing a hint.<br/>
+<br/>
+<br/>In file App.cfc,
+					
+						line 94<br/>In /Users/ryanmarchand/Sites/cf10slatwall/meta/cflint/../../model/entity/App.cfc<br/>In function addSite()<br/>At line : 94<br/>Expression: public void function addSite(required site)   {
+arguments.site.setApp(this);
+
+  }</p>
+</td>
+</tr>
+<tr class="tablerow0">
+<td width="20%" valign="top">
+<a href="#CFLint">Function removeSite is missing a hint.</a>
+</td>
+<td width="10%" valign="top">Info</td>
+<td width="70%">
+<p>Function removeSite is missing a hint.<br/>
+<br/>
+<br/>In file App.cfc,
+					
+						line 97<br/>In /Users/ryanmarchand/Sites/cf10slatwall/meta/cflint/../../model/entity/App.cfc<br/>In function removeSite()<br/>At line : 97<br/>Expression: public void function removeSite(required site)   {
+arguments.site.removeApp(this);
+
+  }</p>
+</td>
+</tr>
+<tr class="tablerow1">
+<td width="20%" valign="top">
+<a href="#CFLint">Function setIntegration is missing a hint.</a>
+</td>
+<td width="10%" valign="top">Info</td>
+<td width="70%">
+<p>Function setIntegration is missing a hint.<br/>
+<br/>
+<br/>In file App.cfc,
+					
+						line 102<br/>In /Users/ryanmarchand/Sites/cf10slatwall/meta/cflint/../../model/entity/App.cfc<br/>In function setIntegration()<br/>At line : 102<br/>Expression: public void function setIntegration(required Integration)   {
+variables.Integration = arguments.Integration;
+    if(isNew() or !arguments.Integration.hasApp(this) )       {
+arrayAppend(arguments.Integ</p>
+</td>
+</tr>
+<tr class="tablerow0">
+<td width="20%" valign="top">
+<a href="#CFLint">Function removeIntegration is missing a hint.</a>
+</td>
+<td width="10%" valign="top">Info</td>
+<td width="70%">
+<p>Function removeIntegration is missing a hint.<br/>
+<br/>
+<br/>In file App.cfc,
+					
+						line 108<br/>In /Users/ryanmarchand/Sites/cf10slatwall/meta/cflint/../../model/entity/App.cfc<br/>In function removeIntegration()<br/>At line : 108<br/>Expression: public void function removeIntegration(Integration)   {
+    if(!structKeyExists(arguments, 'Integration') )       {
+arguments.Integration = variables.Integration;
+
+      };
+    var index = arrayFind(a</p>
+</td>
+</tr>
+<tr class="tablerow1">
+<td width="20%" valign="top">
+<a href="#CFLint">Function getAppRootPath is missing a hint.</a>
+</td>
+<td width="10%" valign="top">Info</td>
+<td width="70%">
+<p>Function getAppRootPath is missing a hint.<br/>
+<br/>
+<br/>In file App.cfc,
+					
+						line 127<br/>In /Users/ryanmarchand/Sites/cf10slatwall/meta/cflint/../../model/entity/App.cfc<br/>In function getAppRootPath()<br/>At line : 127<br/>Expression: public string function getAppRootPath()   {
+    if(!structKeyExists(variables, 'appRootPath') &amp;&amp; !isNull(getAppCode()) )       {
+variables.appRootPath = '/custom/apps/' &amp; getAppCode();
+
+      };
+    r</p>
+</td>
+</tr>
+<tr class="tablerow0">
+<td width="20%" valign="top">
+<a href="#CFLint">Variable Integration is not a valid name. Please use CamelCase or underscores.</a>
+</td>
+<td width="10%" valign="top">Info</td>
+<td width="70%">
+<p>Variable Integration is not a valid name. Please use CamelCase or underscores.<br/>
+<br/>
+<br/>In file App.cfc,
+					
+						line 103<br/>In /Users/ryanmarchand/Sites/cf10slatwall/meta/cflint/../../model/entity/App.cfc<br/>In function setIntegration()<br/>At line : 103<br/>Expression: </p>
+</td>
+</tr>
+<tr class="tablerow1">
+<td width="20%" valign="top">
+<a href="#CFLint">Variable Integration is not a valid name. Please use CamelCase or underscores.</a>
+</td>
+<td width="10%" valign="top">Info</td>
+<td width="70%">
+<p>Variable Integration is not a valid name. Please use CamelCase or underscores.<br/>
+<br/>
+<br/>In file App.cfc,
+					
+						line 110<br/>In /Users/ryanmarchand/Sites/cf10slatwall/meta/cflint/../../model/entity/App.cfc<br/>In function removeIntegration()<br/>At line : 110<br/>Expression: </p>
+</td>
+</tr>
+</table>
+<p>
+<br/>
+<br/>
+</p>
+<p>
+<br/>
+<br/>
+</p>
+<h1>
+<a name="Details">Warning Types</a>
+</h1>
+<h2>
+<a name="ARG_DEFAULT_MISSING">ARG_DEFAULT_MISSING</a>
+</h2>Arguments that are not required should specify a default value (@default)
+<p>
+<br/>
+<br/>
+</p>
+<h2>
+<a name="ARG_HINT_MISSING_SCRIPT">ARG_HINT_MISSING_SCRIPT</a>
+</h2>
+<p>
+<br/>
+<br/>
+</p>
+<h2>
+<a name="ARGUMENT_INVALID_NAME">ARGUMENT_INVALID_NAME</a>
+</h2>
+<p>
+<br/>
+<br/>
+</p>
+<h2>
+<a name="ARG_TYPE_ANY">ARG_TYPE_ANY</a>
+</h2>
+<p>
+<br/>
+<br/>
+</p>
+<h2>
+<a name="FUNCTION_HINT_MISSING">FUNCTION_HINT_MISSING</a>
+</h2>
+<p>
+<br/>
+<br/>
+</p>
+<h2>
+<a name="VAR_INVALID_NAME">VAR_INVALID_NAME</a>
+</h2>
+<p>
+<br/>
+<br/>
+</p>
+</body>
+</html>
