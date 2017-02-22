@@ -78,7 +78,7 @@ component extends="Slatwall.meta.tests.unit.SlatwallUnitTestBase" {
 		var modelDirectoryPath = expandPath('/Slatwall');
 		var modelDirectory = directoryList(modelDirectoryPath,true,'query','*.cfc');
 		var hasUnscopedVars = false;
-		
+
 		for(var record in modelDirectory){
 			if(
 				record.directory DOES NOT CONTAIN 'mxunit'
@@ -99,25 +99,25 @@ component extends="Slatwall.meta.tests.unit.SlatwallUnitTestBase" {
 					addToDebug(record.directory&'/#record.name# has unscoped var');
 					addToDebug(varscoper.getResultsArray());
 				}
-				
-				
+
+
 			}
 		}
 		assertFalse(hasUnscopedVars);
 	}
-	
+
 	public void function cflintTest(){
 		var jarArray = [
 			ExpandPath("/Slatwall/meta/cflint/CFLint-1.0.0-all.jar")
 		];
 		var classLoader = CreateObject("component", "Slatwall.meta.cflint.javaloader.JavaLoader").init(jarArray);
 		var cflintMain = classLoader.create("com.cflint.main.CFLintMain");
-		var excludeRules = "ARG_DEFAULT_MISSING";
-		var cmdArgs = ["-folder","#expandPath('/Slatwall')#/model/entity/App.cfc","-json","-jsonfile","#expandPath('/Slatwall')#/meta/cflint/cflint-result.json","--excludeRule",excludeRules];
+		var excludeRules = "ARG_VAR_CONFLICT";
+		var cmdArgs = ["-folder","#expandPath('/Slatwall')#/model/entity/Product.cfc","-json","-jsonfile","#expandPath('/Slatwall')#/meta/cflint/cflint-result.json","-configfile",'"#expandPath('/Slatwall')#/meta/cflint/rulesconfig.xml"'];
 		cflintMain.main(cmdArgs);
 	}
-	
-	
+
+
 
 //	private void function processDirectory(required string startingDirectory, string recursive=false){
 //

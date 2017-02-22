@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<!-- Available severity tags: FATAL, CRITICAL, ERROR, WARNING, CAUTION, INFO, COSMETIC -->
+<config>
+    <!--<rule name="CFInsertTagChecker" className="CFXTagChecker">
+            <message code="AVOID_USING_CFINSERT_TAG">
+                    <messageText>There are refresh, performance, and maintenance issues with the &lt;${tagName}&gt; tag</messageText>
+                    <severity>WARNING</severity>
+            </message>
+            <parameter name="tagName" value="cfinsert"/>
+    </rule>
+    <rule name="CFScriptTagChecker" className="CFXTagChecker">
+            <message code="AVOID_USING_SCRIPT_TAG">
+                    <messageText>Don't use inline &lt; script &gt; tags, consider making it a &lt; cfmcjavascript &gt; tag</messageText>
+                    <severity>ERROR</severity>
+            </message>
+            <parameter name="tagName" value="script"/>
+    </rule>
+    <rule name="CFUpdateTagChecker" className="CFXTagChecker">
+            <message code="AVOID_USING_CFUPDATE_TAG">
+                    <messageText>There are performance and maintenance issues with the &lt;${tagName}&gt; tag</messageText>
+                    <severity>WARNING</severity>
+            </message>
+            <parameter name="tagName" value="cfupdate"/>
+    </rule>
+    <rule name="CFModuleTagChecker" className="CFXTagChecker">
+            <message code="AVOID_USING_CFMODULE_TAG">
+                    <messageText>There are performance issues with the &lt;${tagName}&gt; tag. Better options exist: consider using a CFC (preferred), use cfimport and invoke a custom tag using a prefix, or 'include' a file</messageText>
+                    <severity>WARNING</severity>
+            </message>
+            <parameter name="tagName" value="cfupdate"/>
+    </rule>
+    <rule name="SelectStarChecker">
+            <message code="AVOID_SELECT_*_IN_QUERY">
+                    <messageText>Avoid using 'select *' in a query</messageText>
+                    <severity>ERROR</severity>
+            </message>
+    </rule>
+    <rule name="CFTagLowercaseChecker">
+            <message code="CFTAG_SHOULD_BE_LOWERCASE">
+                    <messageText>Tags should be written in lowercase or camelCase for consistency in code.</messageText>
+                    <severity>ERROR</severity>
+            </message>
+    </rule>
+    <rule name="CFQueryChecker">
+            <message code="NEVER_USE_QUERY_IN_CFM">
+                    <messageText>Don't use &lt; cfquery &gt; in .cfm files. Database should not be coupled with view</messageText>
+                    <severity>ERROR</severity>
+            </message>
+    </rule>
+    <rule name="FunctionLengthChecker">
+            <message code="EXCESSIVE_FUNCTION_LENGTH">
+                    <severity>INFO</severity>
+            </message>
+    </rule>-->
+    <excludes code="ARGUMENT_IS_TEMPORARY" />
+    <excludes code="AVOID_USING_CFSCRIPT_TAG" />
+    <excludes code="ARG_DEFAULT_MISSING" />
+    <excludes code="ARG_VAR_CONFLICT" />
+    <excludes code="ARG_VAR_MIXED" />
+    <excludes code="GLOBAL_VAR" />
+    <excludes code="NESTED_CFOUTPUT" />
+    <excludes code="OUTPUT_ATTR" />
+    <excludes code="NO_DEFAULT_INSIDE_SWITCH" />
+    <excludes code="QUERYPARAM_REQ" />
+    <excludes code="QUERYNEW_DATATYPE" />
+    <excludes code="MISSING_VAR" />
+    <excludes code="AVOID_USING_CFDUMP_TAG" />
+</config>
