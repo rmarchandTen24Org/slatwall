@@ -113,8 +113,8 @@ component extends="Slatwall.meta.tests.unit.SlatwallUnitTestBase" {
 		var classLoader = CreateObject("component", "Slatwall.meta.cflint.javaloader.JavaLoader").init(jarArray);
 		var cflintMain = classLoader.create("com.cflint.main.CFLintMain");
 		var excludeRules = "ARG_VAR_CONFLICT";
-		var cmdArgs = ["-folder","#expandPath('/Slatwall')#/model/entity/Product.cfc","-json","-jsonfile","#expandPath('/Slatwall')#/meta/cflint/cflint-result.json","-configfile",'"#expandPath('/Slatwall')#/meta/cflint/rulesconfig.xml"'];
-		cflintMain.main(cmdArgs);
+		var cmdArgs = ["-folder","#expandPath('/Slatwall')#/model/entity/Product.cfc","-configfile","#expandPath('/Slatwall')#/meta/cflint/rulesconfig.xml","-json","-jsonfile","#expandPath('/Slatwall')#/meta/cflint/cflint-result.json"];
+		//request.debug(des)
 	}
 
 
