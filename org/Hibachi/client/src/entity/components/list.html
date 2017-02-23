@@ -15,11 +15,14 @@
 		</nav>
 	</div>
 
-	
+
 
     <sw-listing-display
+    		ng-if="collectionListingPromise && collection"
+    		data-collection-promise="collectionListingPromise"
+			data-collection="collection"
+			data-get-collection="getCollection"
             data-collection="entityName"
-
             data-record-detail-action="{{entityName}}"
             data-show-search="true"
             data-title="{{entityName}}"

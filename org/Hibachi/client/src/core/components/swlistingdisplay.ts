@@ -108,8 +108,6 @@ class SWListingDisplayController{
         this.initializeState();
 
         //promises to determine which set of logic will run
-        this.multipleCollectionDeffered = $q.defer();
-        this.multipleCollectionPromise = this.multipleCollectionDeffered.promise;
         this.singleCollectionDeferred = $q.defer();
         this.singleCollectionPromise = this.singleCollectionDeferred.promise;
 
@@ -118,16 +116,11 @@ class SWListingDisplayController{
             this.baseEntityName = this.collection;
             this.collectionObject = this.collection;
             this.collectionConfig = this.collectionConfigService.newCollectionConfig(this.collectionObject);
-            this.multipleCollectionDeffered.reject();
         }
 
         if(angular.isDefined(this.collectionPromise)){
-             this.hasCollectionPromise = true;
-             this.multipleCollectionDeffered.reject();
-        }
-
-        if(this.collectionConfig != null){
-            this.multipleCollectionDeffered.reject();
+            this.hasCollectionPromise = true;
+            this.singleCollectionPromise = this.collectionPromise;
         }
 
         this.listingService.setListingState(this.tableID, this);
@@ -136,31 +129,17 @@ class SWListingDisplayController{
         this.$transclude(this.$scope,()=>{});
 
         this.singleCollectionPromise.then(()=>{
-            this.multipleCollectionDeffered.reject();
+            this.listingService.setupInSingleCollectionConfigMode(this.tableID,this.$scope);
+            if(angular.isUndefined(this.getCollection)){
+                this.getCollection = this.listingService.setupDefaultGetCollection(this.tableID);
+            }
+
+            this.paginator.getCollection = this.getCollection;
+
+            var getCollectionEventID = this.tableID;
+            this.observerService.attach(this.getCollectionObserver,'getCollection',getCollectionEventID);
         });
 
-        this.multipleCollectionPromise.then(
-            ()=>{
-                //now do the intial setup
-                this.listingService.setupInMultiCollectionConfigMode(this.tableID);
-            }
-        ).catch(
-            ()=>{
-                //do the initial setup for single collection mode
-                this.listingService.setupInSingleCollectionConfigMode(this.tableID,this.$scope);
-            }
-        ).finally(
-            ()=>{
-                if(angular.isUndefined(this.getCollection)){
-                    this.getCollection = this.listingService.setupDefaultGetCollection(this.tableID);
-                }
-
-                this.paginator.getCollection = this.getCollection;
-
-                var getCollectionEventID = this.tableID;
-        		this.observerService.attach(this.getCollectionObserver,'getCollection',getCollectionEventID);
-            }
-        );
 
     }
 

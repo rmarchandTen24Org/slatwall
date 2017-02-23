@@ -323,6 +323,11 @@ class ListingService{
         
         this.initCollectionConfigData( listingID, this.getListing(listingID).collectionConfig );
         
+        if(listingDisplayScope.collectionPromise){
+            this.getListing(listingID).collectionPromise = listingDisplayScope.collectionPromise;
+        }
+        
+        
         this.setupColumns( listingID, this.getListing(listingID).collectionConfig, this.getListing(listingID).collectionObject ); 
         
         listingDisplayScope.$watch('swListingDisplay.collectionPromise',(newValue,oldValue)=>{
@@ -387,13 +392,20 @@ class ListingService{
 
     public setupColumns = (listingID:string, collectionConfig, collectionObject) =>{
         //assumes no alias formatting
-        
+        var collectionPromise = this.getListing(listingID).collectionPromise;
         if( this.getListing(listingID).columns.length == 0 && 
             collectionConfig != null
         ){
             if(collectionConfig.columns == null){
-                collectionConfig.getEntity().then(
-                    ()=>{
+                if(!collectionPromise){
+                    collectionPromise = collectionConfig.getEntity();
+                }
+                
+                collectionPromise.then(
+                    (data)=>{
+                        if(!collectionConfig.columns){
+                            collectionConfig.columns = angular.fromJson(data.collectionConfig).columns;    
+                        }
                         for(var j=0; j < collectionConfig.columns.length; j++){
                             var column = collectionConfig.columns[j]; 
                             if(column.isVisible){
