@@ -314,7 +314,7 @@ component displayname="Collection" entityname="SlatwallCollection" table="SwColl
 		var collection = arguments.propertyIdentifier;
 		var propertyKey = '';
 
-		if(arguments.propertyIdentifier.contains('.')){
+		if(find('.',arguments.propertyIdentifier)){
 			collection = Mid(arguments.propertyIdentifier, 1, arguments.propertyIdentifier.lastIndexOf("."));
 			propertyKey = "." & ListLast(arguments.propertyIdentifier, '.');
 		}
@@ -957,7 +957,7 @@ component displayname="Collection" entityname="SlatwallCollection" table="SwColl
 		var collection = arguments.propertyIdentifier;
 		var propertyKey = '';
 
-		if(arguments.propertyIdentifier.contains('.')){
+		if(find('.',arguments.propertyIdentifier)){
 			collection = Mid(arguments.propertyIdentifier, 1, arguments.propertyIdentifier.lastIndexOf("."));
 			propertyKey = "." & ListLast(arguments.propertyIdentifier, '.');
 		}

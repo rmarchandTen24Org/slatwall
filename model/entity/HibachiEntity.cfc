@@ -99,7 +99,7 @@ component output="false" accessors="true" persistent="false" extends="Slatwall.o
 		
 	}
 	
-	public any function validate(string context="", passThrough=false){
+	public any function validate(string context="", boolean passThrough=false){
 		
 		if(!arguments.passThrough){
 			validateAttributes(context=arguments.context);
@@ -136,7 +136,7 @@ component output="false" accessors="true" persistent="false" extends="Slatwall.o
 	}
 	
 	// @hint helper function to return a Setting
-	public any function setting(required string settingName, array filterEntities=[], formatValue=false) {
+	public any function setting(required string settingName, array filterEntities=[], boolean formatValue=false) {
 		return getService("settingService").getSettingValue(settingName=arguments.settingName, object=this, filterEntities=arguments.filterEntities, formatValue=arguments.formatValue);
 	}
 	

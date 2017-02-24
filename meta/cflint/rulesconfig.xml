@@ -48,4 +48,6 @@
     <excludes code="ARGUMENT_INVALID_NAME"/>
     <excludes code="ARGUMENT_TOO_SHORT"/>
     <excludes code="SCOPE_ALLCAPS_NAME"/>
+    <excludes code="UNUSED_LOCAL_VARIABLE"/>
+    <excludes code="EXPLICIT_BOOLEAN_CHECK"/>
 </config>
