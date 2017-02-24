@@ -1078,7 +1078,7 @@ component displayname="Product" entityname="SlatwallProduct" table="SwProduct" p
 		var possibilities = 1;
 
 		for(var optionGroupID in optionGroupIDs){
-			possibilities = possibilities * getDAO("OptionDAO").getNumberOfOptionsForOptionGroup(OptionGroupID);
+			possibilities = possibilities * getDAO("OptionDAO").getNumberOfOptionsForOptionGroup(optionGroupID);
 
 		}
 
@@ -1321,7 +1321,7 @@ component displayname="Product" entityname="SlatwallProduct" table="SwProduct" p
 	}
 
 	public any function getAssignedAttributeSetSmartList(boolean refresh=false){
-		if(!structKeyExists(variables, "assignedAttributeSetSmartList") || arguments.refresh == true) {
+		if(!structKeyExists(variables, "assignedAttributeSetSmartList") || arguments.refresh) {
 
 			variables.assignedAttributeSetSmartList = getService("attributeService").getAttributeSetSmartList();
 

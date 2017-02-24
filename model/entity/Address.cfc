@@ -118,7 +118,7 @@ component displayname="Address" entityname="SlatwallAddress" table="SwAddress" p
 		return true;
 	}
 	
-	public any function copyAddress( saveNewAddress=true ) {
+	public any function copyAddress( boolean saveNewAddress=true ) {
 		return getService("addressService").copyAddress( this, arguments.saveNewAddress );
 	}
 	

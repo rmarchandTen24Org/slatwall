@@ -353,7 +353,7 @@ component displayname="Order" entityname="SlatwallOrder" table="SwOrder" persist
           return !hasGiftCardOrderItems();
     }
 
-	public boolean function hasGiftCardOrderItems(orderItemID=""){
+	public boolean function hasGiftCardOrderItems(string orderItemID=""){
 
 		var giftCardOrderItems = getOrderDAO().getGiftCardOrderItems(this.getOrderID());
 

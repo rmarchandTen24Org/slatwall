@@ -242,7 +242,7 @@ component entityname="SlatwallOrderItem" table="SwOrderItem" persistent="true" a
 		}
 	}
 
-	public string function displayCustomizations(format="list") {
+	public string function displayCustomizations(string format="list") {
 		var customizations = "";
 		if(arguments.format == 'htmlList' && this.hasAttributeValue()) {
 			customizations = "<ul>";

@@ -74,7 +74,7 @@ component displayname="Option Group" entityname="SlatwallOptionGroup" table="SwO
 	// Related Object Properties (many-to-many - owner)
 	property name="productTypes" singularname="productType" cfc="ProductType" type="array" fieldtype="many-to-many" linktable="SwOptionGroupProductType" fkcolumn="optionGroupID" inversejoincolumn="productTypeID";
 
-	public array function getOptions(orderby, sortType="text", direction="asc") {
+	public array function getOptions(string orderby, string sortType="text", string direction="asc") {
 		if(!structKeyExists(arguments,"orderby")) {
 			return variables.Options;
 		} else {

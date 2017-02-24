@@ -296,7 +296,7 @@ component displayname="Collection" entityname="SlatwallCollection" table="SwColl
 		this.setCollectionConfigStruct(collectionConfig);
 	}
 
-	public void function addColumn(required column){
+	public void function addColumn(required struct column){
 		var collectionConfig = this.getCollectionConfigStruct();
 		if(!structKeyExists(collectionConfig,'columns')){
 			collectionConfig["columns"] = [];
@@ -496,7 +496,7 @@ component displayname="Collection" entityname="SlatwallCollection" table="SwColl
 	}
 
 	//this is used when we get params from another collection that we need to apply to this collection
-	private void function addHQLParamsFromNestedCollection(required collectionHQLParams){
+	private void function addHQLParamsFromNestedCollection(required struct collectionHQLParams){
 		for(var key in arguments.collectionHQLParams){
 			addHQLParam(key,arguments.collectionHQLParams[key]);
 		}
@@ -569,7 +569,7 @@ component displayname="Collection" entityname="SlatwallCollection" table="SwColl
 		return (arraylen(getAggregateFilters()) > 0);
 	}
 
-	private string function formatAggregateFunction(aggregate){
+	private string function formatAggregateFunction(string aggregate){
 		var aggregateFunction = '';
 		switch(LCASE(aggregate)){
 			case "average":
@@ -931,7 +931,7 @@ component displayname="Collection" entityname="SlatwallCollection" table="SwColl
 		return fromHQL;
 	}
 
-	public string function getHQL(boolean excludeSelectAndOrderBy = false, forExport=false, removeOrderBy = false){
+	public string function getHQL(boolean excludeSelectAndOrderBy = false, boolean forExport=false, boolean removeOrderBy = false){
 		variables.HQLParams = {};
 		variables.postFilterGroups = [];
 		variables.postOrderBys = [];
@@ -1145,7 +1145,7 @@ component displayname="Collection" entityname="SlatwallCollection" table="SwColl
 	}
 
 	// Paging Methods
-	public array function getPageRecords(boolean refresh=false, formatRecords=true) {
+	public array function getPageRecords(boolean refresh=false, boolean formatRecords=true) {
 
 		if(arguments.formatRecords){
 			var formattedRecords = getService('hibachiCollectionService').getAPIResponseForCollection(this,{},false).pageRecords;
@@ -1788,11 +1788,11 @@ component displayname="Collection" entityname="SlatwallCollection" table="SwColl
 	}
 
 	//TODO:write an export/import service so we can share json files of the collectionConfig
-	public void function exportCollectionConfigAsJSON(required string filePath,fileName){
+	public void function exportCollectionConfigAsJSON(required string filePath, string fileName){
 		fileWrite("#arguments.filePath##arguments.fileName#.json", getCollectionConfig());
 	}
 
-	public void function importCollectionConfigAsJSON(required string filePath, fileName){
+	public void function importCollectionConfigAsJSON(required string filePath, string fileName){
 		setCollectionConfig(fileRead( "#filePath##filename#.json" ));
 	}
 

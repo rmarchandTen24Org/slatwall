@@ -107,6 +107,7 @@ component extends="Slatwall.meta.tests.unit.SlatwallUnitTestBase" {
 	}
 
 	public void function cflintTest(){
+		
 		var jarArray = [
 			ExpandPath("/Slatwall/meta/cflint/CFLint-1.0.0-all.jar")
 		];
@@ -115,6 +116,7 @@ component extends="Slatwall.meta.tests.unit.SlatwallUnitTestBase" {
 		var excludeRules = "ARG_VAR_CONFLICT";
 		var cmdArgs = ["-folder","#expandPath('/Slatwall')#/model/entity/Product.cfc","-configfile","#expandPath('/Slatwall')#/meta/cflint/rulesconfig.xml","-json","-jsonfile","#expandPath('/Slatwall')#/meta/cflint/cflint-result.json"];
 		//request.debug(des)
+		
 	}
 
 

@@ -423,7 +423,7 @@ component entityname="SlatwallSku" table="SwSku" persistent=true accessors=true 
 
 	// START: Option Methods
 
-	public string function getOptionsDisplay(delimiter=" ") {
+	public string function getOptionsDisplay(string delimiter=" ") {
     	var dspOptions = "";
     	for(var i=1;i<=arrayLen(getOptions());i++) {
     		dspOptions = listAppend(dspOptions, getOptions()[i].getOptionName(), arguments.delimiter);
@@ -1500,7 +1500,7 @@ component entityname="SlatwallSku" table="SwSku" persistent=true accessors=true 
 	// ================== START: Deprecated Methods ========================
 
 	// @hint: USE skuDefinition()
-	public string function displayOptions(delimiter=" ") {
+	public string function displayOptions(string delimiter=" ") {
     	var dspOptions = "";
     	for(var i=1;i<=arrayLen(getOptions());i++) {
     		dspOptions = listAppend(dspOptions, getOptions()[i].getOptionName(), arguments.delimiter);

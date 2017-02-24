@@ -403,7 +403,7 @@ component displayname="Order Fulfillment" entityname="SlatwallOrderFulfillment" 
     	return variables.shippingMethodOptions;
     }
 	
-	public any function hasOption(optionsArray, option){
+	public boolean function hasOption(array optionsArray, struct option){
 		var found = false;
 		for(var i=1; i<=arrayLen(optionsArray); i++) {
 			var thisExistingOption = optionsArray[i];

@@ -109,7 +109,7 @@ component displayname="Schedule" entityname="SlatwallSchedule" table="SwSchedule
 		return options;
 	}
 
-	public string function getNextRunDateTime(startDateTime, endDateTime){
+	public string function getNextRunDateTime(any startDateTime, any endDateTime){
 		var nextRun='';
 		
 		if( isNull(arguments.endDateTime) || endDateTime > now() ){
@@ -300,7 +300,7 @@ component displayname="Schedule" entityname="SlatwallSchedule" table="SwSchedule
 		return nextRun;
 	}
 	
-	private boolean function isBetweenHours(required startTime, required endTime, required testTime){
+	private boolean function isBetweenHours(required any startTime, required any endTime, required any testTime){
 		var response = false;
 		var formattedStartTime = createDateTime(year(testTime),month(testTime),day(testTime),hour(startTime),minute(startTime),second(startTime));
 		var formattedEndTime = createDateTime(year(testTime),month(testTime),day(testTime),hour(endTime),minute(endTime),second(endTime));
@@ -312,7 +312,7 @@ component displayname="Schedule" entityname="SlatwallSchedule" table="SwSchedule
 		return response;
 	}	
 	
-	private function getNextTimeSlot(required startTime, required numeric interval, required targetTime){
+	private any function getNextTimeSlot(required any startTime, required numeric interval, required any targetTime){
 		var found = false;
 		var processingTime=createDateTime(year(targetTime),month(targetTime),day(targetTime),hour(startTime),minute(startTime),second(startTime));
 		

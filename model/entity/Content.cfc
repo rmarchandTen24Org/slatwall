@@ -382,7 +382,7 @@ component displayname="Content" entityname="SlatwallContent" table="SwContent" p
 //		return arguments.urlTitleArray;
 //	}
 
-	public array function getChildContents(forNavigation=false){
+	public array function getChildContents(boolean forNavigation=false){
 		var childContents = [];
 		if(arguments.forNavigation){
 			childContents = getDao('contentDao').getChildContentsByDisplayInNavigation(this);
@@ -562,7 +562,7 @@ component displayname="Content" entityname="SlatwallContent" table="SwContent" p
 	// ================== START: Deprecated Methods ========================
 	
 	// The setting method is not deprecated, but 
-	public any function setting(required string settingName, array filterEntities=[], formatValue=false) {
+	public any function setting(required string settingName, array filterEntities=[], boolean formatValue=false) {
 		if(arguments.settingName == 'contentProductListingFlag') {
 			return getProductListingPageFlag();
 		}

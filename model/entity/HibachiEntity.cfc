@@ -174,7 +174,7 @@ component output="false" accessors="true" persistent="false" extends="Slatwall.o
 		return variables.attributeValuesForEntity;
 	}
 
-	public any function getAttributeValue(required string attribute, returnEntity=false){
+	public any function getAttributeValue(required string attribute, boolean returnEntity=false){
 		
 		//If custom property exists for this attribute, return the property value instead
 		if(len(arguments.attribute) eq 32) {

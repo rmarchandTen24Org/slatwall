@@ -86,7 +86,7 @@ component displayname="AttributeSet" entityname="SlatwallAttributeSet" table="Sw
 		return getService('hibachiService').getPrimaryIDPropertyNameByEntityName(getAttributeSetObject());
 	}
 	
-	public array function getAttributes(orderby, sortType="text", direction="asc") {
+	public array function getAttributes(string orderby, string sortType="text", string direction="asc") {
 		if(!structKeyExists(arguments, "orderby")) {
 			return variables.Attributes;
 		} else {

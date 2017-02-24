@@ -103,21 +103,21 @@ component entityname="SlatwallStockAdjustment" table="SwStockAdjustment" persist
 				arrayAppend(keyByProductId[product.getProductId()].stockAdjustmentItems, getStockAdjustmentItems()[i]);
 			} else {
 				// We did not find the product, so add it to the array
-				var struct = {
+				var structItem = {
 					product = product, 
 					stockAdjustmentItems = [getStockAdjustmentItems()[i]]
 				};
-				keyByProductId[product.getProductId()] = struct;
+				keyByProductId[product.getProductId()] = structItem;
 			}
 		}
 		
 		// Transform the assocaitive array into an array
-		var local.arr = [];
-		for (var struct IN keyByProductId) {
-			arrayAppend(local.arr, keyByProductId[struct]);
+		var arr = [];
+		for (var structItem IN keyByProductId) {
+			arrayAppend(arr, keyByProductId[structItem]);
 		}
 
-		return local.arr;
+		return arr;
 	}
 	
 	public boolean function isNotDeletable() {

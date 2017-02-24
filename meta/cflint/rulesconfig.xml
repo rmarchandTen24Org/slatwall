@@ -1,6 +1,12 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <!-- Available severity tags: FATAL, CRITICAL, ERROR, WARNING, CAUTION, INFO, COSMETIC -->
 <config>
+	<excludes code="FUNCTION_TYPE_ANY"/>
+	<excludes code="GLOBAL_LITERAL_VALUE_USED_TOO_OFTEN" />
+	<excludes code="EXCESSIVE_FUNCTIONS" />
+	<excludes code="ARG_TYPE_ANY" />
+	<excludes code="METHOD_TOO_WORDY" />
+	<excludes code="VAR_TOO_LONG" />
     <excludes code="ARGUMENT_IS_TEMPORARY" />
     <excludes code="AVOID_USING_CFSCRIPT_TAG" />
     <excludes code="ARG_DEFAULT_MISSING" />
@@ -14,4 +20,32 @@
     <excludes code="QUERYNEW_DATATYPE" />
     <excludes code="MISSING_VAR" />
     <excludes code="AVOID_USING_CFDUMP_TAG" />
+    <excludes code="UNUSED_METHOD_ARGUMENT" />
+    <excludes code="VAR_TOO_SHORT" />
+    <excludes code="COMPLEX_BOOLEAN_CHECK" />
+    <excludes code="FUNCTION_TOO_COMPLEX"/>
+    <excludes code="UNQUOTED_STRUCT_KEY"/>
+    <excludes code="FUNCTION_HINT_MISSING"/>
+    <excludes code="ARG_HINT_MISSING"/>
+    <excludes code="COMPONENT_HINT_MISSING"/>
+    <excludes code="EXCESSIVE_COMPONENT_LENGTH"/>
+    <excludes code="VAR_IS_TEMPORARY"/>
+    <excludes code="EXCESSIVE_FUNCTION_LENGTH"/>
+    <excludes code="VAR_HAS_PREFIX_OR_POSTFIX"/>
+    <excludes code="EXCESSIVE_ARG_LENGTH"/>
+    <excludes code="VAR_INVALID_NAME"/>
+    <excludes code="VAR_TOO_WORDY"/>
+    <excludes code="ARGUMENT_TOO_LONG"/>
+    <excludes code="METHOD_TOO_LONG"/>
+    <excludes code="ARG_HINT_MISSING_SCRIPT"/>
+    <excludes code="METHOD_IS_TEMPORARY"/>
+    <excludes code="ARGUMENT_TOO_WORDY"/>
+    <excludes code="COMPONENT_TOO_LONG"/>
+    <excludes code="VAR_ALLCAPS_NAME"/>
+    <excludes code="METHOD_INVALID_NAME"/>
+    <excludes code="COMPONENT_TOO_WORDY"/>
+    <excludes code="AVOID_USING_ARRAYNEW"/>
+    <excludes code="ARGUMENT_INVALID_NAME"/>
+    <excludes code="ARGUMENT_TOO_SHORT"/>
+    <excludes code="SCOPE_ALLCAPS_NAME"/>
 </config>

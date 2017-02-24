@@ -103,7 +103,7 @@ component entityname="SlatwallAudit" table="SwAudit" persistent="true" accessors
 		return variables.archiveProcessedFlag;
 	}
 	
-	public function getChangeDetails() {
+	public any function getChangeDetails() {
 		if (!structKeyExists(variables, "changeDetails")) {
 			if (listFindNoCase("create,update,rollback,archive", getAuditType())) {
 				variables.changeDetails = getService("HibachiAuditService").getPropertyChangeDetailsForAudit(this);
@@ -117,7 +117,7 @@ component entityname="SlatwallAudit" table="SwAudit" persistent="true" accessors
 		}
 	}
 	
-	public function getRelatedEntity() {
+	public any function getRelatedEntity() {
 		if (!structKeyExists(variables, "relatedEntity") && !isNull(getBaseObject()) && len(getBaseObject())) {
 			variables.relatedEntity = getService("HibachiAuditService").getRelatedEntityForAudit(this);
 		}
