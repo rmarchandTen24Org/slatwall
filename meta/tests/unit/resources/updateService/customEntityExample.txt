@@ -1,0 +1,36 @@
+component{
+
+property name="accessCode" ormtype="string";
+property name="property1" hb_populateEnabled="false" ormtype="string";
+property name="property2" ormtype="string";
+property name="property3" persistent="false";
+
+property name="integration" cfc="Integration" fieldtype="many-to-one" fkcolumn="integrationID" hb_optionsNullRBKey="define.select";
+
+
+public string function test1() {
+	return "test";
+}
+
+	public string function test2() {
+		return "test";
+	}
+
+private string function test3() {
+	return "test";
+}
+//TEST
+public any function test4() {
+	return "test";
+}
+/*
+TEST COMMENT
+*/
+
+//	private boolean function test2() {
+//		return "test";
+//	}
+//
+//
+
+}

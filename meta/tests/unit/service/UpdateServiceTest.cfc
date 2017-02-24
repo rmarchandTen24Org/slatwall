@@ -170,6 +170,20 @@ component extends="Slatwall.meta.tests.unit.SlatwallUnitTestBase" {
 		return '';
 	}"), trim(customEntityParser.getFunctionString()));
 	}
+
+
+
+
+
+	public void function migueltest(){
+
+		var coreEntityParser = request.slatwallScope.getTransient('hibachiEntityParser');
+
+		coreEntityParser.setFilePath("/meta/tests/unit/resources/updateService/coreEntityExample.txt");
+
+		request.debug(coreEntityParser.hasCustomProperties());
+
+	}
 }
 
 
