@@ -111,12 +111,21 @@ component extends="Slatwall.meta.tests.unit.SlatwallUnitTestBase" {
 		var jarArray = [
 			ExpandPath("/Slatwall/meta/cflint/CFLint-1.0.0-all.jar")
 		];
+		
+		var jsonfilePath = "#expandPath('/Slatwall')#/meta/cflint/cflint-result.json";
 		var classLoader = CreateObject("component", "Slatwall.meta.cflint.javaloader.JavaLoader").init(jarArray);
 		var cflintMain = classLoader.create("com.cflint.main.CFLintMain");
-		var excludeRules = "ARG_VAR_CONFLICT";
-		var cmdArgs = ["-folder","#expandPath('/Slatwall')#/model/entity/Product.cfc","-configfile","#expandPath('/Slatwall')#/meta/cflint/rulesconfig.xml","-json","-jsonfile","#expandPath('/Slatwall')#/meta/cflint/cflint-result.json"];
-		//request.debug(des)
-		
+		var cmdArgs = [
+			"-folder",
+			"#expandPath('/Slatwall')#/model/",
+			"-configfile",
+			"#expandPath('/Slatwall')#/meta/cflint/rulesconfig.xml",
+			"-json",
+			"-jsonfile",jsonfilePath
+		];
+		cflintMain.main(cmdArgs);
+		var jsonresults = fileRead(jsonfilePath);
+		request.debug(deserializeJson(jsonresults));
 	}
 
 
