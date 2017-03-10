@@ -23,8 +23,8 @@ if( url.opt_run ){
 		url[ key ] = xmlFormat( trim( url[ key ] ) );
 	}
 	if(url.reporter == 'CodeCoverage'){
-		pc = getpagecontext().getresponse();
-						pc.setHeader("Content-Type","text/html");
+//		pc = getpagecontext().getresponse();
+//						pc.setHeader("Content-Type","text/html");
 						
 		coverageGenerator = new Slatwall.meta.tests.codecoverage.tests.reporters.CodeCoverage.data.CoverageGenerator();
 		testbox = new testbox.system.TestBox(
@@ -85,11 +85,54 @@ if( url.opt_run ){
 				     break;
 				}
 				case "antjunit": {
+					reportdestination = expandPath('/Slatwall/meta/tests/testresults/xml/unit/');
+					filedest = reportdestination & "results.txt";
+					
+					
+					coverageGenerator = new Slatwall.meta.tests.codecoverage.tests.reporters.CodeCoverage.data.CoverageGenerator();;
+					testbox = new testbox.system.TestBox(
+						directory={
+							mapping = url.target,
+							recurse = url.opt_recurse
+						},
+						reporter={
+						    type = "tests.reporters.CodeCoverage.CoverageReporter",
+						    options = {
+							  	pathToCapture = expandPath( '/' ) & 'model',
+								whitelist = '',
+								blacklist = 'cfperformanceexplorer,/testbox,/tests,/index.cfm,/Application.cfc,/.history,/meta,/WEB-INF',
+						    	passThroughReporter={
+						    		type='ANTJunit',
+						    		option={},
+						    		// This closure will be run against the results from the passthroguh reporter.
+						    		resultsUDF=function( reporterData ) {
+						    			// Produce individual test files due to how ANT JUnit report parses these.
+									    var xmlReport = xmlParse( reporterData.results );
+									    for( var thisSuite in xmlReport.testsuites.XMLChildren ){
+									        fileWrite( reportdestination & "/TEST-" & thisSuite.XMLAttributes.package & ".xml", toString( thisSuite ) );
+									    }
+									    // format results so they display nice in the coverage output (optional)
+									    reporterData.results = '<pre>' & encodeForHTML( reporterData.results ) & '<pre>';
+						    		}
+						    	},
+						    	sonarQube = {
+									XMLOutputPath = expandpath( '/Slatwall/meta/tests/codecoverage/tests/sonarqube-codeCoverage.xml' )
+						    	}
+						    }
+						} );
+
+					// Clear stats before running tests
+					coverageGenerator.beginCapture();
+					
+					results = testbox.run();
+					
+					// Clean up after
+					coverageGenerator.endCapture( true );
+					
 					errors = 0;
 					failures = 0;
 					
-					reportdestination = expandPath('/Slatwall/meta/tests/testresults/xml/unit/');
-					filedest = reportdestination & "results.txt";
+					
 					
 //					pc = getpagecontext().getresponse();
 //						pc.setHeader("Content-Type","text/html");
