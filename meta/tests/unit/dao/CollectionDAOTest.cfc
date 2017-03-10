@@ -53,7 +53,10 @@ component extends="Slatwall.meta.tests.unit.SlatwallUnitTestBase" {
 		
 		variables.dao = request.slatwallScope.getDAO("collectionDAO");
 	}
-
+	
+	public void function getCollectionPageRecordsTest(){
+		variables.dao.getCollectionPageRecords();
+	}
 }
 
 
