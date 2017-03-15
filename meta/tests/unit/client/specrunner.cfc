@@ -34,7 +34,7 @@
 
 					  <script src="/node_modules/jasmine-core/lib/jasmine-core/jasmine.js"></script>
 					  <script src="/node_modules/jasmine-core/lib/jasmine-core/jasmine-html.js"></script>
-						<!---<script src="/node_modules/jasmine-core/lib/jasmine-core/boot.js"></script>--->
+					  <!---<script src="/node_modules/jasmine-core/lib/jasmine-core/boot.js"></script>--->
 
 
 					  <!-- include source files here... -->
@@ -59,9 +59,42 @@
 					</head>
 
 					<body>
-
+						<script>
+							var htmlTemplates = {};
+							<cfdirectory
+								directory="#expandPath('/Slatwall/admin/client')#"
+								action = "list"
+								filter = "*html"
+								listInfo = "all"
+								name = "slatwallHTML"
+								recurse = "yes"
+								type = "file"
+							/>
+							<cfdirectory
+								directory="#expandPath('/Slatwall/org/Hibachi/client')#"
+								action = "list"
+								filter = "*html"
+								listInfo = "all"
+								name = "hibachiHTML"
+								recurse = "yes"
+								type = "file"
+							/>
+							<cfquery name="allHTML" dbtype="query" >
+								SELECT * FROM slatwallHTML
+								UNION
+								SELECT * FROM hibachiHTML;
+							</cfquery>
+							<cfloop query="#allHTML#">
+								<cfset key = replace(allHTML.directory,expandPath('/Slatwall'),'') & '/' & allHTML.name/>
+								<!---#encodeForHTML(fileRead(allHTML.directory & '/' & allHTML.name))# --->
+								<cfset content = fileRead(allHTML.directory & '/' & allHTML.name)>
+								<cfset content = replaceNoCase(content, chr(13), ' ','All')>
+        						<cfset content = replaceNoCase(content, chr(10), ' ','All')>
+								htmlTemplates['#key#']="#EncodeForJavaScript(content)#";
+							</cfloop>
+							
+						</script>
 						<script type="text/javascript" src="#request.slatwallScope.getBaseURL()#/admin/client/src/testbundle.js?instantiationKey=#$.slatwall.getApplicationValue('instantiationKey')#" charset="utf-8"></script>
-
 
 					</body>
 				</html>

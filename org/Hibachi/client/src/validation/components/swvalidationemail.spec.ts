@@ -10,17 +10,8 @@ class test{
     ){
         describe('swvalidationemail Test',()=>{
             var $compile,$rootScope;
-            beforeEach(()=>{
-                angular.module('ngAnimate',[]);
-                angular.module('ngSanitize',[]);
-                angular.module('ui.bootstrap',[]);
-                angular.module('hibachi.core',['ngAnimate','ngSanitize','ui.bootstrap']);
-                angular.mock.module('hibachi.validation');
 
-
-            });
-
-            beforeEach(angular.mock.inject((_$compile_,_$rootScope_)=>{
+            beforeEach(inject((_$compile_,_$rootScope_)=>{
                 $compile = _$compile_;
                 $rootScope = _$rootScope_;
             }));

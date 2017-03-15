@@ -8,8 +8,7 @@ describe('listingService Test',()=>{
     var $httpBackend:ng.IHttpBackendService;
 
     beforeEach(()=>{
-        angular.mock.module('hibachi.listing');
-        angular.mock.inject((_listingService_)=>{
+        inject((_listingService_)=>{
             // The injector unwraps the underscores (_) from around the parameter names when matching
             listingService = _listingService_;
         });

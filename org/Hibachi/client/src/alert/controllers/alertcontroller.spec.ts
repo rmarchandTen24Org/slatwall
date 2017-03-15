@@ -3,9 +3,6 @@
 import {AlertController} from "./alertcontroller";
 
 describe('AlertController',()=>{
-
-    beforeEach(angular.mock.module('hibachi.alert'));
-
     var $controller;
 
     beforeEach(inject((_$controller_)=>{

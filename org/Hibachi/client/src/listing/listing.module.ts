@@ -3,6 +3,7 @@
 
 //modules
 import {collectionmodule} from "../collection/collection.module";
+import {paginationmodule} from "../pagination/pagination.module";
 //services
 import {ListingService} from "./services/listingservice";
 //directives
@@ -22,7 +23,7 @@ import {SWListingSearch} from "./components/swlistingsearch";
 import {SWListingGlobalSearch} from "./components/swlistingglobalsearch";
 
 
-var listingmodule = angular.module('hibachi.listing', [collectionmodule.name])
+var listingmodule = angular.module('hibachi.listing', [collectionmodule.name,paginationmodule.name])
 .run([function() {
 }])
 //services
