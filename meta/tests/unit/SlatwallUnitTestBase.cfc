@@ -44,13 +44,14 @@
     of the program, but you are not obligated to do so.
 
 Notes:
+
 */
-component displayName="mytestcase" extends="testbox.system.compat.framework.TestCase" initmethod="TestBase" {
+component displayName="mytestcase" extends="testbox.system.compat.framework.TestCase"{
 
 	variables.debugArray = [];
 	variables.persistentEntities = [];
 	variables.files = [];
-	
+
 	// BEFORE ALL TESTS IN THIS SUITE	
 	public void function beforeTests(){
 		

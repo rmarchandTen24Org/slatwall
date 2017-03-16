@@ -51,9 +51,17 @@ component extends="Slatwall.meta.tests.unit.SlatwallUnitTestBase" {
 	// @hint put things in here that you want to run befor EACH test
 	public void function setUp() {
 		super.setup();
-
 	}
-
+	
+	/*public function run() {
+		describe("A suite", function() {
+	 		it("contains spec with an awesome expectation",
+	 		function() {
+	 		expect( isAbleToCreateNewFulfillmentBatchTest() ).toBeTrue();
+	 		});
+		});
+	}*/
+	
 	public void function isAbleToCreateNewFulfillmentBatchTest(){
 		//Get a new batch
 		var fulfillmentBatch = request.slatwallScope.newEntity( 'fulfillmentBatch' );
@@ -73,6 +81,7 @@ component extends="Slatwall.meta.tests.unit.SlatwallUnitTestBase" {
 		processObject.setAssignedAccount(account);
 		processObject.setDescription(description);
 		
+		var result = false;
 		//Has a description
 		assertEquals(processObject.getDescription(), description);
 		
@@ -81,8 +90,7 @@ component extends="Slatwall.meta.tests.unit.SlatwallUnitTestBase" {
 		
 		//Has an assigned account
 		assertEquals(processObject.getAssignedAccount(), account);
+		
 	}
-	
-	
 	
 }
