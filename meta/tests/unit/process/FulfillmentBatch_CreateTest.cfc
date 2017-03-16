@@ -93,4 +93,38 @@ component extends="Slatwall.meta.tests.unit.SlatwallUnitTestBase" {
 		
 	}
 	
+	public void function isAbleToCreateNewFulfillmentBatchAutoPopulateTest(){
+		//Get a new batch
+		var fulfillmentBatch = request.slatwallScope.newEntity( 'fulfillmentBatch' );
+		fulfillmentBatch.setFulfillmentBatchID("123456");
+		var processObject = fulfillmentBatch.getProcessObject( 'Create' );
+		
+		//Create a batch item and add an orderFulfillment
+		var orderFulfillment = request.slatwallScope.newEntity( 'orderFulfillment' );
+		orderFulfillment.setOrderFulfillmentID("78910");
+		var fulfillmentBatchItem = request.slatwallScope.newEntity( 'fulfillmentBatchItem' );
+		fulfillmentBatchItem.setOrderFulfillment(orderFulfillment);
+		
+		//Set the others
+		var account = request.slatwallScope.newEntity('account');
+		account.setAccountID("11123");
+		var description = "This is a fulfillment batch description";
+		
+		//Add the fulfillment batch
+		processObject.setFulfillmentBatchItems([fulfillmentBatchItem]);
+		processObject.setAssignedAccount(account);
+		processObject.setDescription(description);
+		
+		var result = false;
+		//Has a description
+		assertEquals(processObject.getDescription(), description);
+		
+		//Has a batch item
+		assertEquals(processObject.getFulfillmentBatchItems()[1], fulfillmentBatchItem);
+		
+		//Has an assigned account
+		assertEquals(processObject.getAssignedAccount(), account);
+		
+	}
+	
 }
