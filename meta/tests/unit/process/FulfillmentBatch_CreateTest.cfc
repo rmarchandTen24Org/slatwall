@@ -85,45 +85,50 @@ component extends="Slatwall.meta.tests.unit.SlatwallUnitTestBase" {
 	}
 	
 	public void function isAbleToCreateNewFulfillmentBatchAutoPopulateTest(){
-		//Get a new batch
+		
+		//Get the process object
 		var fulfillmentBatch = request.slatwallScope.newEntity( 'fulfillmentBatch' );
 		fulfillmentBatch.setFulfillmentBatchID("123456");
 		var processObject = fulfillmentBatch.getProcessObject( 'Create' );
 		
-		//Sets the location id
-		var location = request.slatwallScope.newEntity( 'location' );
-		location.setLocationID("012345678");
+		//Find a random location id to use for population
+		var locationID = request.slatwallScope.getService("LocationService").getLocationCollectionList().getRecords()[1]['locationID'];
+		var location = request.slatwallScope.getService("LocationService").getLocationByLocationID(locationID);
 		
-		//Set the others
-		var account = request.slatwallScope.newEntity('account');
-		account.setAccountID("11123");
+		//Find a random account id to use for population
+		var accountID = request.slatwallScope..getService("AccountService").getAccountCollectionList().getRecords()[1]['accountID'];
+		var account = request.slatwallScope.getService("AccountService").getAccountByAccountID(accountID);
 		var description = "This is a fulfillment batch description";
 		
-		//Don't populate this time as it needs to happen automatically.
+		//*** Don't populate this time as it needs to happen automatically.
+		//Test auto populate using the found data. It should find those entities while populating and put the objects into the process object.
 		
-		var result = false;
-		
-		//Test auto populate.
 		var data = {
-			"locationID": "012345678",
-			"assignedAccountID": "11123",
-			"description": "This is another test description",
-			"fulfillmentBatchItems[1].orderFulfillment.orderFulfillmentID": "78910"
+			"locationID": location.getLocationID(),
+			"assignedAccountID": account.getAccountID(),
+			"description": "This is another test description"
 		};
 		
+		debug(data);
 		//populate the data.
 		processObject.populate(data);
 		
-		//Has the populated description
+		//Has the populated simple description
 		assertEquals(processObject.getDescription(), data.description);
 		
-		//Has a populated location
-		assert(processObject.getLocationID(), data.locationID);
+		//Has a populated simple location
+		assertEquals(processObject.getLocationID(), data.locationID);
 		
-		//Has an assigned account
+		//Has an assigned simple account
 		assertEquals(processObject.getAssignedAccountID(), data.assignedAccountID);
+		
+		//Has a populated object based location
+		writeDump(var=processObject, top=2);
+		//assertEquals(processObject.getLocation().getLocationID(), data.locationID);
+		
+		//Has an assigned object based account so auto populated
+		assertEquals(processObject.getAssignedAccount().getAccountID(), data.assignedAccountID);
 		
 		
 	}
-	
 }
