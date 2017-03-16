@@ -71,6 +71,7 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 	// ===================== START: Process Methods ===========================
 	// Process: FulfillmentBatch
 	public any function processFulfillmentBatch_create(required any fulfillmentBatch, required any processObject){
+		
 		//populate the fulfillmentbatch with the process data
 		if (!isNull(processObject.getAssignedAccount())){
 			fulfillmentBatch.setAssignedAccount(processObject.getAssignedAccount());
@@ -81,7 +82,6 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 		if (!isNull(processObject.getDescription())){
 			fulfillmentBatch.setDescription(processObject.getDescription());
 		}
-		
 		
 		return fulfillmentBatch;
 	}
