@@ -53,15 +53,6 @@ component extends="Slatwall.meta.tests.unit.SlatwallUnitTestBase" {
 		super.setup();
 	}
 	
-	/*public function run() {
-		describe("A suite", function() {
-	 		it("contains spec with an awesome expectation",
-	 		function() {
-	 		expect( isAbleToCreateNewFulfillmentBatchTest() ).toBeTrue();
-	 		});
-		});
-	}*/
-	
 	public void function isAbleToCreateNewFulfillmentBatchTest(){
 		//Get a new batch
 		var fulfillmentBatch = request.slatwallScope.newEntity( 'fulfillmentBatch' );
@@ -99,31 +90,39 @@ component extends="Slatwall.meta.tests.unit.SlatwallUnitTestBase" {
 		fulfillmentBatch.setFulfillmentBatchID("123456");
 		var processObject = fulfillmentBatch.getProcessObject( 'Create' );
 		
-		//Create a batch item and add an orderFulfillment
-		var orderFulfillment = request.slatwallScope.newEntity( 'orderFulfillment' );
-		orderFulfillment.setOrderFulfillmentID("78910");
-		var fulfillmentBatchItem = request.slatwallScope.newEntity( 'fulfillmentBatchItem' );
-		fulfillmentBatchItem.setOrderFulfillment(orderFulfillment);
+		//Sets the location id
+		var location = request.slatwallScope.newEntity( 'location' );
+		location.setLocationID("012345678");
 		
 		//Set the others
 		var account = request.slatwallScope.newEntity('account');
 		account.setAccountID("11123");
 		var description = "This is a fulfillment batch description";
 		
-		//Add the fulfillment batch
-		processObject.setFulfillmentBatchItems([fulfillmentBatchItem]);
-		processObject.setAssignedAccount(account);
-		processObject.setDescription(description);
+		//Don't populate this time as it needs to happen automatically.
 		
 		var result = false;
-		//Has a description
-		assertEquals(processObject.getDescription(), description);
 		
-		//Has a batch item
-		assertEquals(processObject.getFulfillmentBatchItems()[1], fulfillmentBatchItem);
+		//Test auto populate.
+		var data = {
+			"locationID": "012345678",
+			"assignedAccountID": "11123",
+			"description": "This is another test description",
+			"fulfillmentBatchItems[1].orderFulfillment.orderFulfillmentID": "78910"
+		};
+		
+		//populate the data.
+		processObject.populate(data);
+		
+		//Has the populated description
+		assertEquals(processObject.getDescription(), data.description);
+		
+		//Has a populated location
+		assert(processObject.getLocationID(), data.locationID);
 		
 		//Has an assigned account
-		assertEquals(processObject.getAssignedAccount(), account);
+		assertEquals(processObject.getAssignedAccountID(), data.assignedAccountID);
+		
 		
 	}
 	

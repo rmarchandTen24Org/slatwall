@@ -70,7 +70,7 @@ component displayName="mytestcase" extends="testbox.system.compat.framework.Test
 		variables.persistentEntities = [];
 		variables.files = [];
 	}
-
+	
 	// AFTER EACH TEST	
 	public void function tearDown() {
 		debug(variables.debugArray);
