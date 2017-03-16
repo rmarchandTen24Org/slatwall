@@ -82,8 +82,7 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 		if (isNull(fulfillmentBatch.getDescription())){
 			fulfillmentBatch.setDescription(processObject.getDescription());
 		}
-		//Create a fulfillment batch number
-		//fulfillmentBatch.setFulfillmentBatchNumber(1);
+		
 		return fulfillmentBatch;
 	}
 	// =====================  END: Process Methods ============================
