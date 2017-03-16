@@ -96,7 +96,7 @@ component extends="Slatwall.meta.tests.unit.SlatwallUnitTestBase" {
 		var location = request.slatwallScope.getService("LocationService").getLocationByLocationID(locationID);
 		
 		//Find a random account id to use for population
-		var accountID = request.slatwallScope..getService("AccountService").getAccountCollectionList().getRecords()[1]['accountID'];
+		var accountID = request.slatwallScope.getService("AccountService").getAccountCollectionList().getRecords()[1]['accountID'];
 		var account = request.slatwallScope.getService("AccountService").getAccountByAccountID(accountID);
 		var description = "This is a fulfillment batch description";
 		
@@ -109,7 +109,6 @@ component extends="Slatwall.meta.tests.unit.SlatwallUnitTestBase" {
 			"description": "This is another test description"
 		};
 		
-		debug(data);
 		//populate the data.
 		processObject.populate(data);
 		
@@ -123,12 +122,10 @@ component extends="Slatwall.meta.tests.unit.SlatwallUnitTestBase" {
 		assertEquals(processObject.getAssignedAccountID(), data.assignedAccountID);
 		
 		//Has a populated object based location
-		writeDump(var=processObject, top=2);
-		//assertEquals(processObject.getLocation().getLocationID(), data.locationID);
+		assertEquals(processObject.getLocation().getLocationID(), data.locationID);
 		
 		//Has an assigned object based account so auto populated
 		assertEquals(processObject.getAssignedAccount().getAccountID(), data.assignedAccountID);
-		
 		
 	}
 }

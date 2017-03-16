@@ -73,16 +73,17 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 	public any function processFulfillmentBatch_create(required any fulfillmentBatch, required any processObject){
 		
 		//populate the fulfillmentbatch with the process data
-		if (!isNull(processObject.getAssignedAccount())){
+		if (isNull(fulfillmentBatch.getAssignedAccount())){
 			fulfillmentBatch.setAssignedAccount(processObject.getAssignedAccount());
 		}
-		if (!isNull(processObject.getLocation())){
-			fulfillmentBatch.setLocation(processObject.getLocation());
+		if (isNull(fulfillmentBatch.getLocation())){
+			fulfillmentBatch.addLocation(processObject.getLocation());
 		}
-		if (!isNull(processObject.getDescription())){
+		if (isNull(fulfillmentBatch.getDescription())){
 			fulfillmentBatch.setDescription(processObject.getDescription());
 		}
-		
+		//Create a fulfillment batch number
+		//fulfillmentBatch.setFulfillmentBatchNumber(1);
 		return fulfillmentBatch;
 	}
 	// =====================  END: Process Methods ============================
