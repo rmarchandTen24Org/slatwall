@@ -81,7 +81,7 @@ class Pagination{
     public getCurrentPage=():number =>{
         return this.currentPage;
     };
-    public setCurrentPage=(currentPage:number):void =>{
+    public setCurrentPage=(currentPage:number=1):void =>{
         this.currentPage = currentPage;
         this.getCollection();
         this.observerService.notify('swPaginationAction',{action:'pageChange', currentPage});
@@ -166,7 +166,7 @@ interface IPaginationService{
 }
 
 class PaginationService implements IPaginationService{
-    
+
 
     private paginations = {};
     //@ngInject

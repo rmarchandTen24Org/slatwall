@@ -660,7 +660,7 @@ class CollectionConfig {
         return false;
     };
 
-    public setCurrentPage= (pageNumber):CollectionConfig =>{
+    public setCurrentPage= (pageNumber=1):CollectionConfig =>{
         this.currentPage = pageNumber;
         return this;
     };

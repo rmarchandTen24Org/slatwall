@@ -34,27 +34,25 @@ declare var htmlTemplates:any;
 //custom bootstrapper
 class bootstrapper extends BaseBootStrapper{
     public myApplication;
-    
+
     constructor(){
-       
+
         var angular:any = super(slatwalladminmodule.name);
-        
+
         //add all templates to the template cache
         window.angular.module('slatwalladmin').run(['$templateCache','appConfig',($templateCache)=>{
              for(var i in htmlTemplates){
                  $templateCache.put(i,htmlTemplates[i]);
-//                 console.log(i);
-//                 console.log($templateCache.get(i));
              }
         }]);
-        
+
         angular.done(function() {
        	 	//angular.element('#loading').hide();
-            
+
             require('../../../node_modules/jasmine-core/lib/jasmine-core/boot');
             require('angular-mocks');
-            console.log('test',window.angular.modules);
-            
+
+
             describe('all Test',()=>{
                 var $httpBackend;
                 var getAccountHandler;
@@ -64,7 +62,7 @@ class bootstrapper extends BaseBootStrapper{
                 beforeEach(window.angular.mock.module('slatwalladmin'));
                 beforeEach(()=>{
                     for(var m=0;m > window.angular.modules.length;m++){
-                        console.log('test',window.angular.modules[m]);
+
                         window.mock.angular(window.angular.modules[m]);
                     }
                     window.angular.mock.module(($provide)=>{
@@ -80,15 +78,15 @@ class bootstrapper extends BaseBootStrapper{
                         });
                     });
                     window.angular.mock.inject((_$httpBackend_)=>{
-                       $httpBackend = _$httpBackend_; 
+                       $httpBackend = _$httpBackend_;
                         //default state by countryCode
                         getStateByCountryCodeHandler = $httpBackend.when('POST','/index.cfm/api/scope/getStateCodeOptionsByCountryCode/?countryCode=US')
                         .respond({
                            "failureActions":[
-                        
+
                            ],
                            "messages":[
-                        
+
                            ],
                            "stateCodeOptions":[
                               {
@@ -309,14 +307,14 @@ class bootstrapper extends BaseBootStrapper{
                               }
                            ],
                            "successfulActions":[
-                        
+
                            ]
                         });
                         //default countries
                         getCountriesHandler = $httpBackend.when('POST', '/index.cfm/api/scope/getCountries/')
                         .respond({
                            "failureActions":[
-                        
+
                            ],
                            "countryCodeOptions":[
                               {
@@ -1317,40 +1315,40 @@ class bootstrapper extends BaseBootStrapper{
                               }
                            ],
                            "messages":[
-                        
+
                            ],
                            "successfulActions":[
-                        
+
                            ]
                         });
                         //default cart
                         getCartHandler = $httpBackend.when('POST', '/index.cfm/api/scope/getCart/')
                         .respond({
                            "errors":{
-                        
+
                            },
                            "orderPayments":[
-                        
+
                            ],
                            "fulfillmentChargeAfterDiscountTotal":0,
                            "promotionCodeList":"",
                            "fulfillmentTotal":0.00,
                            "orderID":"ff8080815ab91389015ab9369e610013",
                            "promotionCodes":[
-                        
+
                            ],
                            "failureActions":[
-                        
+
                            ],
                            "subtotal":0,
                            "orderFulfillments":[
-                        
+
                            ],
                            "processObjects":{
-                        
+
                            },
                            "messages":[
-                        
+
                            ],
                            "orderOpenDateTime":"",
                            "calculatedTotal":0.00,
@@ -1358,29 +1356,29 @@ class bootstrapper extends BaseBootStrapper{
                            "hasErrors":false,
                            "taxTotal":0,
                            "orderItems":[
-                        
+
                            ],
                            "successfulActions":[
-                        
+
                            ]
                         });
-                        
+
                         getAccountHandler = $httpBackend.when('POST', '/index.cfm/api/scope/getAccount/')
                         .respond({
                            "primaryPhoneNumber":{
                               "errors":{
-                        
+
                               },
                               "phoneNumber":"",
                               "hasErrors":false,
                               "accountPhoneNumberID":""
                            },
                            "errors":{
-                        
+
                            },
                            "primaryAddress":{
                               "errors":{
-                        
+
                               },
                               "hasErrors":false,
                               "accountAddressID":"ff80808159cbfcca0159cc01ebf60008"
@@ -1388,12 +1386,12 @@ class bootstrapper extends BaseBootStrapper{
                            "firstName":"testrunner",
                            "company":"",
                            "failureActions":[
-                        
+
                            ],
                            "remoteID":"",
                            "primaryEmailAddress":{
                               "errors":{
-                        
+
                               },
                               "emailAddress":"testrunner@ten24web.com",
                               "hasErrors":false,
@@ -1401,22 +1399,22 @@ class bootstrapper extends BaseBootStrapper{
                            },
                            "lastName":"testrunning",
                            "processObjects":{
-                        
+
                            },
                            "messages":[
-                        
+
                            ],
                            "accountID":"ff808081598f3eae0159934e45e90028",
                            "accountAddresses":[
                               {
                                  "errors":{
-                        
+
                                  },
                                  "accountAddressName":"",
                                  "address":{
                                     "postalcode":"01601",
                                     "errors":{
-                        
+
                                     },
                                     "city":"Worcester",
                                     "statecode":"MA",
@@ -1432,17 +1430,17 @@ class bootstrapper extends BaseBootStrapper{
                            ],
                            "hasErrors":false,
                            "successfulActions":[
-                        
+
                            ]
                         });
-                        
-                        
+
+
                         //default account
-                        
+
                     });
-                    
+
                 });
-    
+
                  var requireAll = function(requireContext) {
                     return requireContext.keys().map(requireContext);
                 }
