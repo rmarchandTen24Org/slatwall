@@ -108,7 +108,7 @@ component displayName="mytestcase" extends="testbox.system.compat.framework.Test
 
 		structDelete(request, 'slatwallScope');
 	}
-
+	
 	private void function addToDebug( required any output ) {
 		arrayAppend(variables.debugArray, arguments.output);
 	}
