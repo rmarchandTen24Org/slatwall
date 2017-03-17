@@ -3,6 +3,7 @@
 var WebpackStrip = require('strip-loader');
 var devConfig = require('./webpack.config');
 var ngAnnotatePlugin = require('ng-annotate-webpack-plugin');
+var failPlugin = require('webpack-fail-plugin');
 
 var stripConsolelogs = {
 	exlude: /node_modules/,
@@ -20,6 +21,9 @@ devConfig.module.loaders.push(stripLogDebugs);
 
 
 devConfig.plugins= [
+	
+    failPlugin,
+    
   	new ngAnnotatePlugin({
         add: true,
         // other ng-annotate options here
