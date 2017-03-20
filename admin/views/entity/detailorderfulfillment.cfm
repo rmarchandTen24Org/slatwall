@@ -63,11 +63,14 @@ Notes:
 		<hb:HibachiEntityDetailGroup object="#rc.orderFulfillment#">
 			<hb:HibachiEntityDetailItem view="admin:entity/orderfulfillmenttabs/basic" open="true" text="#$.slatwall.rbKey('admin.define.basic')#" />
 			<hb:HibachiEntityDetailItem view="admin:entity/orderfulfillmenttabs/orderfulfillmentitems">
+				<hb:HibachiEntityDetailItem view="admin:entity/orderfulfillmenttabs/accountAddresses">
 			<!--- Custom Attributes --->
 			<cfloop array="#rc.orderFulfillment.getAssignedAttributeSetSmartList().getRecords()#" index="attributeSet">
 				<swa:SlatwallAdminTabCustomAttributes object="#rc.orderFulfillment#" attributeSet="#attributeSet#" />
 			</cfloop>
 		</hb:HibachiEntityDetailGroup>
+		
+		
 		
 	</hb:HibachiEntityDetailForm>
 </cfoutput>
