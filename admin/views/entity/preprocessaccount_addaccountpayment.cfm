@@ -83,7 +83,7 @@ Notes:
 					<hb:HibachiPropertyDisplay object="#rc.processObject.getNewAccountPayment()#" property="paymentMethod" fieldName="newAccountPayment.paymentMethod.paymentMethodID" valueOptions="#rc.processObject.getPaymentMethodIDOptions()#" edit="#rc.edit#">
 					
 					<!--- Save Account Payment as Account Payment Method --->
-					<cfset loadVisable = rc.processObject.getNewAccountPayment().getPaymentMethodOptions()[1]['allowsave'] />
+					<cfset loadVisable = arraylen(rc.processObject.getNewAccountPayment().getPaymentMethodOptions()) && rc.processObject.getNewAccountPayment().getPaymentMethodOptions()[1]['allowsave'] />
 					<cfif !isNull(rc.processObject.getNewAccountPayment().getPaymentMethod())>
 						<cfset loadVisable = rc.processObject.getNewAccountPayment().getPaymentMethod().getAllowSaveFlag() />
 					</cfif>
@@ -98,7 +98,7 @@ Notes:
 						</hb:HibachiDisplayToggle>
 					</hb:HibachiDisplayToggle>
 					
-					<cfset loadPaymentMethodType = rc.processObject.getNewAccountPayment().getPaymentMethodOptions()[1]['paymentmethodtype'] />
+					<cfset loadPaymentMethodType = arraylen(rc.processObject.getNewAccountPayment().getPaymentMethodOptions()) && rc.processObject.getNewAccountPayment().getPaymentMethodOptions()[1]['paymentmethodtype'] />
 					<cfif !isNull(rc.processObject.getNewAccountPayment().getPaymentMethod())>
 						<cfset loadPaymentMethodType = rc.processObject.getNewAccountPayment().getPaymentMethod().getPaymentMethodType() />
 					</cfif>
