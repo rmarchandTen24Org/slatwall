@@ -193,7 +193,6 @@ component extends="Slatwall.meta.tests.unit.SlatwallUnitTestBase" {
 		processObject.getFulfillmentBatchItemsByOrderFulfillmentIDList();
 		
 		//Should have 5 fulfillmentBatchItems
-		writeDump(var="#processObject.getFulfillmentBatchItems()#", top=2);
 		assertEquals(arrayLen(processObject.getFulfillmentBatchItems()), arrayLen(orderFulfillmentsForTesting));
 	}
 }
