@@ -128,4 +128,72 @@ component extends="Slatwall.meta.tests.unit.SlatwallUnitTestBase" {
 		assertEquals(processObject.getAssignedAccount().getAccountID(), data.assignedAccountID);
 		
 	}
+	
+	public void function isAbleToCreateWithSelectedOrderFulfillmentIDListTest(){
+		
+		//Get the process object
+		var fulfillmentBatch = request.slatwallScope.newEntity( 'fulfillmentBatch' );
+		fulfillmentBatch.setFulfillmentBatchID("123456");
+		var processObject = fulfillmentBatch.getProcessObject( 'Create' );
+		
+		//Find a random location id to use for population
+		var locationID = request.slatwallScope.getService("LocationService").getLocationCollectionList().getRecords()[1]['locationID'];
+		var location = request.slatwallScope.getService("LocationService").getLocationByLocationID(locationID);
+		
+		//Find a random account id to use for population
+		var accountID = request.slatwallScope.getService("AccountService").getAccountCollectionList().getRecords()[1]['accountID'];
+		var account = request.slatwallScope.getService("AccountService").getAccountByAccountID(accountID);
+		var description = "This is a fulfillment batch description";
+		
+		//Get some random orderFulfillments from Slatwall to use
+		var orderFulfillmentsForTesting = [];
+		for (var i = 0; i<=5; i++){
+			data = {
+				orderFulfillmentID: "#now()#12345678-" & i
+			};
+			var orderFulfillment = createPersistedTestEntity("OrderFulfillment", data);
+			arrayAppend(orderFulfillmentsForTesting, orderFulfillment);
+		}
+		//Create the orderFulfillmentIDList;
+		orderFulfillmentIDList = "";
+		for (var orderFulfillment in orderFulfillmentsForTesting){
+			orderFulfillmentIDList = orderFulfillmentIDList & "," & orderFulfillment.getOrderFulfillmentID();
+		}
+		
+		//*** Don't populate this time as it needs to happen automatically including the idList
+		//Test auto populate using the found data. It should find those entities while populating and put the objects into the process object.
+		
+		var data = {
+			"locationID": location.getLocationID(),
+			"assignedAccountID": account.getAccountID(),
+			"description": "This is another test description",
+			"orderFulfillmentIDList": orderFulfillmentIDList
+		};
+		
+		//populate the data.
+		processObject.populate(data);
+		processObject.setOrderFulfillmentIDList(data.orderFulfillmentIDList);
+		
+		//Has the populated simple description
+		assertEquals(processObject.getDescription(), data.description);
+		
+		//Has a populated simple location
+		assertEquals(processObject.getLocationID(), data.locationID);
+		
+		//Has an assigned simple account
+		assertEquals(processObject.getAssignedAccountID(), data.assignedAccountID);
+		
+		//Has a populated object based location
+		assertEquals(processObject.getLocation().getLocationID(), data.locationID);
+		
+		//Has an assigned object based account so auto populated
+		assertEquals(processObject.getAssignedAccount().getAccountID(), data.assignedAccountID);
+		
+		//Call to generate the batchItems from the fulfillment list
+		processObject.getFulfillmentBatchItemsByOrderFulfillmentIDList();
+		
+		//Should have 5 fulfillmentBatchItems
+		writeDump(var="#processObject.getFulfillmentBatchItems()#", top=2);
+		assertEquals(arrayLen(processObject.getFulfillmentBatchItems()), arrayLen(orderFulfillmentsForTesting));
+	}
 }

@@ -74,16 +74,26 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 		
 		//populate the fulfillmentbatch with the process data
 		if (isNull(fulfillmentBatch.getAssignedAccount())){
-			fulfillmentBatch.setAssignedAccount(processObject.getAssignedAccount());
+			processObject.getFulfillmentBatch().setAssignedAccount(processObject.getAssignedAccount());
 		}
 		if (isNull(fulfillmentBatch.getLocation())){
-			fulfillmentBatch.addLocation(processObject.getLocation());
+			processObject.getFulfillmentBatch().addLocation(processObject.getLocation());
 		}
 		if (isNull(fulfillmentBatch.getDescription())){
-			fulfillmentBatch.setDescription(processObject.getDescription());
+			processObject.getFulfillmentBatch().setDescription(processObject.getDescription());
 		}
 		
-		return fulfillmentBatch;
+		//If they are trying to pass fulfillments for the fulfillment batch.
+		if (!isNull(processObject.getFulfillmentBatchIDList())){
+			processObject.getFulfillmentBatch().setFulfillmentBatchItems(getFulfillmentBatchItemsByFulfillmentIDList());
+		}
+		
+		//If they are trying to pass orderItems for the fulfillment batch.
+		if (!isNull(processObject.getOrderItemIDList())){
+			processObject.getFulfillmentBatch().setFulfillmentBatchItems(getFulfillmentBatchItemsByOrderItemIDList());
+		}
+		
+		return processObject.getFulfillmentBatch();
 	}
 	// =====================  END: Process Methods ============================
 	
