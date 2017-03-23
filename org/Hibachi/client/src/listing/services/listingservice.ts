@@ -313,38 +313,38 @@ class ListingService{
     //End Row Save Functionality
 
     //Setup Functions
-    public setupInSingleCollectionConfigMode = (listingID:string, listingDisplayScope) =>{
-
-        if( this.getListing(listingID).collectionObject != null &&
-            this.getListing(listingID).collectionConfig != null
-        ){
-            this.getListing(listingID).collectionObject = this.getListing(listingID).collectionConfig.baseEntityName;
-        }
-
-        this.initCollectionConfigData( listingID, this.getListing(listingID).collectionConfig );
-
-        this.setupColumns( listingID, this.getListing(listingID).collectionConfig, this.getListing(listingID).collectionObject );
-
-        listingDisplayScope.$watch('swListingDisplay.collectionPromise',(newValue,oldValue)=>{
-            if(newValue){
-                this.$q.when(this.getListing(listingID).collectionPromise).then((data)=>{
-                    this.getListing(listingID).collectionData = data;
-                    this.setupDefaultCollectionInfo(listingID);
-                    if(this.getListing(listingID).collectionConfig != null && this.getListing(listingID).collectionConfig.hasColumns()){
-                        this.setupColumns(listingID, this.getListing(listingID).collectionConfig, this.getListing(listingID).collectionObject);
-                    }else{
-                        this.getListing(listingID).collectionConfig.loadJson(data.collectionConfig);
-                    }
-                    this.notifyListingPageRecordsUpdate(listingID);
-                    this.getListing(listingID).collectionData.pageRecords = this.getListing(listingID).collectionData.pageRecords ||
-                                                                            this.getListing(listingID).collectionData.records;
-
-                    this.getListing(listingID).paginator.setPageRecordsInfo( this.getListing(listingID).collectionData );
-                    this.getListing(listingID).searching = false;
-                });
-            }
-        });
-    };
+//    public setupInSingleCollectionConfigMode = (listingID:string, listingDisplayScope) =>{
+//
+//        if( this.getListing(listingID).collectionObject != null &&
+//            this.getListing(listingID).collectionConfig != null
+//        ){
+//            this.getListing(listingID).collectionObject = this.getListing(listingID).collectionConfig.baseEntityName;
+//        }
+//
+//        this.initCollectionConfigData( listingID, this.getListing(listingID).collectionConfig );
+//
+//        this.setupColumns( listingID, this.getListing(listingID).collectionConfig, this.getListing(listingID).collectionObject );
+//
+//        listingDisplayScope.$watch('swListingDisplay.collectionPromise',(newValue,oldValue)=>{
+//            if(newValue){
+//                this.$q.when(this.getListing(listingID).collectionPromise).then((data)=>{
+//                    this.getListing(listingID).collectionData = data;
+//                    this.setupDefaultCollectionInfo(listingID);
+//                    if(this.getListing(listingID).collectionConfig != null && this.getListing(listingID).collectionConfig.hasColumns()){
+//                        this.setupColumns(listingID, this.getListing(listingID).collectionConfig, this.getListing(listingID).collectionObject);
+//                    }else{
+//                        this.getListing(listingID).collectionConfig.loadJson(data.collectionConfig);
+//                    }
+//                    this.notifyListingPageRecordsUpdate(listingID);
+//                    this.getListing(listingID).collectionData.pageRecords = this.getListing(listingID).collectionData.pageRecords ||
+//                                                                            this.getListing(listingID).collectionData.records;
+//
+//                    this.getListing(listingID).paginator.setPageRecordsInfo( this.getListing(listingID).collectionData );
+//                    this.getListing(listingID).searching = false;
+//                });
+//            }
+//        });
+//    };
 
     public setupInMultiCollectionConfigMode = (listingID:string) => {
         angular.forEach(this.getListing(listingID).collectionConfigs,(value,key)=>{
@@ -353,14 +353,19 @@ class ListingService{
     };
 
     private setupDefaultCollectionInfo = (listingID:string) =>{
-        if(this.getListing(listingID).hasCollectionPromise
-            && angular.isDefined(this.getListing(listingID).collection)
-            && this.getListing(listingID).collectionConfig == null
-        ){
-            this.getListing(listingID).collectionObject = this.getListing(listingID).collection.collectionObject;
+
+        if(this.getListing(listingID).collectionConfig == null){
             this.getListing(listingID).collectionConfig = this.collectionConfigService.newCollectionConfig(this.getListing(listingID).collectionObject);
-            this.getListing(listingID).collectionConfig.loadJson(this.getListing(listingID).collection.collectionConfig);
         }
+        if(this.getListing(listingID).collectionObject == null){
+            this.getListing(listingID).collectionObject = this.getListing(listingID).collection.collectionObject;
+        }
+
+        this.$timeout(()=>{
+            this.getListing(listingID).collectionConfig.loadJson(this.getListing(listingID).collectionData.collectionConfig);
+            this.getListing(listingID).columns = this.getListing(listingID).collectionConfig.columns;
+        });
+
         if( this.getListing(listingID).paginator != null
             && this.getListing(listingID).collectionConfig != null
         ){
@@ -684,13 +689,14 @@ class ListingService{
             return () =>{
                 this.getListing(listingID).collectionConfig.setCurrentPage(this.getListing(listingID).paginator.getCurrentPage());
                 this.getListing(listingID).collectionConfig.setPageShow(this.getListing(listingID).paginator.getPageShow());
-                
+                this.getListing(listingID).collectionPromise = this.getListing(listingID).collectionConfig.getEntity();
                 this.getListing(listingID).collectionPromise.then(
                     (data)=>{
                         this.getListing(listingID).collectionData = data;
                         this.setupDefaultCollectionInfo(listingID);
                         this.getListing(listingID).collectionData.pageRecords = data.pageRecords || data.records;
                         this.getListing(listingID).paginator.setPageRecordsInfo(this.getListing(listingID).collectionData);
+                        this
                     },
                     (reason)=>{
                         throw("Listing Service encounter a problem when trying to get collection. Reason: " + reason);

@@ -61,13 +61,14 @@ class SWListingDisplayController{
     public recordProcessButtonDisplayFlag:boolean;
     public searching:boolean = false;
     public searchText;
-
+    
     public selectFieldName;
     public selectable:boolean = false;
     public showOrderBy:boolean;
     public showSearch:boolean;
     public showSearchFilters = false;
     public showTopPagination:boolean;
+    
     public showFilters:boolean;
     public sortable:boolean = false;
     public sortableFieldName:string;
@@ -103,8 +104,6 @@ class SWListingDisplayController{
         public observerService,
         public rbkeyService
     ){
-        this.initializeState();
-
         //promises to determine which set of logic will run
 
         if(angular.isDefined(this.collection) && angular.isString(this.collection)){
@@ -112,16 +111,29 @@ class SWListingDisplayController{
             this.baseEntityName = this.collection;
             this.collectionObject = this.collection;
             this.collectionConfig = this.collectionConfigService.newCollectionConfig(this.collectionObject);
+            this.$timeout(()=>{
+                this.collection = this.collectionConfig;
+                this.columns = this.collectionConfig.columns;
+            });
         }
+
+        this.initializeState();
 
         this.hasCollectionPromise = angular.isDefined(this.collectionPromise);
 
         this.listingService.setListingState(this.tableID, this);
 
         //this is performed after the listing state is set above to populate columns and multiple collectionConfigs if present
-        this.$transclude(this.$scope,()=>{});
-
-        this.listingService.setupInMultiCollectionConfigMode(this.tableID);
+        if(!this.columns.length){
+            this.$transclude(this.$scope,()=>{});
+        }
+        
+        if(this.collectionConfig != null && this.columns.length){
+           // this.listingService.setupInSingleCollectionConfigMode(this.tableID,this.$scope);
+        }else{
+            this.listingService.setupInMultiCollectionConfigMode(this.tableID);    
+        }
+        
         if(angular.isUndefined(this.getCollection)){
             this.getCollection = this.listingService.setupDefaultGetCollection(this.tableID);
         }
@@ -130,7 +142,7 @@ class SWListingDisplayController{
 
         var getCollectionEventID = this.tableID;
         this.observerService.attach(this.getCollectionObserver,'getCollection',getCollectionEventID);
-
+        this.listingService.getCollection(this.tableID);
     }
 
     private getCollectionObserver=(param)=> {
@@ -418,7 +430,7 @@ class SWListingDisplay implements ng.IDirective{
             name:"@?",
 
             /*required*/
-            collection:"=?",
+            collection:"<?",
             collectionConfig:"=?",
             getCollection:"&?",
             collectionPromise:"=?",

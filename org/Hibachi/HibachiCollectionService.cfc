@@ -844,6 +844,8 @@ component output="false" accessors="true" extends="HibachiService" {
 				//paginated collection struct
 				collectionStruct = getFormattedPageRecords(arguments.collectionEntity,arguments.collectionEntity.getAuthorizedProperties());
 			}
+			//need to get the serialized struct in case the persisted json is stale or changes are temporary
+			response['collectionConfig'] = serializeJson(collectionEntity.getCollectionConfigStruct());
 			structAppend(response,collectionStruct);
 		}
 		return response;

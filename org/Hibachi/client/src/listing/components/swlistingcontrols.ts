@@ -11,7 +11,7 @@ class SWListingControlsController {
     private listingColumns;
     private displayOptionsClosed:boolean=true;
     private filtersClosed:boolean=true;
-    private showFilters:boolean;
+    private showFilters:boolean=true;
     private showToggleFilters:boolean;
     private showToggleDisplayOptions:boolean;
     private newFilterPosition;
@@ -69,6 +69,9 @@ class SWListingControlsController {
     public canDisplayColumn = (column) =>{
         if(angular.isDefined(this.columnIsControllableMap[column.propertyIdentifier])){
             return this.columnIsControllableMap[column.propertyIdentifier];
+        }
+        if(!this.listingColumns.length){
+            return true;    
         }
         for(var i=0; i < this.listingColumns.length; i++){
             if(column.propertyIdentifier == this.listingColumns[i].propertyIdentifier){
