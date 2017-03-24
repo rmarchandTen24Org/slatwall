@@ -128,15 +128,15 @@ class SWListingDisplayController{
 
         //this is performed after the listing state is set above to populate columns and multiple collectionConfigs if present
         
-            this.$transclude(this.$scope,()=>{});    
-        if(this.collectionConfig != null && this.columns.length){
+        this.$transclude(this.$scope,()=>{});    
+        if(this.multiSlot){
              this.singleCollectionPromise.then(()=>{
-            this.setupCollectionPromise();
+                 this.listingService.setupInSingleCollectionConfigMode(this.tableID,this.$scope);
             }).finally(()=>{
-            	
+                this.setupCollectionPromise();	
             });
-        }else if(!this.columns.length && !this.multiSlot){
-            console.log('here',this);
+        }
+        else if(!this.multiSlot){
             this.setupCollectionPromise();
             
         }
