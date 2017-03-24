@@ -313,18 +313,18 @@ class ListingService{
     //End Row Save Functionality
 
     //Setup Functions
-//    public setupInSingleCollectionConfigMode = (listingID:string, listingDisplayScope) =>{
-//
-//        if( this.getListing(listingID).collectionObject != null &&
-//            this.getListing(listingID).collectionConfig != null
-//        ){
-//            this.getListing(listingID).collectionObject = this.getListing(listingID).collectionConfig.baseEntityName;
-//        }
-//
-//        this.initCollectionConfigData( listingID, this.getListing(listingID).collectionConfig );
-//
-//        this.setupColumns( listingID, this.getListing(listingID).collectionConfig, this.getListing(listingID).collectionObject );
-//
+    public setupInSingleCollectionConfigMode = (listingID:string, listingDisplayScope) =>{
+
+        if( this.getListing(listingID).collectionObject != null &&
+            this.getListing(listingID).collectionConfig != null
+        ){
+            this.getListing(listingID).collectionObject = this.getListing(listingID).collectionConfig.baseEntityName;
+        }
+
+        this.initCollectionConfigData( listingID, this.getListing(listingID).collectionConfig );
+
+        this.setupColumns( listingID, this.getListing(listingID).collectionConfig, this.getListing(listingID).collectionObject );
+
 //        listingDisplayScope.$watch('swListingDisplay.collectionPromise',(newValue,oldValue)=>{
 //            if(newValue){
 //                this.$q.when(this.getListing(listingID).collectionPromise).then((data)=>{
@@ -344,7 +344,7 @@ class ListingService{
 //                });
 //            }
 //        });
-//    };
+    };
 
     public setupInMultiCollectionConfigMode = (listingID:string) => {
         angular.forEach(this.getListing(listingID).collectionConfigs,(value,key)=>{
@@ -358,7 +358,7 @@ class ListingService{
             this.getListing(listingID).collectionConfig = this.collectionConfigService.newCollectionConfig(this.getListing(listingID).collectionObject);
         }
         if(this.getListing(listingID).collectionObject == null){
-            this.getListing(listingID).collectionObject = this.getListing(listingID).collection.collectionObject;
+            this.getListing(listingID).collectionObject = this.getListing(listingID).collectionConfig.baseEntityName;
         }
 
         this.$timeout(()=>{

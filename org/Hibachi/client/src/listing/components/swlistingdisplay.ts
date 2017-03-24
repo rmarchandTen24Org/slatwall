@@ -45,6 +45,8 @@ class SWListingDisplayController{
     public multiselectIdPaths;
     public multiselectPropertyIdentifier;
     public multiselectValues;
+	public singleCollectionDeferred:any;
+    public singleCollectionPromise:any;
     public norecordstext;
     public orderBys = [];
     public orderByStates = {};
@@ -105,7 +107,8 @@ class SWListingDisplayController{
         public rbkeyService
     ){
         //promises to determine which set of logic will run
-
+		this.singleCollectionDeferred = $q.defer();
+        this.singleCollectionPromise = this.singleCollectionDeferred.promise;
         if(angular.isDefined(this.collection) && angular.isString(this.collection)){
             //not sure why we have two properties for this
             this.baseEntityName = this.collection;
@@ -124,17 +127,24 @@ class SWListingDisplayController{
         this.listingService.setListingState(this.tableID, this);
 
         //this is performed after the listing state is set above to populate columns and multiple collectionConfigs if present
-        if(!this.columns.length){
-            this.$transclude(this.$scope,()=>{});
-        }
         
+            this.$transclude(this.$scope,()=>{});    
         if(this.collectionConfig != null && this.columns.length){
-           // this.listingService.setupInSingleCollectionConfigMode(this.tableID,this.$scope);
-        }else{
-            this.listingService.setupInMultiCollectionConfigMode(this.tableID);    
+             this.singleCollectionPromise.then(()=>{
+            this.setupCollectionPromise();
+            }).finally(()=>{
+            	
+            });
+        }else if(!this.columns.length && !this.multiSlot){
+            console.log('here',this);
+            this.setupCollectionPromise();
+            
         }
         
-        if(angular.isUndefined(this.getCollection)){
+    }
+    
+    private setupCollectionPromise=()=>{
+    	if(angular.isUndefined(this.getCollection)){
             this.getCollection = this.listingService.setupDefaultGetCollection(this.tableID);
         }
 
@@ -142,7 +152,7 @@ class SWListingDisplayController{
 
         var getCollectionEventID = this.tableID;
         this.observerService.attach(this.getCollectionObserver,'getCollection',getCollectionEventID);
-        this.listingService.getCollection(this.tableID);
+        this.listingService.getCollection(this.tableID); 
     }
 
     private getCollectionObserver=(param)=> {
