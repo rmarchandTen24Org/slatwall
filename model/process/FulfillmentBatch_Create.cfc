@@ -74,10 +74,8 @@ component output="false" accessors="true" extends="HibachiProcess" {
 	
 	public any function getLocation(){
 		if(!structKeyExists(variables,'location')){
-			if(!isNull(getLocationID())){
-				variables.location = getService('locationService').getLocation(getLocationID());
-			}else{
-				return;
+			if(structKeyExists(variables, "locationID")){
+				variables.location = getService('locationService').getLocation(variables.locationID);
 			}
 		}
 		return variables.location;

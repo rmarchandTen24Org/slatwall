@@ -76,16 +76,21 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 		if (isNull(fulfillmentBatch.getAssignedAccount())){
 			fulfillmentBatch.setAssignedAccount(processObject.getAssignedAccount());
 		}
-		if (isNull(fulfillmentBatch.getLocation())){
-			fulfillmentBatch.addLocation(processObject.getLocation());
+		
+		if (!arrayLen(fulfillmentBatch.getLocations())){
+			var location = processObject.getLocation();
+			if (!isNull(location)){
+				fulfillmentBatch.addLocation(location);
+			}
 		}
+		
 		if (isNull(fulfillmentBatch.getDescription())){
 			fulfillmentBatch.setDescription(processObject.getDescription());
 		}
 		
 		//If they are trying to pass fulfillments for the fulfillment batch.
-		if (!isNull(processObject.getFulfillmentBatchIDList())){
-			fulfillmentBatch.setFulfillmentBatchItems(arguments.processObject.getFulfillmentBatchItemsByFulfillmentIDList());
+		if (!isNull(processObject.getOrderFulfillmentIDList())){
+			fulfillmentBatch.setFulfillmentBatchItems(arguments.processObject.getFulfillmentBatchItemsByOrderFulfillmentIDList());
 		}
 		
 		//If they are trying to pass orderItems for the fulfillment batch.
