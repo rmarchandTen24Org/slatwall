@@ -117,11 +117,9 @@ component extends="Slatwall.meta.tests.unit.SlatwallUnitTestBase" {
 		
 		assertSame(fb.getAssignedAccountID(), data.assignedAccountID, "It should have populated a assigned account");
 		
-		assertSame(processObject.getAssignedAccount().getAccountID(), data.assignedAccountID&"1", "It should have an assigned account ID and the ids should match");
+		assertSame(processObject.getAssignedAccount().getAccountID(), data.assignedAccountID, "It should have an assigned account ID and the ids should match");
 		
 		assertSame(fb.getLocations()[1].getLocationID(), data.locationID, "It should have a location id that matches the passed in locationID");
-		
-		
 		
 	}
 }
