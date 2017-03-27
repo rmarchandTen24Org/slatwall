@@ -74,30 +74,40 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 		
 		//populate the fulfillmentbatch with the process data
 		if (isNull(fulfillmentBatch.getAssignedAccount())){
-			fulfillmentBatch.setAssignedAccount(processObject.getAssignedAccount());
+			arguments.fulfillmentBatch.setAssignedAccount(processObject.getAssignedAccount());
 		}
 		
 		if (!arrayLen(fulfillmentBatch.getLocations())){
 			var location = processObject.getLocation();
 			if (!isNull(location)){
-				fulfillmentBatch.addLocation(location);
+				arguments.fulfillmentBatch.addLocation(location);
 			}
 		}
 		
 		if (isNull(fulfillmentBatch.getDescription())){
-			fulfillmentBatch.setDescription(processObject.getDescription());
+			arguments.fulfillmentBatch.setDescription(processObject.getDescription());
 		}
 		
 		//If they are trying to pass fulfillments for the fulfillment batch.
 		if (!isNull(processObject.getOrderFulfillmentIDList())){
-			fulfillmentBatch.setFulfillmentBatchItems(arguments.processObject.getFulfillmentBatchItemsByOrderFulfillmentIDList());
+			arguments.fulfillmentBatch.setFulfillmentBatchItems(arguments.processObject.getFulfillmentBatchItemsByOrderFulfillmentIDList());
 		}
 		
 		//If they are trying to pass orderItems for the fulfillment batch.
 		if (!isNull(processObject.getOrderItemIDList())){
-			processObject.getFulfillmentBatch().setFulfillmentBatchItems(arguments.processObject.getFulfillmentBatchItemsByOrderItemIDList());
+			arguments.fulfillmentBatch.setFulfillmentBatchItems(arguments.processObject.getFulfillmentBatchItemsByOrderItemIDList());
 		}
 		
+		return arguments.fulfillmentBatch;
+	}
+	
+	// Stub: FulfillmentBatch Auto fulfill all fulfillment batch items
+	public any function autoFulfill(required any fulfillmentBatch){
+		
+		var fulfillmentBatchItems = fulfillmentBatch.getFulfillmentBatchItems();
+		for (var fulfillmentbatchItem in fulfillmentBatchItems){
+			//fulfill.
+		}
 		return processObject.getFulfillmentBatch();
 	}
 	// =====================  END: Process Methods ============================
