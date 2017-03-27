@@ -85,8 +85,7 @@ component extends="Slatwall.meta.tests.unit.SlatwallUnitTestBase" {
 			orderFulfillmentIDList = orderFulfillmentIDList & "," & orderFulfillment.getOrderFulfillmentID();
 		}
 		
-		//*** Don't populate this time as it needs to happen automatically including the idList
-		//Test auto populate using the found data. It should find those entities while populating and put the objects into the process object.
+		//***Testing that the service methods are working to populate the final object based on passed in data. 
 		
 		var data = {
 			"locationID": location.getLocationID(),
