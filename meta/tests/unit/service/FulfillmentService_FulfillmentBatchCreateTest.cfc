@@ -105,18 +105,22 @@ component extends="Slatwall.meta.tests.unit.SlatwallUnitTestBase" {
 		//Pass in the fulfillment batch and the process.
 		var fb = fulfillmentService.processFulfillmentBatch_create(fulfillmentBatch, processObject);
 		
-		//It should have an array of fulfillmentBatchItems because we passed in the id list.
-		assertIsArray(fb.getFulfillmentBatchItems());
+		assert(!isNull(fb), "The fulfillmentBatch should not be null");
 		
-		assertTrue(arraylen(fb.getFulfillmentBatchItems()) > 0, "It has fulfillment batch items");
+		assert(!isNull(fb.getFulfillmentBatchItems()), "It has Fulfillment Batch Items");
 		
-		assertTrue(fb.getDescription() == data.description, "It should have the populated simple description");
+		assertIsArray(fb.getFulfillmentBatchItems(), "The array of batch items exists");
 		
-		assertTrue(fb.getAssignedAccountID() == data.assignedAccountID, "It should have an assigned simple account");
+		assert(arraylen(fb.getFulfillmentBatchItems()) > 0, "It has at least 1 fulfillment batch item");
 		
-		assertTrue(fb.getLocations()[1].getLocationID() == data.locationID, "It should have a location id that matches the passed in locationID");
+		assertSame(fb.getDescription(), data.description, "It should have the populated simple description");
 		
-		assertTrue(processObject.getAssignedAccount().getAccountID() == data.assignedAccountID, "It should have an assigned object based account so auto populated");
+		assertSame(fb.getAssignedAccountID(), data.assignedAccountID, "It should have populated a assigned account");
+		
+		assertSame(processObject.getAssignedAccount().getAccountID(), data.assignedAccountID&"1", "It should have an assigned account ID and the ids should match");
+		
+		assertSame(fb.getLocations()[1].getLocationID(), data.locationID, "It should have a location id that matches the passed in locationID");
+		
 		
 		
 	}
