@@ -746,7 +746,7 @@ component output="false" accessors="true" extends="HibachiService" {
 				var collectionPropertyIdentifiers = getPropertyIdentifierArray(collectionEntity.getCollectionObject());
 			}
 			if(structKeyExists(collectionOptions,'filterGroupsConfig') && len(collectionOptions.filterGroupsConfig)){
-				collectionEntity.getCollectionConfigStruct().filterGroups = deserializeJson(collectionOptions.filterGroupsConfig);
+				collectionEntity.getCollectionConfigStruct()['filterGroups'] = deserializeJson(collectionOptions.filterGroupsConfig);
 			}
 
 			if(structKeyExists(collectionOptions,'columnsConfig') && len(collectionOptions.columnsConfig)){
@@ -845,7 +845,7 @@ component output="false" accessors="true" extends="HibachiService" {
 				collectionStruct = getFormattedPageRecords(arguments.collectionEntity,arguments.collectionEntity.getAuthorizedProperties());
 			}
 			//need to get the serialized struct in case the persisted json is stale or changes are temporary
-			response['collectionConfig'] = serializeJson(collectionEntity.getCollectionConfigStruct());
+			//response['collectionConfig'] = serializeJson(collectionEntity.getCollectionConfigStruct());
 			structAppend(response,collectionStruct);
 		}
 		return response;
@@ -922,14 +922,14 @@ component output="false" accessors="true" extends="HibachiService" {
 					comparisonOperator = 'IN',
 					value = arguments.data.ids
 				};
-				collectionEntity.getCollectionConfigStruct().filterGroups = [
+				collectionEntity.getCollectionConfigStruct()['filterGroups'] = [
 					{
 						'filterGroup'=[
 
 						]
 					}
 				];
-				arrayAppend(collectionEntity.getCollectionConfigStruct().filterGroups[1].filterGroup,filterGroup);
+				arrayAppend(collectionEntity.getCollectionConfigStruct()['filterGroups'][1].filterGroup,filterGroup);
 
 			}
 			var exportCollectionConfigData = {};

@@ -143,8 +143,8 @@ component displayname="Collection" entityname="SlatwallCollection" table="SwColl
 	public void function setParentCollection(required any parentCollection){
 		if(getNewFlag()){
 			var parentCollectionConfigStruct = arguments.parentCollection.getCollectionConfigStruct();
-			parentCollectionConfigStruct.filterGroups = [{}];
-			parentCollectionConfigStruct.filterGroups[1]['filterGroup'] = [{}];
+			parentCollectionConfigStruct['filterGroups'] = [{}];
+			parentCollectionConfigStruct['filterGroups'][1]['filterGroup'] = [{}];
 			setCollectionConfig(serializeJson(parentCollectionConfigStruct));	
 		}
 		
@@ -722,7 +722,7 @@ component displayname="Collection" entityname="SlatwallCollection" table="SwColl
 					}
 					
 					if(!structKeyExists(getCollectionConfigStruct(),'filterGroups')){
-						getCollectionConfigStruct().filterGroups = [{filterGroup=[]}];
+						getCollectionConfigStruct()['filterGroups'] = [{filterGroup=[]}];
 					}
 					
 					filterData['filterGroupAlias'] = "range#prop#";

@@ -277,9 +277,9 @@ component output="false" accessors="true" extends="HibachiController" {
             }
         ];
 
-        collectionConfigStruct.filterGroups = [
+        collectionConfigStruct['filterGroups'] = [
             {
-                filterGroup = [
+                'filterGroup' = [
                     {
                         propertyIdentifier = "_collection.collectionObject",
                         comparisonOperator = "=",
