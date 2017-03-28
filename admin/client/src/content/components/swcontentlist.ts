@@ -43,7 +43,6 @@ class SWContentListController{
 
             this.loadingCollection = false;
 
-
             if(this.localStorageService.hasItem('selectedSiteOption')){
                 this.selectedSite = this.localStorageService.getItem('selectedSiteOption');
             }
@@ -200,7 +199,6 @@ class SWContentListController{
                     this.$timeout(()=>{
                         this.collection = value;
                         this.collection.collectionConfig = this.collectionConfig;
-
                         this.firstLoad = true;
                         this.loadingCollection = false;
                     });

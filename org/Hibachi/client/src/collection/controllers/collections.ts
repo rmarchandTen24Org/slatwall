@@ -279,7 +279,6 @@ class CollectionController{
                 "ids":selectionService.getSelections('collectionSelection'),
                 "keywords":$scope.keywords
                };
-            console.log('exportData',data);
             var target="downloadCollection";
             $('body').append('<form action="'+url+'" method="post" target="'+target+'" id="postToIframe"></form>');
             $.each(data,function(n,v){

@@ -45,7 +45,9 @@ class SWListingDisplayController{
     public multiselectIdPaths;
     public multiselectPropertyIdentifier;
     public multiselectValues;
-	public singleCollectionDeferred:any;
+    public multipleCollectionDeffered:any;
+    public multipleCollectionPromise:any;
+    public singleCollectionDeferred:any;
     public singleCollectionPromise:any;
     public norecordstext;
     public orderBys = [];
@@ -63,14 +65,13 @@ class SWListingDisplayController{
     public recordProcessButtonDisplayFlag:boolean;
     public searching:boolean = false;
     public searchText;
-    
+
     public selectFieldName;
     public selectable:boolean = false;
     public showOrderBy:boolean;
     public showSearch:boolean;
     public showSearchFilters = false;
     public showTopPagination:boolean;
-    
     public showFilters:boolean;
     public sortable:boolean = false;
     public sortableFieldName:string;
@@ -89,8 +90,6 @@ class SWListingDisplayController{
     public isCurrentPageRecordsSelected;
     public allSelected;
     public name;
-
-
     //@ngInject
     constructor(
         public $scope,
@@ -106,9 +105,14 @@ class SWListingDisplayController{
         public observerService,
         public rbkeyService
     ){
+        this.initializeState();
+
         //promises to determine which set of logic will run
-		this.singleCollectionDeferred = $q.defer();
+        this.multipleCollectionDeffered = $q.defer();
+        this.multipleCollectionPromise = this.multipleCollectionDeffered.promise;
+        this.singleCollectionDeferred = $q.defer();
         this.singleCollectionPromise = this.singleCollectionDeferred.promise;
+
         if(angular.isDefined(this.collection) && angular.isString(this.collection)){
             //not sure why we have two properties for this
             this.baseEntityName = this.collection;
@@ -118,33 +122,47 @@ class SWListingDisplayController{
                 this.collection = this.collectionConfig;
                 this.columns = this.collectionConfig.columns;
             });
+            this.multipleCollectionDeffered.reject();
         }
 
-        this.initializeState();
+        if(angular.isDefined(this.collectionPromise)){
+             this.hasCollectionPromise = true;
+             this.multipleCollectionDeffered.reject();
+        }
 
-        this.hasCollectionPromise = angular.isDefined(this.collectionPromise);
+        if(this.collectionConfig != null){
+            this.multipleCollectionDeffered.reject();
+        }
 
         this.listingService.setListingState(this.tableID, this);
 
         //this is performed after the listing state is set above to populate columns and multiple collectionConfigs if present
-        
-        this.$transclude(this.$scope,()=>{});    
-        //if(this.multiSlot){
-             this.singleCollectionPromise.then(()=>{
-                 this.listingService.setupInSingleCollectionConfigMode(this.tableID,this.$scope);
-            }).finally(()=>{
-                this.setupCollectionPromise();	
-            });
-//        }
-//        else if(!this.multiSlot){
-//            this.setupCollectionPromise();
-//            
-//        }
-        
+        this.$transclude(this.$scope,()=>{});
+
+        this.singleCollectionPromise.then(()=>{
+            this.multipleCollectionDeffered.reject();
+        });
+
+        this.multipleCollectionPromise.then(
+            ()=>{
+                //now do the intial setup
+                this.listingService.setupInMultiCollectionConfigMode(this.tableID);
+            }
+        ).catch(
+            ()=>{
+                //do the initial setup for single collection mode
+                this.listingService.setupInSingleCollectionConfigMode(this.tableID,this.$scope);
+            }
+        ).finally(
+            ()=>{
+                this.setupCollectionPromise();
+            }
+        );
+
     }
     
     private setupCollectionPromise=()=>{
-    	if(angular.isUndefined(this.getCollection)){
+        if(angular.isUndefined(this.getCollection)){
             this.getCollection = this.listingService.setupDefaultGetCollection(this.tableID);
         }
 
@@ -152,8 +170,13 @@ class SWListingDisplayController{
 
         var getCollectionEventID = this.tableID;
         this.observerService.attach(this.getCollectionObserver,'getCollection',getCollectionEventID);
-        this.listingService.getCollection(this.tableID); 
+        
+        this.listingService.getCollection(this.tableID);
+        
+        
+
     }
+    
 
     private getCollectionObserver=(param)=> {
         console.warn("getCollectionObserver", param)
@@ -182,7 +205,7 @@ class SWListingDisplayController{
         if(angular.isDefined(this.administrativeCount)){
             this.administrativeCount = parseInt(this.administrativeCount);
         } else {
-	        this.administrativeCount = 0;
+            this.administrativeCount = 0;
         }
         if(this.recordDetailAction && this.recordDetailAction.length){
             this.administrativeCount++;

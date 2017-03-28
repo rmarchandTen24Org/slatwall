@@ -51,16 +51,13 @@ class SWSiteSelectorController {
 
     public selectSite = () =>{
         this.collectionConfigToFilter.removeFilterByDisplayPropertyIdentifier(this.simpleFilterPropertyIdentifier);
-        console.log("selectSite", this.selectedSite)
         switch(this.selectedSite){
             case "all":
                 //do nothing
-                console.log("donothing")
                 break;
             case "default":
                 this.updateDefaultSiteID();
                 if(this.defaultEstablished){
-                    console.log("adding filter", this.defaultSiteID)
                     this.collectionConfigToFilter.addFilter(this.filterPropertyIdentifier, this.defaultSiteID, "=");
                 }
                 break;
@@ -81,13 +78,11 @@ class SWSiteSelectorController {
     }
 
     private updateDefaultSiteID = () =>{
-        console.log("updating default established")
         if(this.localStorageService.hasItem("defaultSiteID")){
             this.defaultEstablished = true;
 
             this.defaultSiteID = this.localStorageService.getItem("defaultSiteID");
         } else {
-            console.log("default established false")
             this.defaultEstablished = false;
         }
     }

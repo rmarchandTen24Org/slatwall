@@ -325,25 +325,25 @@ class ListingService{
 
         this.setupColumns( listingID, this.getListing(listingID).collectionConfig, this.getListing(listingID).collectionObject );
 
-//        listingDisplayScope.$watch('swListingDisplay.collectionPromise',(newValue,oldValue)=>{
-//            if(newValue){
-//                this.$q.when(this.getListing(listingID).collectionPromise).then((data)=>{
-//                    this.getListing(listingID).collectionData = data;
-//                    this.setupDefaultCollectionInfo(listingID);
-//                    if(this.getListing(listingID).collectionConfig != null && this.getListing(listingID).collectionConfig.hasColumns()){
-//                        this.setupColumns(listingID, this.getListing(listingID).collectionConfig, this.getListing(listingID).collectionObject);
-//                    }else{
-//                        this.getListing(listingID).collectionConfig.loadJson(data.collectionConfig);
-//                    }
-//                    this.notifyListingPageRecordsUpdate(listingID);
-//                    this.getListing(listingID).collectionData.pageRecords = this.getListing(listingID).collectionData.pageRecords ||
-//                                                                            this.getListing(listingID).collectionData.records;
-//
-//                    this.getListing(listingID).paginator.setPageRecordsInfo( this.getListing(listingID).collectionData );
-//                    this.getListing(listingID).searching = false;
-//                });
-//            }
-//        });
+       listingDisplayScope.$watch('swListingDisplay.collectionPromise',(newValue,oldValue)=>{
+           if(newValue){
+               this.$q.when(this.getListing(listingID).collectionPromise).then((data)=>{
+                   this.getListing(listingID).collectionData = data;
+                   this.setupDefaultCollectionInfo(listingID);
+                   if(this.getListing(listingID).collectionConfig != null && this.getListing(listingID).collectionConfig.hasColumns()){
+                       this.setupColumns(listingID, this.getListing(listingID).collectionConfig, this.getListing(listingID).collectionObject);
+                   }else{
+                       this.getListing(listingID).collectionConfig.loadJson(data.collectionConfig);
+                   }
+                   this.notifyListingPageRecordsUpdate(listingID);
+                   this.getListing(listingID).collectionData.pageRecords = this.getListing(listingID).collectionData.pageRecords ||
+                                                                           this.getListing(listingID).collectionData.records;
+
+                   this.getListing(listingID).paginator.setPageRecordsInfo( this.getListing(listingID).collectionData );
+                   this.getListing(listingID).searching = false;
+               });
+           }
+       });
     };
 
     public setupInMultiCollectionConfigMode = (listingID:string) => {
@@ -682,9 +682,8 @@ class ListingService{
         }
     };
 
-
-
     public setupDefaultGetCollection = (listingID:string) =>{
+
         if(this.getListing(listingID).collectionConfigs.length == 0){
             return () =>{
                 this.getListing(listingID).collectionConfig.setCurrentPage(this.getListing(listingID).paginator.getCurrentPage());
@@ -696,7 +695,7 @@ class ListingService{
                         this.setupDefaultCollectionInfo(listingID);
                         this.getListing(listingID).collectionData.pageRecords = data.pageRecords || data.records;
                         this.getListing(listingID).paginator.setPageRecordsInfo(this.getListing(listingID).collectionData);
-                        this
+
                     },
                     (reason)=>{
                         throw("Listing Service encounter a problem when trying to get collection. Reason: " + reason);

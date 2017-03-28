@@ -722,7 +722,8 @@ component displayname="Collection" entityname="SlatwallCollection" table="SwColl
 					}
 					
 					if(!structKeyExists(getCollectionConfigStruct(),'filterGroups')){
-						getCollectionConfigStruct()['filterGroups'] = [{filterGroup=[]}];
+						getCollectionConfigStruct()['filterGroups'] = [{"filterGroup"=[]}];
+						
 					}
 					
 					filterData['filterGroupAlias'] = "range#prop#";

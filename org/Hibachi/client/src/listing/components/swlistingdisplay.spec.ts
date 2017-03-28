@@ -198,7 +198,6 @@ describe('swListingDisplay.spec Test',()=>{
 
         $rootScope.$digest();
         var listingDisplayController = $rootScope.$$childTail.swListingDisplay;
-        console.log(listingDisplayController);
         //assert controller values are good
         //we supplied collection as a string so we should expect the base entityName to be the same
         expect(listingDisplayController.baseEntityName).toEqual('Workflow');
