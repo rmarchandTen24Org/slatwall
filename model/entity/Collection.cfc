@@ -111,9 +111,6 @@ component displayname="Collection" entityname="SlatwallCollection" table="SwColl
 	public any function init(){
 		super.init();
 
-		param name="session.entityCollection" type="struct" default="#structNew()#";
-		param name="session.entityCollection.savedStates" type="array" default="#arrayNew(1)#";
-
 		variables.hqlParams = {};
 		variables.hqlAliases = {};
 		variables.Cacheable = false;
