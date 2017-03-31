@@ -537,9 +537,13 @@ component extends="HibachiService" accessors="true" {
 					if(structKeyExists(currentProperty,'hb_formFieldType') && currentProperty.hb_formFieldType == 'wysiwyg'){
 						changeDetail[column] = columnValue;
 					}else{
-						changeDetail[column] = hibachiHTMLEditFormat(columnValue);
+						if (getMetadata(columnValue).getName() == "java.lang.String"){
+							changeDetail[column] = hibachiHTMLEditFormat(columnValue);
+						}else{
+							var newColumnValue = javacast("java.lang.String", columnValue);
+							changeDetail[column] = hibachiHTMLEditFormat(newColumnValue);
+						}
 					}
-					
 				}
 			}
 			
