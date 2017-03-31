@@ -75,6 +75,7 @@ Notes:
 		<hb:HibachiListingColumn propertyIdentifier="amount" />
 		<hb:HibachiListingColumn propertyIdentifier="amountReceived" />
 		<hb:HibachiListingColumn propertyIdentifier="amountCredited" />
+		<hb:HibachiListingColumn propertyIdentifier="createdDateTime" />
 	</hb:HibachiListingDisplay>
 	
 	<hb:HibachiListingDisplay title="#$.slatwall.rbKey('admin.entity.ordertabs.orderpayments.credits')#" smartList="#local.creditList#" 
@@ -86,6 +87,7 @@ Notes:
 		<hb:HibachiListingColumn propertyIdentifier="amount" />
 		<hb:HibachiListingColumn propertyIdentifier="amountReceived" />
 		<hb:HibachiListingColumn propertyIdentifier="amountCredited" />
+		<hb:HibachiListingColumn propertyIdentifier="createdDateTime" />
 	</hb:HibachiListingDisplay>
 	
 	<hb:HibachiListingDisplay title="#$.slatwall.rbKey('admin.entity.ordertabs.orderpayments.nonActive')#" smartList="#local.nonActiveList#" 
@@ -98,6 +100,7 @@ Notes:
 		<hb:HibachiListingColumn propertyIdentifier="amount" />
 		<hb:HibachiListingColumn propertyIdentifier="amountReceived" />
 		<hb:HibachiListingColumn propertyIdentifier="amountCredited" />
+		<hb:HibachiListingColumn propertyIdentifier="createdDateTime" />
 	</hb:HibachiListingDisplay>
 	
 	<hb:HibachiProcessCaller action="admin:entity.preprocessorder" entity="#rc.order#" processContext="addOrderPayment" class="btn btn-default" icon="plus" modal="true" hideDisabled="false" />
