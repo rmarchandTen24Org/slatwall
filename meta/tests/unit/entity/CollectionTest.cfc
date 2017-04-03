@@ -65,7 +65,7 @@ component extends="Slatwall.meta.tests.unit.entity.SlatwallEntityTestBase" {
 
 		var elasticSearchFilter = {
 			"bool" = {
-				"must" = {}
+				"must" = []
 			}
 		};
 
