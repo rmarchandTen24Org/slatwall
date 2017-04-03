@@ -199,7 +199,6 @@ component extends="Slatwall.meta.tests.unit.entity.SlatwallEntityTestBase" {
 							queryFilter["not_exists"]["field"] = filter.propertyIdentifier;  
 							break; 
 						case "!=":
-							break; 
 						case "=":
 							queryFilter["term"] = {};
 							queryFilter["term"][filter.propertyIdentifier] = filter.value; 
@@ -224,7 +223,6 @@ component extends="Slatwall.meta.tests.unit.entity.SlatwallEntityTestBase" {
 					var addQueryFilter = true; 
 
 					if(lookForRangeFilter && !structKeyExists(rangeFilterPropertyIdentifierHasBeenAddedMap, filter.propertyIdentifier)){
-						writedump("going inside range filter");
 						queryFilter["range"] = {}; 
 						var propertyIdentifierRangeFilters = propertyIdentifierRangeFilterMap[filter.propertyIdentifier]; 
 						for(var rangeFilterIndex = 1; rangeFilterIndex <= ArrayLen(propertyIdentifierRangeFilters); rangeFilterIndex++){
@@ -249,7 +247,7 @@ component extends="Slatwall.meta.tests.unit.entity.SlatwallEntityTestBase" {
 							
 							queryFilter["range"][rangeFilterComparisonOperator] = rangeFilter.value; 
 						}
-					} else { 
+					} else if(lookForRangeFilter && structKeyExists(rangeFilterPropertyIdentifierHasBeenAdded, filter.propertyIdentifier)) { 
 						addQueryFilter = false; 
 					} 
 	
