@@ -1,3 +1,46 @@
+/*
+    Hibachi
+    Copyright (C) ten24, LLC
+
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+    Linking this program statically or dynamically with other modules is
+    making a combined work based on this program.  Thus, the terms and
+    conditions of the GNU General Public License cover the whole
+    combination.
+
+    As a special exception, the copyright holders of this program give you
+    permission to combine this program with independent modules and your
+    custom code, regardless of the license terms of these independent
+    modules, and to copy and distribute the resulting program under terms
+    of your choice, provided that you follow these specific guidelines:
+	- You also meet the terms and conditions of the license of each
+	  independent module
+	- You must not alter the default display of the Hibachi name or logo from
+	  any part of the application
+	- Your custom code must not alter or create any files inside Hibachi,
+	  except in the following directories:
+		/integrationServices/
+	You may copy and distribute the modified version of this program that meets
+	the above guidelines as a combined work under the terms of GPL for this program,
+	provided that you include the source code of that other code when and as the
+	GNU GPL requires distribution of source code.
+
+    If you modify this program, you may extend this exception to your version
+    of the program, but you are not obligated to do so.
+Notes:
+*/
 component output="false" accessors="true" persistent="false" extends="HibachiObject" {
 
 	property name="hibachiErrors" type="any" persistent="false";							// This porpery holds errors that are not part of ValidateThis, for example processing errors.
@@ -172,8 +215,6 @@ component output="false" accessors="true" persistent="false" extends="HibachiObj
 		// Call beforePopulate
 		beforePopulate(data=arguments.data);
 
-
-
 		// Get an array of All the properties for this object
 		var properties = getProperties();
 
@@ -185,18 +226,15 @@ component output="false" accessors="true" persistent="false" extends="HibachiObj
 
 			// Check to see if this property has a key in the data that was passed in
 			if(
-				structKeyExists(arguments.data, currentProperty.name) && (!structKeyExists(currentProperty, "hb_populateEnabled") || currentProperty.hb_populateEnabled neq false) &&
-				(
+				structKeyExists(arguments.data, currentProperty.name) && (!structKeyExists(currentProperty, "hb_populateEnabled") || currentProperty.hb_populateEnabled neq false) && (
 					!isPersistent()
 					||
 					(getHibachiScope().getPublicPopulateFlag() && structKeyExists(currentProperty, "hb_populateEnabled") && currentProperty.hb_populateEnabled == "public")
 					||
-					getHibachiScope().authenticateEntityProperty( crudType="update", entityName=this.getClassName(), propertyName=currentProperty.name))
-			) {
+					getHibachiScope().authenticateEntityProperty( crudType="update", entityName=this.getClassName(), propertyName=currentProperty.name))) {
 
 				// ( COLUMN )
 				if( (!structKeyExists(currentProperty, "fieldType") || currentProperty.fieldType == "column") && isSimpleValue(arguments.data[ currentProperty.name ]) && !structKeyExists(currentProperty, "hb_fileUpload") ) {
-
 
 					// If the value is blank, then we check to see if the property can be set to NULL.
 					if( trim(arguments.data[ currentProperty.name ]) == "" && ( !structKeyExists(currentProperty, "notNull") || !currentProperty.notNull ) ) {
@@ -210,7 +248,7 @@ component output="false" accessors="true" persistent="false" extends="HibachiObj
 						}
 						_setProperty(currentProperty.name, trim(arguments.data[ currentProperty.name ]), currentProperty.hb_formatType);
 						*/
-						_setProperty(currentProperty.name, rereplace(trim(arguments.data[ currentProperty.name ]),chr(002),'','all'));
+						_setProperty(currentProperty.name, trim(arguments.data[ currentProperty.name ]));
 
 						// if this property has a sessionDefault defined for it, then we should update that value with what was used
 						if(structKeyExists(currentProperty, "hb_sessionDefault")) {
@@ -377,19 +415,8 @@ component output="false" accessors="true" persistent="false" extends="HibachiObj
 			currentProperty = properties[p];
 
 			// Check to see if we should upload this property
-			if(
-				structKeyExists(arguments.data, currentProperty.name)
-				&& (
-					!structKeyExists(currentProperty, "fieldType")
-					|| currentProperty.fieldType == "column"
-				) && isSimpleValue(arguments.data[ currentProperty.name ])
-				&& structKeyExists(currentProperty, "hb_fileUpload")
-				&& currentProperty.hb_fileUpload
-				&& structKeyExists(currentProperty, "hb_fileAcceptMIMEType")
-				&& len(arguments.data[ currentProperty.name ])
-				&& structKeyExists(form, currentProperty.name) 
-				&& len(form[currentProperty.name])
-			) {
+			if( structKeyExists(arguments.data, currentProperty.name) && (!structKeyExists(currentProperty, "fieldType") || currentProperty.fieldType == "column") && isSimpleValue(arguments.data[ currentProperty.name ]) && structKeyExists(currentProperty, "hb_fileUpload") && currentProperty.hb_fileUpload && structKeyExists(currentProperty, "hb_fileAcceptMIMEType") && len(arguments.data[ currentProperty.name ]) && structKeyExists(form, currentProperty.name) ) {
+
 				// Wrap in try/catch to add validation error based on fileAcceptMIMEType
 				try {
 
@@ -524,13 +551,12 @@ component output="false" accessors="true" persistent="false" extends="HibachiObj
 	}
 
 	public any function getLastObjectByPropertyIdentifier(required string propertyIdentifier) {
-
 		if(listLen(arguments.propertyIdentifier, ".") eq 1) {
 			return this;
 		}
 		var object = invokeMethod("get#listFirst(arguments.propertyIdentifier, '.')#");
 		if(!isNull(object) && isObject(object)) {
-			return object.getLastObjectByPropertyIdentifier(listRest(arguments.propertyIdentifier, "."));
+			return object.getLastObjectByPropertyIdentifier(listDeleteAt(arguments.propertyIdentifier, 1, "."));
 		}
 	}
 
@@ -776,16 +802,6 @@ component output="false" accessors="true" persistent="false" extends="HibachiObj
 
 		// Default case if no matches were found is a text field
 		return "text";
-	}
-
-	public boolean function getPropertyIsNumeric( required string propertyName ) {
-		var propertyMetaData = getPropertyMetaData(arguments.propertyName);
-		if( structKeyExists(propertyMetaData, "ormtype") &&
-			listFindNoCase("big_decimal,integer,int,double,float", propertyMetaData.ormtype)
-		){
-			return true;
-		}
-		return false;
 	}
 
 	// @help public method for getting the meta data of a specific property

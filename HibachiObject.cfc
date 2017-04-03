@@ -1,3 +1,46 @@
+/*
+    Hibachi
+    Copyright (C) ten24, LLC
+
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+    Linking this program statically or dynamically with other modules is
+    making a combined work based on this program.  Thus, the terms and
+    conditions of the GNU General Public License cover the whole
+    combination.
+
+    As a special exception, the copyright holders of this program give you
+    permission to combine this program with independent modules and your
+    custom code, regardless of the license terms of these independent
+    modules, and to copy and distribute the resulting program under terms
+    of your choice, provided that you follow these specific guidelines:
+	- You also meet the terms and conditions of the license of each
+	  independent module
+	- You must not alter the default display of the Hibachi name or logo from
+	  any part of the application
+	- Your custom code must not alter or create any files inside Hibachi,
+	  except in the following directories:
+		/integrationServices/
+	You may copy and distribute the modified version of this program that meets
+	the above guidelines as a combined work under the terms of GPL for this program,
+	provided that you include the source code of that other code when and as the
+	GNU GPL requires distribution of source code.
+
+    If you modify this program, you may extend this exception to your version
+    of the program, but you are not obligated to do so.
+Notes:
+*/
 component accessors="true" output="false" persistent="false" {
 
 	property name="hibachiInstanceApplicationScopeKey" type="string" persistent="false";
@@ -179,10 +222,6 @@ component accessors="true" output="false" persistent="false" {
 		return getHibachiScope().rbKey(arguments.key);
 	}
 
-	public string function hibachiHTMLEditFormat(required string html=""){
-		return getHibachiScope().hibachiHTMLEditFormat(arguments.html);
-	}
-
 	public string function buildURL() {
 		return getApplicationValue("application").buildURL(argumentcollection=arguments);
 	}
@@ -233,7 +272,7 @@ component accessors="true" output="false" persistent="false" {
 			return application[ getHibachiInstanceApplicationScopeKey() ][ arguments.key ];
 		}
 
-		throw("You have requested a value for '#arguments.key#' from the core hibachi application that is not setup.  This may be because the verifyApplicationSetup() method has not been called yet");
+		throw("You have requested a value for '#arguments.key#' from the core hibachi application that is not setup.  This may be because the verifyApplicationSetup() method has not been called yet")
 	}
 
 	// @hint facade method to set values in the application scope
@@ -252,17 +291,39 @@ component accessors="true" output="false" persistent="false" {
 
 	// @hint facade method to check the application scope for a value
 	public boolean function hasSessionValue(required any key) {
-		getHibachiScope().hasSessionValue(arguments.key);
+		param name="session" default="#structNew()#";
+		if( structKeyExists(session, getHibachiInstanceApplicationScopeKey()) && structKeyExists(session[ getHibachiInstanceApplicationScopeKey() ], arguments.key)) {
+			return true;
+		}
+
+		return false;
 	}
 
 	// @hint facade method to get values from the application scope
 	public any function getSessionValue(required any key) {
-		getHibachiScope().getSessionValue(arguments.key);
+		if( structKeyExists(session, getHibachiInstanceApplicationScopeKey()) && structKeyExists(session[ getHibachiInstanceApplicationScopeKey() ], arguments.key)) {
+			return session[ getHibachiInstanceApplicationScopeKey() ][ arguments.key ];
+		}
+
+		throw("You have requested a value for '#arguments.key#' from the core application that is not setup.  This may be because the verifyApplicationSetup() method has not been called yet")
 	}
 
 	// @hint facade method to set values in the application scope
 	public void function setSessionValue(required any key, required any value) {
-		getHibachiScope().setSessionValue(arguments.key,arguments.value);
+		var sessionKey = "";
+		if(structKeyExists(COOKIE, "JSESSIONID")) {
+			sessionKey = COOKIE.JSESSIONID;
+		} else if (structKeyExists(COOKIE, "CFTOKEN")) {
+			sessionKey = COOKIE.CFTOKEN;
+		} else if (structKeyExists(COOKIE, "CFID")) {
+			sessionKey = COOKIE.CFID;
+		}
+		lock name="#sessionKey#_#getHibachiInstanceApplicationScopeKey()#_#arguments.key#" timeout="10" {
+			if(!structKeyExists(session, getHibachiInstanceApplicationScopeKey())) {
+				session[ getHibachiInstanceApplicationScopeKey() ] = {};
+			}
+			session[ getHibachiInstanceApplicationScopeKey() ][ arguments.key ] = arguments.value;
+		}
 	}
 
 	// ========================= START: APPLICATION VAUES ===========================================

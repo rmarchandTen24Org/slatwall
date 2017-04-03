@@ -110,10 +110,12 @@ methods in this CFC:
 	</cfif>
 </cffunction> 
 
-<cfscript>
-	//@hint "returns text for given key in given java resource bundle per locale"
-	
-	public string function getRBString(required string rbFile, required string rbKey, required string rbLocale){
+<cffunction access="public" name="getRBString" output="No" returntype="string"
+	hint="returns text for given key in given java resource bundle per locale">
+<cfargument name="rbFile" required="Yes" type="string">
+<cfargument name="rbKey" required="Yes" type="string">
+<cfargument name="rbLocale" required="No" type="string" default="en_US">
+	<cfscript>
 		var isOk=false; // success flag
 		var rbString=""; // text message to return
 		var resourceBundle=structNew(); // structure to hold resource bundle
@@ -132,17 +134,17 @@ methods in this CFC:
 				rbString=rB.handleGetObject(arguments.rbKey);
 				fis.close();
 		}	
-		if(!isOK){
-			throw("Fatal error: resource bundle #thisRBfile# not found.");
-		}else{
-			if(len(trim(rbString))){
-				return rbString;
-			}else{
-				throw("Fatal error: resource bundle #thisRBfile# does not contain key #arguments.rbKEY#.");
-			}
-		}
-	} 
-</cfscript>
+	</cfscript>
+	<cfif NOT isOK>
+		<cfthrow message="Fatal error: resource bundle #thisRBfile# not found.">
+	<cfelse>
+		<cfif len(trim(rbString))>
+			<cfreturn rbString>
+		<cfelse>
+			<cfthrow message="Fatal error: resource bundle #thisRBfile# does not contain key #arguments.rbKEY#.">
+		</cfif>
+	</cfif>
+</cffunction> 
 
 <cffunction name="loadResourceBundle" access="public" output="no" returnType="void" hint="Loads a bundle">
 	<cfargument name="rbFile" required="yes" type="string">

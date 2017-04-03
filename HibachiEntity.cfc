@@ -1,3 +1,46 @@
+/*
+    Hibachi
+    Copyright (C) ten24, LLC
+
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+    Linking this program statically or dynamically with other modules is
+    making a combined work based on this program.  Thus, the terms and
+    conditions of the GNU General Public License cover the whole
+    combination.
+
+    As a special exception, the copyright holders of this program give you
+    permission to combine this program with independent modules and your
+    custom code, regardless of the license terms of these independent
+    modules, and to copy and distribute the resulting program under terms
+    of your choice, provided that you follow these specific guidelines:
+	- You also meet the terms and conditions of the license of each
+	  independent module
+	- You must not alter the default display of the Hibachi name or logo from
+	  any part of the application
+	- Your custom code must not alter or create any files inside Hibachi,
+	  except in the following directories:
+		/integrationServices/
+	You may copy and distribute the modified version of this program that meets
+	the above guidelines as a combined work under the terms of GPL for this program,
+	provided that you include the source code of that other code when and as the
+	GNU GPL requires distribution of source code.
+
+    If you modify this program, you may extend this exception to your version
+    of the program, but you are not obligated to do so.
+Notes:
+*/
 component output="false" accessors="true" persistent="false" extends="HibachiTransient" {
 
 	property name="newFlag" type="boolean" persistent="false";
@@ -11,8 +54,8 @@ component output="false" accessors="true" persistent="false" extends="HibachiTra
 	property name="auditSmartList" type="any" persistent="false";
 
 	// Audit Properties
-	property name="createdByAccount" persistent="false";
-	property name="modifiedByAccount" persistent="false";
+	property name="createdByAccount" hb_cfc="Account" persistent="false";
+	property name="modifiedByAccount" hb_cfc="Account" persistent="false";
 
 	// @hint global constructor arguments.  All Extended entities should call super.init() so that this gets called
 	public any function init() {
@@ -35,47 +78,32 @@ component output="false" accessors="true" persistent="false" extends="HibachiTra
 		return super.init();
 	}
 
-	public void function genericPropertyRemove(required string propertyName){
-		evaluate("set#arguments.propertyName#(javacast('null',''))");
-	}
-
-	public string function getUploadDirectoryByPropertyName(required string propertyName){
-		var uploadDirectory = setting('globalAssetsFileFolderPath') & "/";
-
-		uploadDirectory &= "#lcase(arguments.propertyName)#/";
-
-		return uploadDirectory;
-	}
-
-	public string function getFileUrlByPropertyName(required string propertyName){
-		return getURLFromPath(invokeMethod('get#arguments.propertyName#UploadDirectory')) & invokeMethod('get#arguments.propertyName#');
-	}
-
 	/** runs a update calculated properties only once per request unless explicitly set to false before calling. */
 	public void function updateCalculatedProperties(any runAgain=false) {
         if(!structKeyExists(variables, "calculatedUpdateRunFlag") || runAgain) {
             // Set calculated to true so that this only runs 1 time per request unless explicitly told to run again.
-            variables.calculatedUpdateRunFlag = true;
-            // Loop over all properties
-            for(var property in getProperties()) {
+			variables.calculatedUpdateRunFlag = true;
 
-                // Look for any that start with the calculatedXXX naming convention
+			// Loop over all properties
+			for(var property in getProperties()) {
+
+				// Look for any that start with the calculatedXXX naming convention
                 if(left(property.name, 10) == "calculated" && (!structKeyExists(property, "persistent") || property.persistent == "true")) {
 
-                    var value = this.invokeMethod("get#right(property.name, len(property.name)-10)#");
-                    if(!isNull(value)) {
-                        variables[ property.name ] = value;
-                    }
+					var value = this.invokeMethod("get#right(property.name, len(property.name)-10)#");
+					if(!isNull(value)) {
+						variables[ property.name ] = value;
+					}
 
-                } else if (structKeyExists(property, "hb_cascadeCalculate") && property.hb_cascadeCalculate && structKeyExists(variables, property.name) && isObject( variables[ property.name ] ) ) {
+				} else if (structKeyExists(property, "hb_cascadeCalculate") && property.hb_cascadeCalculate && structKeyExists(variables, property.name) && isObject( variables[ property.name ] ) ) {
 
-                    variables[ property.name ].updateCalculatedProperties();
+					variables[ property.name ].updateCalculatedProperties();
 
-                }
-            }
+				}
+			}
 
-        }
-    }
+		}
+	}
 	// @hint return a simple representation of this entity
 	public string function getSimpleRepresentation() {
 
@@ -134,38 +162,11 @@ component output="false" accessors="true" persistent="false" extends="HibachiTra
 		return variables[ "requestNewPropertyEntity#arguments.propertyName#" ];
 	}
 
-	public any function duplicate(boolean onlyPersistent=false) {
+	public any function duplicate() {
 		var newEntity = getService("hibachiService").getServiceByEntityName(getEntityName()).invokeMethod("new#replace(getEntityName(),getApplicationValue('applicationKey'),'')#");
 		var properties = getProperties();
-		var propertyIsPersistent = true;
-
 		for(var p=1; p<=arrayLen(properties); p++) {
-			if(
-				arguments.onlyPersistent
-				&& structKeyExists(properties[p],'persistent')
-			){
-				propertyIsPersistent = properties[p].persistent;
-			}else{
-				propertyIsPersistent = true;
-			}
-
-			if(
-				(
-					!arguments.onlyPersistent
-					|| (
-						arguments.onlyPersistent
-						&& propertyIsPersistent
-					)
-				)
-				&& properties[p].name != getPrimaryIDPropertyName()
-				&& (
-					!structKeyExists(properties[p], "fieldType")
-					|| ( properties[p].fieldType != "one-to-many" && properties[p].fieldType != "many-to-many")
-				)
-				&&(
-					structKeyExists(this,'set#properties[p].name#')
-				)
-			) {
+			if( properties[p].name != getPrimaryIDPropertyName() && (!structKeyExists(properties[p], "fieldType") || ( properties[p].fieldType != "one-to-many" && properties[p].fieldType != "many-to-many")) ) {
 				var value = invokeMethod('get#properties[p].name#');
 				if(!isNull(value)) {
 					newEntity.invokeMethod("set#properties[p].name#", {1=value});
@@ -296,7 +297,7 @@ component output="false" accessors="true" persistent="false" extends="HibachiTra
 	// @hint public method to determine if this entity is audited
 	public any function getAuditableFlag() {
 		var metaData = getThisMetaData();
-		if(isPersistent() && (setting('globalAuditAutoArchiveVersionLimit') > 0) && (!structKeyExists(metaData, "hb_auditable") || (structKeyExists(metaData, "hb_auditable") && metaData.hb_auditable))) {
+		if(isPersistent() && (getHibachiScope().setting('globalAuditAutoArchiveVersionLimit') > 0) && (!structKeyExists(metaData, "hb_auditable") || (structKeyExists(metaData, "hb_auditable") && metaData.hb_auditable))) {
 			return true;
 		}
 		return false;
@@ -425,13 +426,10 @@ component output="false" accessors="true" persistent="false" extends="HibachiTra
 		var cacheKey = "#arguments.propertyName#AssignedIDList";
 
 		if(!structKeyExists(variables, cacheKey)) {
-			variables[ cacheKey ] = '';
-			var smartList = this.getPropertySmartList(arguments.propertyName);
-			smartList.addSelect(propertyIdentifier=getService("hibachiService").getPrimaryIDPropertyNameByEntityName(listLast(getPropertyMetaData( arguments.propertyName ).cfc,'.')), alias="value");
-			//Set array to string
-			for(var i=1; i<=arrayLen(smartList.getRecords()); i++) {
-
-				variables[ cacheKey ] = listAppend(variables[ cacheKey ], smartList.getRecords()[i]['value'] );
+			variables[ cacheKey ] = "";
+			var arr = this.invokeMethod("get#arguments.propertyName#");
+			for(var i=1; i<=arrayLen(arr); i++) {
+				variables[ cacheKey ] = listAppend(arr[i].getPrimaryIDValue(), arr[i].getPrimaryIDValue());
 			}
 		}
 		return variables[ cacheKey ];
@@ -550,34 +548,6 @@ component output="false" accessors="true" persistent="false" extends="HibachiTra
 		return variables[ cacheKey ];
 	}
 
-	// @hint returns a collection list of the current values for a given one-to-many or many-to-many property
-	public any function getPropertyCollectionList( required string propertyName ) {
-		var cacheKey = "#arguments.propertyName#CollectionList";
-
-		if(!structKeyExists(variables, cacheKey)) {
-
-			var entityService = getService("hibachiService").getServiceByEntityName( listLast(getPropertyMetaData( arguments.propertyName ).cfc,'.') );
-			var collectionList = entityService.invokeMethod("get#listLast(getPropertyMetaData( arguments.propertyName ).cfc,'.')#CollectionList");
-
-			// Create an example entity so that we can read the meta data
-			var exampleEntity = entityNew("#getApplicationValue('applicationKey')##listLast(getPropertyMetaData( arguments.propertyName ).cfc,'.')#");
-
-			// If its a one-to-many, then add filter
-			if(getPropertyMetaData( arguments.propertyName ).fieldtype == "one-to-many") {
-				// Loop over the properties in the example entity to
-				for(var i=1; i<=arrayLen(exampleEntity.getProperties()); i++) {
-					if( structKeyExists(exampleEntity.getProperties()[i], "fkcolumn") && exampleEntity.getProperties()[i].fkcolumn == getPropertyMetaData( arguments.propertyName ).fkcolumn ) {
-						collectionList.addFilter("#exampleEntity.getProperties()[i].name#.#getPrimaryIDPropertyName()#", getPrimaryIDValue());
-					}
-				}
-			}
-
-			variables[ cacheKey ] = collectionList;
-		}
-
-		return variables[ cacheKey ];
-	}
-
 	// @hint returns a struct of the current entities in a given property.  The struck is key'd based on the primaryID of the entities
 	public struct function getPropertyStruct( required string propertyName ) {
 		var cacheKey = "#arguments.propertyName#Struct";
@@ -600,7 +570,7 @@ component output="false" accessors="true" persistent="false" extends="HibachiTra
 	public numeric function getPropertyCount( required string propertyName ) {
 		var propertySmartList = this.invokeMethod('get#propertyName#SmartList');
 		return propertySmartList.getRecordsCount();
-	}
+		}
 
 	// @hint handles encrypting a property based on conventions
 	public void function encryptProperty(required string propertyName) {
@@ -646,26 +616,16 @@ component output="false" accessors="true" persistent="false" extends="HibachiTra
 	// @hint handles decrypting a property based on conventions
 	public string function decryptProperty(required string propertyName) {
 		var encryptedPropertyValue = "";
-		
-		var isAttributeProperty = getService('hibachiService').getHasAttributeByEntityNameAndPropertyIdentifier(getClassName(),arguments.propertyName);
-		
-		var generatorName = "";
-		var entity = this;
-		if(isAttributeProperty){
-			generatorName = "AttributeValue";
-			entity = this.getAttributeValue(arguments.propertyName,true);
-		}else{
-			generatorName = arguments.propertyName;	
-		}
-		var generatorValue = entity.invokeMethod("get#generatorName#EncryptedGenerator");;
+		var generatorValue = this.invokeMethod("get#arguments.propertyName#EncryptedGenerator");
 		param name="generatorValue" default="";
 
 		// Determine the appropriate property to retrieve the encrytped value from
-		if (entity.hasProperty("#generatorName#Encrypted")) {
-			encryptedPropertyValue = entity.invokeMethod("get#generatorName#Encrypted");
+		if (this.hasProperty("#arguments.propertyName#Encrypted")) {
+			encryptedPropertyValue = this.invokeMethod("get#arguments.propertyName#Encrypted");
 		} else {
 			encryptedPropertyValue = variables['#arguments.propertyName#'];
 		}
+
 		return decryptValue(encryptedPropertyValue, generatorValue);
 	}
 
@@ -746,11 +706,6 @@ component output="false" accessors="true" persistent="false" extends="HibachiTra
 			return getPropertySmartList( propertyName=left(right(arguments.missingMethodName, len(arguments.missingMethodName)-3), len(arguments.missingMethodName)-12) );
 
 		// getXXXStruct()		Where XXX is a one-to-many or many-to-many property where we want a key delimited struct
-		} else if ( left(arguments.missingMethodName, 3) == "get" && right(arguments.missingMethodName, 14) == "CollectionList") {
-
-			return getPropertyCollectionList( propertyName=left(right(arguments.missingMethodName, len(arguments.missingMethodName)-3), len(arguments.missingMethodName)-17) );
-
-		// getXXXStruct()		Where XXX is a one-to-many or many-to-many property where we want a key delimited struct
 		} else if ( left(arguments.missingMethodName, 3) == "get" && right(arguments.missingMethodName, 6) == "Struct") {
 
 			return getPropertyStruct( propertyName=left(right(arguments.missingMethodName, len(arguments.missingMethodName)-3), len(arguments.missingMethodName)-9) );
@@ -770,27 +725,8 @@ component output="false" accessors="true" persistent="false" extends="HibachiTra
 		 else if ( left(arguments.missingMethodName, 3) == "get" && right(arguments.missingMethodName, 2) == "ID") {
 
 			return getPropertyPrimaryID( propertyName=left(right(arguments.missingMethodName, len(arguments.missingMethodName)-3), len(arguments.missingMethodName)-5) );
-		//getXXXUploadDirectory()
-		} else if ( left(arguments.missingMethodName, 3) == "get" && right(arguments.missingMethodName, 15) == "UploadDirectory") {
-			var propertyName = mid(arguments.missingMethodName,4,len(arguments.missingMethodName)-18);
-
-			if(getPropertyFieldType(propertyName) == 'file'){
-				return getUploadDirectoryByPropertyName(propertyName);
-			}
-		//getXXXFileURL()
-		} else if ( left(arguments.missingMethodName, 3) == "get" && right(arguments.missingMethodName, 7) == "FileUrl") {
-			var propertyName = mid(arguments.missingMethodName,4,len(arguments.missingMethodName)-10);
-
-			if(getPropertyFieldType(propertyName) == 'file'){
-				return getFileUrlByPropertyName(propertyName);
-			}
-		//removeXXX() only for files
-		} else if ( left(arguments.missingMethodName, 6) == "remove") {
-			var propertyName =right(arguments.missingMethodName,len(arguments.missingMethodName)-6);
-			if(getPropertyFieldType(propertyName) == 'file'){
-				return genericPropertyRemove(propertyName);
-			}
 		}
+
 		throw('You have called a method #arguments.missingMethodName#() which does not exists in the #getClassName()# entity.');
 	}
 
@@ -909,13 +845,13 @@ component output="false" accessors="true" persistent="false" extends="HibachiTra
 			}
 
 			// Set createdByAccount
-			if(structKeyExists(this,"setCreatedByAccountID") && !getHibachiScope().getAccount().isNew() ){
+			if(structKeyExists(this,"setCreatedByAccountID") && !getHibachiScope().getAccount().isNew() && getHibachiScope().getAccount().getAdminAccountFlag() ){
 				setCreatedByAccountID( getHibachiScope().getAccount().getAccountID() );
 			}
 
 			// Set modifiedByAccount
-			if(structKeyExists(this,"setModifiedByAccountID") && !getHibachiScope().getAccount().isNew() ){
-				setModifiedByAccountID( getHibachiScope().getAccount().getAccountID() );
+			if(structKeyExists(this,"setModifiedByAccountID") && !getHibachiScope().getAccount().isNew() && getHibachiScope().getAccount().getAdminAccountFlag() ){
+				setModifiedByAccount( getHibachiScope().getAccount().getAccountID() );
 			}
 
 			// Log audit only if admin user
@@ -951,8 +887,8 @@ component output="false" accessors="true" persistent="false" extends="HibachiTra
 		if(getHibachiScope().hasApplicationValue("initialized") && getHibachiScope().getApplicationValue("initialized")) {
 
 			// Set modifiedByAccount
-			if(structKeyExists(this,"setModifiedByAccountID") && !getHibachiScope().getAccount().isNew() ){
-				setModifiedByAccountID(getHibachiScope().getAccount().getAccountID());
+			if(structKeyExists(this,"setModifiedByAccountID") && !getHibachiScope().getAccount().isNew() && getHibachiScope().getAccount().getAdminAccountFlag() ){
+				setModifiedByAccount(getHibachiScope().getAccount().getAccountID());
 			}
 
 			// Log audit only if admin user or there are prevous audit recods
@@ -972,33 +908,62 @@ component output="false" accessors="true" persistent="false" extends="HibachiTra
 		var properties = getProperties();
 
 		var defaultProperties = [];
-		for(var p=1; p<=arrayLen(properties); p++) {
-			if(len(arguments.excludesList) && ListFind(arguments.excludesList,properties[p].name)){
 
-			}else{
-				if((len(arguments.includesList) && ListFind(arguments.includesList,properties[p].name)) ||
-				!structKeyExists(properties[p],'FKColumn') && (!structKeyExists(properties[p], "persistent") ||
-				properties[p].persistent)){
-					arrayAppend(defaultProperties,properties[p]);
+		//Check if there is any include column
+		if(len(arguments.includesList)){
+			var includesArray = ListToArray(arguments.includesList);
+			for(var inc in includesArray) {
+				//Loop through IncludeList looking for relational
+				inc = trim(inc);
+				if(Find('.', inc) != 0){
+					//if find, get relational Entity Stuck
+					var entityStructs = getService("hibachiService").getPropertiesByEntityName(
+						getService("hibachiService").getLastEntityNameInPropertyIdentifier(this.getClassName(), inc)
+					);
+
+					for(var property in entityStructs){
+						if(property.name == listLast(inc, '.')){
+							//Create a new struct instead of changing the "property" otherwise it will be cached with the changes.
+							var newProperty = {};
+							structAppend(newProperty,property);
+							newProperty.name = inc;
+							newProperty.title = rbKey('entity.'&inc);
+							//append the Column struct with relational name.
+							arrayAppend(defaultProperties, newProperty);
+						}
+					}
+				}else{
+					//If its not relationa, just use the current entity struct
+					for(var property in properties){
+						if(property.name == inc){
+							arrayAppend(defaultProperties, property);
+						}
+					}
+				}
+            }
+        }else{
+			//Remove all non Persistent, Relational and Excluded columns
+			for(var property in properties){
+				if(!ListContains(excludesList, property.name) && !structKeyExists(property,'FKColumn') &&
+				(!structKeyExists(property, "persistent") || property.persistent)){
+					arrayAppend(defaultProperties,property);
 				}
 			}
-		}
+        }
 		return defaultProperties;
 	}
 
-	public any function getFilterProperties(string includesList = "", string excludesList = "", includeNonPersistent = false){
+
+	public any function getFilterProperties(string includesList = "", string excludesList = ""){
 		var properties = getProperties();
 		var defaultProperties = [];
-
 		for(var p=1; p<=arrayLen(properties); p++) {
-			if((len(includesList) && ListFind(arguments.includesList,properties[p].name) && !ListFind(arguments.excludesList,properties[p].name))
-				||
-				(
-					(!structKeyExists(properties[p], "persistent") || properties[p].persistent)
-					||
-					(includeNonPersistent == true && structKeyExists(properties[p], "persistent") && properties[p].persistent == false && structKeyExists(properties[p], "ormtype"))
-				)
-			){
+			if(len(arguments.includesList)){
+				if(ListFind(arguments.includesList,properties[p].name)){
+					properties[p]['displayPropertyIdentifier'] = getPropertyTitle(properties[p].name);
+					arrayAppend(defaultProperties, properties[p]);
+				}
+			}else if(!ListFind(arguments.excludesList,properties[p].name) && (!structKeyExists(properties[p], "persistent") || properties[p].persistent)){
 				properties[p]['displayPropertyIdentifier'] = getPropertyTitle(properties[p].name);
 				arrayAppend(defaultProperties,properties[p]);
 			}

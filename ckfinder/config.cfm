@@ -16,26 +16,27 @@ config = structNew();
 
 // This function must check the user session to be sure that he/she is
 // authorized to upload and access files in the File Browser. '
-function CheckAuthentication()
-{
+function CheckAuthentication() {
+
 	//WARNING : DO NOT simply return "true". By doing so, you are allowing
 	//"anyone" to upload and list the files in your server. You must implement
 	//some kind of session validation here. Even something very simple as...
 	//... where session.IsAuthorized is set to "true" as soon as the
 	//user logs in your system.
+
 	var list = structKeyList(session);
 	var applicationKeyIndex = ListContainsNoCase(list, "CKFinderAccess" );
 	var sessionVar = listGetAt(list,applicationKeyIndex);
-	
+
 	if(!structKeyExists(session, "#sessionVar#")) {
 		session["#sessionVar#"] = false;
 	}
-	
+
 	return session["#sessionVar#"];
-	
+
 }
 
-config.licenseName = 'Slatwall eCommerce';
+config.licenseName = 'Hibachi';
 config.licenseKey = 'ESB4-VJNP-SPDK-NEJG-X44A-XK1B-S8BC';
 
 /* To make it easy to configure CKFinder, the config.baseUrl and config.baseDir can be used.
@@ -53,7 +54,7 @@ config.licenseKey = 'ESB4-VJNP-SPDK-NEJG-X44A-XK1B-S8BC';
 if(structKeyExists(url,'appCode') && structKeyExists(url,'siteCode')){
 	config.baseUrl = '/custom/apps/#appCode#/#siteCode#/assets/';
 }else{
-	config.baseUrl = "/custom/assets/";
+config.baseUrl = "/custom/assets/";
 }
 
 /*

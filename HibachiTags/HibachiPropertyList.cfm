@@ -1,4 +1,3 @@
-<cfimport prefix="swa" taglib="../../../tags" />
 <cfimport prefix="hb" taglib="../../../org/Hibachi/HibachiTags" />
 <cfif thisTag.executionMode is "start">
 	<cfparam name="attributes.divClass" type="string" default="col-md-12" />
@@ -6,11 +5,11 @@
 	<cfparam name="attributes.edit" type="boolean" default="#request.context.edit#" />
 
 	<cfoutput>
-		<div class="<cfif len(attributes.divClass)>#attributes.divClass#<cfelse>col-md-12</cfif>">
+		<div class="#attributes.divClass#">
 			<cfif attributes.edit>
-				<div class="s-property form-horizontal">
+				<div class="form-horizontal">
 			<cfelse>
-				<div class="s-property-info form-horizontal">
+				<div class="form-horizontal  s-property-info">
 			</cfif>
 	</cfoutput>
 <cfelse>

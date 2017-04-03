@@ -1,4 +1,3 @@
-<cfimport prefix="swa" taglib="../../../tags" />
 <cfimport prefix="hb" taglib="../../../org/Hibachi/HibachiTags" />
 <cfif thisTag.executionMode is "end">
 	<cfset trimedContent = trim(thistag.generatedContent)>
@@ -17,7 +16,7 @@
 				<cfset trimedContent = "" />
 			</cfif>
 		<cfelse>
-			<cfset found = false />	
+			<cfset found = false />
 		</cfif>
 	</cfloop>
 	<cfset thisTag.generatedContent = trimedContent />
