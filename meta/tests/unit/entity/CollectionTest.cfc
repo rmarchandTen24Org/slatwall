@@ -145,7 +145,7 @@ component extends="Slatwall.meta.tests.unit.entity.SlatwallEntityTestBase" {
 			var rangeComparisonOperatorList = "<,>,<=,>="; 
 
 			for(var propertyIdentifier in filtersByPropertyIdentifier){ 
-				var propertyIdentifierFilters = filtersByPropertyIdentifier[propertyIdentifer]; 
+				var propertyIdentifierFilters = filtersByPropertyIdentifier[propertyIdentifier];
 				var propertyIdentifierFilterCount = arrayLen(propertyIdentifierFilters);  
 				if(propertyIdentifierFilterCount > 1){ 
 					for(var j = 1; j<=propertyIdentifierFilterCount; j++){
@@ -219,8 +219,8 @@ component extends="Slatwall.meta.tests.unit.entity.SlatwallEntityTestBase" {
 						addQueryFilter = false; 
 					} 
 	
-					if(addQueryFilter){ 
-						arrayAppend(filterGroupQueryStruct["bool"]["must"], queryFilter); 
+					if(addQueryFilter){
+						arrayAppend(filterGroupQueryStruct["bool"][elasticSearchFilterGroupLogicalOperator], filter);
 					}
 				} 
 				
