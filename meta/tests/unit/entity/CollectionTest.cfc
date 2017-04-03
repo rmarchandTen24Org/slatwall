@@ -69,8 +69,9 @@ component extends="Slatwall.meta.tests.unit.entity.SlatwallEntityTestBase" {
 			}
 		};
 
-		var collectionFilter = deserializeJSON('[{"filterGroup":[{"filterGroup":[{"propertyIdentifier":"_product.currentProductVersionAudit.dateDelisted","value":"null","comparisonOperator":"is"}]},{"filterGroup":[{"propertyIdentifier":"_product.currentProductVersionAudit","value":"null","comparisonOperator":"is not"}],"logicalOperator":"AND"},{"filterGroup":[{"propertyIdentifier":"_product.currentProductVersionAudit.classification.typeCode","value":"premium","comparisonOperator":"="}],"logicalOperator":"AND"},{"filterGroup":[{"propertyIdentifier":"_product_categories.categoryID","value":"8a80818f58dc1aa7015975b47f9477fe","comparisonOperator":"=","logicalOperator":"OR"},{"propertyIdentifier":"_product_categories.categoryID","value":"8a80818f58dc1aa7015975b3fbc277f2","comparisonOperator":"=","logicalOperator":"OR"},{"propertyIdentifier":"_product_categories.categoryID","value":"31eb30f9f68b65afdb8ff7fc21a419fb","comparisonOperator":"=","logicalOperator":"OR"}],"logicalOperator":"AND"},{"filterGroup":[{"propertyIdentifier":"_product.Manufacturer","value":"LGI Technology","comparisonOperator":"="},{"propertyIdentifier":"_product.Manufacturer","value":"##1 Advance LEDs","comparisonOperator":"=","logicalOperator":"OR"}],"logicalOperator":"OR"}]}]');
-
+		//var collectionFilter = deserializeJSON('[{"filterGroup":[{"filterGroup":[{"propertyIdentifier":"_product.currentProductVersionAudit.dateDelisted","value":"null","comparisonOperator":"is"}]},{"filterGroup":[{"propertyIdentifier":"_product.currentProductVersionAudit","value":"null","comparisonOperator":"is not"}],"logicalOperator":"AND"},{"filterGroup":[{"propertyIdentifier":"_product.currentProductVersionAudit.classification.typeCode","value":"premium","comparisonOperator":"="}],"logicalOperator":"AND"},{"filterGroup":[{"propertyIdentifier":"_product_categories.categoryID","value":"8a80818f58dc1aa7015975b47f9477fe","comparisonOperator":"=","logicalOperator":"OR"},{"propertyIdentifier":"_product_categories.categoryID","value":"8a80818f58dc1aa7015975b3fbc277f2","comparisonOperator":"=","logicalOperator":"OR"},{"propertyIdentifier":"_product_categories.categoryID","value":"31eb30f9f68b65afdb8ff7fc21a419fb","comparisonOperator":"=","logicalOperator":"OR"}],"logicalOperator":"AND"},{"filterGroup":[{"propertyIdentifier":"_product.Manufacturer","value":"LGI Technology","comparisonOperator":"="},{"propertyIdentifier":"_product.Manufacturer","value":"##1 Advance LEDs","comparisonOperator":"=","logicalOperator":"OR"}],"logicalOperator":"OR"}]}]');
+		//range test
+		var collectionFilter = deserializeJSON('[{"filterGroup":[{"filterGroup":[{"propertyIdentifier":"_product.currentProductVersionAudit.dateDelisted","value":"null","comparisonOperator":"is"}]},{"filterGroup":[{"propertyIdentifier":"_product.futureProductVersionAudit","value":"null","comparisonOperator":"is not","logicalOperator":"OR"},{"propertyIdentifier":"_product.currentProductVersionAudit","value":"null","comparisonOperator":"is not","logicalOperator":"OR"}],"logicalOperator":"AND"},{"filterGroup":[{"propertyIdentifier":"_product.currentProductVersionAudit","value":"null","comparisonOperator":"is not"},{"propertyIdentifier":"_product.currentProductVersionAudit.versionNumber","value":4,"comparisonOperator":">=","logicalOperator":"AND"},{"propertyIdentifier":"_product.currentProductVersionAudit.versionNumber","value":4.1,"comparisonOperator":"<=","logicalOperator":"AND"}],"logicalOperator":"AND"},{"filterGroup":[{"propertyIdentifier":"_product.futureProductVersionAudit","value":"null","comparisonOperator":"is not"},{"propertyIdentifier":"_product.futureProductVersionAudit.versionNumber","value":4,"comparisonOperator":">=","logicalOperator":"AND"},{"propertyIdentifier":"_product.futureProductVersionAudit.versionNumber","value":4.1,"comparisonOperator":"<=","logicalOperator":"AND"}],"logicalOperator":"AND"},{"filterGroup":[{"propertyIdentifier":"_product.Manufacturer","value":"Acuity Brands Lighting","comparisonOperator":"="},{"propertyIdentifier":"_product.Manufacturer","value":"Big Ass Light Solutions","comparisonOperator":"=","logicalOperator":"OR"}],"logicalOperator":"AND"},{"filterGroup":[{"propertyIdentifier":"_product.lightOutput","value":27601.5337,"comparisonOperator":">="},{"propertyIdentifier":"_product.lightOutput","value":49435.5828,"comparisonOperator":"<=","logicalOperator":"AND"}],"logicalOperator":"AND"}]}]');
 		// for determing range filters
 		var filtersByPropertyIdentifier = {};  
 
@@ -204,14 +205,8 @@ component extends="Slatwall.meta.tests.unit.entity.SlatwallEntityTestBase" {
 							queryFilter["term"][filter.propertyIdentifier] = filter.value; 
 							break; 
 						case ">": 
-							lookForRangeFilter = true; 
-							break; 
 						case "<": 
-							lookForRangeFilter = true;
-							break;  
 						case ">=":		 
-							lookForRangeFilter = true; 
-							break; 
 						case "<=": 
 							lookForRangeFilter = true; 
 							break; 
@@ -223,8 +218,10 @@ component extends="Slatwall.meta.tests.unit.entity.SlatwallEntityTestBase" {
 					var addQueryFilter = true; 
 
 					if(lookForRangeFilter && !structKeyExists(rangeFilterPropertyIdentifierHasBeenAddedMap, filter.propertyIdentifier)){
-						queryFilter["range"] = {}; 
 						var propertyIdentifierRangeFilters = propertyIdentifierRangeFilterMap[filter.propertyIdentifier]; 
+						queryFilter["range"] = {};
+						queryFilter["range"][filter.propertyIdentifier] = {};
+						rangeFilterPropertyIdentifierHasBeenAddedMap[filter.propertyIdentifier] = true;
 						for(var rangeFilterIndex = 1; rangeFilterIndex <= ArrayLen(propertyIdentifierRangeFilters); rangeFilterIndex++){
 							var rangeFilter = propertyIdentifierRangeFilters[rangeFilterIndex]; 
 
@@ -245,9 +242,9 @@ component extends="Slatwall.meta.tests.unit.entity.SlatwallEntityTestBase" {
 									break; 
 							}	
 							
-							queryFilter["range"][rangeFilterComparisonOperator] = rangeFilter.value; 
+							queryFilter["range"][filter.propertyIdentifier][rangeFilterComparisonOperator] = rangeFilter.value; 
 						}
-					} else if(lookForRangeFilter && structKeyExists(rangeFilterPropertyIdentifierHasBeenAdded, filter.propertyIdentifier)) { 
+					} else if(lookForRangeFilter && structKeyExists(rangeFilterPropertyIdentifierHasBeenAddedMap, filter.propertyIdentifier)) { 
 						addQueryFilter = false; 
 					} 
 	
