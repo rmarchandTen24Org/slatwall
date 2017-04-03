@@ -23,7 +23,6 @@ function CheckAuthentication() {
 	//some kind of session validation here. Even something very simple as...
 	//... where session.IsAuthorized is set to "true" as soon as the
 	//user logs in your system.
-
 	var list = structKeyList(session);
 	var applicationKeyIndex = ListContainsNoCase(list, "CKFinderAccess" );
 	var sessionVar = listGetAt(list,applicationKeyIndex);
