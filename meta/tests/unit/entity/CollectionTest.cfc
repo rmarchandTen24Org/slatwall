@@ -60,6 +60,39 @@ component extends="Slatwall.meta.tests.unit.entity.SlatwallEntityTestBase" {
 	public boolean function returnFalse(){
 		return false;
 	}
+
+	public void function elasticSearchFiltersTest(){
+
+		var collectionFilter = deserializeJSON('[{"filterGroup":[{"filterGroup":[{"propertyIdentifier":"_product.currentProductVersionAudit.dateDelisted","value":"null","comparisonOperator":"is"}]},{"filterGroup":[{"propertyIdentifier":"_product.currentProductVersionAudit","value":"null","comparisonOperator":"is not"}],"logicalOperator":"AND"}]}]');
+		// loop top level of filter groups
+		for(var firstLevelfilterGroupIndex = 1; firstLevelfilterGroupIndex <= arraylen(collectionFilter); firstLevelfilterGroupIndex++){
+			var firstLevelFilterGroup = collectionFilter[firstLevelfilterGroupIndex];
+
+			writedump(firstLevelFilterGroup);
+
+			// check if there is filter groups inside of it.
+			if(structKeyExists(firstLevelFilterGroup, 'filterGroup') && isArray(firstLevelFilterGroup.filterGroup)){
+
+				//loop second level of filter groups
+				for(var secondLevelFilterGroupIndex = 1; secondLevelFilterGroupIndex <= arraylen(firstLevelFilterGroup.filterGroup); secondLevelFilterGroupIndex++){
+
+					var secondLevelFilterGroup = firstLevelFilterGroup.filterGroup[secondLevelFilterGroupIndex];
+
+					writeDump(secondLevelFilterGroup);
+				}
+
+
+
+
+
+			}
+
+abort;
+
+
+		}
+
+	}
 	
 	//test that if we trun enforce auth off but also aren't authenticated that only 1st level props are available
 	/**
