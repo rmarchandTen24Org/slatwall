@@ -189,30 +189,42 @@ component extends="Slatwall.meta.tests.unit.entity.SlatwallEntityTestBase" {
 					//preprocess filter to match elastic search query syntax
 					var queryFilter = {}; 
 					var lookForRangeFilter = false; 
-					switch(comparisonOperator){ 
+					switch(filter.comparisonOperator){ 
 						case "is": 
 							queryFilter["exists"] = {};
-							queryFilter["exists"]["field"] = filter.propertyIdentifier;  
+							queryFilter["exists"]["field"] = filter.propertyIdentifier;
+							break;   
 						case "is not": 
 							queryFilter["not_exists"] = {}; 
 							queryFilter["not_exists"]["field"] = filter.propertyIdentifier;  
+							break; 
+						case "!=":
+							break; 
 						case "=":
-							//todo
+							queryFilter["term"] = {};
+							queryFilter["term"][filter.propertyIdentifier] = filter.value; 
+							break; 
 						case ">": 
 							lookForRangeFilter = true; 
+							break; 
 						case "<": 
-							lookForRangeFilter = true; 
+							lookForRangeFilter = true;
+							break;  
 						case ">=":		 
 							lookForRangeFilter = true; 
+							break; 
 						case "<=": 
 							lookForRangeFilter = true; 
+							break; 
 						default:
 							//todo
+							break; 
 					}
 			
 					var addQueryFilter = true; 
 
 					if(lookForRangeFilter && !structKeyExists(rangeFilterPropertyIdentifierHasBeenAddedMap, filter.propertyIdentifier)){
+						writedump("going inside range filter");
 						queryFilter["range"] = {}; 
 						var propertyIdentifierRangeFilters = propertyIdentifierRangeFilterMap[filter.propertyIdentifier]; 
 						for(var rangeFilterIndex = 1; rangeFilterIndex <= ArrayLen(propertyIdentifierRangeFilters); rangeFilterIndex++){
@@ -220,15 +232,29 @@ component extends="Slatwall.meta.tests.unit.entity.SlatwallEntityTestBase" {
 
 							var rangeFilterComparisonOperator = "GT"; 
 							switch(rangeFilter.comparisonOperator){ 
-
+								case '>':
+									break; 
+								case '<':
+									rangeFilterComparisonOperator = "LT"; 
+									break; 
+								case '>=':
+									rangeFilterComparisonOperator = "GTE"; 
+									break; 
+								case '<=': 
+									rangeFilterComparisonOperator = "LTE"; 
+									break; 
+								default: 
+									break; 
 							}	
+							
+							queryFilter["range"][rangeFilterComparisonOperator] = rangeFilter.value; 
 						}
 					} else { 
 						addQueryFilter = false; 
 					} 
 	
 					if(addQueryFilter){
-						arrayAppend(filterGroupQueryStruct["bool"][elasticSearchFilterGroupLogicalOperator], filter);
+						arrayAppend(filterGroupQueryStruct["bool"][elasticSearchFilterGroupLogicalOperator], queryFilter);
 					}
 				} 
 				
