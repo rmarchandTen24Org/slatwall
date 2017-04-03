@@ -18,12 +18,6 @@ class PublicService {
     public newBillingAddress:any;
     public loading:boolean;
 
-    public accountDataPromise:any;
-    public addressOptionData:any;
-    public cartDataPromise:any;
-    public countryDataPromise:any;
-    public stateDataPromise:any;
-
     public http:ng.IHttpService;
     public confirmationUrl:string;
     public header:any;
@@ -110,48 +104,33 @@ class PublicService {
         }
     }
     /** accessors for account */
-    public getAccount=(refresh=false):any =>  {
+    public getAccount=():any =>  {
         let urlBase = this.baseActionPath+'getAccount/';
-        if(!this.accountDataPromise || refresh){
-            this.accountDataPromise = this.getData(urlBase, "account", "");
-        }
-        return this.accountDataPromise;
+        return this.getData(urlBase, "account", "");
     }
     /** accessors for cart */
-    public getCart=(refresh=false):any =>  {
+    public getCart=():any =>  {
         let urlBase = this.baseActionPath+'getCart/';
-        if(!this.cartDataPromise || refresh){
-            this.cartDataPromise = this.getData(urlBase, "cart", "");
-        }
-        return this.cartDataPromise;
+        return this.getData(urlBase, "cart", "");
     }
     /** accessors for countries */
-    public getCountries=(refresh=false):any =>  {
+    public getCountries=():any =>  {
         let urlBase = this.baseActionPath+'getCountries/';
-        if(!this.countryDataPromise || refresh){
-            this.countryDataPromise = this.getData(urlBase, "countries", "");
-        }
-        return this.countryDataPromise;
+        return this.getData(urlBase, "countries", "");
     }
 
     /** accessors for states */
-    public getStates=(countryCode:string, refresh=false):any =>  {
+    public getStates=(countryCode:string):any =>  {
        if (!angular.isDefined(countryCode)) countryCode = "US";
        let urlBase = this.baseActionPath+'getStateCodeOptionsByCountryCode/';
-       if(!this.stateDataPromise || refresh){
-           this.stateDataPromise = this.getData(urlBase, "states", "?countryCode="+countryCode);
-       }
-       return this.stateDataPromise;
+       return this.getData(urlBase, "states", "?countryCode="+countryCode);
     }
 
     /** accessors for states */
-    public getAddressOptions=(countryCode:string, refresh=false):any =>  {
+    public getAddressOptions=(countryCode:string):any =>  {
        if (!angular.isDefined(countryCode)) countryCode = "US";
        let urlBase = this.baseActionPath+'getAddressOptionsByCountryCode/';
-       if(!this.addressOptionData || refresh){
-           this.addressOptionData = this.getData(urlBase, "addressOptions", "&countryCode="+countryCode);
-       }
-       return this.addressOptionData;
+       return this.getData(urlBase, "addressOptions", "&countryCode="+countryCode);
     }
 
     /** accessors for states */
@@ -211,8 +190,6 @@ class PublicService {
         }else{
             urlBase = "/index.cfm/api/scope/" + action;//public path
         }
-
-
 
         if(data){
             method = "post";
@@ -521,7 +498,7 @@ class PublicService {
             'newOrderPayment.saveShippingAsBilling':(this.saveShippingAsBilling == true),
         };
 
-        //processObject.populate(data);
+        processObject.populate(data);
 
 
         //Make sure we have required fields for a newOrderPayment.
@@ -760,7 +737,6 @@ class PublicService {
             this.rates = result.data;
         });
     }
-
     
     /** Returns the state from the list of states by stateCode */
     public getStateByStateCode = (stateCode) => {
@@ -816,7 +792,8 @@ class PublicService {
    		}); 
    	}
 
-      /**
+	
+    /**
      *  Returns true when the fulfillment body should be showing
      *  Show if we don't need an account but do need a fulfillment
      *
@@ -836,7 +813,6 @@ class PublicService {
      *  we have a payment but are editting the payment AND nothing else is being edited
      *
      */
-   
     public showPaymentTabBody = ()=> {
         if ((this.cart.orderRequirementsList.indexOf('account') == -1) && this.account.accountID &&
             (this.cart.orderRequirementsList.indexOf('fulfillment') == -1) &&
@@ -847,7 +823,7 @@ class PublicService {
         }
         return false;
     };
-
+    
     /**
      *  Returns true if the review tab body should be showing.
      *  Show if we don't need an account,fulfillment,payment, but not if something else is being edited
@@ -862,6 +838,7 @@ class PublicService {
         }
         return false;
     };
+    
     /** Returns true if the fulfillment tab should be active */
     public fulfillmentTabIsActive = ()=> {
         if ((this.edit == 'fulfillment') ||
@@ -871,6 +848,7 @@ class PublicService {
         }
         return false;
     };
+    
     /** Returns true if the payment tab should be active */
     public paymentTabIsActive = ()=> {
         if ((this.edit == 'payment') ||
@@ -883,9 +861,19 @@ class PublicService {
         return false;
     };
     
-    
- 
+    /** Returns true if the review tab should be active */
+    public reviewTabIsActive =  ()=> {
+        if ((this.edit == 'review' ||
+            (this.edit == '' &&
+                (this.cart.orderRequirementsList.indexOf('account') == -1) && this.account.accountID &&
+                (this.cart.orderRequirementsList.indexOf('fulfillment') == -1) &&
+                (this.cart.orderRequirementsList.indexOf('payment') == -1)))) {
+            return true;
+        }
+        return false;
+    };
 
+	
+	
 }
 export {PublicService};
-

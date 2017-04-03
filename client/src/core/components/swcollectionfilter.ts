@@ -16,25 +16,22 @@ class SWCollectionFilter implements ng.IDirective{
     };
     public controller=SWCollectionFilterController;
     public controllerAs="SWCollectionFilter";
-    public template = "";
+    template
 
     public static Factory(){
         var directive:ng.IDirectiveFactory=(
-            scopeService, 
             utilityService
         )=>new SWCollectionFilter(
-            scopeService, 
             utilityService
         );
         directive.$inject = [
-            'scopeService',
             'utilityService'
         ];
         return directive;
     }
     
     //@ngInject
-    constructor(private scopeService, private utilityService){}
+    constructor(private utilityService){}
 
     public link:ng.IDirectiveLinkFn = (scope:any, element:any, attrs:any) =>{
         var filter = {
@@ -44,13 +41,9 @@ class SWCollectionFilter implements ng.IDirective{
                 logicalOperator:scope.SWCollectionFilter.logicalOperator,
                 hidden:scope.SWCollectionFilter.hidden
         };
-        var currentScope = this.scopeService.getRootParentScope(scope, "swCollectionConfig");
        
-        if(angular.isDefined(currentScope.swCollectionConfig)){ 
-            currentScope.swCollectionConfig.filters.push(filter); 
-            currentScope.swCollectionConfig.filtersDeferred.resolve(); 
-        } else { 
-            throw("could not find swCollectionConfig in the parent scope from swcollectionfilter");
+        if(angular.isDefined(scope.swCollectionConfig)){ 
+            scope.swCollectionConfig.filters.push(filter); 
         }
     }
 }

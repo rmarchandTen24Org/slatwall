@@ -3,6 +3,7 @@
 //import alertmodule = require('./alert/alert.module');
 import {alertmodule} from "../alert/alert.module";
 import {collectionmodule} from "../collection/collection.module";
+import {coremodule} from "../core/core.module";
 import {dialogmodule} from "../dialog/dialog.module";
 import {entitymodule} from "../entity/entity.module";
 import {paginationmodule} from "../pagination/pagination.module";
@@ -15,6 +16,7 @@ import {SWSaveAndFinish} from "./components/swsaveandfinish";
 
 var hibachimodule = angular.module('hibachi',[
     alertmodule.name,
+
     collectionmodule.name,
     entitymodule.name,
     dialogmodule.name,

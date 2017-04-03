@@ -4,7 +4,7 @@ var devConfig = require('./webpack.config');
 
 devConfig
     .setupApp(__dirname, './frontend/bootstrap.ts')
-    .setOutputName('slatwall.js')
+    .setOutputName('slatwall_frontend.js')
 ;
 
 module.exports = devConfig;

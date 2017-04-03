@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 CKFinder
 ========
 http://ckfinder.com
@@ -7,13 +6,3 @@ Copyright (C) 2007-2012, CKSource - Frederico Knabben. All rights reserved.
 The full documentation, including installation instructions, is available at:
 
 	http://docs.cksource.com/CKFinder
-=======
-CKFinder
-========
-http://ckfinder.com
-Copyright (C) 2007-2012, CKSource - Frederico Knabben. All rights reserved.
-
-The full documentation, including installation instructions, is available at:
-
-	http://docs.cksource.com/CKFinder
->>>>>>> 04efc81912db0c0c808e100caa063517245d1476

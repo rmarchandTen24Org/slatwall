@@ -1,7 +1,4 @@
-<<<<<<< HEAD
 <cfimport prefix="swa" taglib="../../../tags" />
-=======
->>>>>>> 04efc81912db0c0c808e100caa063517245d1476
 <cfimport prefix="hb" taglib="../../../org/Hibachi/HibachiTags" />
 <cfif thisTag.executionMode is "start">
 	<cfparam name="attributes.hibachiScope" type="any" default="#request.context.fw.getHibachiScope()#" />
@@ -24,10 +21,7 @@
 							.s-report-info dd, .s-report-info dt {line-height:30px;}
 							.s-report-info dt {margin-right:10px;}
 						</style>
-<<<<<<< HEAD
 						
-=======
->>>>>>> 04efc81912db0c0c808e100caa063517245d1476
 						<!--- Metrics --->
 						<input type="hidden" name="metrics" value="#trim(attributes.report.getMetrics())#" />
 						<dt style="width:100px;"><strong>#attributes.hibachiScope.rbKey('define.metrics')#</strong></dt>
@@ -89,7 +83,6 @@
 								<option value="dimensions" <cfif attributes.report.getOrderByType() EQ "dimensions">selected</cfif>>#attributes.hibachiScope.rbKey('define.dimensions')#</option>
 							</select>
 						</dd>
-<<<<<<< HEAD
 
 						<!--- Limit Results --->
 						<cfif attributes.report.getReportType() EQ "column" OR attributes.report.getReportType() EQ "pie">
@@ -123,28 +116,17 @@
 						<dd style="margin-left:100px;">
 							<input id="hibachi-show-report" type="checkbox" name="showReport" value="true" <cfif attributes.report.getShowReport()>checked</cfif> />
 						</dd>
-=======
->>>>>>> 04efc81912db0c0c808e100caa063517245d1476
 						
 						<!--- Action Buttons --->
 						<dt style="width:100px;"><strong>#attributes.hibachiScope.rbKey('define.actions')#</strong></dt>
 						<dd style="margin-left:100px;">
 							<cfif not isNull(attributes.report.getReportEntity())>
-<<<<<<< HEAD
 								<hb:HibachiActionCaller action="admin:entity.editreport" queryString="reportID=#attributes.report.getReportEntity().getReportID()#&reportName=#attributes.report.getClassName()#&reportDateTime=#attributes.report.getReportDateTime()#&reportDateTimeGroupBy=#attributes.report.getReportDateTimeGroupBy()#&reportCompareFlag=#attributes.report.getReportCompareFlag()#&dimensions=#attributes.report.getDimensions()#&metrics=#attributes.report.getMetrics()#&redirectAction=admin:report.default&reportType=#attributes.report.getReportType()#&limitResults=#attributes.report.getLimitResults()#&showReport=#attributes.report.getShowReport()#&" icon="pencil" class="btn btn-xs btn-dgrey" modal=true />
 								<hb:HibachiActionCaller action="admin:entity.deletereport" queryString="reportID=#attributes.report.getReportEntity().getReportID()#&redirectAction=admin:report.default" icon="remove" class="btn btn-xs btn-dgrey" />
 							</cfif>	
 							<hb:HibachiActionCaller action="admin:entity.createreport" queryString="reportName=#attributes.report.getClassName()#&reportDateTime=#attributes.report.getReportDateTime()#&reportDateTimeGroupBy=#attributes.report.getReportDateTimeGroupBy()#&reportCompareFlag=#attributes.report.getReportCompareFlag()#&dimensions=#attributes.report.getDimensions()#&metrics=#attributes.report.getMetrics()#&redirectAction=admin:report.default&reportType=#attributes.report.getReportType()#&limitResults=#attributes.report.getLimitResults()#&showReport=#attributes.report.getShowReport()#&" icon="plus" class="btn btn-xs btn-dgrey" modal=true />
 							<hb:HibachiActionCaller action="admin:report.exportxls" name="slatAction" icon="share" type="button" class="btn btn-xs btn-dgrey" submit="true" />
 							<hb:HibachiActionCaller action="admin:report.exportcsv" name="slatAction" icon="share" type="button" class="btn btn-xs btn-dgrey" submit="true" />	
-=======
-								<hb:HibachiActionCaller action="admin:entity.editreport" queryString="reportID=#attributes.report.getReportEntity().getReportID()#&reportName=#attributes.report.getClassName()#&reportDateTime=#attributes.report.getReportDateTime()#&reportDateTimeGroupBy=#attributes.report.getReportDateTimeGroupBy()#&reportCompareFlag=#attributes.report.getReportCompareFlag()#&dimensions=#attributes.report.getDimensions()#&metrics=#attributes.report.getMetrics()#&redirectAction=admin:report.default" icon="pencil" class="btn btn-xs s-btn-dgrey" modal=true />
-								<hb:HibachiActionCaller action="admin:entity.deletereport" queryString="reportID=#attributes.report.getReportEntity().getReportID()#&redirectAction=admin:report.default" icon="remove" class="btn btn-xs s-btn-dgrey" />
-							</cfif>	
-							<hb:HibachiActionCaller action="admin:entity.createreport" queryString="reportName=#attributes.report.getClassName()#&reportDateTime=#attributes.report.getReportDateTime()#&reportDateTimeGroupBy=#attributes.report.getReportDateTimeGroupBy()#&reportCompareFlag=#attributes.report.getReportCompareFlag()#&dimensions=#attributes.report.getDimensions()#&metrics=#attributes.report.getMetrics()#&redirectAction=admin:report.default" icon="plus" class="btn btn-xs s-btn-dgrey" modal=true />
-							<hb:HibachiActionCaller action="admin:report.exportxls" name="slatAction" icon="share" type="button" class="btn-xs s-btn-dgrey" submit="true" />
-							<hb:HibachiActionCaller action="admin:report.exportcsv" name="slatAction" icon="share" type="button" class="btn-xs s-btn-dgrey" submit="true" />	
->>>>>>> 04efc81912db0c0c808e100caa063517245d1476
 						</dd>
 					</dl>
 				</div>

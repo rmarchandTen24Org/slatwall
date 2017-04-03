@@ -1,15 +1,6 @@
-<<<<<<< HEAD
 <IfModule mod_php5.c>
   php_value engine off
 </IfModule>
 <IfModule mod_php4.c>
   php_value engine off
 </IfModule>
-=======
-<IfModule mod_php5.c>
-  php_value engine off
-</IfModule>
-<IfModule mod_php4.c>
-  php_value engine off
-</IfModule>
->>>>>>> 04efc81912db0c0c808e100caa063517245d1476

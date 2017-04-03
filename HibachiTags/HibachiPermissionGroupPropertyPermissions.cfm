@@ -1,7 +1,4 @@
-<<<<<<< HEAD
 <cfimport prefix="swa" taglib="../../../tags" />
-=======
->>>>>>> 04efc81912db0c0c808e100caa063517245d1476
 <cfimport prefix="hb" taglib="../../../org/Hibachi/HibachiTags" />
 <cfif thisTag.executionMode is "start">
 	<cfparam name="attributes.hibachiScope" type="struct" default="#request.context.fw.getHibachiScope()#" />
@@ -11,26 +8,16 @@
 	<cfparam name="attributes.parentIndex" type="numeric" default="1" />
 	<cfparam name="attributes.depth" type="numeric" default="1" />
 	<cfparam name="attributes.edit" type="boolean" default="false" />
-<<<<<<< HEAD
 	
 	<cfset propertyName = "" />
 	
-=======
-
-	<cfset propertyName = "" />
-
->>>>>>> 04efc81912db0c0c808e100caa063517245d1476
 	<cfset subPropertyInheriting = structNew() />
 	<cfloop collection="#attributes.entityPermissionDetails#" item="key">
 		<cfif structKeyExists(attributes.entityPermissionDetails[key], "inheritPermissionEntityName") and attributes.entityPermissionDetails[key].inheritPermissionEntityName eq attributes.entityName>
 			<cfset subPropertyInheriting[ attributes.entityPermissionDetails[key].inheritPermissionPropertyName ] = key />
 		</cfif>
 	</cfloop>
-<<<<<<< HEAD
 	
-=======
-
->>>>>>> 04efc81912db0c0c808e100caa063517245d1476
 	<cfset entityPropertiesList = "" />
 	<cfset standardPropertiesList = "" />
 	<cfset standardPropertiesList = listAppend(standardPropertiesList, structKeyList(attributes.entityPermissionDetails[attributes.entityName].properties)) />
@@ -43,7 +30,6 @@
 			<cfset standardPropertiesList = listAppend(standardPropertiesList, propertyName) />
 		</cfif>
 	</cfloop>
-<<<<<<< HEAD
 	
 	<cfset entityProperties = listToArray(entityPropertiesList) />
 	<cfset standardProperties = listToArray(standardPropertiesList) />
@@ -56,40 +42,18 @@
 		<cfset rowClass=listAppend(rowClass, "hide", " ") /> 
 	</cfif>
 	
-=======
-
-	<cfset entityProperties = listToArray(entityPropertiesList) />
-	<cfset standardProperties = listToArray(standardPropertiesList) />
-
-	<cfset arraySort(entityProperties, "text") />
-	<cfset arraySort(standardProperties, "text") />
-
-	<cfset rowClass="permission#lcase(attributes.entityName)#" />
-	<cfif not attributes.edit>
-		<cfset rowClass=listAppend(rowClass, "hide", " ") />
-	</cfif>
-
->>>>>>> 04efc81912db0c0c808e100caa063517245d1476
 	<cfoutput>
 		<cfloop array="#standardProperties#" index="propertyName">
 			<tr class="#rowClass#">
 				<cfif attributes.edit>
 					<cfset request.context.permissionFormIndex++ />
 					<cfset thisPermission = attributes.permissionGroup.getPermissionByDetails(accessType='entity', entityClassName=attributes.entityName, propertyName=propertyName) />
-<<<<<<< HEAD
 					
-=======
-
->>>>>>> 04efc81912db0c0c808e100caa063517245d1476
 					<input type="hidden" name="permissions[#request.context.permissionFormIndex#].permissionID" value="#thisPermission.getPermissionID()#" />
 					<input type="hidden" name="permissions[#request.context.permissionFormIndex#].accessType" value="entity" />
 					<input type="hidden" name="permissions[#request.context.permissionFormIndex#].entityClassName" value="#attributes.entityName#" />
 					<input type="hidden" name="permissions[#request.context.permissionFormIndex#].propertyName" value="#propertyName#" />
-<<<<<<< HEAD
 					
-=======
-
->>>>>>> 04efc81912db0c0c808e100caa063517245d1476
 					<td class="primary"><span class="depth#attributes.depth#" />#attributes.hibachiScope.getService('hibachiService').getEntityObject( attributes.entityName ).getPropertyTitle( propertyName )#</td>
 					<td></td>
 					<td><input type="hidden" name="permissions[#request.context.permissionFormIndex#].allowReadFlag" value=""><input type="checkbox" name="permissions[#request.context.permissionFormIndex#].allowReadFlag" class="hibachi-permission-checkbox" data-hibachi-parentcheckbox="permissions[#attributes.parentIndex#].allowReadFlag" value="1"<cfif not attributes.hibachiScope.getService("hibachiAuthenticationService").authenticateEntityByPermissionGroup('read', attributes.entityName, attributes.permissionGroup)> disabled="disabled"</cfif><cfif (!thisPermission.isNew() && !isNull(thisPermission.getAllowReadFlag()) && thisPermission.getAllowReadFlag()) || (attributes.hibachiScope.getService("hibachiAuthenticationService").authenticateEntityPropertyByPermissionGroup('read', attributes.entityName, propertyName, attributes.permissionGroup))> checked="checked"</cfif>> Read</td>
@@ -112,20 +76,12 @@
 			<tr class="#rowClass#" onClick="$('.permission#lcase(subPropertyInheriting[ propertyName ])#').toggleClass('hide');">
 				<cfif attributes.edit>
 					<cfset request.context.permissionFormIndex++ />
-<<<<<<< HEAD
 					
-=======
-
->>>>>>> 04efc81912db0c0c808e100caa063517245d1476
 					<input type="hidden" name="permissions[#request.context.permissionFormIndex#].permissionID" value="" />
 					<input type="hidden" name="permissions[#request.context.permissionFormIndex#].accessType" value="entity" />
 					<input type="hidden" name="permissions[#request.context.permissionFormIndex#].entityClassName" value="#attributes.entityName#" />
 					<input type="hidden" name="permissions[#request.context.permissionFormIndex#].propertyName" value="#propertyName#" />
-<<<<<<< HEAD
 					
-=======
-
->>>>>>> 04efc81912db0c0c808e100caa063517245d1476
 					<td class="primary"><span class="depth#attributes.depth#" /><strong>#attributes.hibachiScope.getService('hibachiService').getEntityObject( attributes.entityName ).getPropertyTitle( propertyName )#</strong></td>
 					<td><input type="hidden" name="permissions[#request.context.permissionFormIndex#].allowCreateFlag" value=""><input type="checkbox" name="permissions[#request.context.permissionFormIndex#].allowCreateFlag" class="hibachi-permission-checkbox" data-hibachi-parentcheckbox="permissions[#attributes.parentIndex#].allowCreateFlag" value="1"> Create</td>
 					<td><input type="hidden" name="permissions[#request.context.permissionFormIndex#].allowReadFlag" value=""><input type="checkbox" name="permissions[#request.context.permissionFormIndex#].allowReadFlag" class="hibachi-permission-checkbox" data-hibachi-parentcheckbox="permissions[#attributes.parentIndex#].allowReadFlag" value="1"> Read</td>

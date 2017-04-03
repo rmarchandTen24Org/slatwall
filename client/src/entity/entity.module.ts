@@ -32,15 +32,11 @@ var entitymodule = angular.module('hibachi.entity',['ngRoute',coremodule.name])
          $locationProvider.html5Mode( false ).hashPrefix('!');
      }
     
-    var snakeToCapitalCase = (s)=>{
-        return s.charAt(0).toUpperCase() + s.replace(/(\-\w)/g, function(m){return m[1].toUpperCase();}).slice(1);
-    }
-
     $routeProvider.when('/entity/:entityName/', {
          template: function(params){
-             var entityDirectiveExists = $injector.has('sw'+snakeToCapitalCase(params.entityName)+'ListDirective');
+             var entityDirectiveExists = $injector.has('sw'+params.entityName+'ListDirective');
              if(entityDirectiveExists){
-                 return '<sw-'+params.entityName.toLowerCase()+'-list></sw-'+params.entityName.toLowerCase()+'-list>';
+                 return '<sw-'+params.entityName.toLowerCase()+'-list>';
              }else{
                  return '<sw-list></sw-list>';
              }
@@ -48,11 +44,9 @@ var entitymodule = angular.module('hibachi.entity',['ngRoute',coremodule.name])
          controller: 'routerController'
      }).when('/entity/:entityName/:entityID', {
          template: function(params){
-             
-             
-             var entityDirectiveExists = $injector.has('sw'+snakeToCapitalCase(params.entityName)+'DetailDirective');
+             var entityDirectiveExists = $injector.has('sw'+params.entityName+'DetailDirective');
              if(entityDirectiveExists){
-                 return '<sw-'+params.entityName.toLowerCase()+'-detail></sw-'+params.entityName.toLowerCase()+'-detail>';
+                 return '<sw-'+params.entityName.toLowerCase()+'-detail>';
              }else{
                  return '<sw-detail></sw-detail>';
              }

@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 html {
   cursor: text;
 }
@@ -54,60 +53,3 @@ span.css-comment {
 span.css-string {
   color: #A22;
 }
-=======
-html {
-  cursor: text;
-}
-
-.editbox {
-  margin: .4em;
-  padding: 0;
-  font-family: monospace;
-  font-size: 10pt;
-  color: black;
-}
-
-pre.code, .editbox {
-  color: #666;
-}
-
-.editbox p {
-  margin: 0;
-}
-
-span.css-at {
-  color: #708;
-}
-
-span.css-unit {
-  color: #281;
-}
-
-span.css-value {
-  color: #708;
-}
-
-span.css-identifier {
-  color: black;
-}
-
-span.css-selector {
-  color: #11B;
-}
-
-span.css-important {
-  color: #00F;
-}
-
-span.css-colorcode {
-  color: #299;
-}
-
-span.css-comment {
-  color: #A70;
-}
-
-span.css-string {
-  color: #A22;
-}
->>>>>>> 04efc81912db0c0c808e100caa063517245d1476
