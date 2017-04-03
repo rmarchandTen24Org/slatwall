@@ -141,7 +141,28 @@ component extends="Slatwall.meta.tests.unit.entity.SlatwallEntityTestBase" {
 			}
 			writeDump(filtersByPropertyIdentifier);
 
+			var propertyIdentifierRangeFilterMap = {}; 
+			var rangeComparisonOperatorList = "<,>,<=,>="; 
+
+			for(var propertyIdentifier in filtersByPropertyIdentifier){ 
+				var propertyIdentifierFilters = filtersByPropertyIdentifier[propertyIdentifer]; 
+				var propertyIdentifierFilterCount = arrayLen(propertyIdentifierFilters);  
+				if(propertyIdentifierFilterCount > 1){ 
+					for(var j = 1; j<=propertyIdentifierFilterCount; j++){
+						var propertyIdentifierFilter = propertyIdentifierFilters[j]; 
+						if(ListContains(rangeComparisonOperatorList, propertyIdentifierFilter.comparisonOperator)){
+							if(!structKeyExists(propertyIdentifierRangeFilterMap, propertyIdentifier)){
+								propertyIdentifierRangeFilterMap[propertyIdentifier] = []; 
+							}
+							ArrayAppend(propertyIdentifierRangeFilterMap[propertyIdentifier], propertyIdentifierFilter);
+						} 
+					} 
+				}
+			} 
+
 			writeDump("Preprocess filter group structure:"); 
+
+			var rangeFilterPropertyIdentifierHasBeenAddedMap = {}; 
 
 			for(var key in filterGroupStructure){
 
@@ -151,13 +172,13 @@ component extends="Slatwall.meta.tests.unit.entity.SlatwallEntityTestBase" {
 
 				var filterGroupQueryStruct = { "bool" = { "must" = [] }}; 
 
-
 				for(var filterIndex = 1; filterIndex<=Arraylen(filterGroupStructure[key]); filterIndex++){
 					var filter = filterGroup[filterIndex];
 					writeDump(filter);  	
 					
 					//preprocess filter to match elastic search query syntax
 					var queryFilter = {}; 
+					var lookForRangeFilter = false; 
 					switch(comparisonOperator){ 
 						case "is": 
 							queryFilter["exists"] = {};
@@ -168,19 +189,29 @@ component extends="Slatwall.meta.tests.unit.entity.SlatwallEntityTestBase" {
 						case "=":
 							//todo
 						case ">": 
-							//todo
+							lookForRangeFilter = true; 
 						case "<": 
-							//todo
+							lookForRangeFilter = true; 
 						case ">=":		 
-							//todo
+							lookForRangeFilter = true; 
 						case "<=": 
-							//todo
+							lookForRangeFilter = true; 
 						default:
 							//todo
 					}
-				
+			
+					var addQueryFilter = true; 
 
-					arrayAppend(filterGroupQueryStruct["bool"]["must"], queryFilter); 
+					if(lookForRangeFilter && !structKeyExists(rangeFilterPropertyIdentifierHasBeenAddedMap, filter.propertyIdentifier)){
+						queryFilter["range"] = {}; 
+						var propertyIdentifierRangeFilters = propertyIdentifierRangeFilterMap[filter.propertyIdentifier]; 
+					} else { 
+						addQueryFilter = false; 
+					} 
+	
+					if(addQueryFilter){ 
+						arrayAppend(filterGroupQueryStruct["bool"]["must"], queryFilter); 
+					}
 				} 
 				
 				ArrayAppend(elasticSearchFilter["bool"]["must"], filterGroupQueryStruct); 
