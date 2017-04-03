@@ -1,46 +1,3 @@
-<!---
-    Hibachi
-    Copyright (C) ten24, LLC
-
-    This program is free software: you can redistribute it and/or modify
-    it under the terms of the GNU General Public License as published by
-    the Free Software Foundation, either version 3 of the License, or
-    (at your option) any later version.
-
-    This program is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-    GNU General Public License for more details.
-
-    You should have received a copy of the GNU General Public License
-    along with this program.  If not, see <http://www.gnu.org/licenses/>.
-
-    Linking this program statically or dynamically with other modules is
-    making a combined work based on this program.  Thus, the terms and
-    conditions of the GNU General Public License cover the whole
-    combination.
-
-    As a special exception, the copyright holders of this program give you
-    permission to combine this program with independent modules and your
-    custom code, regardless of the license terms of these independent
-    modules, and to copy and distribute the resulting program under terms
-    of your choice, provided that you follow these specific guidelines:
-	- You also meet the terms and conditions of the license of each
-	  independent module
-	- You must not alter the default display of the Hibachi name or logo from
-	  any part of the application
-	- Your custom code must not alter or create any files inside Hibachi,
-	  except in the following directories:
-		/integrationServices/
-	You may copy and distribute the modified version of this program that meets
-	the above guidelines as a combined work under the terms of GPL for this program,
-	provided that you include the source code of that other code when and as the
-	GNU GPL requires distribution of source code.
-
-    If you modify this program, you may extend this exception to your version
-    of the program, but you are not obligated to do so.
-Notes:
---->
 <cfimport prefix="hb" taglib="./HibachiTags" />
 
 <cfcomponent accessors="true" persistent="false" output="false" extends="HibachiTransient">
@@ -243,7 +200,7 @@ Notes:
 
 		<cfset var metricDefinition = {} />
 
-		<cfloop array="#getMetricDefinitions()#" index="metricDefinition">
+		<cfloop array="#getMetricDefinitions()#" index="local.metricDefinition">
 			<cfif metricDefinition.alias eq arguments.alias and structKeyExists(metricDefinition, 'title')>
 				<cfreturn metricDefinition.title />
 			</cfif>
@@ -257,7 +214,7 @@ Notes:
 
 		<cfset var dimensionDefinition = {} />
 
-		<cfloop array="#getDimensionDefinitions()#" index="dimensionDefinition">
+		<cfloop array="#getDimensionDefinitions()#" index="local.dimensionDefinition">
 			<cfif dimensionDefinition.alias eq arguments.alias and structKeyExists(dimensionDefinition, 'title')>
 		 		<cfreturn dimensionDefinition.title />
 			</cfif>
@@ -271,7 +228,7 @@ Notes:
 
 		<cfset var reportDateTimeDefinition = {} />
 
-		<cfloop array="#getReportDateTimeDefinitions()#" index="reportDateTimeDefinition">
+		<cfloop array="#getReportDateTimeDefinitions()#" index="local.reportDateTimeDefinition">
 			<cfif reportDateTimeDefinition.alias eq arguments.alias and structKeyExists(reportDateTimeDefinition, 'title')>
 		 		<cfreturn reportDateTimeDefinition.title />
 			</cfif>
@@ -301,7 +258,7 @@ Notes:
 
 		<cfset var metricDefinition = structNew() />
 
-		<cfloop array="#getMetricDefinitions()#" index="metricDefinition">
+		<cfloop array="#getMetricDefinitions()#" index="local.metricDefinition">
 			<cfif metricDefinition.alias eq arguments.alias>
 				<cfreturn metricDefinition />
 			</cfif>
@@ -315,7 +272,7 @@ Notes:
 
 		<cfset var dimensionDefinition = structNew() />
 
-		<cfloop array="#getDimensionDefinitions()#" index="dimensionDefinition">
+		<cfloop array="#getDimensionDefinitions()#" index="local.dimensionDefinition">
 			<cfif dimensionDefinition.alias eq arguments.alias>
 				<cfreturn dimensionDefinition />
 			</cfif>
@@ -329,7 +286,7 @@ Notes:
 
 		<cfset var reportDateTimeDefinition = structNew() />
 
-		<cfloop array="#getReportDateTimeDefinitions()#" index="reportDateTimeDefinition">
+		<cfloop array="#getReportDateTimeDefinitions()#" index="local.reportDateTimeDefinition">
 			<cfif reportDateTimeDefinition.alias eq arguments.alias>
 				<cfreturn reportDateTimeDefinition />
 			</cfif>
@@ -426,7 +383,7 @@ Notes:
 				</cfif>
 				<cfquery name="variables.sortedPieAndBarChartData" dbtype="query" maxrows="#variables.limitResults#">
 					SELECT
-						<cfloop from="1" to="#listLen(getDimensions())#" step="1" index="d">
+						<cfloop from="1" to="#listLen(getDimensions())#" step="1" index="local.d">
 							<cfset var dimensionDefinition = getDimensionDefinition( listGetAt(getDimensions(), d) ) />
 							<cfif d GT "1">,</cfif>
 							#dimensionDefinition.alias#, count(#dimensionDefinition.alias#) AS #dimensionDefinition.alias#Total
@@ -437,7 +394,7 @@ Notes:
 					AND
 				 	 	reportDateTime <= <cfqueryparam cfsqltype="cf_sql_timestamp" value="#reportEndDateTimePlusOne#" />
 					GROUP BY
-						<cfloop from="1" to="#listLen(getDimensions())#" step="1" index="d">
+						<cfloop from="1" to="#listLen(getDimensions())#" step="1" index="local.d">
 							<cfset var dimensionDefinition = getDimensionDefinition( listGetAt(getDimensions(), d) ) />
 							<cfif d gt 1>,</cfif>
 							#dimensionDefinition.alias#
@@ -454,7 +411,7 @@ Notes:
 
 			<cfquery name="variables.chartDataQuery" dbtype="query">
 				SELECT
-					<cfloop from="1" to="#listLen(getMetrics())#" step="1" index="m">
+					<cfloop from="1" to="#listLen(getMetrics())#" step="1" index="local.m">
 						<cfset var metricDefinition = getMetricDefinition( listGetAt(getMetrics(), m) ) />
 						<cfif m gt 1>,</cfif>
 						<cfif structKeyExists(metricDefinition, "calculation")>
@@ -531,7 +488,7 @@ Notes:
 
 			<cfquery name="variables.chartCompareDataQuery" dbtype="query">
 				SELECT
-					<cfloop from="1" to="#listLen(getMetrics())#" step="1" index="m">
+					<cfloop from="1" to="#listLen(getMetrics())#" step="1" index="local.m">
 						<cfset var metricDefinition = getMetricDefinition( listGetAt(getMetrics(), m) ) />
 						<cfif m gt 1>,</cfif>
 						<cfif structKeyExists(metricDefinition, "calculation")>
@@ -687,7 +644,7 @@ Notes:
 				<cfset xAxisData["type"] = "datetime" />
 				<cfset xAxisData["opposite"] = true />
 				<cfset arrayAppend(variables.chartData["xAxis"], xAxisData) />
-				<cfloop from="1" to="#listLen(getMetrics())#" step="1" index="m">
+				<cfloop from="1" to="#listLen(getMetrics())#" step="1" index="local.m">
 
 					<cfset var metricDefinition = getMetricDefinition( listGetAt(getMetrics(), m) ) />
 
@@ -705,7 +662,7 @@ Notes:
 					<hb:HibachiDateLoop index="thisDate" from="#getReportStartDateTime()#" to="#chartReportEndDateTime#" datepart="#loopdatepart#">
 						<cfset var thisData = [] />
 						<cfset arrayAppend(thisData, dateDiff("s", createdatetime( '1970','01','01','00','00','00' ), dateAdd("h", 1, thisDate))*1000) />
-	                    <cfif addChartSeriesDataCheck(thisDate, getReportDateTimeGroupBy(), chartDataQuery, chartRow)>
+	 					<cfif addChartSeriesDataCheck(thisDate, getReportDateTimeGroupBy(), chartDataQuery, chartRow)>
 							<cfset arrayAppend(thisData, chartDataQuery[ metricDefinition.alias ][ chartRow ]) />
 							<cfset chartRow ++ />
 						<cfelse>
@@ -735,8 +692,10 @@ Notes:
 							<cfelse>
 								<cfset arrayAppend(thisData, 0) />
 							</cfif>
-							<cfset structAppend(variables.chartData["series"][dataSeriesID]["data"], thisData) />
+
+							<cfset arrayAppend(variables.chartData["series"][dataSeriesID]["data"], thisData) />
 						</hb:HibachiDateLoop>
+
 					</cfif>
 				</cfloop>
 
@@ -756,7 +715,7 @@ Notes:
 				</cfloop>
 				<cfset arrayAppend(variables.chartData["xAxis"], xAxisData) />
 
-		</cfif>
+			</cfif>
 
 			<cfif getReportCompareFlag()>
 				<cfset arrayAppend(variables.chartData["xAxis"], xAxisCompareData) />
@@ -821,7 +780,7 @@ Notes:
 
 			<cfquery name="variables.totalsQuery" dbtype="query">
 				SELECT
-					<cfloop from="1" to="#listLen(getMetrics())#" step="1" index="m">
+					<cfloop from="1" to="#listLen(getMetrics())#" step="1" index="local.m">
 						<cfset var metricDefinition = getMetricDefinition( listGetAt(getMetrics(), m) ) />
 						<cfif m gt 1>,</cfif>
 						<cfif structKeyExists(metricDefinition, "calculation")>
@@ -851,7 +810,7 @@ Notes:
 
 			<cfquery name="variables.compareTotalsQuery" dbtype="query">
 				SELECT
-					<cfloop from="1" to="#listLen(getMetrics())#" step="1" index="m">
+					<cfloop from="1" to="#listLen(getMetrics())#" step="1" index="local.m">
 						<cfset var metricDefinition = getMetricDefinition( listGetAt(getMetrics(), m) ) />
 						<cfif m gt 1>,</cfif>
 						<cfif structKeyExists(metricDefinition, "calculation")>
@@ -873,6 +832,7 @@ Notes:
 	</cffunction>
 
 	<cffunction name="getTableDataQuery" access="public" output="false">
+
 		<cfif not structKeyExists(variables, "tableDataQuery")>
 
 			<cfset var data = getData() />
@@ -885,10 +845,9 @@ Notes:
 			<cfset var m = 1 />
 			<cfset var d = 1 />
 			<cfset var reportEndDateTimePlusOne = dateAdd("d", 1, getReportEndDateTime()) />
-
 			<cfquery name="unsortedData" dbtype="query">
 				SELECT
-					<cfloop from="1" to="#listLen(getMetrics())#" step="1" index="m">
+					<cfloop from="1" to="#listLen(getMetrics())#" step="1" index="local.m">
 						<cfset var metricDefinition = getMetricDefinition( listGetAt(getMetrics(), m) ) />
 						<cfif m gt 1>,</cfif>
 						<cfif structKeyExists(metricDefinition, "calculation")>
@@ -897,7 +856,7 @@ Notes:
 							#metricDefinition.function#(#metricDefinition.alias#) as #metricDefinition.alias#
 						</cfif>
 					</cfloop>
-					<cfloop from="1" to="#listLen(getDimensions())#" step="1" index="d">
+					<cfloop from="1" to="#listLen(getDimensions())#" step="1" index="local.d">
 						<cfset var dimensionDefinition = getDimensionDefinition( listGetAt(getDimensions(), d) ) />
 						,#dimensionDefinition.alias#
 						<cfif structKeyExists(dimensionDefinition, "filterAlias")>
@@ -911,7 +870,7 @@ Notes:
 				  AND
 				  	reportDateTime <= <cfqueryparam cfsqltype="cf_sql_timestamp" value="#reportEndDateTimePlusOne#" />
 				GROUP BY
-					<cfloop from="1" to="#listLen(getDimensions())#" step="1" index="d">
+					<cfloop from="1" to="#listLen(getDimensions())#" step="1" index="local.d">
 						<cfset var dimensionDefinition = getDimensionDefinition( listGetAt(getDimensions(), d) ) />
 						<cfif d gt 1>,</cfif>
 						#dimensionDefinition.alias#
@@ -922,11 +881,12 @@ Notes:
 			</cfquery>
 
 			<cfif getReportCompareFlag()>
+
 				<cfset var reportCompareEndDateTimePlusOne = dateAdd("d", 1, getReportCompareEndDateTime()) />
 
 				<cfquery name="unsortedCompareData" dbtype="query">
 					SELECT
-						<cfloop from="1" to="#listLen(getMetrics())#" step="1" index="m">
+						<cfloop from="1" to="#listLen(getMetrics())#" step="1" index="local.m">
 							<cfset var metricDefinition = getMetricDefinition( listGetAt(getMetrics(), m) ) />
 							<cfif m gt 1>,</cfif>
 							<cfif structKeyExists(metricDefinition, "calculation")>
@@ -935,7 +895,7 @@ Notes:
 								#metricDefinition.function#(#metricDefinition.alias#) as #metricDefinition.alias#Compare
 							</cfif>
 						</cfloop>
-						<cfloop from="1" to="#listLen(getDimensions())#" step="1" index="d">
+						<cfloop from="1" to="#listLen(getDimensions())#" step="1" index="local.d">
 							<cfset var dimensionDefinition = getDimensionDefinition( listGetAt(getDimensions(), d) ) />
 							,#dimensionDefinition.alias#
 							<cfif structKeyExists(dimensionDefinition, "filterAlias")>
@@ -949,7 +909,7 @@ Notes:
 					  AND
 					  	reportDateTime <= <cfqueryparam cfsqltype="cf_sql_timestamp" value="#reportCompareEndDateTimePlusOne#" />
 					GROUP BY
-						<cfloop from="1" to="#listLen(getDimensions())#" step="1" index="d">
+						<cfloop from="1" to="#listLen(getDimensions())#" step="1" index="local.d">
 							<cfset var dimensionDefinition = getDimensionDefinition( listGetAt(getDimensions(), d) ) />
 							<cfif d gt 1>,</cfif>
 							#dimensionDefinition.alias#
@@ -961,13 +921,13 @@ Notes:
 
 				<cfquery name="allDimensions" dbtype="query">
 					SELECT DISTINCT
-						<cfloop from="1" to="#listLen(getMetrics())#" step="1" index="m">
+						<cfloop from="1" to="#listLen(getMetrics())#" step="1" index="local.m">
 							<cfset var metricDefinition = getMetricDefinition( listGetAt(getMetrics(), m) ) />
 							<cfif m gt 1>,</cfif>
 							0 as #metricDefinition.alias#
 							,0 as #metricDefinition.alias#Compare
 						</cfloop>
-						<cfloop from="1" to="#listLen(getDimensions())#" step="1" index="d">
+						<cfloop from="1" to="#listLen(getDimensions())#" step="1" index="local.d">
 							<cfset var dimensionDefinition = getDimensionDefinition( listGetAt(getDimensions(), d) ) />
 							,#dimensionDefinition.alias#
 							<cfif structKeyExists(dimensionDefinition, "filterAlias")>
@@ -979,7 +939,7 @@ Notes:
 				</cfquery>
 
 				<cfloop query="allDimensions">
-					<cfloop from="1" to="#listLen(getMetrics())#" step="1" index="m">
+					<cfloop from="1" to="#listLen(getMetrics())#" step="1" index="local.m">
 						<cfset var metricDefinition = getMetricDefinition( listGetAt(getMetrics(), m) ) />
 
 						<cfquery name="dataValue" dbtype="query">
@@ -988,7 +948,7 @@ Notes:
 							FROM
 								unsortedData
 							WHERE
-								<cfloop from="1" to="#listLen(getDimensions())#" step="1" index="d">
+								<cfloop from="1" to="#listLen(getDimensions())#" step="1" index="local.d">
 									<cfset var dimensionDefinition = getDimensionDefinition( listGetAt(getDimensions(), d) ) />
 									<cfif d gt 1>AND</cfif>
 									unsortedData.#dimensionDefinition.alias# = '#allDimensions[ dimensionDefinition.alias ][ allDimensions.currentRow ]#'
@@ -1004,7 +964,7 @@ Notes:
 							FROM
 								unsortedCompareData
 							WHERE
-								<cfloop from="1" to="#listLen(getDimensions())#" step="1" index="d">
+								<cfloop from="1" to="#listLen(getDimensions())#" step="1" index="local.d">
 									<cfset var dimensionDefinition = getDimensionDefinition( listGetAt(getDimensions(), d) ) />
 									<cfif d gt 1>AND</cfif>
 									unsortedCompareData.#dimensionDefinition.alias# = '#allDimensions[ dimensionDefinition.alias ][ allDimensions.currentRow ]#'
@@ -1037,12 +997,12 @@ Notes:
 					allUnsortedData
 				ORDER BY
 				<cfif getOrderByType() EQ "dimensions">
-					<cfloop from="1" to="#listLen(getDimensions())#" step="1" index="d">
+					<cfloop from="1" to="#listLen(getDimensions())#" step="1" index="local.d">
 						<cfset var dimensionDefinition = getDimensionDefinition( listGetAt(getDimensions(), d) ) />
 						<cfif d gt 1>,</cfif>#dimensionDefinition.alias# DESC
 					</cfloop>
 				<cfelse>
-					<cfloop from="1" to="#listLen(getMetrics())#" step="1" index="m">
+					<cfloop from="1" to="#listLen(getMetrics())#" step="1" index="local.m">
 						<cfset var metricDefinition = getMetricDefinition( listGetAt(getMetrics(), m) ) />
 						<cfif m gt 1>,</cfif>#metricDefinition.alias# DESC
 					</cfloop>
@@ -1087,14 +1047,14 @@ Notes:
 		<cfset var headers = "" />
 		<cfset var i = "" />
 
-		<cfloop list="#getDimensions()#" index="i">
+		<cfloop list="#getDimensions()#" index="local.i">
 			<cfif arguments.includeQuotes>
 				<cfset headers = listAppend(headers, '"#getDimensionTitle(i)#"') />
 			<cfelse>
 				<cfset headers = listAppend(headers, getDimensionTitle(i)) />
 			</cfif>
 		</cfloop>
-		<cfloop list="#getMetrics()#" index="i">
+		<cfloop list="#getMetrics()#" index="local.i">
 			<cfif arguments.includeQuotes>
 				<cfset headers = listAppend(headers, '"#getMetricTitle(i)#"') />
 			<cfelse>
@@ -1114,10 +1074,10 @@ Notes:
 		<cfset var headerCompare = "" />
 		<cfset var i = "" />
 
-		<cfloop list="#getDimensions()#" index="i">
+		<cfloop list="#getDimensions()#" index="local.i">
 			<cfset headerCompare = listAppend(headerCompare, ' ') />
 		</cfloop>
-		<cfloop list="#getMetrics()#" index="i">
+		<cfloop list="#getMetrics()#" index="local.i">
 			<cfif arguments.includeQuotes>
 				<cfset headerCompare = listAppend(headerCompare, '"#dateFormat(getReportStartDateTime(), 'yyyy/mm/dd')# - #dateFormat(getReportEndDateTime(), 'yyyy/mm/dd')#"') />
 				<cfset headerCompare = listAppend(headerCompare, '"#dateFormat(getReportCompareStartDateTime(), 'yyyy/mm/dd')# - #dateFormat(getReportCompareEndDateTime(), 'yyyy/mm/dd')#"') />
@@ -1141,10 +1101,10 @@ Notes:
 			<cfset var totalsCompareQuery = getCompareTotalsQuery() />
 		</cfif>
 
-		<cfloop list="#getDimensions()#" index="i">
+		<cfloop list="#getDimensions()#" index="local.i">
 			<cfset totals = listAppend(totals, ' ') />
 		</cfloop>
-		<cfloop list="#getMetrics()#" index="i">
+		<cfloop list="#getMetrics()#" index="local.i">
 			<cfif arguments.includeQuotes>
 				<cfset totals = listAppend(totals, '"#totalsQuery[ i ][1]#"' ) />
 			<cfelse>
@@ -1169,10 +1129,10 @@ Notes:
 
 		<cfquery name="data" dbtype="query">
 			SELECT
-				<cfloop from="1" to="#listLen(getDimensions())#" index="i">
+				<cfloop from="1" to="#listLen(getDimensions())#" index="local.i">
 					<cfif i gt 1>,</cfif>#listGetAt(getDimensions(), i)#
 				</cfloop>
-				<cfloop from="1" to="#listLen(getMetrics())#" index="i">
+				<cfloop from="1" to="#listLen(getMetrics())#" index="local.i">
 					,#listGetAt(getMetrics(), i)#
 					<cfif getReportCompareFlag()>
 						,#listGetAt(getMetrics(), i)#Compare
@@ -1190,7 +1150,7 @@ Notes:
 
 		<!--- Create the filename variables --->
 		<cfset var filename = "" />
-		<cfif not isNull(getReportEntity())>
+		<cfif !isNull(getReportEntity()) && !isNull(getReportEntity().getReportTitle()) >
 			<cfset filename = getService("HibachiUtilityService").createSEOString(getReportEntity().getReportTitle()) />
 			<cfset filename &= "_" />
 		<cfelse>
@@ -1227,20 +1187,20 @@ Notes:
 
 			<!--- Add the column headers --->
 			<cfset spreadsheetAddRow(spreadsheet, getSpreadsheetHeaderRow()) />
-			<cfset spreadsheetrowcount &= 1 />
+			<cfset spreadsheetrowcount += 1 />
 			<cfset spreadsheetFormatRow(spreadsheet, {bold=true}, 1) />
 
 			<!--- Add compare row --->
 			<cfif getReportCompareFlag()>
 				<cfset var i = 1 />
 
-				<cfloop from="1" to="#listLen(getMetrics())#" index="i">
+				<cfloop from="1" to="#listLen(getMetrics())#" index="local.i">
 					<cfset var startColumn = (listLen(getDimensions()) + (i*2)) - 1 />
 					<cfset spreadsheetMergeCells(spreadsheet, 1, 1, startColumn, startColumn + 1 ) />
 				</cfloop>
 
 				<cfset spreadsheetAddRow(spreadsheet, getSpreadsheetHeaderCompareRow()) />
-				<cfset spreadsheetrowcount &= 1 />
+				<cfset spreadsheetrowcount += 1 />
 
 				<cfset spreadsheetFormatRow(spreadsheet, {fontsize=8}, spreadsheet.rowcount) />
 				<cfset spreadsheetMergeCells(spreadsheet, spreadsheetrowcount, spreadsheetrowcount, 1, listLen(getDimensions()) ) />
@@ -1252,11 +1212,11 @@ Notes:
 			<!--- Add the data --->
 			<cfset var dataQuery = getSpreadsheetData() />
 			<cfset spreadsheetAddRows(spreadsheet, dataQuery) />
-			<cfset spreadsheetrowcount &= dataQuery.recordcount />
+			<cfset spreadsheetrowcount += dataQuery.recordcount />
 
 			<!--- Add the totals --->
 			<cfset spreadsheetAddRow(spreadsheet, getSpreadsheetTotals()) />
-			<cfset spreadsheetrowcount &= 1 />
+			<cfset spreadsheetrowcount += 1 />
 
 			<cfset spreadsheetMergeCells(spreadsheet, spreadsheetrowcount, spreadsheetrowcount, 1, listLen(getDimensions())) />
 			<cfset spreadsheetSetCellValue(spreadsheet, rbKey('define.totals'), spreadsheetrowcount, 1) />
@@ -1265,11 +1225,11 @@ Notes:
 			<!--- Add Totals border --->
 			<cfset spreadsheetFormatCellRange (spreadsheet, {topborder='thin'}, spreadsheetrowcount, 1, spreadsheetrowcount, totalColumns) />
 
-			<cfset spreadsheetWrite( spreadsheet, fullFilename ) />
+			<cfset spreadsheetWrite( spreadsheet, fullFilename, true ) />
 			<cfset getService("hibachiUtilityService").downloadFile( filename, fullFilename, "application/msexcel", true ) />
 			<cfcatch>
-				<cfif structKeyExists(server, "railo") and cfcatch.message eq "No matching function [SPREADSHEETADDROW] found">
-					<cfthrow type="Application" message="It appears that you are running Hibachi on Railo and have tried to export a report, but you do not have the cfspreadsheet extension installed on this instance of Railo.  Please install the cfspreadsheet extension and try again.">
+				<cfif (structKeyExists(server, "railo") or structKeyExists(server, "lucee")) and cfcatch.message eq "No matching function [SPREADSHEETADDROW] found">
+					<cfthrow type="Application" message="It appears that you are running Slatwall on Railo and have tried to export a report, but you do not have the cfspreadsheet extension installed on this instance of Railo.  Please install the cfspreadsheet extension and try again.">
 				</cfif>
 				<cfrethrow />
 			</cfcatch>
@@ -1286,10 +1246,10 @@ Notes:
 		<cfset var fields = "" />
 		<cfset var i = "" />
 
-		<cfloop list="#getDimensions()#" index="i">
+		<cfloop list="#getDimensions()#" index="local.i">
 			<cfset fields = listAppend(fields, i) />
 		</cfloop>
-		<cfloop list="#getMetrics()#" index="i">
+		<cfloop list="#getMetrics()#" index="local.i">
 			<cfset fields = listAppend(fields, i) />
 			<cfif getReportCompareFlag()>
 				<cfset fields = listAppend(fields, '#i#Compare') />

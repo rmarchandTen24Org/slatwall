@@ -1,3 +1,4 @@
+<cfimport prefix="swa" taglib="../../../tags" />
 <cfimport prefix="hb" taglib="../../../org/Hibachi/HibachiTags" />
 <cfparam name="attributes.hibachiScope" type="any" default="#request.context.fw.getHibachiScope()#" />
 <cfparam name="attributes.object" type="any" default="" />
@@ -66,7 +67,14 @@
 					<div class="row collapse navbar-collapse" id="main-tab-nav">
 						<ul class="nav nav-tabs s-negative">
 							<cfloop array="#thistag.tabs#" index="tab">
-								<li <cfif activeTab eq tab.tabid>class="active"</cfif>><a href="###tab.tabid#" data-toggle="tab">#tab.text#<cfif len(tab.count) and tab.count gt 0> <span class="badge pull-right" style="padding-left:10px;">#tab.count#</span></cfif></a></li>
+								<li <cfif activeTab eq tab.tabid>class="active"</cfif>>
+									<a href="###tab.tabid#" data-toggle="tab">
+										<span class="s-title">#tab.text# </span>
+										<cfif len(tab.count) and tab.count gt 0> 
+											<span class="badge">#tab.count#</span>
+										</cfif>
+									</a>
+								</li>
 							</cfloop>
 							<cfif isObject(attributes.object)>
 								<li><a href="##tabSystem" data-toggle="tab">#attributes.hibachiScope.rbKey('define.system')#</a></li>
@@ -88,7 +96,7 @@
 								<hb:HibachiPropertyList>
 									<hb:HibachiPropertyDisplay object="#attributes.object#" property="#attributes.object.getPrimaryIDPropertyName()#" />
 									<cfif attributes.object.hasProperty('remoteID')>
-										<hb:HibachiPropertyDisplay object="#attributes.object#" property="remoteID" edit="#iif(request.context.edit && attributes.hibachiScope.setting('globalRemoteIDEditFlag'), true, false)#" />
+										<hb:HibachiPropertyDisplay object="#attributes.object#" property="remoteID" edit="#attributes.hibachiScope.getService('hibachiUtilityService').hibachiTernary(request.context.edit && attributes.hibachiScope.setting('globalRemoteIDEditFlag'), true, false)#" />
 									</cfif>
 									<cfif !attributes.object.getAuditSmartList().getRecordsCount()>
 										<cfif attributes.object.hasProperty('createdDateTime')>

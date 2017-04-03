@@ -1,46 +1,3 @@
-<!--
-    Hibachi
-    Copyright (C) ten24, LLC
-
-    This program is free software: you can redistribute it and/or modify
-    it under the terms of the GNU General Public License as published by
-    the Free Software Foundation, either version 3 of the License, or
-    (at your option) any later version.
-
-    This program is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-    GNU General Public License for more details.
-
-    You should have received a copy of the GNU General Public License
-    along with this program.  If not, see <http://www.gnu.org/licenses/>.
-
-    Linking this program statically or dynamically with other modules is
-    making a combined work based on this program.  Thus, the terms and
-    conditions of the GNU General Public License cover the whole
-    combination.
-
-    As a special exception, the copyright holders of this program give you
-    permission to combine this program with independent modules and your
-    custom code, regardless of the license terms of these independent
-    modules, and to copy and distribute the resulting program under terms
-    of your choice, provided that you follow these specific guidelines:
-	- You also meet the terms and conditions of the license of each
-	  independent module
-	- You must not alter the default display of the Hibachi name or logo from
-	  any part of the application
-	- Your custom code must not alter or create any files inside Hibachi,
-	  except in the following directories:
-		/integrationServices/
-	You may copy and distribute the modified version of this program that meets
-	the above guidelines as a combined work under the terms of GPL for this program,
-	provided that you include the source code of that other code when and as the
-	GNU GPL requires distribution of source code.
-
-    If you modify this program, you may extend this exception to your version
-    of the program, but you are not obligated to do so.
-Notes:
---->
 <cfcomponent output="false" accessors="true" extends="HibachiObject">
 
 	<cfproperty name="applicationKey" type="string" />
@@ -132,6 +89,7 @@ Notes:
 			return ormExecuteQuery("SELECT count(*) FROM #arguments.entityName#",true);
 		}
 
+
 		public void function reloadEntity(required any entity) {
 	    	entityReload(arguments.entity);
 	    }
@@ -164,6 +122,12 @@ Notes:
 			return smartList;
 		}
 
+		public any function getCollectionList(required string entityName,struct data={}){
+			var collectionList = getService('HibachiCollectionService').newCollection();
+			collectionList.setup(argumentCollection=arguments);
+			return collectionList;
+		}
+
 		public any function getExportQuery(required string tableName) {
 			var qry = new query();
 			qry.setName("exportQry");
@@ -175,17 +139,10 @@ Notes:
 		public void function reencryptData(numeric batchSizeLimit=0) {
 		}
 
-		public any function getAccountByAuthToken(required string authToken) {
-			var account = ormExecuteQuery("SELECT acc FROM #getApplicationKey()#AccountAuthentication accauth INNER JOIN accauth.account acc WHERE (accauth.expirationDateTime is null or accauth.expirationDateTime > :now) and accauth.authToken is not null and accauth.authToken = :authToken", {now=now(), authToken=arguments.authToken}, true);
-			if(isNull(account)) {
-				return entityNew("#getApplicationKey()#Account");
-			}
-			return account;
-		}
-
 		// ===================== START: Private Helper Methods ===========================
 
 		// =====================  END: Private Helper Methods ============================
+
 
 	</cfscript>
 
@@ -200,7 +157,7 @@ Notes:
 		<cfset var entityIDproperty = arguments.entity.getPrimaryIDPropertyName() />
 		<cfset var propertyValue = arguments.entity.getValueByPropertyIdentifier( arguments.propertyName ) />
 
-		<cfset var results = ormExecuteQuery(" from #entityName# e where e.#property# = :propertyValue and e.#entityIDproperty# != :entityID", {propertyValue=propertyValue, entityID=entityID}) />
+		<cfset var results = ormExecuteQuery(" from #entityName# e where e.#property# = :propertyValue and e.#entityIDproperty# != :entityID", {propertyValue=propertyValue, entityID=entityID},false,{maxresults=1}) />
 
 		<cfif arrayLen(results)>
 			<cfreturn false />
@@ -327,4 +284,114 @@ Notes:
 			</cflock>
 
 	</cffunction>
+
+	<cffunction name="recordUpdate" returntype="any">
+		<cfargument name="tableName" required="true" type="string" />
+		<cfargument name="idColumns" required="true" type="string" />
+		<cfargument name="updateData" required="true" type="struct" />
+		<cfargument name="insertData" required="true" type="struct" />
+		<cfargument name="updateOnlyFlag" required="true" type="boolean" default="false" />
+		<cfargument name="returnPrimaryKeyValue" required="false" default="false" />
+		<cfargument name="primaryKeyColumn" required="false" default="" />
+		<cfargument name="compositeKeyOperator" required="false" type="string" default="AND" />
+
+		<cfset var keyList = structKeyList(arguments.updateData) />
+		<cfset var rs = "" />
+		<cfset var sqlResult = "" />
+		<cfset var i = 0 />
+
+		<cfif arguments.compositeKeyOperator eq "">
+			<cfset arguments.compositeKeyOperator = "AND">
+		</cfif>
+
+		<cfif arguments.returnPrimaryKeyValue>
+			<cfset var checkrs = "" />
+			<cfset var primaryKeyValue = "" />
+
+			<cfquery name="checkrs" result="sqlResult">
+				SELECT
+					#arguments.primaryKeyColumn#
+				FROM
+					#arguments.tableName#
+				WHERE
+					<cfloop from="1" to="#listLen(arguments.idColumns)#" index="local.i">
+						#listGetAt(arguments.idColumns, i)# = <cfqueryparam cfsqltype="cf_sql_#arguments.updateData[ listGetAt(arguments.idColumns, i) ].datatype#" value="#arguments.updateData[ listGetAt(arguments.idColumns, i) ].value#">
+				<cfif listLen(arguments.idColumns) gt i>#arguments.compositeKeyOperator# </cfif>
+					</cfloop>
+			</cfquery>
+			<cfif checkrs.recordCount>
+				<cfif !structIsEmpty(arguments.updateData)>
+					<cfset primaryKeyValue = checkrs[arguments.primaryKeyColumn][1] />
+					<cfquery name="rs" result="sqlResult">
+						UPDATE
+							#arguments.tableName#
+						SET
+							<cfloop from="1" to="#listLen(keyList)#" index="local.i">
+								<cfif arguments.updateData[ listGetAt(keyList, i) ].value eq "NULL" OR (arguments.insertData[ listGetAt(keyList, i) ].value EQ "" AND arguments.insertData[ listGetAt(keyList, i) ].dataType EQ "timestamp")>
+									#listGetAt(keyList, i)# = <cfqueryparam cfsqltype="cf_sql_#arguments.updateData[ listGetAt(keyList, i) ].dataType#" value="" null="yes">
+								<cfelse>
+									#listGetAt(keyList, i)# = <cfqueryparam cfsqltype="cf_sql_#arguments.updateData[ listGetAt(keyList, i) ].dataType#" value="#arguments.updateData[ listGetAt(keyList, i) ].value#">
+								</cfif>
+								<cfif listLen(keyList) gt i>, </cfif>
+							</cfloop>
+						WHERE
+							#arguments.primaryKeyColumn# = <cfqueryparam cfsqltype="cf_sql_varchar" value="#primaryKeyValue#" />
+					</cfquery>
+				</cfif>
+			<cfelse>
+				<cfset primaryKeyValue = arguments.insertData[ arguments.primaryKeyColumn ].value />
+				<cfset recordInsert(tableName=arguments.tableName, insertData=arguments.insertData) />
+			</cfif>
+			<cfreturn primaryKeyValue />
+		<cfelse>
+			<cfquery name="rs" result="sqlResult">
+				UPDATE
+					#arguments.tableName#
+				SET
+					<cfloop from="1" to="#listLen(keyList)#" index="local.i">
+						<cfif arguments.updateData[ listGetAt(keyList, i) ].value eq "NULL" OR (arguments.insertData[ listGetAt(keyList, i) ].value EQ "" AND arguments.insertData[ listGetAt(keyList, i) ].dataType EQ "timestamp")>
+							#listGetAt(keyList, i)# = <cfqueryparam cfsqltype="cf_sql_#arguments.updateData[ listGetAt(keyList, i) ].dataType#" value="" null="yes">
+						<cfelse>
+							#listGetAt(keyList, i)# = <cfqueryparam cfsqltype="cf_sql_#arguments.updateData[ listGetAt(keyList, i) ].dataType#" value="#arguments.updateData[ listGetAt(keyList, i) ].value#">
+						</cfif>
+						<cfif listLen(keyList) gt i>, </cfif>
+					</cfloop>
+				WHERE
+					<cfloop from="1" to="#listLen(arguments.idColumns)#" index="local.i">
+						#listGetAt(arguments.idColumns, i)# = <cfqueryparam cfsqltype="cf_sql_#arguments.updateData[ listGetAt(arguments.idColumns, i) ].datatype#" value="#arguments.updateData[ listGetAt(arguments.idColumns, i) ].value#">
+						<cfif listLen(arguments.idColumns) gt i>AND </cfif>
+					</cfloop>
+			</cfquery>
+			<cfif !sqlResult.recordCount>
+				<cfset recordInsert(tableName=arguments.tableName, insertData=arguments.insertData) />
+			</cfif>
+		</cfif>
+	</cffunction>
+
+	<cffunction name="recordInsert" returntype="void">
+		<cfargument name="tableName" required="true" type="string" />
+		<cfargument name="insertData" required="true" type="struct" />
+
+		<cfset var keyList = structKeyList(arguments.insertData) />
+		<cfset var keyListOracle = keyList />
+		<cfset var rs = "" />
+		<cfset var sqlResult = "" />
+		<cfset var i = 0 />
+
+		<cfquery name="rs" result="sqlResult">
+			INSERT INTO	#arguments.tableName# (
+				<cfif getApplicationValue("databaseType") eq "Oracle10g" AND listFindNoCase(keyListOracle,'type')>#listSetAt(keyListOracle,listFindNoCase(keyListOracle,'type'),'"type"')#<cfelse>#keyList#</cfif>
+			) VALUES (
+				<cfloop from="1" to="#listLen(keyList)#" index="local.i">
+					<cfif arguments.insertData[ listGetAt(keyList, i) ].value eq "NULL" OR (arguments.insertData[ listGetAt(keyList, i) ].value EQ "" AND arguments.insertData[ listGetAt(keyList, i) ].dataType EQ "timestamp")>
+						<cfqueryparam cfsqltype="cf_sql_#arguments.insertData[ listGetAt(keyList, i) ].dataType#" value="" null="yes">
+					<cfelse>
+						<cfqueryparam cfsqltype="cf_sql_#arguments.insertData[ listGetAt(keyList, i) ].dataType#" value="#arguments.insertData[ listGetAt(keyList, i) ].value#">
+					</cfif>
+					<cfif listLen(keyList) gt i>,</cfif>
+				</cfloop>
+			)
+		</cfquery>
+	</cffunction>
+
 </cfcomponent>

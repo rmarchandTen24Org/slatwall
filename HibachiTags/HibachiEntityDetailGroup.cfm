@@ -1,3 +1,4 @@
+<cfimport prefix="swa" taglib="../../../tags" />
 <cfimport prefix="hb" taglib="../../../org/Hibachi/HibachiTags" />
 <cfparam name="attributes.hibachiScope" type="any" default="#request.context.fw.getHibachiScope()#" />
 <cfparam name="attributes.object" type="any" default="" />
@@ -5,7 +6,6 @@
 <cfparam name="attributes.section" type="string" default="#request.context.fw.getSection( request.context[ request.context.fw.getAction() ])#">
 <cfparam name="attributes.tabLocation" type="string" default="left" />
 <cfparam name="attributes.createOrModalFlag" type="boolean" default="false" />
-<cfparam name="attributes.findSubSystemSectionFlag" type="boolean" default="false" />
 
 <cfif (isObject(attributes.object) && attributes.object.isNew())|| (structKeyExists(request.context, "modal") and request.context.modal)>
 	<cfset attributes.createOrModalFlag = true />
@@ -87,6 +87,7 @@
 					</div><!--- j-panel panel-default --->
 				</cfloop>
 				<cfif isObject(attributes.object)>
+					<!---system tab --->
 					<div class="j-panel panel panel-default">
 						<a data-toggle="collapse" href="##tabSystem">
 							<div class="panel-heading">
@@ -99,14 +100,14 @@
 						<div id="tabSystem" class="panel-collapse collapse">
 							<content class="s-body-box">
 								<cfoutput>
-									<div <cfif activeTab eq tab.tabid> class="tab-pane active" <cfelse> class="tab-pane" </cfif> id="tabSystem">
+									<div <cfif !isNull(tab) && structKeyExists(tab, "tabid") && activeTab eq tab.tabid> class="tab-pane active" <cfelse> class="tab-pane" </cfif> id="tabSystem">
 
 											<hb:HibachiPropertyList>
 												<hb:HibachiPropertyDisplay object="#attributes.object#" property="#attributes.object.getPrimaryIDPropertyName()#" />
-												<cfif structKeyExists(attributes.object,'remoteID')>
-													<hb:HibachiPropertyDisplay object="#attributes.object#" property="remoteID" edit="#iif(request.context.edit && attributes.hibachiScope.setting('globalRemoteIDEditFlag'), true, false)#" />
+												<cfif attributes.object.hasProperty('remoteID') and attributes.hibachiScope.setting('globalRemoteIDShowFlag')>
+													<hb:HibachiPropertyDisplay object="#attributes.object#" property="remoteID" edit="#attributes.hibachiScope.getService('hibachiUtilityService').hibachiTernary(request.context.edit && attributes.hibachiScope.setting('globalRemoteIDEditFlag'), true, false)#" />
 												</cfif>
-												<cfif structKeyExists(attributes.object,"getShortReferenceID") AND len( attributes.object.getShortReferenceID() )>
+												<cfif len( attributes.object.getShortReferenceID() )>
 													<hb:HibachiFieldDisplay title="#attributes.hibachiScope.rbkey('entity.define.shortreferenceid')#" value="#attributes.object.getshortReferenceID()#" edit="false" displayType="dl">
 												</cfif>
 												<cfif attributes.object.hasProperty('createdDateTime')>
@@ -123,7 +124,7 @@
 												</cfif>
 											</hb:HibachiPropertyList>
 
-											<hb:HibachiTimeline object="#attributes.object#" findSubSystemSectionFlag="#attributes.findSubSystemSectionFlag#"/>
+											<hb:HibachiTimeline object="#attributes.object#" />
 
 									</div>
 								</cfoutput>

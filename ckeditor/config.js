@@ -1,6 +1,6 @@
 //--------------------------------------------------To add a custom configuration instructions.-------------------------------------------------------->
 //
-// Hibachi also searches for another version of this file within /custom/assets/ckeditor_config.js directory. 
+// Slatwall also searches for another version of this file within /custom/assets/ckeditor_config.js directory. 
 // Use may make changes their that will override these settings.
 //
 //--------------------------------------------------To add a custom configuration instructions.-------------------------------------------------------->

@@ -1,3 +1,4 @@
+<cfimport prefix="swa" taglib="../../../tags" />
 <cfimport prefix="hb" taglib="../../../org/Hibachi/HibachiTags" />
 <cfif thisTag.executionMode is "start">
 	<cfparam name="attributes.hibachiScope" type="any" default="#request.context.fw.getHibachiScope()#" />
@@ -18,15 +19,15 @@
 	<cfparam name="attributes.sRedirectQS" type="string" default="#request.context.entityActionDetails.sRedirectQS#">
 	<cfparam name="attributes.fRedirectQS" type="string" default="#request.context.entityActionDetails.fRedirectQS#">
 	<cfparam name="attributes.forceSSLFlag" type="boolean" default="false" />
-
+	
 	<cfset formAction ="">
-
+	
 	<cfif attributes.forceSSLFlag AND (findNoCase("off", CGI.HTTPS) OR NOT CGI.SERVER_PORT_SECURE)>
 		<cfset formAction &= "https://#cgi.SERVER_NAME##attributes.hibachiScope.getApplicationValue('baseURL')#/" >
 	</cfif>
-
+	
 	<cfset formAction &= "?s=1" />
-
+	
 	<cfif len(attributes.processActionQueryString)>
 		<cfset formAction &= "&#attributes.processActionQueryString#" />
 	</cfif>
@@ -36,7 +37,7 @@
 	</cfif>
 
 	<cfoutput>
-		<form method="post" action="#formAction#" class="" enctype="#attributes.enctype#" id="#replaceNoCase(replaceNoCase(lcase(attributes.processAction),':','','all'),'.','','all')#_#lcase(attributes.processContext)#">
+		<form method="post" action="#formAction#" class="form-horizontal" enctype="#attributes.enctype#" id="#replaceNoCase(replaceNoCase(lcase(attributes.processAction),':','','all'),'.','','all')#_#lcase(attributes.processContext)#">
 			<input type="hidden" name="#request.context.fw.getAction()#" value="#attributes.processAction#" />
 			<input type="hidden" name="processContext" value="#attributes.processContext#" />
 			<input type="hidden" name="#attributes.entity.getPrimaryIDPropertyName()#" value="#attributes.entity.getPrimaryIDValue()#" />
@@ -52,7 +53,7 @@
 
 			<!--- Additional Model Header --->
 			<cfif structKeyExists(request.context, "modal") and request.context.modal>
-				<div class="modal-dialog modal-md">
+				<div class="modal-dialog">
 					<div class="modal-content">
 						<div class="modal-header">
 							<a class="close" data-dismiss="modal">&times;</a>
@@ -72,7 +73,7 @@
 					<div class="modal-footer">
 						<cfif attributes.edit>
 							<a href="##" class="btn btn-default s-remove" data-dismiss="modal"><span class="glyphicon glyphicon-remove icon-white"></span> #attributes.hibachiScope.rbKey('define.cancel')#</a>
-							<hb:HibachiActionCaller type="button" action="##" class="btn-success" icon="ok icon-white" text="#attributes.hibachiScope.rbKey( 'entity.#attributes.entity.getClassName()#.process.#attributes.processContext#' )#" disabled="#attributes.disableProcess#" disabledText="#attributes.disableProcessText#">
+							<hb:HibachiActionCaller type="button" action="##" class="btn btn-success" icon="ok icon-white" text="#attributes.hibachiScope.rbKey( 'entity.#attributes.entity.getClassName()#.process.#attributes.processContext#' )#" disabled="#attributes.disableProcess#" disabledText="#attributes.disableProcessText#">
 						</cfif>
 					</div>
 				</div>
