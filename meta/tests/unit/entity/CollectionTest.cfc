@@ -172,7 +172,14 @@ component extends="Slatwall.meta.tests.unit.entity.SlatwallEntityTestBase" {
 				
 				writeDump(filterGroup);
 
-				var filterGroupQueryStruct = { "bool" = { "must" = [] }}; 
+				var filterGroupQueryStruct = { "bool" = { }};
+
+				var elasticSearchFilterGroupLogicalOperator = "must";
+				if(filterGroup[1].filterGroupLogicalOperator == "OR"){
+					elasticSearchFilterGroupLogicalOperator =  "should";
+				}
+
+				filterGroupQueryStruct["bool"][elasticSearchFilterGroupLogicalOperator] = [];
 
 
 				for(var filterIndex = 1; filterIndex<=Arraylen(filterGroupStructure[key]); filterIndex++){
