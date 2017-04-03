@@ -69,7 +69,7 @@ component extends="Slatwall.meta.tests.unit.entity.SlatwallEntityTestBase" {
 			}
 		};
 
-		var collectionFilter = deserializeJSON('[{"filterGroup":[{"filterGroup":[{"propertyIdentifier":"_product.currentProductVersionAudit.dateDelisted","value":"null","comparisonOperator":"is"}]},{"filterGroup":[{"propertyIdentifier":"_product.currentProductVersionAudit","value":"null","comparisonOperator":"is not"}],"logicalOperator":"AND"},{"filterGroup":[{"propertyIdentifier":"_product.currentProductVersionAudit.classification.typeCode","value":"premium","comparisonOperator":"="}],"logicalOperator":"AND"},{"filterGroup":[{"propertyIdentifier":"_product_categories.categoryID","value":"8a80818f58dc1aa7015975b47f9477fe","comparisonOperator":"=","logicalOperator":"OR"},{"propertyIdentifier":"_product_categories.categoryID","value":"8a80818f58dc1aa7015975b3fbc277f2","comparisonOperator":"=","logicalOperator":"OR"},{"propertyIdentifier":"_product_categories.categoryID","value":"31eb30f9f68b65afdb8ff7fc21a419fb","comparisonOperator":"=","logicalOperator":"OR"}],"logicalOperator":"AND"},{"filterGroup":[{"propertyIdentifier":"_product.Manufacturer","value":"LGI Technology","comparisonOperator":"="},{"propertyIdentifier":"_product.Manufacturer","value":"##1 Advance LEDs","comparisonOperator":"=","logicalOperator":"OR"}],"logicalOperator":"AND"}]}]');
+		var collectionFilter = deserializeJSON('[{"filterGroup":[{"filterGroup":[{"propertyIdentifier":"_product.currentProductVersionAudit.dateDelisted","value":"null","comparisonOperator":"is"}]},{"filterGroup":[{"propertyIdentifier":"_product.currentProductVersionAudit","value":"null","comparisonOperator":"is not"}],"logicalOperator":"AND"},{"filterGroup":[{"propertyIdentifier":"_product.currentProductVersionAudit.classification.typeCode","value":"premium","comparisonOperator":"="}],"logicalOperator":"AND"},{"filterGroup":[{"propertyIdentifier":"_product_categories.categoryID","value":"8a80818f58dc1aa7015975b47f9477fe","comparisonOperator":"=","logicalOperator":"OR"},{"propertyIdentifier":"_product_categories.categoryID","value":"8a80818f58dc1aa7015975b3fbc277f2","comparisonOperator":"=","logicalOperator":"OR"},{"propertyIdentifier":"_product_categories.categoryID","value":"31eb30f9f68b65afdb8ff7fc21a419fb","comparisonOperator":"=","logicalOperator":"OR"}],"logicalOperator":"AND"},{"filterGroup":[{"propertyIdentifier":"_product.Manufacturer","value":"LGI Technology","comparisonOperator":"="},{"propertyIdentifier":"_product.Manufacturer","value":"##1 Advance LEDs","comparisonOperator":"=","logicalOperator":"OR"}],"logicalOperator":"OR"}]}]');
 
 		// for determing range filters
 		var filtersByPropertyIdentifier = {};  
@@ -94,7 +94,7 @@ component extends="Slatwall.meta.tests.unit.entity.SlatwallEntityTestBase" {
 						filterGroupLogicalOperator = secondLevelFilterGroup.logicalOperator; 
 					} 
 
-					writeDump(secondLevelFilterGroup);
+					//writeDump(secondLevelFilterGroup);
 					if(structKeyExists(secondLevelFilterGroup, 'filterGroup') && isArray(secondLevelFilterGroup.filterGroup)){
 
 						filterGroupStructure[secondLevelFilterGroupIndex] = []; 
@@ -112,10 +112,10 @@ component extends="Slatwall.meta.tests.unit.entity.SlatwallEntityTestBase" {
 							var filterValue = thirdLevelFilterGroup.value; 							
 							var filterLogicalOperator = 'AND'; 
 							
-							writeDump(comparisonOperator); 
-							writeDump(propertyIdentifier); 
-							writeDump(filterValue); 
-							writeDump(filterGroupLogicalOperator);
+							//writeDump(comparisonOperator);
+							//writeDump(propertyIdentifier);
+							//writeDump(filterValue);
+							//writeDump(filterGroupLogicalOperator);
 
 							var filterStruct = {
 								comparisonOperator=comparisonOperator, 
@@ -133,7 +133,7 @@ component extends="Slatwall.meta.tests.unit.entity.SlatwallEntityTestBase" {
 							
 							ArrayAppend(filtersByPropertyIdentifier[propertyIdentifier], filterStruct);
 							
-							writeDump(filterStruct);
+							//writeDump(filterStruct);
 							
 						}
 					}
@@ -161,6 +161,8 @@ component extends="Slatwall.meta.tests.unit.entity.SlatwallEntityTestBase" {
 			} 
 
 			writeDump("Preprocess filter group structure:"); 
+			//writeDump("Preprocess filter group structure:");
+			writeDump(filterGroupStructure);
 
 			var rangeFilterPropertyIdentifierHasBeenAddedMap = {}; 
 
@@ -168,7 +170,7 @@ component extends="Slatwall.meta.tests.unit.entity.SlatwallEntityTestBase" {
 
 				var filterGroup = filterGroupStructure[key]; 
 				
-				writeDump(filterGroup); 
+				writeDump(filterGroup);
 
 				var filterGroupQueryStruct = { "bool" = { "must" = [] }}; 
 
@@ -219,6 +221,7 @@ component extends="Slatwall.meta.tests.unit.entity.SlatwallEntityTestBase" {
 			} 
 				
 			writedump(serializeJson(elasticSearchFilter));
+			writedump(elasticSearchFilter);
 
 			abort;
 
