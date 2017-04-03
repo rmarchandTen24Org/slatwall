@@ -63,7 +63,11 @@ component extends="Slatwall.meta.tests.unit.entity.SlatwallEntityTestBase" {
 
 	public void function elasticSearchFiltersTest(){
 
-		var elasticSearchFilter = {};
+		var elasticSearchFilter = {
+			"bool" = {
+				"must" = {}
+			}
+		};
 
 		var collectionFilter = deserializeJSON('[{"filterGroup":[{"filterGroup":[{"propertyIdentifier":"_product.currentProductVersionAudit.dateDelisted","value":"null","comparisonOperator":"is"}]},{"filterGroup":[{"propertyIdentifier":"_product.currentProductVersionAudit","value":"null","comparisonOperator":"is not"}],"logicalOperator":"AND"}]}]');
 				
