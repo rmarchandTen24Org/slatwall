@@ -205,6 +205,14 @@ component extends="Slatwall.meta.tests.unit.entity.SlatwallEntityTestBase" {
 					if(lookForRangeFilter && !structKeyExists(rangeFilterPropertyIdentifierHasBeenAddedMap, filter.propertyIdentifier)){
 						queryFilter["range"] = {}; 
 						var propertyIdentifierRangeFilters = propertyIdentifierRangeFilterMap[filter.propertyIdentifier]; 
+						for(var rangeFilterIndex = 1; rangeFilterIndex <= ArrayLen(propertyIdentifierRangeFilters); rangeFilterIndex++){
+							var rangeFilter = propertyIdentifierRangeFilters[rangeFilterIndex]; 
+
+							var rangeFilterComparisonOperator = "GT"; 
+							switch(rangeFilter.comparisonOperator){ 
+
+							}	
+						}
 					} else { 
 						addQueryFilter = false; 
 					} 
