@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 ﻿/*
 Copyright (c) 2003-2012, CKSource - Frederico Knabben. All rights reserved.
 For licensing, see LICENSE.html or http://ckfinder.com/license
@@ -14,3 +15,21 @@ CKFinder.customConfig = function( config )
 	// config.language = 'fr';
 	// config.removePlugins = 'basket';
 };
+=======
+﻿/*
+Copyright (c) 2003-2012, CKSource - Frederico Knabben. All rights reserved.
+For licensing, see LICENSE.html or http://ckfinder.com/license
+*/
+
+CKFinder.customConfig = function( config )
+{
+	// Define changes to default configuration here.
+	// For the list of available options, check:
+	// http://docs.cksource.com/ckfinder_2.x_api/symbols/CKFinder.config.html
+
+	// Sample configuration options:
+	config.uiColor = '#FFFFFF';
+	// config.language = 'fr';
+	// config.removePlugins = 'basket';
+};
+>>>>>>> 04efc81912db0c0c808e100caa063517245d1476

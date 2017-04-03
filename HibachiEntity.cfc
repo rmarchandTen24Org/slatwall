@@ -1,3 +1,49 @@
+<<<<<<< HEAD
+=======
+/*
+    Hibachi
+    Copyright (C) ten24, LLC
+
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+    Linking this program statically or dynamically with other modules is
+    making a combined work based on this program.  Thus, the terms and
+    conditions of the GNU General Public License cover the whole
+    combination.
+
+    As a special exception, the copyright holders of this program give you
+    permission to combine this program with independent modules and your
+    custom code, regardless of the license terms of these independent
+    modules, and to copy and distribute the resulting program under terms
+    of your choice, provided that you follow these specific guidelines:
+	- You also meet the terms and conditions of the license of each
+	  independent module
+	- You must not alter the default display of the Hibachi name or logo from
+	  any part of the application
+	- Your custom code must not alter or create any files inside Hibachi,
+	  except in the following directories:
+		/integrationServices/
+	You may copy and distribute the modified version of this program that meets
+	the above guidelines as a combined work under the terms of GPL for this program,
+	provided that you include the source code of that other code when and as the
+	GNU GPL requires distribution of source code.
+
+    If you modify this program, you may extend this exception to your version
+    of the program, but you are not obligated to do so.
+Notes:
+*/
+>>>>>>> 04efc81912db0c0c808e100caa063517245d1476
 component output="false" accessors="true" persistent="false" extends="HibachiTransient" {
 
 	property name="newFlag" type="boolean" persistent="false";
@@ -11,8 +57,13 @@ component output="false" accessors="true" persistent="false" extends="HibachiTra
 	property name="auditSmartList" type="any" persistent="false";
 
 	// Audit Properties
+<<<<<<< HEAD
 	property name="createdByAccount" persistent="false";
 	property name="modifiedByAccount" persistent="false";
+=======
+	property name="createdByAccount" hb_cfc="Account" persistent="false";
+	property name="modifiedByAccount" hb_cfc="Account" persistent="false";
+>>>>>>> 04efc81912db0c0c808e100caa063517245d1476
 
 	// @hint global constructor arguments.  All Extended entities should call super.init() so that this gets called
 	public any function init() {
@@ -35,6 +86,7 @@ component output="false" accessors="true" persistent="false" extends="HibachiTra
 		return super.init();
 	}
 
+<<<<<<< HEAD
 	public void function genericPropertyRemove(required string propertyName){
 		evaluate("set#arguments.propertyName#(javacast('null',''))");
 	}
@@ -51,10 +103,13 @@ component output="false" accessors="true" persistent="false" extends="HibachiTra
 		return getURLFromPath(invokeMethod('get#arguments.propertyName#UploadDirectory')) & invokeMethod('get#arguments.propertyName#');
 	}
 
+=======
+>>>>>>> 04efc81912db0c0c808e100caa063517245d1476
 	/** runs a update calculated properties only once per request unless explicitly set to false before calling. */
 	public void function updateCalculatedProperties(any runAgain=false) {
         if(!structKeyExists(variables, "calculatedUpdateRunFlag") || runAgain) {
             // Set calculated to true so that this only runs 1 time per request unless explicitly told to run again.
+<<<<<<< HEAD
             variables.calculatedUpdateRunFlag = true;
             // Loop over all properties
             for(var property in getProperties()) {
@@ -76,6 +131,30 @@ component output="false" accessors="true" persistent="false" extends="HibachiTra
 
         }
     }
+=======
+			variables.calculatedUpdateRunFlag = true;
+
+			// Loop over all properties
+			for(var property in getProperties()) {
+
+				// Look for any that start with the calculatedXXX naming convention
+                if(left(property.name, 10) == "calculated" && (!structKeyExists(property, "persistent") || property.persistent == "true")) {
+
+					var value = this.invokeMethod("get#right(property.name, len(property.name)-10)#");
+					if(!isNull(value)) {
+						variables[ property.name ] = value;
+					}
+
+				} else if (structKeyExists(property, "hb_cascadeCalculate") && property.hb_cascadeCalculate && structKeyExists(variables, property.name) && isObject( variables[ property.name ] ) ) {
+
+					variables[ property.name ].updateCalculatedProperties();
+
+				}
+			}
+
+		}
+	}
+>>>>>>> 04efc81912db0c0c808e100caa063517245d1476
 	// @hint return a simple representation of this entity
 	public string function getSimpleRepresentation() {
 
@@ -134,6 +213,7 @@ component output="false" accessors="true" persistent="false" extends="HibachiTra
 		return variables[ "requestNewPropertyEntity#arguments.propertyName#" ];
 	}
 
+<<<<<<< HEAD
 	public any function duplicate(boolean onlyPersistent=false) {
 		var newEntity = getService("hibachiService").getServiceByEntityName(getEntityName()).invokeMethod("new#replace(getEntityName(),getApplicationValue('applicationKey'),'')#");
 		var properties = getProperties();
@@ -166,6 +246,13 @@ component output="false" accessors="true" persistent="false" extends="HibachiTra
 					structKeyExists(this,'set#properties[p].name#')
 				)
 			) {
+=======
+	public any function duplicate() {
+		var newEntity = getService("hibachiService").getServiceByEntityName(getEntityName()).invokeMethod("new#replace(getEntityName(),getApplicationValue('applicationKey'),'')#");
+		var properties = getProperties();
+		for(var p=1; p<=arrayLen(properties); p++) {
+			if( properties[p].name != getPrimaryIDPropertyName() && (!structKeyExists(properties[p], "fieldType") || ( properties[p].fieldType != "one-to-many" && properties[p].fieldType != "many-to-many")) ) {
+>>>>>>> 04efc81912db0c0c808e100caa063517245d1476
 				var value = invokeMethod('get#properties[p].name#');
 				if(!isNull(value)) {
 					newEntity.invokeMethod("set#properties[p].name#", {1=value});
@@ -296,7 +383,11 @@ component output="false" accessors="true" persistent="false" extends="HibachiTra
 	// @hint public method to determine if this entity is audited
 	public any function getAuditableFlag() {
 		var metaData = getThisMetaData();
+<<<<<<< HEAD
 		if(isPersistent() && (setting('globalAuditAutoArchiveVersionLimit') > 0) && (!structKeyExists(metaData, "hb_auditable") || (structKeyExists(metaData, "hb_auditable") && metaData.hb_auditable))) {
+=======
+		if(isPersistent() && (getHibachiScope().setting('globalAuditAutoArchiveVersionLimit') > 0) && (!structKeyExists(metaData, "hb_auditable") || (structKeyExists(metaData, "hb_auditable") && metaData.hb_auditable))) {
+>>>>>>> 04efc81912db0c0c808e100caa063517245d1476
 			return true;
 		}
 		return false;
@@ -425,6 +516,7 @@ component output="false" accessors="true" persistent="false" extends="HibachiTra
 		var cacheKey = "#arguments.propertyName#AssignedIDList";
 
 		if(!structKeyExists(variables, cacheKey)) {
+<<<<<<< HEAD
 			variables[ cacheKey ] = '';
 			var smartList = this.getPropertySmartList(arguments.propertyName);
 			smartList.addSelect(propertyIdentifier=getService("hibachiService").getPrimaryIDPropertyNameByEntityName(listLast(getPropertyMetaData( arguments.propertyName ).cfc,'.')), alias="value");
@@ -432,6 +524,12 @@ component output="false" accessors="true" persistent="false" extends="HibachiTra
 			for(var i=1; i<=arrayLen(smartList.getRecords()); i++) {
 
 				variables[ cacheKey ] = listAppend(variables[ cacheKey ], smartList.getRecords()[i]['value'] );
+=======
+			variables[ cacheKey ] = "";
+			var arr = this.invokeMethod("get#arguments.propertyName#");
+			for(var i=1; i<=arrayLen(arr); i++) {
+				variables[ cacheKey ] = listAppend(arr[i].getPrimaryIDValue(), arr[i].getPrimaryIDValue());
+>>>>>>> 04efc81912db0c0c808e100caa063517245d1476
 			}
 		}
 		return variables[ cacheKey ];
@@ -550,6 +648,7 @@ component output="false" accessors="true" persistent="false" extends="HibachiTra
 		return variables[ cacheKey ];
 	}
 
+<<<<<<< HEAD
 	// @hint returns a collection list of the current values for a given one-to-many or many-to-many property
 	public any function getPropertyCollectionList( required string propertyName ) {
 		var cacheKey = "#arguments.propertyName#CollectionList";
@@ -578,6 +677,8 @@ component output="false" accessors="true" persistent="false" extends="HibachiTra
 		return variables[ cacheKey ];
 	}
 
+=======
+>>>>>>> 04efc81912db0c0c808e100caa063517245d1476
 	// @hint returns a struct of the current entities in a given property.  The struck is key'd based on the primaryID of the entities
 	public struct function getPropertyStruct( required string propertyName ) {
 		var cacheKey = "#arguments.propertyName#Struct";
@@ -600,14 +701,22 @@ component output="false" accessors="true" persistent="false" extends="HibachiTra
 	public numeric function getPropertyCount( required string propertyName ) {
 		var propertySmartList = this.invokeMethod('get#propertyName#SmartList');
 		return propertySmartList.getRecordsCount();
+<<<<<<< HEAD
 	}
+=======
+		}
+>>>>>>> 04efc81912db0c0c808e100caa063517245d1476
 
 	// @hint handles encrypting a property based on conventions
 	public void function encryptProperty(required string propertyName) {
 		var generatorValue = createHibachiUUID();
 		var value = this.invokeMethod('get#arguments.propertyName#');
+<<<<<<< HEAD
 		
 		if(!isNull(value) && len(value) && value != '********') {
+=======
+		if(!isNull(value)) {
+>>>>>>> 04efc81912db0c0c808e100caa063517245d1476
 			var encryptedPropertyValue = encryptValue(value, generatorValue);
 
 			// Set encrypted generator
@@ -737,11 +846,14 @@ component output="false" accessors="true" persistent="false" extends="HibachiTra
 			return getPropertySmartList( propertyName=left(right(arguments.missingMethodName, len(arguments.missingMethodName)-3), len(arguments.missingMethodName)-12) );
 
 		// getXXXStruct()		Where XXX is a one-to-many or many-to-many property where we want a key delimited struct
+<<<<<<< HEAD
 		} else if ( left(arguments.missingMethodName, 3) == "get" && right(arguments.missingMethodName, 14) == "CollectionList") {
 
 			return getPropertyCollectionList( propertyName=left(right(arguments.missingMethodName, len(arguments.missingMethodName)-3), len(arguments.missingMethodName)-17) );
 
 		// getXXXStruct()		Where XXX is a one-to-many or many-to-many property where we want a key delimited struct
+=======
+>>>>>>> 04efc81912db0c0c808e100caa063517245d1476
 		} else if ( left(arguments.missingMethodName, 3) == "get" && right(arguments.missingMethodName, 6) == "Struct") {
 
 			return getPropertyStruct( propertyName=left(right(arguments.missingMethodName, len(arguments.missingMethodName)-3), len(arguments.missingMethodName)-9) );
@@ -761,6 +873,7 @@ component output="false" accessors="true" persistent="false" extends="HibachiTra
 		 else if ( left(arguments.missingMethodName, 3) == "get" && right(arguments.missingMethodName, 2) == "ID") {
 
 			return getPropertyPrimaryID( propertyName=left(right(arguments.missingMethodName, len(arguments.missingMethodName)-3), len(arguments.missingMethodName)-5) );
+<<<<<<< HEAD
 		//getXXXUploadDirectory()
 		} else if ( left(arguments.missingMethodName, 3) == "get" && right(arguments.missingMethodName, 15) == "UploadDirectory") {
 			var propertyName = mid(arguments.missingMethodName,4,len(arguments.missingMethodName)-18);
@@ -782,6 +895,10 @@ component output="false" accessors="true" persistent="false" extends="HibachiTra
 				return genericPropertyRemove(propertyName);
 			}
 		}
+=======
+		}
+
+>>>>>>> 04efc81912db0c0c808e100caa063517245d1476
 		throw('You have called a method #arguments.missingMethodName#() which does not exists in the #getClassName()# entity.');
 	}
 
@@ -900,13 +1017,22 @@ component output="false" accessors="true" persistent="false" extends="HibachiTra
 			}
 
 			// Set createdByAccount
+<<<<<<< HEAD
 			if(structKeyExists(this,"setCreatedByAccountID") && !getHibachiScope().getAccount().isNew() ){
+=======
+			if(structKeyExists(this,"setCreatedByAccountID") && !getHibachiScope().getAccount().isNew() && getHibachiScope().getAccount().getAdminAccountFlag() ){
+>>>>>>> 04efc81912db0c0c808e100caa063517245d1476
 				setCreatedByAccountID( getHibachiScope().getAccount().getAccountID() );
 			}
 
 			// Set modifiedByAccount
+<<<<<<< HEAD
 			if(structKeyExists(this,"setModifiedByAccountID") && !getHibachiScope().getAccount().isNew() ){
 				setModifiedByAccountID( getHibachiScope().getAccount().getAccountID() );
+=======
+			if(structKeyExists(this,"setModifiedByAccountID") && !getHibachiScope().getAccount().isNew() && getHibachiScope().getAccount().getAdminAccountFlag() ){
+				setModifiedByAccount( getHibachiScope().getAccount().getAccountID() );
+>>>>>>> 04efc81912db0c0c808e100caa063517245d1476
 			}
 
 			// Log audit only if admin user
@@ -942,8 +1068,13 @@ component output="false" accessors="true" persistent="false" extends="HibachiTra
 		if(getHibachiScope().hasApplicationValue("initialized") && getHibachiScope().getApplicationValue("initialized")) {
 
 			// Set modifiedByAccount
+<<<<<<< HEAD
 			if(structKeyExists(this,"setModifiedByAccountID") && !getHibachiScope().getAccount().isNew() ){
 				setModifiedByAccountID(getHibachiScope().getAccount().getAccountID());
+=======
+			if(structKeyExists(this,"setModifiedByAccountID") && !getHibachiScope().getAccount().isNew() && getHibachiScope().getAccount().getAdminAccountFlag() ){
+				setModifiedByAccount(getHibachiScope().getAccount().getAccountID());
+>>>>>>> 04efc81912db0c0c808e100caa063517245d1476
 			}
 
 			// Log audit only if admin user or there are prevous audit recods
@@ -963,6 +1094,7 @@ component output="false" accessors="true" persistent="false" extends="HibachiTra
 		var properties = getProperties();
 
 		var defaultProperties = [];
+<<<<<<< HEAD
 		for(var p=1; p<=arrayLen(properties); p++) {
 			if(len(arguments.excludesList) && ListFind(arguments.excludesList,properties[p].name)){
 
@@ -990,6 +1122,64 @@ component output="false" accessors="true" persistent="false" extends="HibachiTra
 					(includeNonPersistent == true && structKeyExists(properties[p], "persistent") && properties[p].persistent == false && structKeyExists(properties[p], "ormtype"))
 				)
 			){
+=======
+
+		//Check if there is any include column
+		if(len(arguments.includesList)){
+			var includesArray = ListToArray(arguments.includesList);
+			for(var inc in includesArray) {
+				//Loop through IncludeList looking for relational
+				inc = trim(inc);
+				if(Find('.', inc) != 0){
+					//if find, get relational Entity Stuck
+					var entityStructs = getService("hibachiService").getPropertiesByEntityName(
+						getService("hibachiService").getLastEntityNameInPropertyIdentifier(this.getClassName(), inc)
+					);
+
+					for(var property in entityStructs){
+						if(property.name == listLast(inc, '.')){
+							//Create a new struct instead of changing the "property" otherwise it will be cached with the changes.
+							var newProperty = {};
+							structAppend(newProperty,property);
+							newProperty.name = inc;
+							newProperty.title = rbKey('entity.'&inc);
+							//append the Column struct with relational name.
+							arrayAppend(defaultProperties, newProperty);
+						}
+					}
+				}else{
+					//If its not relationa, just use the current entity struct
+					for(var property in properties){
+						if(property.name == inc){
+							arrayAppend(defaultProperties, property);
+						}
+					}
+				}
+            }
+        }else{
+			//Remove all non Persistent, Relational and Excluded columns
+			for(var property in properties){
+				if(!ListContains(excludesList, property.name) && !structKeyExists(property,'FKColumn') &&
+				(!structKeyExists(property, "persistent") || property.persistent)){
+					arrayAppend(defaultProperties,property);
+				}
+			}
+        }
+		return defaultProperties;
+	}
+
+
+	public any function getFilterProperties(string includesList = "", string excludesList = ""){
+		var properties = getProperties();
+		var defaultProperties = [];
+		for(var p=1; p<=arrayLen(properties); p++) {
+			if(len(arguments.includesList)){
+				if(ListFind(arguments.includesList,properties[p].name)){
+					properties[p]['displayPropertyIdentifier'] = getPropertyTitle(properties[p].name);
+					arrayAppend(defaultProperties, properties[p]);
+				}
+			}else if(!ListFind(arguments.excludesList,properties[p].name) && (!structKeyExists(properties[p], "persistent") || properties[p].persistent)){
+>>>>>>> 04efc81912db0c0c808e100caa063517245d1476
 				properties[p]['displayPropertyIdentifier'] = getPropertyTitle(properties[p].name);
 				arrayAppend(defaultProperties,properties[p]);
 			}

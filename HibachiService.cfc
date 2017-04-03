@@ -18,7 +18,10 @@
 	<cfset variables.entityObjects = {} />
 	<cfset variables.entityHasProperty = {} />
 	<cfset variables.entityHasAttribute = {} />
+<<<<<<< HEAD
 	<cfset variables.processComponentDirectoryListing = [] />
+=======
+>>>>>>> 04efc81912db0c0c808e100caa063517245d1476
 	
 	<cfscript>
 		public any function get(required string entityName, required any idOrFilter, boolean isReturnNewOnNotFound = false ) {
@@ -33,11 +36,22 @@
 				var simpleRepresentationPropertyName = example.getSimpleRepresentationPropertyName();
 				var primaryIDPropertyName = example.getPrimaryIDPropertyName();
 				var pmd = example.getPropertyMetaData( primaryIDPropertyName );
+<<<<<<< HEAD
 				if(!structKeyExists(pmd, "ormtype") || pmd.ormtype != 'integer') {
 					smartList.addKeywordProperty(propertyIdentifier=primaryIDPropertyName, weight=1);	
 				}
 				if(simpleRepresentationPropertyName != primaryIDPropertyName) {
 					smartList.addKeywordProperty(propertyIdentifier=simpleRepresentationPropertyName, weight=1);	
+=======
+				var simpleRepresentationMetaData = example.getPropertyMetaData( simpleRepresentationPropertyName );
+
+				if(!structKeyExists(pmd, "ormtype") || pmd.ormtype != 'integer') {
+					smartList.addKeywordProperty(propertyIdentifier=primaryIDPropertyName, weight=1);	
+				}
+				if(simpleRepresentationPropertyName != primaryIDPropertyName &&
+				(!structKeyExists(simpleRepresentationMetaData, "persistent") || simpleRepresentationMetaData.persistent)) {
+					smartList.addKeywordProperty(propertyIdentifier=simpleRepresentationPropertyName, weight=1);
+>>>>>>> 04efc81912db0c0c808e100caa063517245d1476
 				}
 			}
 			
@@ -45,7 +59,11 @@
 		}
 		
 		public any function getCollectionList(string entityName, struct data={}){
+<<<<<<< HEAD
 			var collection = getService('hibachiCollectionService').newCollection(argumentcollection=arguments);
+=======
+			var collection = getService('collectionService').newCollection(argumentcollection=arguments);
+>>>>>>> 04efc81912db0c0c808e100caa063517245d1476
 			collection.setCollectionObject(arguments.entityName);
 			return collection;
 		}
@@ -173,7 +191,11 @@
 	        
 	        // Validate this object now that it has been populated
 			arguments.entity.validate(context=arguments.context);
+<<<<<<< HEAD
 			        
+=======
+	        
+>>>>>>> 04efc81912db0c0c808e100caa063517245d1476
 	        // If the object passed validation then call save in the DAO, otherwise set the errors flag
 	        if(!arguments.entity.hasErrors()) {
 	            arguments.entity = getHibachiDAO().save(target=arguments.entity);
@@ -193,6 +215,7 @@
 	    }
 	    
 	  /**
+<<<<<<< HEAD
         * Exports the given query/array to file.
         * 
         * @param data Data to export. (Required) (Currently only supports query and array of structs).
@@ -283,6 +306,53 @@
         return buffer.toString();
     };
     
+=======
+		* Exports the given query/array to file.
+		* 
+		* @param data Data to export. (Required) (Currently only supports query and array of structs).
+		* @param columns List of columns to export. (optional, default: all)
+		* @param columnNames List of column headers to export. (optional, default: none)
+		* @param fileName File name for export. (default: uuid)
+		* @param fileType File type for export. (default: csv)
+		*/
+		public void function export(required any data, string columns, string columnNames, string fileName, string fileType = 'csv') {
+			if (isArray(data)){
+				arguments.data = transformArrayOfStructsToQuery( data, ListToArray(columnNames));
+			}
+			if(!structKeyExists(arguments,"fileName")){
+				arguments.fileName = createUUID() ;
+			}
+			var fileNameWithExt = arguments.fileName & "." & arguments.fileType ;
+			var filePath = getVirtualFileSystemPath() & "/" & fileNameWithExt ;
+			if(isQuery(data) && !structKeyExists(arguments,"columns")){
+				arguments.columns = arguments.data.columnList;
+			}
+			if(structKeyExists(arguments,"columns") && !structKeyExists(arguments,"columnNames")){
+				arguments.columnNames = arguments.columns;
+			}
+			var columnArray = listToArray(arguments.columns);
+			var columnCount = arrayLen(columnArray);
+			
+			if(arguments.fileType == 'csv'){
+				var dataArray=[arguments.columnNames];
+				for(var i=1; i <= data.recordcount; i++){
+					var row = [];
+					for(var j=1; j <= columnCount; j++){
+						arrayAppend(row,'"#data[columnArray[j]][i]#"');
+					}
+					arrayAppend(dataArray,arrayToList(row));
+				}
+				var outputData = arrayToList(dataArray,"#chr(13)##chr(10)#");
+				fileWrite(filePath,outputData);
+			} else {
+				throw("Implement export for fileType #arguments.fileType#");
+			}
+	
+			// Open / Download File
+			getHibachiUtilityService().downloadFile(fileNameWithExt,filePath,"application/#arguments.fileType#",true);
+		}
+	
+>>>>>>> 04efc81912db0c0c808e100caa063517245d1476
 	private query function transformArrayOfStructsToQuery( required array arrayOfStructs, required array colNames ){
 		var rowsTotal = ArrayLen(arrayOfStructs);
 		var columnsTotal = ArrayLen(colNames); 
@@ -304,7 +374,11 @@
 			}
 		}
 		return newQuery;
+<<<<<<< HEAD
 	}
+=======
+	}	
+>>>>>>> 04efc81912db0c0c808e100caa063517245d1476
 			    
 	 	/**
 		 * Generic ORM CRUD methods and dynamic methods by convention via onMissingMethod.
@@ -718,9 +792,13 @@
 			arguments.entityName = getProperlyCasedShortEntityName(arguments.entityName);
 			
 			if(structKeyExists(getEntitiesMetaData(), arguments.entityName) && structKeyExists(getEntitiesMetaData()[arguments.entityName], "hb_serviceName")) {
+<<<<<<< HEAD
 				if(hasService(getEntitiesMetaData()[ arguments.entityName ].hb_serviceName)){
 					return getService( getEntitiesMetaData()[ arguments.entityName ].hb_serviceName );
 				}
+=======
+				return getService( getEntitiesMetaData()[ arguments.entityName ].hb_serviceName );
+>>>>>>> 04efc81912db0c0c808e100caa063517245d1476
 			}
 			
 			// By default just return the base hibachi service
@@ -825,6 +903,7 @@
 		
 		// @hint returns a property of a given entity
 		public any function getPropertyByEntityNameAndPropertyName( required string entityName, required string propertyName ) {
+<<<<<<< HEAD
 			var hasAttributeByEntityNameAndPropertyIdentifier = getHasAttributeByEntityNameAndPropertyIdentifier(arguments.entityName, arguments.propertyName);
 			if(!hasAttributeByEntityNameAndPropertyIdentifier){
 				var propertiesStructByEntityName = getPropertiesStructByEntityName( entityName=arguments.entityName );
@@ -900,6 +979,25 @@
 		    }
 	    	return variables.entitiesProcessContexts;
 	    }
+=======
+			return getPropertiesStructByEntityName( entityName=arguments.entityName )[ arguments.propertyName ]; 
+		}
+		
+		public any function getEntitiesProcessContexts() {
+			if(!structCount(variables.entitiesProcessContexts)) {
+				var processContexts = {};
+				var emd = getEntitiesMetaData();
+				for(var entityName in emd) {
+					if(structKeyExists(emd[ entityName ], "hb_processContexts")) {
+						processContexts[ entityName ] = listToArray(emd[ entityName ].hb_processContexts);
+					}
+				}
+				
+				variables.entitiesProcessContexts = processContexts;
+			}
+			return variables.entitiesProcessContexts;
+		}
+>>>>>>> 04efc81912db0c0c808e100caa063517245d1476
 		
 		// =====================  END: Cached Entity Meta Data Methods ============================
 		
@@ -928,6 +1026,7 @@
 		}
 		
 		public boolean function getPropertyIsObjectByEntityNameAndPropertyIdentifier(required string entityName, required string propertyIdentifier){
+<<<<<<< HEAD
 			var hasAttributeByEntityNameAndPropertyIdentifier=getHasAttributeByEntityNameAndPropertyIdentifier(arguments.entityName, arguments.propertyIdentifier);
 			
 			if(!hasAttributeByEntityNameAndPropertyIdentifier){
@@ -950,6 +1049,9 @@
 			} else {
 				return false;
 			}
+=======
+			return structKeyExists(getPropertiesStructByEntityName(getLastEntityNameInPropertyIdentifier(arguments.entityName, arguments.propertyIdentifier))[listLast(arguments.propertyIdentifier, ".")],'cfc');
+>>>>>>> 04efc81912db0c0c808e100caa063517245d1476
 		}
 		
 		// @hint leverages the getEntityHasPropertyByEntityName() by traverses a propertyIdentifier first using getLastEntityNameInPropertyIdentifier()
@@ -961,11 +1063,20 @@
 			}
 		}
 		
+<<<<<<< HEAD
 		
+=======
+>>>>>>> 04efc81912db0c0c808e100caa063517245d1476
 		// @hint traverses a propertyIdentifier to find the last entityName in the list... this is then used by the hasProperty and hasAttribute methods()
 		public string function getLastEntityNameInPropertyIdentifier( required string entityName, required string propertyIdentifier ) {
 			if(listLen(arguments.propertyIdentifier, ".") gt 1) {
 				var propertiesSruct = getPropertiesStructByEntityName( arguments.entityName );
+<<<<<<< HEAD
+=======
+				if(structKeyExists(propertiesSruct[listFirst(arguments.propertyIdentifier, ".")], "hb_cfc")){
+					propertiesSruct[listFirst(arguments.propertyIdentifier, ".")].cfc = propertiesSruct[listFirst(arguments.propertyIdentifier, ".")].hb_cfc;
+				}
+>>>>>>> 04efc81912db0c0c808e100caa063517245d1476
 				if( !structKeyExists(propertiesSruct, listFirst(arguments.propertyIdentifier, ".")) || !structKeyExists(propertiesSruct[listFirst(arguments.propertyIdentifier, ".")], "cfc") ) {
 					throw("The Property Identifier #arguments.propertyIdentifier# is invalid for the entity #arguments.entityName#");
 				}
@@ -988,16 +1099,23 @@
 		
 		// @hint leverages the getEntityHasAttributeByEntityName() by traverses a propertyIdentifier first using getLastEntityNameInPropertyIdentifier()
 		public boolean function getHasAttributeByEntityNameAndPropertyIdentifier( required string entityName, required string propertyIdentifier ) {
+<<<<<<< HEAD
 			return getEntityHasAttributeByEntityName( 
 				entityName=getLastEntityNameInPropertyIdentifier(arguments.entityName, arguments.propertyIdentifier), 
 				attributeCode=listLast(arguments.propertyIdentifier, "._") 
 			);
+=======
+			return getEntityHasAttributeByEntityName( entityName=getLastEntityNameInPropertyIdentifier(arguments.entityName, arguments.propertyIdentifier), attributeCode=listLast(arguments.propertyIdentifier, ".") );
+>>>>>>> 04efc81912db0c0c808e100caa063517245d1476
 		}
 		
 		// @hint returns true or false based on an entityName, and checks if that entity has an extended attribute with that attributeCode
 		public boolean function getEntityHasAttributeByEntityName( required string entityName, required string attributeCode ) {
 			var attributeCodesList = getHibachiCacheService().getOrCacheFunctionValue("attributeService_getAttributeCodesListByAttributeSetType_ast#getProperlyCasedShortEntityName(arguments.entityName)#", "attributeService", "getAttributeCodesListByAttributeSetType", {1="ast#getProperlyCasedShortEntityName(arguments.entityName)#"});
+<<<<<<< HEAD
 			
+=======
+>>>>>>> 04efc81912db0c0c808e100caa063517245d1476
 			if(listFindNoCase(attributeCodesList, arguments.attributeCode)) {
 				return true;
 			}

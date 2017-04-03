@@ -1,3 +1,49 @@
+<<<<<<< HEAD
+=======
+/*
+    Hibachi
+    Copyright (C) ten24, LLC
+
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+    Linking this program statically or dynamically with other modules is
+    making a combined work based on this program.  Thus, the terms and
+    conditions of the GNU General Public License cover the whole
+    combination.
+
+    As a special exception, the copyright holders of this program give you
+    permission to combine this program with independent modules and your
+    custom code, regardless of the license terms of these independent
+    modules, and to copy and distribute the resulting program under terms
+    of your choice, provided that you follow these specific guidelines:
+	- You also meet the terms and conditions of the license of each
+	  independent module
+	- You must not alter the default display of the Hibachi name or logo from
+	  any part of the application
+	- Your custom code must not alter or create any files inside Hibachi,
+	  except in the following directories:
+		/integrationServices/
+	You may copy and distribute the modified version of this program that meets
+	the above guidelines as a combined work under the terms of GPL for this program,
+	provided that you include the source code of that other code when and as the
+	GNU GPL requires distribution of source code.
+
+    If you modify this program, you may extend this exception to your version
+    of the program, but you are not obligated to do so.
+Notes:
+*/
+>>>>>>> 04efc81912db0c0c808e100caa063517245d1476
 component output="false" accessors="true" extends="HibachiController" {
 
 	property name="hibachiService" type="any";
@@ -237,7 +283,11 @@ component output="false" accessors="true" extends="HibachiController" {
 		}
 
 		// Setup the values needed for this type of layout
+<<<<<<< HEAD
 		arguments.rc.pageTitle = hibachiHTMLEditFormat(arguments.rc[arguments.entityName].getSimpleRepresentation());
+=======
+		arguments.rc.pageTitle = arguments.rc[arguments.entityName].getSimpleRepresentation();
+>>>>>>> 04efc81912db0c0c808e100caa063517245d1476
 		arguments.rc.edit = true;
 	}
 
@@ -253,7 +303,11 @@ component output="false" accessors="true" extends="HibachiController" {
 		}
 
 		// Setup the values needed for this type of layout
+<<<<<<< HEAD
 		arguments.rc.pageTitle = hibachiHTMLEditFormat(arguments.rc[arguments.entityName].getSimpleRepresentation());
+=======
+		arguments.rc.pageTitle = arguments.rc[arguments.entityName].getSimpleRepresentation();
+>>>>>>> 04efc81912db0c0c808e100caa063517245d1476
 		arguments.rc.edit = false;
 	}
 
@@ -511,6 +565,7 @@ component output="false" accessors="true" extends="HibachiController" {
 				} else {
 
 					// Place the id in the URL for redirects in case this was a new entity before
+<<<<<<< HEAD
 					var isSPrimaryIDOverridden = false;
 					if(structKeyExists(arguments.rc,'sRedirectQS')){
 						var sRedirectQSArray= listToArray(arguments.rc.sRedirectQS,'&');
@@ -524,6 +579,9 @@ component output="false" accessors="true" extends="HibachiController" {
 					if(!isSPrimaryIDOverridden){
 						url[ entity.getPrimaryIDPropertyName() ] = arguments.rc[ arguments.entityName ].getPrimaryIDValue();	
 					}
+=======
+					url[ entity.getPrimaryIDPropertyName() ] = arguments.rc[ arguments.entityName ].getPrimaryIDValue();
+>>>>>>> 04efc81912db0c0c808e100caa063517245d1476
 
 					// Render or Redirect a Success
 					renderOrRedirectSuccess( defaultAction=arguments.rc.entityActionDetails.detailAction, maintainQueryString=true, rc=arguments.rc);
@@ -557,6 +615,7 @@ component output="false" accessors="true" extends="HibachiController" {
 
 				// Otherwise do the standard render / redirect
 				} else {
+<<<<<<< HEAD
 					
 					var isFPrimaryIDOverridden = false;
 					if(structKeyExists(arguments.rc,'fRedirectQS')){
@@ -572,6 +631,11 @@ component output="false" accessors="true" extends="HibachiController" {
 					if(!isFPrimaryIDOverridden){
 						url[ entity.getPrimaryIDPropertyName() ] = arguments.rc[ arguments.entityName ].getPrimaryIDValue();	
 					}
+=======
+
+					// Place the id in the URL for redirects in case this was a new entity before
+					url[ entity.getPrimaryIDPropertyName() ] = arguments.rc[ arguments.entityName ].getPrimaryIDValue();
+>>>>>>> 04efc81912db0c0c808e100caa063517245d1476
 
 					// Render or Redirect a faluire
 					renderOrRedirectFailure( defaultAction=arguments.rc.entityActionDetails.detailAction, maintainQueryString=true, rc=arguments.rc);
@@ -656,6 +720,7 @@ component output="false" accessors="true" extends="HibachiController" {
 
 	private void function renderOrRedirectSuccess( required string defaultAction, required boolean maintainQueryString, required struct rc, string keysToRemoveOnRedirect="" ) {
 		param name="arguments.rc.sRedirectQS" default="";
+<<<<<<< HEAD
 		
 		// First look for a sRedirectURL in the rc, and do a redirectExact on that
 		if(structKeyExists(arguments.rc, "sRedirectURL")) {
@@ -664,6 +729,16 @@ component output="false" accessors="true" extends="HibachiController" {
 		// Next look for a sRedirectAction in the rc, and do a redirect on that
 		} else if (structKeyExists(arguments.rc, "sRedirectAction")) {
 			getFW().redirect( action=arguments.rc.sRedirectAction, preserve="messages", queryString=buildRedirectQueryString(arguments.rc.sRedirectQS, arguments.maintainQueryString, arguments.keysToRemoveOnRedirect) );
+=======
+
+		// First look for a sRedirectURL in the rc, and do a redirectExact on that
+		if(structKeyExists(arguments.rc, "sRedirectURL")) {
+			getFW().redirectExact( url=arguments.rc.sRedirectURL );
+
+		// Next look for a sRedirectAction in the rc, and do a redirect on that
+		} else if (structKeyExists(arguments.rc, "sRedirectAction")) {
+			getFW().redirect( action=arguments.rc.sRedirectAction, preserve="messages", queryString=buildRedirectQueryString(arguments.rc.sRedirectQS, arguments.maintainQueryString) );
+>>>>>>> 04efc81912db0c0c808e100caa063517245d1476
 
 		// Next look for a sRenderItem in the rc, set the view to that, and then call the controller for that action
 		} else if (structKeyExists(arguments.rc, "sRenderItem")) {
@@ -695,7 +770,11 @@ component output="false" accessors="true" extends="HibachiController" {
 
 		// First look for a fRedirectURL in the rc, and do a redirectExact on that
 		if(structKeyExists(arguments.rc, "fRedirectURL")) {
+<<<<<<< HEAD
 			getFW().redirectExact( redirectlocation=arguments.rc.fRedirectURL );
+=======
+			getFW().redirectExact( url=arguments.rc.fRedirectURL );
+>>>>>>> 04efc81912db0c0c808e100caa063517245d1476
 
 		// Next look for a fRedirectAction in the rc, and do a redirect on that
 		} else if (structKeyExists(arguments.rc, "fRedirectAction")) {

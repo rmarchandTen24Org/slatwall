@@ -1,13 +1,22 @@
+<<<<<<< HEAD
 <cfimport prefix="swa" taglib="../../../tags" />
+=======
+>>>>>>> 04efc81912db0c0c808e100caa063517245d1476
 <cfimport prefix="hb" taglib="../../../org/Hibachi/HibachiTags" />
 <cfif thisTag.executionMode is "start">
 	<cfparam name="attributes.hibachiScope" type="struct" default="#request.context.fw.getHibachiScope()#" />
 	<cfparam name="attributes.permissionGroup" type="any" />
 	<cfparam name="attributes.actionPermissionDetails" type="struct" default="#attributes.hibachiScope.getService('hibachiAuthenticationService').getActionPermissionDetails()#" />
 	<cfparam name="attributes.edit" type="boolean" default="#request.context.edit#" />
+<<<<<<< HEAD
 	
 	<cfparam name="request.context.permissionFormIndex" default="0" />
 	
+=======
+
+	<cfparam name="request.context.permissionFormIndex" default="0" />
+
+>>>>>>> 04efc81912db0c0c808e100caa063517245d1476
 	<cfoutput>
 		<table class="table">
 			<tr>
@@ -26,11 +35,19 @@
 								<cfset request.context.permissionFormIndex++ />
 								<cfset subsystemFormIndex = request.context.permissionFormIndex />
 								<cfset thisPermission = attributes.permissionGroup.getPermissionByDetails(accessType='action', subsystem=subsystemName) />
+<<<<<<< HEAD
 								
 								<input type="hidden" name="permissions[#request.context.permissionFormIndex#].permissionID" value="#thisPermission.getPermissionID()#" />
 								<input type="hidden" name="permissions[#request.context.permissionFormIndex#].accessType" value="action" />
 								<input type="hidden" name="permissions[#request.context.permissionFormIndex#].subsystem" value="#subsystemName#" />
 								
+=======
+
+								<input type="hidden" name="permissions[#request.context.permissionFormIndex#].permissionID" value="#thisPermission.getPermissionID()#" />
+								<input type="hidden" name="permissions[#request.context.permissionFormIndex#].accessType" value="action" />
+								<input type="hidden" name="permissions[#request.context.permissionFormIndex#].subsystem" value="#subsystemName#" />
+
+>>>>>>> 04efc81912db0c0c808e100caa063517245d1476
 								<input type="hidden" name="permissions[#request.context.permissionFormIndex#].allowActionFlag" value="" />
 								<input type="checkbox" name="permissions[#request.context.permissionFormIndex#].allowActionFlag" value="1" class="hibachi-permission-checkbox"<cfif !isNull(thisPermission.getAllowActionFlag()) and thisPermission.getAllowActionFlag()> checked="checked"</cfif> />
 							<cfelse>
@@ -49,12 +66,20 @@
 										<cfset request.context.permissionFormIndex++ />
 										<cfset sectionFormIndex = request.context.permissionFormIndex />
 										<cfset thisPermission = attributes.permissionGroup.getPermissionByDetails(accessType='action', subsystem=subsystemName, section=sectionName) />
+<<<<<<< HEAD
 										
+=======
+
+>>>>>>> 04efc81912db0c0c808e100caa063517245d1476
 										<input type="hidden" name="permissions[#request.context.permissionFormIndex#].permissionID" value="#thisPermission.getPermissionID()#" />
 										<input type="hidden" name="permissions[#request.context.permissionFormIndex#].accessType" value="action" />
 										<input type="hidden" name="permissions[#request.context.permissionFormIndex#].subsystem" value="#subsystemName#" />
 										<input type="hidden" name="permissions[#request.context.permissionFormIndex#].section" value="#sectionName#" />
+<<<<<<< HEAD
 										
+=======
+
+>>>>>>> 04efc81912db0c0c808e100caa063517245d1476
 										<input type="hidden" name="permissions[#request.context.permissionFormIndex#].allowActionFlag" value="" />
 										<input type="checkbox" name="permissions[#request.context.permissionFormIndex#].allowActionFlag" value="1" class="hibachi-permission-checkbox" data-hibachi-parentcheckbox="permissions[#subsystemFormIndex#].allowActionFlag" <cfif !isNull(thisPermission.getAllowActionFlag()) and thisPermission.getAllowActionFlag()>checked="checked"</cfif> />
 									<cfelse>
@@ -70,15 +95,25 @@
 										<cfif attributes.edit>
 											<cfset request.context.permissionFormIndex++ />
 											<cfset thisPermission = attributes.permissionGroup.getPermissionByDetails(accessType='action', subsystem=subsystemName, section=sectionName, item=itemName) />
+<<<<<<< HEAD
 										
+=======
+
+>>>>>>> 04efc81912db0c0c808e100caa063517245d1476
 											<input type="hidden" name="permissions[#request.context.permissionFormIndex#].permissionID" value="#thisPermission.getPermissionID()#" />
 											<input type="hidden" name="permissions[#request.context.permissionFormIndex#].accessType" value="action" />
 											<input type="hidden" name="permissions[#request.context.permissionFormIndex#].subsystem" value="#subsystemName#" />
 											<input type="hidden" name="permissions[#request.context.permissionFormIndex#].section" value="#sectionName#" />
 											<input type="hidden" name="permissions[#request.context.permissionFormIndex#].item" value="#itemName#" />
+<<<<<<< HEAD
 											
 											<input type="hidden" name="permissions[#request.context.permissionFormIndex#].allowActionFlag" value="" />
 											<input type="checkbox" name="permissions[#request.context.permissionFormIndex#].allowActionFlag" value="1" class="hibachi-permission-checkbox" data-hibachi-parentcheckbox="permissions[#sectionFormIndex#].allowActionFlag" <cfif !isNull(thisPermission.getAllowActionFlag()) and thisPermission.getAllowActionFlag()>checked="checked"</cfif> />	
+=======
+
+											<input type="hidden" name="permissions[#request.context.permissionFormIndex#].allowActionFlag" value="" />
+											<input type="checkbox" name="permissions[#request.context.permissionFormIndex#].allowActionFlag" value="1" class="hibachi-permission-checkbox" data-hibachi-parentcheckbox="permissions[#sectionFormIndex#].allowActionFlag" <cfif !isNull(thisPermission.getAllowActionFlag()) and thisPermission.getAllowActionFlag()>checked="checked"</cfif> />
+>>>>>>> 04efc81912db0c0c808e100caa063517245d1476
 										<cfelse>
 											#attributes.hibachiScope.formatValue(attributes.hibachiScope.getService("hibachiAuthenticationService").authenticateSubsystemSectionItemActionByPermissionGroup(subsystem=subsystemName, section=sectionName, item=itemName, permissionGroup=attributes.permissionGroup), "yesno")#
 										</cfif>
@@ -91,5 +126,9 @@
 			</cfloop>
 		</table>
 	</cfoutput>
+<<<<<<< HEAD
 	
+=======
+
+>>>>>>> 04efc81912db0c0c808e100caa063517245d1476
 </cfif>

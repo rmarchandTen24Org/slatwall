@@ -1,4 +1,7 @@
+<<<<<<< HEAD
 <cfimport prefix="swa" taglib="../../../tags" />
+=======
+>>>>>>> 04efc81912db0c0c808e100caa063517245d1476
 <cfimport prefix="hb" taglib="../../../org/Hibachi/HibachiTags" />
 <cfif thisTag.executionMode is "start">
 	<cfparam name="attributes.hibachiScope" type="struct" default="#request.context.fw.getHibachiScope()#" />
@@ -6,9 +9,15 @@
 	<cfparam name="attributes.entityPermissionDetails" type="struct" default="#attributes.hibachiScope.getService('hibachiAuthenticationService').getEntityPermissionDetails()#" />
 	<cfparam name="attributes.edit" type="boolean" default="#request.context.edit#" />
 	<cfparam name="attributes.editEntityName" type="string" default="" />
+<<<<<<< HEAD
 	
 	<cfparam name="request.context.permissionFormIndex" default="0" />
 	
+=======
+
+	<cfparam name="request.context.permissionFormIndex" default="0" />
+
+>>>>>>> 04efc81912db0c0c808e100caa063517245d1476
 	<cfoutput>
 		<table class="table">
 			<tr>
@@ -16,10 +25,17 @@
 					<cfset request.context.permissionFormIndex++ />
 					<cfset topPermissionFormIndex = request.context.permissionFormIndex />
 					<cfset thisPermission = attributes.permissionGroup.getPermissionByDetails(accessType='entity') />
+<<<<<<< HEAD
 					
 					<input type="hidden" name="permissions[#request.context.permissionFormIndex#].permissionID" value="#thisPermission.getPermissionID()#" />
 					<input type="hidden" name="permissions[#request.context.permissionFormIndex#].accessType" value="entity" />
 					
+=======
+
+					<input type="hidden" name="permissions[#request.context.permissionFormIndex#].permissionID" value="#thisPermission.getPermissionID()#" />
+					<input type="hidden" name="permissions[#request.context.permissionFormIndex#].accessType" value="entity" />
+
+>>>>>>> 04efc81912db0c0c808e100caa063517245d1476
 					<th class="primary" style="font-size:14px;">All Entities & Properties</th>
 					<th style="font-size:14px;"><input type="hidden" name="permissions[#request.context.permissionFormIndex#].allowCreateFlag" value=""><input type="checkbox" name="permissions[#request.context.permissionFormIndex#].allowCreateFlag" class="hibachi-permission-checkbox" value="1" <cfif !arrayLen(attributes.permissionGroup.getPermissions()) or (!isNull(thisPermission.getAllowCreateFlag()) and thisPermission.getAllowCreateFlag())>checked="checked"</cfif>> Create</th>
 					<th style="font-size:14px;"><input type="hidden" name="permissions[#request.context.permissionFormIndex#].allowReadFlag" value=""><input type="checkbox" name="permissions[#request.context.permissionFormIndex#].allowReadFlag" class="hibachi-permission-checkbox" value="1" <cfif !arrayLen(attributes.permissionGroup.getPermissions()) or (!isNull(thisPermission.getAllowReadFlag()) and thisPermission.getAllowReadFlag())>checked="checked"</cfif>> Read</th>
@@ -37,21 +53,36 @@
 					<th></th>
 				</cfif>
 			</tr>
+<<<<<<< HEAD
 			
 			<cfset entities = listToArray(structKeyList(attributes.entityPermissionDetails)) />
 			<cfset arraySort(entities, "text") />
 			
+=======
+
+			<cfset entities = listToArray(structKeyList(attributes.entityPermissionDetails)) />
+			<cfset arraySort(entities, "text") />
+
+>>>>>>> 04efc81912db0c0c808e100caa063517245d1476
 			<cfloop array="#entities#" index="entityName">
 				<cfif not structKeyExists(attributes.entityPermissionDetails[entityName], "inheritPermissionEntityName")>
 					<tr>
 						<cfif attributes.edit and not len(attributes.editEntityName)>
 							<cfset request.context.permissionFormIndex++ />
 							<cfset thisPermission = attributes.permissionGroup.getPermissionByDetails(accessType='entity', entityClassName=entityName) />
+<<<<<<< HEAD
 							
 							<input type="hidden" name="permissions[#request.context.permissionFormIndex#].permissionID" value="#thisPermission.getPermissionID()#" />
 							<input type="hidden" name="permissions[#request.context.permissionFormIndex#].accessType" value="entity" />
 							<input type="hidden" name="permissions[#request.context.permissionFormIndex#].entityClassName" value="#entityName#" />
 							
+=======
+
+							<input type="hidden" name="permissions[#request.context.permissionFormIndex#].permissionID" value="#thisPermission.getPermissionID()#" />
+							<input type="hidden" name="permissions[#request.context.permissionFormIndex#].accessType" value="entity" />
+							<input type="hidden" name="permissions[#request.context.permissionFormIndex#].entityClassName" value="#entityName#" />
+
+>>>>>>> 04efc81912db0c0c808e100caa063517245d1476
 							<td class="primary" onClick="$('.permission#lcase(entityName)#').toggleClass('hide');"><strong>#attributes.hibachiScope.rbKey('entity.#entityName#')#</strong></td>
 							<td><input type="hidden" name="permissions[#request.context.permissionFormIndex#].allowCreateFlag" value=""><input type="checkbox" name="permissions[#request.context.permissionFormIndex#].allowCreateFlag" class="hibachi-permission-checkbox" data-hibachi-parentcheckbox="permissions[#topPermissionFormIndex#].allowCreateFlag" value="1" <cfif not isNull(thisPermission.getAllowCreateFlag()) and thisPermission.getAllowCreateFlag()>checked="checked"</cfif>> Create</td>
 							<td><input type="hidden" name="permissions[#request.context.permissionFormIndex#].allowReadFlag" value=""><input type="checkbox" name="permissions[#request.context.permissionFormIndex#].allowReadFlag" class="hibachi-permission-checkbox" data-hibachi-parentcheckbox="permissions[#topPermissionFormIndex#].allowReadFlag" value="1" <cfif not isNull(thisPermission.getAllowReadFlag()) and thisPermission.getAllowReadFlag()>checked="checked"</cfif>> Read</td>
@@ -63,7 +94,11 @@
 									<cfif attributes.editEntityName eq entityName>
 										<hb:HibachiActionCaller action="admin:entity.detailPermissionGroup" queryString="permissionGroupID=#attributes.permissionGroup.getPermissionGroupID()#" class="btn btn-xs" iconOnly="true" icon="remove">
 									<cfelse>
+<<<<<<< HEAD
 										<hb:HibachiActionCaller action="admin:entity.editPermissionGroup" queryString="permissionGroupID=#attributes.permissionGroup.getPermissionGroupID()#&editEntityName=#entityName#" class="btn btn-xs" iconOnly="true" icon="pencil">	
+=======
+										<hb:HibachiActionCaller action="admin:entity.editPermissionGroup" queryString="permissionGroupID=#attributes.permissionGroup.getPermissionGroupID()#&editEntityName=#entityName#" class="btn btn-xs" iconOnly="true" icon="pencil">
+>>>>>>> 04efc81912db0c0c808e100caa063517245d1476
 									</cfif>
 								</cfif>
 							</td>

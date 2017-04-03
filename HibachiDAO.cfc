@@ -1,3 +1,49 @@
+<<<<<<< HEAD
+=======
+<!--
+    Hibachi
+    Copyright (C) ten24, LLC
+
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+    Linking this program statically or dynamically with other modules is
+    making a combined work based on this program.  Thus, the terms and
+    conditions of the GNU General Public License cover the whole
+    combination.
+
+    As a special exception, the copyright holders of this program give you
+    permission to combine this program with independent modules and your
+    custom code, regardless of the license terms of these independent
+    modules, and to copy and distribute the resulting program under terms
+    of your choice, provided that you follow these specific guidelines:
+	- You also meet the terms and conditions of the license of each
+	  independent module
+	- You must not alter the default display of the Hibachi name or logo from
+	  any part of the application
+	- Your custom code must not alter or create any files inside Hibachi,
+	  except in the following directories:
+		/integrationServices/
+	You may copy and distribute the modified version of this program that meets
+	the above guidelines as a combined work under the terms of GPL for this program,
+	provided that you include the source code of that other code when and as the
+	GNU GPL requires distribution of source code.
+
+    If you modify this program, you may extend this exception to your version
+    of the program, but you are not obligated to do so.
+Notes:
+--->
+>>>>>>> 04efc81912db0c0c808e100caa063517245d1476
 <cfcomponent output="false" accessors="true" extends="HibachiObject">
 
 	<cfproperty name="applicationKey" type="string" />
@@ -89,7 +135,10 @@
 			return ormExecuteQuery("SELECT count(*) FROM #arguments.entityName#",true);
 		}
 
+<<<<<<< HEAD
 
+=======
+>>>>>>> 04efc81912db0c0c808e100caa063517245d1476
 		public void function reloadEntity(required any entity) {
 	    	entityReload(arguments.entity);
 	    }
@@ -122,12 +171,15 @@
 			return smartList;
 		}
 
+<<<<<<< HEAD
 		public any function getCollectionList(required string entityName,struct data={}){
 			var collectionList = getService('HibachiCollectionService').newCollection();
 			collectionList.setup(argumentCollection=arguments);
 			return collectionList;
 		}
 
+=======
+>>>>>>> 04efc81912db0c0c808e100caa063517245d1476
 		public any function getExportQuery(required string tableName) {
 			var qry = new query();
 			qry.setName("exportQry");
@@ -139,11 +191,25 @@
 		public void function reencryptData(numeric batchSizeLimit=0) {
 		}
 
+<<<<<<< HEAD
+=======
+		public any function getAccountByAuthToken(required string authToken) {
+			var account = ormExecuteQuery("SELECT acc FROM #getApplicationKey()#AccountAuthentication accauth INNER JOIN accauth.account acc WHERE (accauth.expirationDateTime is null or accauth.expirationDateTime > :now) and accauth.authToken is not null and accauth.authToken = :authToken", {now=now(), authToken=arguments.authToken}, true);
+			if(isNull(account)) {
+				return entityNew("#getApplicationKey()#Account");
+			}
+			return account;
+		}
+
+>>>>>>> 04efc81912db0c0c808e100caa063517245d1476
 		// ===================== START: Private Helper Methods ===========================
 
 		// =====================  END: Private Helper Methods ============================
 
+<<<<<<< HEAD
 
+=======
+>>>>>>> 04efc81912db0c0c808e100caa063517245d1476
 	</cfscript>
 
 	<!--- hint: This method is for doing validation checks to make sure a property value isn't already in use --->
@@ -157,7 +223,11 @@
 		<cfset var entityIDproperty = arguments.entity.getPrimaryIDPropertyName() />
 		<cfset var propertyValue = arguments.entity.getValueByPropertyIdentifier( arguments.propertyName ) />
 
+<<<<<<< HEAD
 		<cfset var results = ormExecuteQuery(" from #entityName# e where e.#property# = :propertyValue and e.#entityIDproperty# != :entityID", {propertyValue=propertyValue, entityID=entityID},false,{maxresults=1}) />
+=======
+		<cfset var results = ormExecuteQuery(" from #entityName# e where e.#property# = :propertyValue and e.#entityIDproperty# != :entityID", {propertyValue=propertyValue, entityID=entityID}) />
+>>>>>>> 04efc81912db0c0c808e100caa063517245d1476
 
 		<cfif arrayLen(results)>
 			<cfreturn false />
@@ -284,6 +354,7 @@
 			</cflock>
 
 	</cffunction>
+<<<<<<< HEAD
 
 	<cffunction name="recordUpdate" returntype="any">
 		<cfargument name="tableName" required="true" type="string" />
@@ -394,4 +465,6 @@
 		</cfquery>
 	</cffunction>
 
+=======
+>>>>>>> 04efc81912db0c0c808e100caa063517245d1476
 </cfcomponent>
