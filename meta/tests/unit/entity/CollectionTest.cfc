@@ -81,13 +81,18 @@ component extends="Slatwall.meta.tests.unit.entity.SlatwallEntityTestBase" {
 		for(var firstLevelfilterGroupIndex = 1; firstLevelfilterGroupIndex <= arraylen(collectionFilter); firstLevelfilterGroupIndex++){
 			var firstLevelFilterGroup = collectionFilter[firstLevelfilterGroupIndex];
 
-			writedump(firstLevelFilterGroup);
+
+			arrayAppend(elasticSearchFilter["bool"]["must"], { "bool" = { "must" = [] }});
+
+
 
 			// check if there is filter groups inside of it.
 			if(structKeyExists(firstLevelFilterGroup, 'filterGroup') && isArray(firstLevelFilterGroup.filterGroup)){
 
 				//loop second level of filter groups
 				for(var secondLevelFilterGroupIndex = 1; secondLevelFilterGroupIndex <= arraylen(firstLevelFilterGroup.filterGroup); secondLevelFilterGroupIndex++){
+
+					arrayAppend(elasticSearchFilter["bool"]["must"][firstLevelfilterGroupIndex]["bool"]["must"], { "bool" = { "must" = [] }});
 
 					var secondLevelFilterGroup = firstLevelFilterGroup.filterGroup[secondLevelFilterGroupIndex];
 
@@ -102,6 +107,8 @@ component extends="Slatwall.meta.tests.unit.entity.SlatwallEntityTestBase" {
 						filterGroupStructure[secondLevelFilterGroupIndex] = []; 
 
 						for(var thirdLevelFilterGroupIndex = 1; thirdLevelFilterGroupIndex <= arraylen(secondLevelFilterGroup.filterGroup); thirdLevelFilterGroupIndex++) {
+
+
 
 							var thirdLevelFilterGroup = secondLevelFilterGroup.filterGroup[thirdLevelFilterGroupIndex];
 
@@ -131,14 +138,16 @@ component extends="Slatwall.meta.tests.unit.entity.SlatwallEntityTestBase" {
 
 							filtersByPropertyIdentifier[propertyIdentifier] = filterStruct; 
 
-							writeDump(filterStruct); 
+							writeDump(filterStruct);
+
+							arrayAppend(elasticSearchFilter["bool"]["must"][firstLevelfilterGroupIndex]["bool"]["must"][secondLevelFilterGroupIndex]["bool"]["must"],filterStruct);
 							
 						}
 					}
 				}
 			}
-
-			writeDump(filtersByPropertyIdentifier); 
+			writedump(elasticSearchFilter);
+			writeDump(filtersByPropertyIdentifier);
 
 			writeDump("Preprocess filter group structure:"); 
 
