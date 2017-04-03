@@ -64,6 +64,9 @@ component extends="Slatwall.meta.tests.unit.entity.SlatwallEntityTestBase" {
 	public void function elasticSearchFiltersTest(){
 
 		var collectionFilter = deserializeJSON('[{"filterGroup":[{"filterGroup":[{"propertyIdentifier":"_product.currentProductVersionAudit.dateDelisted","value":"null","comparisonOperator":"is"}]},{"filterGroup":[{"propertyIdentifier":"_product.currentProductVersionAudit","value":"null","comparisonOperator":"is not"}],"logicalOperator":"AND"}]}]');
+				
+		var elasticSearchFilters = []; 
+	
 		// loop top level of filter groups
 		for(var firstLevelfilterGroupIndex = 1; firstLevelfilterGroupIndex <= arraylen(collectionFilter); firstLevelfilterGroupIndex++){
 			var firstLevelFilterGroup = collectionFilter[firstLevelfilterGroupIndex];
@@ -91,7 +94,9 @@ component extends="Slatwall.meta.tests.unit.entity.SlatwallEntityTestBase" {
 							var thirdLevelFilterGroup = secondLevelFilterGroup.filterGroup[thirdLevelFilterGroupIndex];
 
 							var comparisonOperator = thirdLevelFilterGroup.comparisonOperator; 
-							var propertyIdentifier = thirdLevelFilterGroup.propertyIdentifier; 
+							var propertyIdentifierArray = listToArray(thirdLevelFilterGroup.propertyIdentifier); 
+							ArrayDeleteAt(propertyIdentifierArray, 1); 
+							var propertyIdentifier = ArrayToList(propertyIdentifierArray, '_'); 
 							var filterValue = thirdLevelFilterGroup.value; 							
 							
 							writeDump(comparisonOperator); 
@@ -99,20 +104,13 @@ component extends="Slatwall.meta.tests.unit.entity.SlatwallEntityTestBase" {
 							writeDump(filterValue); 
 							writeDump(filterGroupLogicalOperator);
 
+							
 						}
-
 					}
-
 				}
-
-
-
-
-
 			}
 
-abort;
-
+			abort;
 
 		}
 
