@@ -5,7 +5,6 @@ class ExpandableService{
     
     public recordStates = {};
     
-    //ngInject
     constructor(
         
     ){
@@ -20,12 +19,7 @@ class ExpandableService{
     } 
     
     updateState = (recordID:string, state:any) => {
-        if(angular.isUndefined(this.recordStates[recordID])){
-            this.recordStates[recordID] = {}; 
-        }
-        for(var key in state){
-            this.recordStates[recordID][key] = state[key];
-        }
+        this.recordStates[recordID] = state; 
     }
     
     getState = (recordID:string, key?:string) => {

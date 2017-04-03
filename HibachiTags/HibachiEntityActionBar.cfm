@@ -1,7 +1,4 @@
-<<<<<<< HEAD
 <cfimport prefix="swa" taglib="../../../tags" />
-=======
->>>>>>> 04efc81912db0c0c808e100caa063517245d1476
 <cfimport prefix="hb" taglib="../../../org/Hibachi/HibachiTags" />
 <cfif thisTag.executionMode is "start">
 	<!--- Auto-Injected --->
@@ -33,11 +30,6 @@
 	<cfparam name="attributes.deleteAction" type="string" default="#request.context.entityActionDetails.deleteAction#" />
 	<cfparam name="attributes.deleteQueryString" type="string" default="" />
 
-<<<<<<< HEAD
-=======
-	<cfparam name="attributes.angularCreate" type="string" default="" />
-
->>>>>>> 04efc81912db0c0c808e100caa063517245d1476
 	<!--- Process Specific Values --->
 	<cfparam name="attributes.processAction" type="string" default="">
 	<cfparam name="attributes.processContext" type="string" default="">
@@ -49,18 +41,6 @@
 			<div class="row s-body-nav">
 			    <nav class="navbar navbar-default" role="navigation">
 			      <div class="col-md-6 s-header-info">
-<<<<<<< HEAD
-=======
-					<!---<div class="actionnav well well-sm">
-						<div class="row">
-							<div class="col-md-4">--->
-						<!--- Page Title --->
-						<ul class="list-unstyled list-inline">
-							<!--- <li><a href="##">Dashboard</a></li> --->
-							<!--- <li><a href="##">Order Items</a></li>
-							<li><a href="##">Order ##2635</a></li> --->
-						</ul>
->>>>>>> 04efc81912db0c0c808e100caa063517245d1476
 						<cfif !len(attributes.pageTitle) && structKeyExists(request.context, "pageTitle")>
 							<cfset attributes.pageTitle = request.context.pageTitle />
 						</cfif>
@@ -71,14 +51,9 @@
 						<div class="btn-toolbar">
 
 							<!--- ================ Listing =================== --->
-<<<<<<< HEAD
 							
 							<cfif attributes.type eq "listing" >
 								
-=======
-							<cfif attributes.type eq "listing" >
-
->>>>>>> 04efc81912db0c0c808e100caa063517245d1476
 								<cfparam name="request.context.keywords" default="" />
 
 								<!--- Listing: Button Groups --->
@@ -89,10 +64,6 @@
 										</cfif>
 									</cfloop>
 								</cfif>
-<<<<<<< HEAD
-=======
-
->>>>>>> 04efc81912db0c0c808e100caa063517245d1476
 								<!--- Listing: Create --->
 								<cfif attributes.showCreate>
 									<cfif attributes.createModal>
@@ -101,7 +72,6 @@
 										<hb:HibachiActionCaller action="#attributes.createAction#" queryString="#attributes.createQueryString#" class="btn btn-primary" icon="plus icon-white">
 									</cfif>
 								</cfif>
-<<<<<<< HEAD
 								
 							<!--- ================ Detail ===================== --->
 							<cfelseif attributes.type eq "detail">
@@ -113,18 +83,6 @@
 									<!--- Detail: Actions --->
 									<cfif !attributes.object.isNew() && len( trim( thistag.generatedcontent ) ) gt 1>
 										<button class="btn dropdown-toggle btn-default" data-toggle="dropdown"><i class="icon-list-alt"></i> #attributes.hibachiScope.rbKey('define.actions')# <span class="caret"></span></button>
-=======
-
-							<!--- ================ Detail ===================== --->
-							<cfelseif attributes.type eq "detail">
-								<div class="btn-group btn-group-sm">
-									<!--- Detail: Back Button --->
-									<hb:HibachiActionCaller action="#attributes.backAction#" queryString="#attributes.backQueryString#" class="btn btn-default" icon="arrow-left">
-
-									<!--- Detail: Actions --->
-									<cfif !attributes.object.isNew() && len( trim( thistag.generatedcontent ) ) gt 1>
-										<button class="btn dropdown-toggle btn-default" data-toggle="dropdown"><i class="glyphicon glyphicon-list-alt"></i> #attributes.hibachiScope.rbKey('define.actions')# <span class="caret"></span></button>
->>>>>>> 04efc81912db0c0c808e100caa063517245d1476
 										<ul class="dropdown-menu pull-right">
 											<hb:HibachiDividerHider>
 												#thistag.generatedcontent#
@@ -135,11 +93,7 @@
 									<!--- Detail: Button Groups --->
 									<cfif structKeyExists(thistag, "buttonGroups") && arrayLen(thistag.buttonGroups)>
 										<cfloop array="#thisTag.buttonGroups#" index="buttonGroup">
-<<<<<<< HEAD
 											<cfif structKeyExists(buttonGroup, "generatedContent") && len(buttonGroup.generatedContent)>											
-=======
-											<cfif structKeyExists(buttonGroup, "generatedContent") && len(buttonGroup.generatedContent)>
->>>>>>> 04efc81912db0c0c808e100caa063517245d1476
 												#buttonGroup.generatedContent#
 											</cfif>
 										</cfloop>
@@ -185,11 +139,7 @@
 								</cfif>
 
 								<!--- Detail: CRUD Buttons --->
-<<<<<<< HEAD
 								
-=======
-
->>>>>>> 04efc81912db0c0c808e100caa063517245d1476
 								<div class="btn-group btn-group-sm">
 									<!--- Setup delete Details --->
 									<cfset local.deleteErrors = attributes.hibachiScope.getService("hibachiValidationService").validate(object=attributes.object, context="delete", setErrors=false) />
@@ -211,18 +161,7 @@
 										<hb:HibachiActionCaller action="#attributes.cancelAction#" querystring="#attributes.cancelQueryString#" text="#attributes.hibachiScope.rbKey('define.cancel')#" class="btn btn-default" icon="remove icon-white">
 
 										<!--- Save --->
-<<<<<<< HEAD
 										<hb:HibachiActionCaller action="#request.context.entityActionDetails.saveAction#" text="#attributes.hibachiScope.rbKey('define.save')#" class="btn btn-success" type="button" submit="true" icon="ok icon-white">
-=======
-                            			<cfif !len(attributes.angularCreate)>
-											<hb:HibachiActionCaller action="#request.context.entityActionDetails.saveAction#" text="#attributes.hibachiScope.rbKey('define.save')#" class="btn btn-success" type="button" submit="true" icon="ok icon-white">
-										<cfelse>
-                                            <button class="btn btn-success" title="Save" data-ng-click="#attributes.angularCreate#">
-                                                <i class="glyphicon glyphicon-ok icon-white"></i> #attributes.hibachiScope.rbKey('define.save')#
-                                            </button>
-										</cfif>
-
->>>>>>> 04efc81912db0c0c808e100caa063517245d1476
 									<cfelse>
 										<!--- Delete --->
 										<cfif attributes.showdelete>
@@ -239,11 +178,7 @@
 
 								<!--- ================= Process =================== --->
 								<cfelseif attributes.type eq "preprocess">
-<<<<<<< HEAD
 	
-=======
-
->>>>>>> 04efc81912db0c0c808e100caa063517245d1476
 									<cfif !len(attributes.processContext) and structKeyExists(request.context, "processContext")>
 										<cfset attributes.processContext = request.context.processContext />
 									</cfif>
@@ -257,11 +192,7 @@
 										<button type="submit" class="btn btn-primary">#attributes.hibachiScope.rbKey( "entity.#attributes.object.getClassName()#.process.#attributes.processContext#" )#</button>
 									</div>
 								</cfif>
-<<<<<<< HEAD
 							
-=======
-
->>>>>>> 04efc81912db0c0c808e100caa063517245d1476
 
 							<!--- Clear the generated content so that it isn't rendered --->
 							<cfset thistag.generatedcontent = "" />

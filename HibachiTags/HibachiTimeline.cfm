@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 <!---
 
     Slatwall - An Open Source eCommerce Platform
@@ -48,9 +47,6 @@ Notes:
 
 --->
 <cfimport prefix="swa" taglib="../../../tags" />
-=======
-
->>>>>>> 04efc81912db0c0c808e100caa063517245d1476
 <cfimport prefix="hb" taglib="../../../org/Hibachi/HibachiTags" />
 <cfif thisTag.executionMode is "start">
 	<cfparam name="attributes.hibachiScope" type="any" default="#request.context.fw.getHibachiScope()#" />
@@ -59,14 +55,7 @@ Notes:
 	<cfparam name="attributes.object" type="any" default="" />
 	<cfparam name="attributes.recordsShow" type="string" default="10" />
 	<cfparam name="attributes.auditSmartList" type="any" default="" />
-<<<<<<< HEAD
 	
-=======
-	<cfparam name="attributes.findSubSystemSectionFlag" type="boolean" default="false" />
-
-	<cfset local.subsystemSection = "entity" />
-
->>>>>>> 04efc81912db0c0c808e100caa063517245d1476
 	<cfset thisTag.hibachiAuditService = attributes.hibachiScope.getService('HibachiAuditService') />
 	<cfset thisTag.mode = "" />
 	<cfset thisTag.auditArray = [] />
@@ -103,11 +92,7 @@ Notes:
 		SELECT a FROM SlatwallAudit a INNER JOIN FETCH
 		
 	--->
-<<<<<<< HEAD
 	
-=======
-
->>>>>>> 04efc81912db0c0c808e100caa063517245d1476
 	<!--- Display page or all --->
 	<cfif isNumeric(attributes.recordsShow) and attributes.recordsShow gt 0>
 		<cfset attributes.auditSmartList.setPageRecordsShow(attributes.recordsShow) />
@@ -118,7 +103,6 @@ Notes:
 	
 	<cfset thisTag.columnCount = 5 />
 	<cfoutput>
-<<<<<<< HEAD
 		<div class="table-responsive">	
 			<table class="table table-bordered table-hover">
 				<cfif arraylen(thisTag.auditArray)>
@@ -168,67 +152,10 @@ Notes:
 						<!--- Output the date row --->
 						<cfif not dateGroupingUsageFlags[dateGroupUsageKey]>
 							<thead>
-=======
-		<div class="col-xs-12 table-responsive">	
-			<table class="table table-bordered table-hover">
-				<tbody>
-					<cfif arraylen(thisTag.auditArray)>
-						<!--- Remove time for day comparison --->
-						<cfset nowDate = createDate(year(now()), month(now()), day(now())) />
-						
-						<!--- Used for determining when to display date row for grouping --->
-						<cfset dateGroupingUsageFlags = {today=false, yesterday=false, thisweek=false, thismonth=false} />
-						
-						<cfloop array="#thisTag.auditArray#" index="currentAudit">
-
-							<cfif attributes.findSubSystemSectionFlag>
-
-								<cfset local.subsystemSection = #currentAudit.getRelatedEntity().getThisMetaData().HB_SUBSYSTEMSECTION#>
-							</cfif>
-							<!--- Remove time for day comparison --->
-							<cfset auditDate = createDate(year(currentAudit.getAuditDateTime()), month(currentAudit.getAuditDateTime()), day(currentAudit.getAuditDateTime())) />
-							
-							<cfset daysDiffNow = dateDiff('d', auditDate, nowDate) />
-							<cfset monthDiffNow = dateDiff('m', auditDate, nowDate) />
-							
-							<cfset showTime = false />
-							<cfset dateGroupUsageKey = "" />
-							<cfset dateGroupText = "" />
-							
-							<!--- Group by today --->
-							<cfif daysDiffNow eq 0>
-								<cfset dateGroupUsageKey = "today" />
-								<cfset dateGroupText = "Today, #dateFormat(auditDate, 'mmmm dd, yyyy')#" />
-								<cfset showTime = true />
-							<!--- Group by yesterday --->
-							<cfelseif daysDiffNow eq 1>
-								<cfset dateGroupUsageKey = "yesterday" />
-								<cfset dateGroupText = "Yesterday, #dateFormat(auditDate, 'mmmm dd, yyyy')#" />
-								<cfset showTime = true />
-							<cfelse>
-								<!--- Group by day of current month --->
-								<cfif monthDiffNow eq 0>
-									<cfset dateGroupUsageKey = "#dateFormat(auditDate, 'mmmddyyyy')#" />
-									<cfset dateGroupText = "#dateFormat(auditDate, 'dddd, mmmm dd, yyyy')#" />
-									<cfset showTime = true />
-								<!--- Group by month --->
-								<cfelse>
-									<cfset dateGroupUsageKey = "#dateFormat(auditDate, 'mmmyyyy')#" />
-									<cfset dateGroupText = "#dateFormat(auditDate, 'mmmm yyyy')#" />
-								</cfif>
-								<cfif not structKeyExists(dateGroupingUsageFlags, dateGroupUsageKey)>
-									<cfset dateGroupingUsageFlags[dateGroupUsageKey] = false />
-								</cfif>
-							</cfif>
-							
-							<!--- Output the date row --->
-							<cfif not dateGroupingUsageFlags[dateGroupUsageKey]>
->>>>>>> 04efc81912db0c0c808e100caa063517245d1476
 								<!--- Determine which format to show --->
 								<tr>
 									<th colspan="3">#dateGroupText#</th>
 								</tr>
-<<<<<<< HEAD
 							</thead>
 							<cfset dateGroupingUsageFlags[dateGroupUsageKey] = true />
 						</cfif>
@@ -283,62 +210,6 @@ Notes:
 					<tr><td colspan="#thisTag.columnCount#" style="text-align:center;"><em>#attributes.hibachiScope.rbKey("entity.audit.norecords")#</em></td></tr>
 				</cfif>
 			
-=======
-								<cfset dateGroupingUsageFlags[dateGroupUsageKey] = true />
-							</cfif>
-							
-							<tr>
-								<td style="white-space:nowrap;width:1%;"><cfif showTime>#currentAudit.getFormattedValue("auditDateTime", "time")#</cfif><cfif len(currentAudit.getSessionAccountFullName())> - #currentAudit.getSessionAccountFullName()#</cfif></td>
-								<td class="primary">
-									<cfif not listFindNoCase("login,loginInvalid,logout", currentAudit.getAuditType())>
-										#currentAudit.getFormattedValue('auditType')#<cfif thisTag.mode neq 'object'> #currentAudit.getBaseObject()# - </cfif>
-										<cfif listFindNoCase("create,update,rollback,archive", currentAudit.getAuditType())>
-											<hb:HibachiActionCaller action="admin:#local.subsystemSection#.detail#currentAudit.getBaseObject()#" queryString="#currentAudit.getBaseObject()#ID=#currentAudit.getBaseID()#" text="#currentAudit.getTitle()#" />
-										<cfelse>
-											#currentAudit.getTitle()#
-										</cfif>
-										<br />
-										<cfif listFindNoCase('update,rollback,archive', currentAudit.getAuditType()) or (currentAudit.getAuditType() eq 'create' and thisTag.mode eq "object")>
-											<em>#attributes.hibachiScope.rbKey("entity.audit.changeDetails.propertyChanged.#currentAudit.getAuditType()#")#: 
-											<cfset data = deserializeJSON(currentAudit.getData()) />
-											<cfset indexCount = 0 />
-											<cfloop collection="#data.newPropertyData#" item="propertyName">
-												<cfset indexCount++ />
-												<!--- propertyName is attribute --->
-												<cfif !thisTag.hibachiAuditService.getEntityHasPropertyByEntityName(entityName=currentAudit.getBaseObject(), propertyName=propertyName) and attributes.hibachiScope.getService('hibachiService').getEntityHasAttributeByEntityName(entityName=currentAudit.getBaseObject(), attributeCode=propertyName)>
-													<cfset attributeName = attributes.hibachiScope.getService('AttributeService').getAttributeNameByAttributeCode(propertyName) />
-													<cfif len(attributeName)>
-														#attributeName#<cfif indexCount neq structCount(data.newPropertyData)>,</cfif>
-													<cfelse>
-														#attributes.hibachiScope.rbKey("entity.#currentAudit.getBaseObject()#.#propertyName#")#<cfif indexCount neq structCount(data.newPropertyData)>,</cfif>
-													</cfif>
-												<!--- propertyName is entity property --->
-												<cfelse>
-													#attributes.hibachiScope.rbKey("#local.subsystemSection#.#currentAudit.getBaseObject()#.#propertyName#")#<cfif indexCount neq structCount(data.newPropertyData)>,</cfif>
-												</cfif>
-											</cfloop>
-											</em>
-										</cfif>
-									<cfelse>
-										#currentAudit.getFormattedValue('auditType')#<br/>
-										#currentAudit.getSessionAccountEmailAddress()# (#currentAudit.getSessionIPAddress()#)
-									</cfif>
-								</td>
-								<td class="admin admin1">
-									<hb:HibachiActionCaller action="admin:entity.preprocessaudit" queryString="processContext=rollback&#currentAudit.getPrimaryIDPropertyName()#=#currentAudit.getPrimaryIDValue()#&redirectAction=admin:#local.subsystemSection#.detail#currentAudit.getBaseObject()#" class="btn btn-xs" modal="true" icon="eye-open" iconOnly="true" />
-								</td>
-							</tr>
-						</cfloop>
-						<cfif isObject(attributes.object) and attributes.object.hasProperty('createdDateTime') and attributes.object.getCreatedDateTime() lt attributes.auditSmartList.getRecords()[arrayLen(attributes.auditSmartList.getRecords())].getAuditDateTime()>
-							<tr><td colspan="#thisTag.columnCount#" style="text-align:center;"><em>#attributes.hibachiScope.rbKey("entity.audit.frontEndAndAdmin")#</em></td></tr>
-						</cfif>
-					<cfelseif isObject(attributes.object) and attributes.object.hasProperty('createdDateTime') and attributes.object.hasProperty('modifiedDateTime') and attributes.object.getCreatedDateTime() lt attributes.object.getModifiedDateTime()>
-						<tr><td colspan="#thisTag.columnCount#" style="text-align:center;"><em>#attributes.hibachiScope.rbKey("entity.audit.frontEndOnly")#</em></td></tr>
-					<cfelse>
-						<tr><td colspan="#thisTag.columnCount#" style="text-align:center;"><em>#attributes.hibachiScope.rbKey("entity.audit.norecords")#</em></td></tr>
-					</cfif>
-				</tbody>
->>>>>>> 04efc81912db0c0c808e100caa063517245d1476
 			</table>
 		</div>
 	</cfoutput>

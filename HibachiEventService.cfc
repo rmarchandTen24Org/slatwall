@@ -41,7 +41,6 @@ component output="false" update="true" extends="HibachiService" {
 
 	variables.registeredEvents = {};
 	variables.registeredEventHandlers = {};
-<<<<<<< HEAD
 	variables.eventNameOptions = {};
 	/*{
 		"triggerEvent":"triggerEventRBKey"
@@ -55,10 +54,6 @@ component output="false" update="true" extends="HibachiService" {
 	public any function getRegisteredEvents(){
 		return variables.registeredEvents;
 	}
-=======
-	
-	
->>>>>>> 04efc81912db0c0c808e100caa063517245d1476
 	
 	public any function getEventHandler( required string objectFullname ) {
 		if(!structKeyExists(variables.registeredEventHandlers, arguments.objectFullname)) {
@@ -114,7 +109,6 @@ component output="false" update="true" extends="HibachiService" {
 				
 				// Stick the Hibachi Scope in with the rest of the event data
 				arguments.eventData[ "#getApplicationValue('applicationKey')#Scope" ] = getHibachiScope();
-<<<<<<< HEAD
 				// Attempt to evaluate this method
 				
 				if(structKeyExists(object,'callEvent')){
@@ -124,11 +118,6 @@ component output="false" update="true" extends="HibachiService" {
 					// Attempt to evaluate this method
 					evaluate("object.#eventName#( argumentCollection=arguments.eventData )");	
 				}
-=======
-				
-				// Attempt to evaluate this method
-				evaluate("object.#eventName#( argumentCollection=arguments.eventData )");	
->>>>>>> 04efc81912db0c0c808e100caa063517245d1476
 				
 			}
 		}
@@ -154,7 +143,6 @@ component output="false" update="true" extends="HibachiService" {
 		}
 		
 		if(!isNull(object)) {
-<<<<<<< HEAD
 			var functions = [];
 			var objectMetaData = getMetaData(object);
 			if(structKeyExists(objectMetaData, "functions")){
@@ -175,13 +163,6 @@ component output="false" update="true" extends="HibachiService" {
 				for(var f=1; f<=arrayLen(functions); f++) {
 					if(!structKeyExists(functions[f], "access") || functions[f].access == "public") {
 						registerEvent(eventName=functions[f].name, object=object, objectFullname=objectFullname);
-=======
-			var objectMetaData = getMetaData(object);
-			if(structKeyExists(objectMetaData, "functions")) {
-				for(var f=1; f<=arrayLen(objectMetaData.functions); f++) {
-					if(!structKeyExists(objectMetaData.functions[f], "access") || objectMetaData.functions[f].access == "public") {
-						registerEvent(eventName=objectMetaData.functions[f].name, object=object, objectFullname=objectFullname);
->>>>>>> 04efc81912db0c0c808e100caa063517245d1476
 					}
 				}	
 			}
@@ -205,7 +186,6 @@ component output="false" update="true" extends="HibachiService" {
 				}
 			}
 		}
-<<<<<<< HEAD
 		
 	}
 	
@@ -220,36 +200,11 @@ component output="false" update="true" extends="HibachiService" {
 	
 	public any function getEntityEventNameOptions(string eventfilter=""){
 		var opArr = [];
-=======
-		if(directoryExists(getApplicationValue('applicationRootMappingPath') & '/integrationServices/slatwallcms/model/handler')) {
-			var dirList = directoryList(getApplicationValue('applicationRootMappingPath') & '/integrationServices/slatwallcms/model/handler');
-			for(var h=1; h<=arrayLen(dirList); h++) {
-				if(listLast(dirList[h], '.') eq 'cfc') {
-					registerEventHandler( "#getApplicationValue('applicationKey')#.integrationServices.slatwallcms.model.handler.#listFirst(listLast(dirList[h], '/\'), '.')#" );
-				}
-			}
-		}
-	}
-	
-	public any function getEventNameOptions() {
-		var opArr = [];
-		arrayAppend(opArr, {name="#getHibachiScope().rbKey('define.select')#", value=""});
-		arrayAppend(opArr, {name="#getHibachiScope().rbKey('event.onEvent')# | onEvent", value="onEvent"});
-		arrayAppend(opArr, {name="#getHibachiScope().rbKey('event.onApplicationSetup')# | onApplicationSetup", value="onApplicationSetup"});
-		arrayAppend(opArr, {name="#getHibachiScope().rbKey('event.onApplicationFullUpdate')# | onApplicationFullUpdate", value="onApplicationFullUpdate"});
-		arrayAppend(opArr, {name="#getHibachiScope().rbKey('event.onApplicationBootstrapRequestStart')# | onApplicationBootstrapRequestStart", value="onApplicationBootstrapRequestStart"});
-		arrayAppend(opArr, {name="#getHibachiScope().rbKey('event.onApplicationRequestStart')# | onApplicationRequestStart", value="onApplicationRequestStart"});
-		arrayAppend(opArr, {name="#getHibachiScope().rbKey('event.onApplicationRequestEnd')# | onApplicationRequestEnd", value="onApplicationRequestEnd"});
-		arrayAppend(opArr, {name="#getHibachiScope().rbKey('event.onSessionAccountLogin')# | onSessionAccountLogin", value="onSessionAccountLogin"});
-		arrayAppend(opArr, {name="#getHibachiScope().rbKey('event.onSessionAccountLogout')# | onSessionAccountLogout", value="onSessionAccountLogout"});
-		
->>>>>>> 04efc81912db0c0c808e100caa063517245d1476
 		var emd = getEntitiesMetaData();
 		var entityNameArr = listToArray(structKeyList(emd));
 		arraySort(entityNameArr, "text");
 		for(var i=1; i<=arrayLen(entityNameArr); i++) {
 			var entityName = entityNameArr[i];
-<<<<<<< HEAD
 			if(!len(arguments.eventFilter) || arguments.eventFilter == 'before'){
 				arrayAppend(opArr, {name="#getHibachiScope().rbKey('entity.#entityName#')# - #getHibachiScope().rbKey('define.before')# #getHibachiScope().rbKey('define.save')# | before#entityName#Save", value="before#entityName#Save", entityName=entityName});
 				arrayAppend(opArr, {name="#getHibachiScope().rbKey('entity.#entityName#')# - #getHibachiScope().rbKey('define.before')# #getHibachiScope().rbKey('define.delete')# | before#entityName#Delete", value="before#entityName#Delete", entityName=entityName});
@@ -265,23 +220,10 @@ component output="false" update="true" extends="HibachiService" {
 				arrayAppend(opArr, {name="#getHibachiScope().rbKey('entity.#entityName#')# - #getHibachiScope().rbKey('define.after')# #getHibachiScope().rbKey('define.delete')# #getHibachiScope().rbKey('define.success')# | after#entityName#DeleteSuccess", value="after#entityName#DeleteSuccess", entityName=entityName});
 				arrayAppend(opArr, {name="#getHibachiScope().rbKey('entity.#entityName#')# - #getHibachiScope().rbKey('define.after')# #getHibachiScope().rbKey('define.delete')# #getHibachiScope().rbKey('define.failure')# | after#entityName#DeleteFailure", value="after#entityName#DeleteFailure", entityName=entityName});
 			}
-=======
-			
-			arrayAppend(opArr, {name="#getHibachiScope().rbKey('entity.#entityName#')# - #getHibachiScope().rbKey('define.before')# #getHibachiScope().rbKey('define.save')# | before#entityName#Save", value="before#entityName#Save", entityName=entityName});
-			arrayAppend(opArr, {name="#getHibachiScope().rbKey('entity.#entityName#')# - #getHibachiScope().rbKey('define.after')# #getHibachiScope().rbKey('define.save')# | after#entityName#Save", value="after#entityName#Save", entityName=entityName});
-			arrayAppend(opArr, {name="#getHibachiScope().rbKey('entity.#entityName#')# - #getHibachiScope().rbKey('define.after')# #getHibachiScope().rbKey('define.save')# #getHibachiScope().rbKey('define.success')# | after#entityName#SaveSuccess", value="after#entityName#SaveSuccess", entityName=entityName});
-			arrayAppend(opArr, {name="#getHibachiScope().rbKey('entity.#entityName#')# - #getHibachiScope().rbKey('define.after')# #getHibachiScope().rbKey('define.save')# #getHibachiScope().rbKey('define.failure')# | after#entityName#SaveFailure", value="after#entityName#SaveFailure", entityName=entityName});
-			
-			arrayAppend(opArr, {name="#getHibachiScope().rbKey('entity.#entityName#')# - #getHibachiScope().rbKey('define.before')# #getHibachiScope().rbKey('define.delete')# | before#entityName#Delete", value="before#entityName#Delete", entityName=entityName});
-			arrayAppend(opArr, {name="#getHibachiScope().rbKey('entity.#entityName#')# - #getHibachiScope().rbKey('define.after')# #getHibachiScope().rbKey('define.delete')# | after#entityName#Delete", value="after#entityName#Delete", entityName=entityName});
-			arrayAppend(opArr, {name="#getHibachiScope().rbKey('entity.#entityName#')# - #getHibachiScope().rbKey('define.after')# #getHibachiScope().rbKey('define.delete')# #getHibachiScope().rbKey('define.success')# | after#entityName#DeleteSuccess", value="after#entityName#DeleteSuccess", entityName=entityName});
-			arrayAppend(opArr, {name="#getHibachiScope().rbKey('entity.#entityName#')# - #getHibachiScope().rbKey('define.after')# #getHibachiScope().rbKey('define.delete')# #getHibachiScope().rbKey('define.failure')# | after#entityName#DeleteFailure", value="after#entityName#DeleteFailure", entityName=entityName});
->>>>>>> 04efc81912db0c0c808e100caa063517245d1476
 			
 			if(structKeyExists(emd[entityName], "hb_processContexts")) {
 				for(var c=1; c<=listLen(emd[entityName].hb_processContexts); c++) {
 					var thisContext = listGetAt(emd[entityName].hb_processContexts, c);
-<<<<<<< HEAD
 					if(!len(arguments.eventFilter) || arguments.eventFilter == 'before'){
 						arrayAppend(opArr, {name="#getHibachiScope().rbKey('entity.#entityName#')# - #getHibachiScope().rbKey('define.before')# #getHibachiScope().rbKey('entity.#entityName#.process.#thisContext#')# | before#entityName#Process_#thisContext#", value="before#entityName#Process_#thisContext#", entityName=entityName});
 					}
@@ -397,122 +339,3 @@ component output="false" update="true" extends="HibachiService" {
 	}
 	
 }
-=======
-					
-					arrayAppend(opArr, {name="#getHibachiScope().rbKey('entity.#entityName#')# - #getHibachiScope().rbKey('define.before')# #getHibachiScope().rbKey('entity.#entityName#.process.#thisContext#')# | before#entityName#Process_#thisContext#", value="before#entityName#Process_#thisContext#", entityName=entityName});
-					arrayAppend(opArr, {name="#getHibachiScope().rbKey('entity.#entityName#')# - #getHibachiScope().rbKey('define.after')# #getHibachiScope().rbKey('entity.#entityName#.process.#thisContext#')# | after#entityName#Process_#thisContext#", value="after#entityName#Process_#thisContext#", entityName=entityName});
-					arrayAppend(opArr, {name="#getHibachiScope().rbKey('entity.#entityName#')# - #getHibachiScope().rbKey('define.after')# #getHibachiScope().rbKey('entity.#entityName#.process.#thisContext#')# #getHibachiScope().rbKey('define.success')# | after#entityName#Process_#thisContext#Success", value="after#entityName#Process_#thisContext#Success", entityName=entityName});
-					arrayAppend(opArr, {name="#getHibachiScope().rbKey('entity.#entityName#')# - #getHibachiScope().rbKey('define.after')# #getHibachiScope().rbKey('entity.#entityName#.process.#thisContext#')# #getHibachiScope().rbKey('define.failure')# | after#entityName#Process_#thisContext#Failure", value="after#entityName#Process_#thisContext#Failure", entityName=entityName});
-				}
-			}
-		}
-		
-		return opArr;
-	}
-	
-	public any function getEventNameOptionsForObject(required string objectName, boolean doOneToManyOptions = true) {
-		var opArr = [];
-		
-		if(arguments.doOneToManyOptions){
-			optionStruct['name'] ="#getHibachiScope().rbKey('define.select')#";
-			optionStruct['value']="";
-			arrayAppend(opArr, optionStruct);
-		}
-		
-		var emd = getEntityMetaData(arguments.objectName);
-		
-		var entityName = arguments.objectName;
-		
-		var optionStruct = {};
-		optionStruct['name'] = "#getHibachiScope().rbKey('entity.#entityName#')# - #getHibachiScope().rbKey('define.before')# #getHibachiScope().rbKey('define.save')# | before#entityName#Save";
-		optionStruct['value'] = "before#entityName#Save";
-		optionStruct['entityName'] = arguments.objectName;
-		arrayAppend(opArr, optionStruct);
-		
-		optionStruct = {};
-		optionStruct['name'] = "#getHibachiScope().rbKey('entity.#entityName#')# - #getHibachiScope().rbKey('define.after')# #getHibachiScope().rbKey('define.save')# | after#entityName#Save";
-		optionStruct['value'] = "after#entityName#Save";
-		optionStruct['entityName'] = arguments.objectName;
-		arrayAppend(opArr, optionStruct);
-		
-		optionStruct = {};
-		optionStruct['name'] = "#getHibachiScope().rbKey('entity.#entityName#')# - #getHibachiScope().rbKey('define.after')# #getHibachiScope().rbKey('define.save')# #getHibachiScope().rbKey('define.success')# | after#entityName#SaveSuccess";
-		optionStruct['value'] = "after#entityName#SaveSuccess";
-		optionStruct['entityName'] = arguments.objectName;
-		arrayAppend(opArr, optionStruct);
-		
-		optionStruct = {};
-		optionStruct['name'] = "#getHibachiScope().rbKey('entity.#entityName#')# - #getHibachiScope().rbKey('define.after')# #getHibachiScope().rbKey('define.save')# #getHibachiScope().rbKey('define.failure')# | after#entityName#SaveFailure";
-		optionStruct['value'] = "after#entityName#SaveFailure";
-		optionStruct['entityName'] = arguments.objectName;
-		arrayAppend(opArr, optionStruct);
-		
-		optionStruct = {};
-		optionStruct['name'] = "#getHibachiScope().rbKey('entity.#entityName#')# - #getHibachiScope().rbKey('define.before')# #getHibachiScope().rbKey('define.delete')# | before#entityName#Delete";
-		optionStruct['value'] = "before#entityName#Delete";
-		optionStruct['entityName'] = arguments.objectName;
-		arrayAppend(opArr, optionStruct);
-		
-		optionStruct = {};
-		optionStruct['name'] = "#getHibachiScope().rbKey('entity.#entityName#')# - #getHibachiScope().rbKey('define.after')# #getHibachiScope().rbKey('define.delete')# | after#entityName#Delete";
-		optionStruct['value'] = "after#entityName#Delete";
-		optionStruct['entityName'] = arguments.objectName;
-		arrayAppend(opArr, optionStruct);
-		
-		optionStruct = {};
-		optionStruct['name'] = "#getHibachiScope().rbKey('entity.#entityName#')# - #getHibachiScope().rbKey('define.after')# #getHibachiScope().rbKey('define.delete')# #getHibachiScope().rbKey('define.success')# | after#entityName#DeleteSuccess";
-		optionStruct['value'] = "after#entityName#DeleteSuccess";
-		optionStruct['entityName'] = arguments.objectName;
-		arrayAppend(opArr, optionStruct);
-		
-		optionStruct = {};
-		optionStruct['name'] = "#getHibachiScope().rbKey('entity.#entityName#')# - #getHibachiScope().rbKey('define.after')# #getHibachiScope().rbKey('define.delete')# #getHibachiScope().rbKey('define.failure')# | after#entityName#DeleteFailure";
-		optionStruct['value'] = "after#entityName#DeleteFailure";
-		optionStruct['entityName'] = arguments.objectName;
-		arrayAppend(opArr, optionStruct);
-		
-		if(structKeyExists(emd, "hb_processContexts")) {
-			for(var c=1; c<=listLen(emd.hb_processContexts); c++) {
-				var thisContext = listGetAt(emd.hb_processContexts, c);
-				
-				optionStruct = {};
-				optionStruct['name'] = "#getHibachiScope().rbKey('entity.#entityName#')# - #getHibachiScope().rbKey('define.before')# #getHibachiScope().rbKey('entity.#entityName#.process.#thisContext#')# | before#entityName#Process_#thisContext#";
-				optionStruct['value'] = "before#entityName#Process_#thisContext#";
-				optionStruct['entityName'] = arguments.objectName;
-				arrayAppend(opArr, optionStruct);
-				
-				optionStruct = {};
-				optionStruct['name'] = "#getHibachiScope().rbKey('entity.#entityName#')# - #getHibachiScope().rbKey('define.after')# #getHibachiScope().rbKey('entity.#entityName#.process.#thisContext#')# | after#entityName#Process_#thisContext#";
-				optionStruct['value'] = "after#entityName#Process_#thisContext#";
-				optionStruct['entityName'] = arguments.objectName;
-				arrayAppend(opArr, optionStruct);
-				
-				optionStruct = {};
-				optionStruct['name'] = "#getHibachiScope().rbKey('entity.#entityName#')# - #getHibachiScope().rbKey('define.after')# #getHibachiScope().rbKey('entity.#entityName#.process.#thisContext#')# #getHibachiScope().rbKey('define.success')# | after#entityName#Process_#thisContext#Success";
-				optionStruct['value'] = "after#entityName#Process_#thisContext#Success";
-				optionStruct['entityName'] = arguments.objectName;
-				arrayAppend(opArr, optionStruct);
-				
-				optionStruct = {};
-				optionStruct['name'] = "#getHibachiScope().rbKey('entity.#entityName#')# - #getHibachiScope().rbKey('define.after')# #getHibachiScope().rbKey('entity.#entityName#.process.#thisContext#')# #getHibachiScope().rbKey('define.failure')# | after#entityName#Process_#thisContext#Failure";
-				optionStruct['value'] = "after#entityName#Process_#thisContext#Failure";
-				optionStruct['entityName'] = arguments.objectName;
-				arrayAppend(opArr, optionStruct);
-				
-			}
-		}
-		if(arguments.doOneToManyOptions){
-			var propertiesArrayLength = arrayLen(emd.properties);
-			for(var d=1; d<=propertiesArrayLength;d++){
-				var property = emd.properties[d];
-				if(structKeyExists(property,'fieldType') && property.fieldType == 'one-to-many' && property.cfc != arguments.objectName){
-					var relationshipOptions = getEventNameOptionsForObject(property.CFC,false);
-					opArr = getService('hibachiUtilityService').arrayConcat(opArr,relationshipOptions);
-				}
-			}
-		}
-		return opArr;
-	}
-	
-}
->>>>>>> 04efc81912db0c0c808e100caa063517245d1476

@@ -15,14 +15,13 @@ class ValidationService{
 
 
 
-    public validateUnique=(value, object, property)=>{
-
+    public validateUnique=(value, objectName, property)=>{
         var deferred = this.$q.defer();
         //First time the asyncValidators function is loaded the
         //key won't be set  so ensure that we have
         //key and propertyName before checking with the server
-        if (object && property) {
-            this.$hibachi.checkUniqueValue(object, property, value)
+        if (objectName && property) {
+            this.$hibachi.checkUniqueValue(objectName, property, value)
             .then((unique)=> {
                 if (unique) {
                     deferred.resolve(); //It's unique
@@ -39,13 +38,13 @@ class ValidationService{
         return deferred.promise;
     }
 
-    public validateUniqueOrNull=(value, object, property)=>{
+    public validateUniqueOrNull=(value, objectName, property)=>{
         var deferred = this.$q.defer();
         //First time the asyncValidators function is loaded the
         //key won't be set  so ensure that we have
         //key and propertyName before checking with the server
-        if (object && property) {
-            this.$hibachi.checkUniqueOrNullValue(object, property, value)
+        if (objectName && property) {
+            this.$hibachi.checkUniqueOrNullValue(objectName, property, value)
             .then((unique)=> {
                 if (unique) {
                     deferred.resolve(); //It's unique
@@ -67,7 +66,6 @@ class ValidationService{
     }
 
     public validateDataType=(value,type):boolean=>{
-        if(value == null){return true;}//let required validate this
         if (angular.isString(value) && type === "string"){return true;}
         if (angular.isNumber(parseInt(value)) && type === "numeric"){return true;}
         if (angular.isArray(value) && type === "array"){return true;}

@@ -12,9 +12,6 @@ class SWValidationMaxValue{
             link: function(scope, element, attributes, ngModel) {
                 ngModel.$validators.swvalidationmaxvalue =
                 function(modelValue, viewValue) {
-                    if(viewValue == null){
-                        return true; 
-                    }
                     validationService.validateMaxValue(viewValue,attributes.swvalidationmaxvalue);
                 };
             }

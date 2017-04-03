@@ -2,22 +2,14 @@
 	
 	/* Create the Hibachi Object */
 	Hibachi = function( cfg ) {
-<<<<<<< HEAD
-=======
-		
->>>>>>> 04efc81912db0c0c808e100caa063517245d1476
 		// Define the global config
 		var config = {
 			dateFormat : 'MM/DD/YYYY',
 			timeFormat : 'HH:MM',
 			baseURL : '/',
 			applicationKey : 'Hibachi',
-<<<<<<< HEAD
 			rbLocale:'en',
 			hashbangMode:false
-=======
-			rbLocale:'en'
->>>>>>> 04efc81912db0c0c808e100caa063517245d1476
 		}
 		$.extend(config, cfg);
 		//rb key data

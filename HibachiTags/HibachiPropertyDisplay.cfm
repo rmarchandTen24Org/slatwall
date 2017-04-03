@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 <cfimport prefix="swa" taglib="../../../tags" />
 <cfimport prefix="hb" taglib="../../../org/Hibachi/HibachiTags" />
 <cfif thisTag.executionMode is "start">
@@ -16,24 +15,6 @@
 	<cfparam name="attributes.title" type="string" default="" />							<!--- hint: This can be used to override the displayName of a property" --->
 	<cfparam name="attributes.hint" type="string" default="" />								<!--- hint: If specified, then this will produce a tooltip around the title --->
 	
-=======
-<cfimport prefix="hb" taglib="../../../org/Hibachi/HibachiTags" />
-<cfif thisTag.executionMode is "start">
-	<!--- Implicit --->
-	<cfparam name="attributes.hibachiScope" type="any" default="#request.context.fw.getHibachiScope()#" />
-
-	<!--- These are required Attributes --->
-	<cfparam name="attributes.object" type="any" />											<!--- hint: This is a required attribute that defines the object that contains the property to display --->
-	<cfparam name="attributes.property" type="string" /> 									<!--- hint: This is a required attribute as the property that you want to display" --->
-
-	<!--- These are optional Attributes --->
-	<cfparam name="attributes.edit" type="boolean" default="false" />						<!--- hint: When in edit mode this will create a Form Field, otherwise it will just display the value" --->
-	<cfparam name="attributes.requiredFlag" type="boolean" default="false" />				<!--- Determines whether property is required or not in edit mode --->
-
-	<cfparam name="attributes.title" type="string" default="" />							<!--- hint: This can be used to override the displayName of a property" --->
-	<cfparam name="attributes.hint" type="string" default="" />								<!--- hint: If specified, then this will produce a tooltip around the title --->
-
->>>>>>> 04efc81912db0c0c808e100caa063517245d1476
 	<cfparam name="attributes.value" type="string" default="" />							<!--- hint: This can be used to override the value of a property --->
 	<cfparam name="attributes.valueOptions" type="array" default="#arrayNew(1)#" />			<!--- hint: This can be used to set a default value for the property IF it hasn't been defined  NOTE: right now this only works for select boxes--->
 	<cfparam name="attributes.valueOptionsSmartList" type="any" default="" />				<!--- hint: This can either be either an entityName string, or an actual smartList --->
@@ -43,16 +24,11 @@
 
 	<cfparam name="attributes.fieldName" type="string" default="" />						<!--- hint: This can be used to override the default field name" --->
 	<cfparam name="attributes.fieldType" type="string" default="" />						<!--- hint: When in edit mode you can override the default type of form object to use" --->
-<<<<<<< HEAD
 	
-=======
-
->>>>>>> 04efc81912db0c0c808e100caa063517245d1476
 	<cfparam name="attributes.titleClass" default="" />										<!--- hint: Adds class to whatever markup wraps the title element --->
 	<cfparam name="attributes.valueClass" default="" />										<!--- hint: Adds class to whatever markup wraps the value element --->
 	<cfparam name="attributes.fieldClass" default="" />										<!--- hint: Adds class to the actual field element --->
 	<cfparam name="attributes.valueLinkClass" default="" />									<!--- hint: Adds class to whatever markup wraps the value link element --->
-<<<<<<< HEAD
 	
 	<cfparam name="attributes.toggle" type="string" default="no" />							<!--- hint: This attribute indicates whether the field can be toggled to show/hide the value. Possible values are "no" (no toggling), "Show" (shows field by default but can be toggled), or "Hide" (hide field by default but can be toggled) --->
 	<cfparam name="attributes.displayType" default="dl" />									<!--- hint: This attribute is used to specify if the information comes back as a definition list (dl) item or table row (table) or with no formatting or label (plain) --->
@@ -62,38 +38,16 @@
 	
 	<cfparam name="attributes.modalCreateAction" type="string" default="" />				<!--- hint: This allows for a special admin action to be passed in where the saving of that action will automatically return the results to this field --->
 	
-=======
-
-	<cfparam name="attributes.toggle" type="string" default="no" />							<!--- hint: This attribute indicates whether the field can be toggled to show/hide the value. Possible values are "no" (no toggling), "Show" (shows field by default but can be toggled), or "Hide" (hide field by default but can be toggled) --->
-	<cfparam name="attributes.displayType" default="dl" />									<!--- hint: This attribute is used to specify if the information comes back as a definition list (dl) item or table row (table) or with no formatting or label (plain) --->
-
-	<cfparam name="attributes.showLabel" default="true" />									<!--- hint: This attribute is used to remove Label column--->
-
-	<cfparam name="attributes.errors" type="array" default="#arrayNew(1)#" />				<!--- hint: This holds any errors for the current field if needed --->
-	<cfparam name="attributes.displayVisible" type="string" default="" />					<!--- hint: binds visibility of element to another form value (ie displayVisible="{inputname}:{inputvalue}") --->
-
-	<cfparam name="attributes.modalCreateAction" type="string" default="" />				<!--- hint: This allows for a special admin action to be passed in where the saving of that action will automatically return the results to this field --->
-
->>>>>>> 04efc81912db0c0c808e100caa063517245d1476
 	<cfparam name="attributes.autocompletePropertyIdentifiers" type="string" default="" />	<!--- hint: This describes the list of properties that we want to get from an entity --->
 	<cfparam name="attributes.autocompleteNameProperty" type="string" default="" />			<!--- hint: This is the value property that will get assigned to the hidden field when selected --->
 	<cfparam name="attributes.autocompleteValueProperty" type="string" default="" /> 		<!--- hint: This is the single name property that shows once an option is selected --->
 	<cfparam name="attributes.autocompleteSelectedValueDetails" type="struct" default="#structNew()#" />
-<<<<<<< HEAD
 	
 	<cfparam name="attributes.fieldAttributes" type="string" default="" />					<!--- hint: This is used to pass specific additional fieldAttributes when in edit mode --->
 	<cfparam name="attributes.ignoreHTMLEditFormat" type="boolean" default="false" />
 	<!---
 		attributes.fieldType have the following options:
 		
-=======
-
-	<cfparam name="attributes.fieldAttributes" type="string" default="" />					<!--- hint: This is used to pass specific additional fieldAttributes when in edit mode --->
-
-	<!---
-		attributes.fieldType have the following options:
-
->>>>>>> 04efc81912db0c0c808e100caa063517245d1476
 		checkbox			|	As a single checkbox this doesn't require any options, but it will create a hidden field for you so that the key gets submitted even when not checked.  The value of the checkbox will be 1
 		checkboxgroup		|	Requires the valueOptions to be an array of simple value if name and value is same or array of structs with the format of {value="", name=""}
 		date				|	This is still just a textbox, but it adds the jQuery date picker
@@ -109,15 +63,9 @@
 		wysiwyg				|	Value needs to be a string
 		yesno				|	This is used by booleans and flags to create a radio group of Yes and No
 		textautocomplete	|	This fieldtype will query an entity to get specific values
-<<<<<<< HEAD
 		
 	--->
 	
-=======
-
-	--->
-
->>>>>>> 04efc81912db0c0c808e100caa063517245d1476
 	<!---
 		attributes.displayType have the following options:
 		dl
@@ -125,44 +73,27 @@
 		span
 		plain
 	--->
-<<<<<<< HEAD
 	
 	<!--- First Make sure that we have the ability to actually display this property --->
 	<cfif !attributes.object.isPersistent() || attributes.hibachiScope.authenticateEntityProperty('read', attributes.object.getClassName(), attributes.property)>
 		
 		<cfsilent>
 			
-=======
-
-	<!--- First Make sure that we have the ability to actually display this property --->
-	<cfif !attributes.object.isPersistent() || attributes.hibachiScope.authenticateEntityProperty('read', attributes.object.getClassName(), attributes.property)>
-
-		<cfsilent>
-
->>>>>>> 04efc81912db0c0c808e100caa063517245d1476
 			<!--- If this was originally set to edit... make sure that they have edit ability for this property --->
 
 			<cfif attributes.edit and attributes.object.isPersistent() and not attributes.hibachiScope.authenticateEntityProperty('update', attributes.object.getClassName(), attributes.property)>
 				<cfset attributes.edit = false />
 			</cfif>
-<<<<<<< HEAD
 			
-=======
-
->>>>>>> 04efc81912db0c0c808e100caa063517245d1476
 			<!--- Set Up whatever fieldtype this should be --->
 			<cfif attributes.fieldType eq "">
 				<cfset attributes.fieldType = attributes.object.getPropertyFieldType( attributes.property ) />
 			</cfif>
-<<<<<<< HEAD
 			
 			<cfif attributes.fieldType eq 'wysiwyg'>
 				<cfset attributes.ignoreHTMLEditFormat = true/>
 			</cfif>
 			
-=======
-
->>>>>>> 04efc81912db0c0c808e100caa063517245d1476
 			<!--- If this is in edit mode then get the pertinent field info --->
 			<cfif attributes.edit or attributes.fieldType eq "listingMultiselect">
 				<cfset attributes.fieldClass = listAppend(attributes.fieldClass, attributes.object.getPropertyValidationClass( attributes.property ), " ") />
@@ -180,16 +111,10 @@
 						<cfset attributes.multiselectPropertyIdentifier = "#attributes.hibachiScope.getService('hibachiService').getPrimaryIDPropertyNameByEntityName( propertyMD.cfc )#" />
 					</cfif>
 					<cfset attributes.valueOptionsSmartList = attributes.object.invokeMethod( "get#attributes.property#OptionsSmartList" ) />
-<<<<<<< HEAD
 					
 				</cfif>
 			</cfif>
 			
-=======
-				</cfif>
-			</cfif>
-
->>>>>>> 04efc81912db0c0c808e100caa063517245d1476
 			<!--- Setup textautocomplete values if they wern't passed in --->
 			<cfif attributes.fieldType eq "textautocomplete">
 				<cfset attributes.fieldAttributes = listAppend(attributes.fieldAttributes, 'data-acpropertyidentifiers="#attributes.autocompletePropertyIdentifiers#"', ' ') />
@@ -203,7 +128,6 @@
 				</cfif>
 				<cfset attributes.fieldAttributes = listAppend(attributes.fieldAttributes, 'data-acnameproperty="#attributes.autocompleteNameProperty#"', ' ') />
 			</cfif>
-<<<<<<< HEAD
 			
 			<!--- Set Up The Value --->
 			<cfif attributes.value eq "">
@@ -221,18 +145,6 @@
 					<cfset attributes.value = attributes.object.getFormattedValue(attributes.property,'decimal') />
 				</cfif>
 				
-=======
-
-			<!--- Set Up The Value --->
-			<cfif attributes.value eq "">
-
-				<cfset attributes.value = attributes.object.getValueByPropertyIdentifier( attributes.property ) />
-
-				<cfif isNull(attributes.value) || (isSimpleValue(attributes.value) && attributes.value eq "")>
-					<cfset attributes.value = attributes.valueDefault />
-				</cfif>
-
->>>>>>> 04efc81912db0c0c808e100caa063517245d1476
 				<!--- If the value was an object, typically a MANY-TO-ONE, then we get either the identifierValue or for display a simpleRepresentation --->
 				<cfif isObject(attributes.value) && attributes.object.isPersistent()>
 					<cfif attributes.edit>
@@ -245,21 +157,12 @@
 								<cfset attributes.autocompleteSelectedValueDetails[ attributes.autocompleteNameProperty ] = attributes.value.getValueByPropertyIdentifier( attributes.autocompleteNameProperty ) />
 							</cfif>
 						</cfif>
-<<<<<<< HEAD
 						<cfset attributes.value = attributes.value.getIdentifierValue() />  
 					<cfelse>
 						<cfset attributes.value = attributes.value.getSimpleRepresentation() />
 					</cfif>
 	
 				<!--- If the value was an array, typically a MANY-TO-MANY, then we loop over the array and create either a list of simpleRepresetnation or a list of identifier values --->	
-=======
-						<cfset attributes.value = attributes.value.getIdentifierValue() />
-					<cfelse>
-						<cfset attributes.value = attributes.value.getSimpleRepresentation() />
-					</cfif>
-
-				<!--- If the value was an array, typically a MANY-TO-MANY, then we loop over the array and create either a list of simpleRepresetnation or a list of identifier values --->
->>>>>>> 04efc81912db0c0c808e100caa063517245d1476
 				<cfelseif isArray(attributes.value)>
 					<cfset thisValueList = "" />
 					<cfloop array="#attributes.value#" index="thisValue">
@@ -277,21 +180,12 @@
 						<cfif isNumeric(attributes.value) and attributes.value lt 0>
 							<cfset attributes.valueClass &= " negative" />
 						</cfif>
-<<<<<<< HEAD
 						
 						<cfset attributes.value = attributes.object.getFormattedValue(attributes.property) />
 						
 					</cfif>
 				</cfif>
 				
-=======
-
-						<cfset attributes.value = attributes.object.getFormattedValue(attributes.property) />
-
-					</cfif>
-				</cfif>
-
->>>>>>> 04efc81912db0c0c808e100caa063517245d1476
 				<!--- Final check to make sure that the value is simple --->
 				<cfif not isSimpleValue(attributes.value)>
 					<cfif isSimpleValue(attributes.valueDefault)>
@@ -300,19 +194,13 @@
 						<cfset attributes.value = "" />
 					</cfif>
 				</cfif>
-<<<<<<< HEAD
 				
 			</cfif>
 			
-=======
-			</cfif>
-
->>>>>>> 04efc81912db0c0c808e100caa063517245d1476
 			<!--- Set up the property title --->
 			<cfif attributes.title eq "">
 				<cfset attributes.title = attributes.object.getPropertyTitle( attributes.property ) />
 			</cfif>
-<<<<<<< HEAD
 			
 			<cfif attributes.hint eq "">
 				<cfset attributes.hint = attributes.object.getPropertyHint( attributes.property ) />
@@ -325,39 +213,17 @@
 				<cfset attributes.errors = attributes.object.getError( attributes.property ) />
 			</cfif>
 			
-=======
-
-			<cfif attributes.hint eq "">
-				<cfset attributes.hint = attributes.object.getPropertyHint( attributes.property ) />
-			</cfif>
-
-			<!--- Add the error class to the form field if it didn't pass validation --->
-			<cfif attributes.object.hasError(attributes.property)>
-				<cfset attributes.fieldClass = attributes.fieldClass & " error" />
-
-				<cfset attributes.errors = attributes.object.getError( attributes.property ) />
-			</cfif>
-
->>>>>>> 04efc81912db0c0c808e100caa063517245d1476
 			<!--- If the field type is file, then look for an hb_fileAccept value --->
 			<cfif structKeyExists(attributes.object.getPropertyMetaData(attributes.property), "hb_fileAcceptExtension")>
 				<cfset attributes.fieldAttributes = listAppend(attributes.fieldAttributes, 'accept="#attributes.object.getPropertyMetaData(attributes.property).hb_fileAcceptExtension#"', " ") />
 			</cfif>
-<<<<<<< HEAD
 			
-=======
-
->>>>>>> 04efc81912db0c0c808e100caa063517245d1476
 			<!--- Setup null value --->
 			<cfif structKeyExists(attributes.object.getPropertyMetaData(attributes.property), "hb_nullRBKey")>
 				 <cfset attributes.fieldAttributes = listAppend(attributes.fieldAttributes, 'placeholder="#attributes.hibachiScope.rbKey( attributes.object.getPropertyMetaData(attributes.property).hb_nullRBKey )#"', " ") />
 			</cfif>
 		</cfsilent>
-<<<<<<< HEAD
 		
-=======
-
->>>>>>> 04efc81912db0c0c808e100caa063517245d1476
 		<hb:HibachiFieldDisplay attributecollection="#attributes#" />
 	</cfif>
 

@@ -8,10 +8,9 @@ class SWFPropertyDisplayController extends SWPropertyDisplayController {
         public $filter,
         public utilityService,
         public $injector,
-        public metadataService,
-        public observerService
+        public metadataService
     ){
-        super($filter,utilityService,$injector,metadataService,observerService);
+        super($filter,utilityService,$injector,metadataService);
 
         this.editing = true;
     }
@@ -22,15 +21,11 @@ class SWFPropertyDisplay extends SWPropertyDisplay{
     public controllerAs="swfPropertyDisplay";
     //@ngInject
     constructor(
-        public $compile,
-        public scopeService,
         public coreFormPartialsPath,
         public hibachiPathBuilder,
         public swpropertyPartialPath
     ){
         super(
-            $compile,
-            scopeService,
             coreFormPartialsPath,
             hibachiPathBuilder,
             swpropertyPartialPath
