@@ -157,8 +157,30 @@ component extends="Slatwall.meta.tests.unit.entity.SlatwallEntityTestBase" {
 					writeDump(filter);  	
 					
 					//preprocess filter to match elastic search query syntax
+					var queryFilter = {}; 
+					switch(comparisonOperator){ 
+						case "is": 
+							queryFilter["exists"] = {};
+							queryFilter["exists"]["field"] = filter.propertyIdentifier;  
+						case "is not": 
+							queryFilter["not_exists"] = {}; 
+							queryFilter["not_exists"]["field"] = filter.propertyIdentifier;  
+						case "=":
+							//todo
+						case ">": 
+							//todo
+						case "<": 
+							//todo
+						case ">=":		 
+							//todo
+						case "<=": 
+							//todo
+						default:
+							//todo
+					}
+				
 
-					arrayAppend(filterGroupQueryStruct["bool"]["must"], filter); 
+					arrayAppend(filterGroupQueryStruct["bool"]["must"], queryFilter); 
 				} 
 				
 				ArrayAppend(elasticSearchFilter["bool"]["must"], filterGroupQueryStruct); 
