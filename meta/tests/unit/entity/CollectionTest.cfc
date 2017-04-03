@@ -174,6 +174,7 @@ component extends="Slatwall.meta.tests.unit.entity.SlatwallEntityTestBase" {
 
 				var filterGroupQueryStruct = { "bool" = { "must" = [] }}; 
 
+
 				for(var filterIndex = 1; filterIndex<=Arraylen(filterGroupStructure[key]); filterIndex++){
 					var filter = filterGroup[filterIndex];
 					writeDump(filter);  	
