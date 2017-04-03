@@ -94,7 +94,7 @@ component extends="Slatwall.meta.tests.unit.entity.SlatwallEntityTestBase" {
 							var thirdLevelFilterGroup = secondLevelFilterGroup.filterGroup[thirdLevelFilterGroupIndex];
 
 							var comparisonOperator = thirdLevelFilterGroup.comparisonOperator; 
-							var propertyIdentifierArray = listToArray(thirdLevelFilterGroup.propertyIdentifier); 
+							var propertyIdentifierArray = listToArray(thirdLevelFilterGroup.propertyIdentifier, "."); 
 							ArrayDeleteAt(propertyIdentifierArray, 1); 
 							var propertyIdentifier = ArrayToList(propertyIdentifierArray, '_'); 
 							var filterValue = thirdLevelFilterGroup.value; 							
