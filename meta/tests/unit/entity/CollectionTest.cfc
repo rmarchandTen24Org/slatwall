@@ -78,6 +78,11 @@ component extends="Slatwall.meta.tests.unit.entity.SlatwallEntityTestBase" {
 
 					var secondLevelFilterGroup = firstLevelFilterGroup.filterGroup[secondLevelFilterGroupIndex];
 
+					var filterGroupLogicalOperator = "AND";
+					if(structKeyExists(secondLevelFilterGroup, "logicalOperator")){
+						filterGroupLogicalOperator = secondLevelFilterGroup.logicalOperator; 
+					} 
+
 					writeDump(secondLevelFilterGroup);
 					if(structKeyExists(secondLevelFilterGroup, 'filterGroup') && isArray(secondLevelFilterGroup.filterGroup)){
 
@@ -85,8 +90,14 @@ component extends="Slatwall.meta.tests.unit.entity.SlatwallEntityTestBase" {
 
 							var thirdLevelFilterGroup = secondLevelFilterGroup.filterGroup[thirdLevelFilterGroupIndex];
 
-							writeDump(thirdLevelFilterGroup);
-
+							var comparisonOperator = thirdLevelFilterGroup.comparisonOperator; 
+							var propertyIdentifier = thirdLevelFilterGroup.propertyIdentifier; 
+							var filterValue = thirdLevelFilterGroup.value; 							
+							
+							writeDump(comparisonOperator); 
+							writeDump(propertyIdentifier); 
+							writeDump(filterValue); 
+							writeDump(filterGroupLogicalOperator);
 
 						}
 
