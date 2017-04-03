@@ -63,6 +63,8 @@ component extends="Slatwall.meta.tests.unit.entity.SlatwallEntityTestBase" {
 
 	public void function elasticSearchFiltersTest(){
 
+		var elasticSearchFilter = {};
+
 		var collectionFilter = deserializeJSON('[{"filterGroup":[{"filterGroup":[{"propertyIdentifier":"_product.currentProductVersionAudit.dateDelisted","value":"null","comparisonOperator":"is"}]},{"filterGroup":[{"propertyIdentifier":"_product.currentProductVersionAudit","value":"null","comparisonOperator":"is not"}],"logicalOperator":"AND"}]}]');
 				
 		var elasticSearchFilters = [];
@@ -104,9 +106,10 @@ component extends="Slatwall.meta.tests.unit.entity.SlatwallEntityTestBase" {
 							var filterValue = thirdLevelFilterGroup.value; 							
 							var filterLogicalOperator = 'AND'; 
 							
-							if(structKeyExists(thirdLevelFilterGroup,"logicalOperator")){
-								filterLogicalOperator = thirdLevelFilterGroup.logicalOperator; 
-							}
+							writeDump(comparisonOperator); 
+							writeDump(propertyIdentifier); 
+							writeDump(filterValue); 
+							writeDump(filterGroupLogicalOperator);
 
 							var filterStruct = {
 								comparisonOperator=comparisonOperator, 
