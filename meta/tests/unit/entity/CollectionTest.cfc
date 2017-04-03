@@ -180,7 +180,9 @@ component extends="Slatwall.meta.tests.unit.entity.SlatwallEntityTestBase" {
 					elasticSearchFilterGroupLogicalOperator =  "should";
 				}
 
-				filterGroupQueryStruct["bool"][elasticSearchFilterGroupLogicalOperator] = [];
+				if(!structKeyExists(filterGroupQueryStruct["bool"], elasticSearchFilterGroupLogicalOperator)){
+					filterGroupQueryStruct["bool"][elasticSearchFilterGroupLogicalOperator] = [];
+				}
 
 
 				for(var filterIndex = 1; filterIndex<=Arraylen(filterGroupStructure[key]); filterIndex++){
