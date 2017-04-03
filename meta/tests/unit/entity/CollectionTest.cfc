@@ -67,7 +67,11 @@ component extends="Slatwall.meta.tests.unit.entity.SlatwallEntityTestBase" {
 				
 		var elasticSearchFilters = [];
 
+		// for determing range filters
 		var filtersByPropertyIdentifier = {};  
+
+		var filterGroupStructure = {}; 
+		
 	
 		// loop top level of filter groups
 		for(var firstLevelfilterGroupIndex = 1; firstLevelfilterGroupIndex <= arraylen(collectionFilter); firstLevelfilterGroupIndex++){
@@ -90,6 +94,8 @@ component extends="Slatwall.meta.tests.unit.entity.SlatwallEntityTestBase" {
 
 					writeDump(secondLevelFilterGroup);
 					if(structKeyExists(secondLevelFilterGroup, 'filterGroup') && isArray(secondLevelFilterGroup.filterGroup)){
+
+						filterGroupStructure[secondLevelFilterGroupIndex] = []; 
 
 						for(var thirdLevelFilterGroupIndex = 1; thirdLevelFilterGroupIndex <= arraylen(secondLevelFilterGroup.filterGroup); thirdLevelFilterGroupIndex++) {
 
@@ -116,6 +122,8 @@ component extends="Slatwall.meta.tests.unit.entity.SlatwallEntityTestBase" {
 								filterGroupLogicalOperator=filterGroupLogicalOperator	
 							};
 
+							ArrayAppend(filterGroupStructure[secondLevelFilterGroupIndex], filterStruct);
+
 							filtersByPropertyIdentifier[propertyIdentifier] = filterStruct; 
 
 							writeDump(filterStruct); 
@@ -126,6 +134,15 @@ component extends="Slatwall.meta.tests.unit.entity.SlatwallEntityTestBase" {
 			}
 
 			writeDump(filtersByPropertyIdentifier); 
+
+			writeDump("Preprocess filter group structure:"); 
+
+			for(var key in filterGroupStructure){
+
+				var filterGroup = filterGroupStructure[key]; 
+
+				writeDump(filterGroup); 
+			} 
 
 			abort;
 
