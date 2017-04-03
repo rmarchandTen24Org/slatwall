@@ -227,18 +227,18 @@ component extends="Slatwall.meta.tests.unit.entity.SlatwallEntityTestBase" {
 						for(var rangeFilterIndex = 1; rangeFilterIndex <= ArrayLen(propertyIdentifierRangeFilters); rangeFilterIndex++){
 							var rangeFilter = propertyIdentifierRangeFilters[rangeFilterIndex]; 
 
-							var rangeFilterComparisonOperator = "GT"; 
+							var rangeFilterComparisonOperator = "gt";
 							switch(rangeFilter.comparisonOperator){ 
 								case '>':
 									break; 
 								case '<':
-									rangeFilterComparisonOperator = "LT"; 
+									rangeFilterComparisonOperator = "lt";
 									break; 
 								case '>=':
-									rangeFilterComparisonOperator = "GTE"; 
+									rangeFilterComparisonOperator = "gte";
 									break; 
 								case '<=': 
-									rangeFilterComparisonOperator = "LTE"; 
+									rangeFilterComparisonOperator = "lte";
 									break; 
 								default: 
 									break; 
