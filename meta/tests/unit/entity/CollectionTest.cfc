@@ -65,7 +65,9 @@ component extends="Slatwall.meta.tests.unit.entity.SlatwallEntityTestBase" {
 
 		var collectionFilter = deserializeJSON('[{"filterGroup":[{"filterGroup":[{"propertyIdentifier":"_product.currentProductVersionAudit.dateDelisted","value":"null","comparisonOperator":"is"}]},{"filterGroup":[{"propertyIdentifier":"_product.currentProductVersionAudit","value":"null","comparisonOperator":"is not"}],"logicalOperator":"AND"}]}]');
 				
-		var elasticSearchFilters = []; 
+		var elasticSearchFilters = [];
+
+		var filtersByPropertyIdentifier = {};  
 	
 		// loop top level of filter groups
 		for(var firstLevelfilterGroupIndex = 1; firstLevelfilterGroupIndex <= arraylen(collectionFilter); firstLevelfilterGroupIndex++){
@@ -94,21 +96,36 @@ component extends="Slatwall.meta.tests.unit.entity.SlatwallEntityTestBase" {
 							var thirdLevelFilterGroup = secondLevelFilterGroup.filterGroup[thirdLevelFilterGroupIndex];
 
 							var comparisonOperator = thirdLevelFilterGroup.comparisonOperator; 
+							
 							var propertyIdentifierArray = listToArray(thirdLevelFilterGroup.propertyIdentifier, "."); 
 							ArrayDeleteAt(propertyIdentifierArray, 1); 
 							var propertyIdentifier = ArrayToList(propertyIdentifierArray, '_'); 
-							var filterValue = thirdLevelFilterGroup.value; 							
 							
-							writeDump(comparisonOperator); 
-							writeDump(propertyIdentifier); 
-							writeDump(filterValue); 
-							writeDump(filterGroupLogicalOperator);
+							var filterValue = thirdLevelFilterGroup.value; 							
+							var filterLogicalOperator = 'AND'; 
+							
+							if(structKeyExists(thirdLevelFilterGroup,"logicalOperator")){
+								filterLogicalOperator = thirdLevelFilterGroup.logicalOperator; 
+							}
 
+							var filterStruct = {
+								comparisonOperator=comparisonOperator, 
+								propertyIdentifier=propertyIdentifier, 
+								value=filterValue, 
+								filterLogicalOperator=filterLogicalOperator, 
+								filterGroupLogicalOperator=filterGroupLogicalOperator	
+							};
+
+							filtersByPropertyIdentifier[propertyIdentifier] = filterStruct; 
+
+							writeDump(filterStruct); 
 							
 						}
 					}
 				}
 			}
+
+			writeDump(filtersByPropertyIdentifier); 
 
 			abort;
 
