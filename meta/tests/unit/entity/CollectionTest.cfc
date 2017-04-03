@@ -81,18 +81,11 @@ component extends="Slatwall.meta.tests.unit.entity.SlatwallEntityTestBase" {
 		for(var firstLevelfilterGroupIndex = 1; firstLevelfilterGroupIndex <= arraylen(collectionFilter); firstLevelfilterGroupIndex++){
 			var firstLevelFilterGroup = collectionFilter[firstLevelfilterGroupIndex];
 
-
-			arrayAppend(elasticSearchFilter["bool"]["must"], { "bool" = { "must" = [] }});
-
-
-
 			// check if there is filter groups inside of it.
 			if(structKeyExists(firstLevelFilterGroup, 'filterGroup') && isArray(firstLevelFilterGroup.filterGroup)){
 
 				//loop second level of filter groups
 				for(var secondLevelFilterGroupIndex = 1; secondLevelFilterGroupIndex <= arraylen(firstLevelFilterGroup.filterGroup); secondLevelFilterGroupIndex++){
-
-					arrayAppend(elasticSearchFilter["bool"]["must"][firstLevelfilterGroupIndex]["bool"]["must"], { "bool" = { "must" = [] }});
 
 					var secondLevelFilterGroup = firstLevelFilterGroup.filterGroup[secondLevelFilterGroupIndex];
 
@@ -107,8 +100,6 @@ component extends="Slatwall.meta.tests.unit.entity.SlatwallEntityTestBase" {
 						filterGroupStructure[secondLevelFilterGroupIndex] = []; 
 
 						for(var thirdLevelFilterGroupIndex = 1; thirdLevelFilterGroupIndex <= arraylen(secondLevelFilterGroup.filterGroup); thirdLevelFilterGroupIndex++) {
-
-
 
 							var thirdLevelFilterGroup = secondLevelFilterGroup.filterGroup[thirdLevelFilterGroupIndex];
 
@@ -136,17 +127,18 @@ component extends="Slatwall.meta.tests.unit.entity.SlatwallEntityTestBase" {
 
 							ArrayAppend(filterGroupStructure[secondLevelFilterGroupIndex], filterStruct);
 
-							filtersByPropertyIdentifier[propertyIdentifier] = filterStruct; 
-
+							if(!structKeyExists(filtersByPropertyIdentifier, propertyIdentifier)){
+								filtersByPropertyIdentifier[propertyIdentifier] = []; 	
+							}
+							
+							ArrayAppend(filtersByPropertyIdentifier[propertyIdentifier], filterStruct);
+							
 							writeDump(filterStruct);
-
-							arrayAppend(elasticSearchFilter["bool"]["must"][firstLevelfilterGroupIndex]["bool"]["must"][secondLevelFilterGroupIndex]["bool"]["must"],filterStruct);
 							
 						}
 					}
 				}
 			}
-			writedump(elasticSearchFilter);
 			writeDump(filtersByPropertyIdentifier);
 
 			writeDump("Preprocess filter group structure:"); 
@@ -154,9 +146,26 @@ component extends="Slatwall.meta.tests.unit.entity.SlatwallEntityTestBase" {
 			for(var key in filterGroupStructure){
 
 				var filterGroup = filterGroupStructure[key]; 
-
+				
 				writeDump(filterGroup); 
+
+				var filterGroupQueryStruct = { "bool" = { "must" = [] }}; 
+
+
+				for(var filterIndex = 1; filterIndex<=Arraylen(filterGroupStructure[key]); filterIndex++){
+					var filter = filterGroup[filterIndex];
+					writeDump(filter);  	
+					
+					//preprocess filter to match elastic search query syntax
+
+					arrayAppend(filterGroupQueryStruct["bool"]["must"], filter); 
+				} 
+				
+				ArrayAppend(elasticSearchFilter["bool"]["must"], filterGroupQueryStruct); 
+
 			} 
+				
+			writedump(serializeJson(elasticSearchFilter));
 
 			abort;
 
