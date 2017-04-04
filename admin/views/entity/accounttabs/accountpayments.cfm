@@ -55,7 +55,7 @@ Notes:
 <cfoutput>
 	<cfset accountPaymentSL = rc.account.getAccountPaymentsSmartList()/>
 	<cfset accountPaymentSL.setSelectDistinctFlag(1)/>
-	<cfset accountPaymentSL.addFilter('paymentTransactions.transactionSuccessFlag','1')/>
+	<!---<cfset accountPaymentSL.addFilter('paymentTransactions.transactionSuccessFlag','1')/>--->
 	
 	<hb:HibachiListingDisplay smartList="#accountPaymentSL#"
 							   recordDetailAction="admin:entity.detailaccountpayment"

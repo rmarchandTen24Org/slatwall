@@ -76,7 +76,9 @@ component extends="Slatwall.meta.tests.unit.SlatwallUnitTestBase" {
 		
 		assert(deleteOK);
 	}
-	
+	/**
+	* @test
+	*/
 	public void function processAccount_addAccountPayment(){
 		var accountData = {
 			accountID=""

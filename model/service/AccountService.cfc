@@ -178,7 +178,7 @@ component extends="HibachiService" accessors="true" output="false" {
 		if(!newAccountPayment.hasErrors()) {
 			// Loop over all account payments and link them to the AccountPaymentApplied object
 			for (var appliedOrderPayment in processObject.getAppliedOrderPayments()) {
-				if(IsNumeric(appliedOrderPayment.amount) && appliedOrderPayment.amount > 0) {
+				if(IsNumeric(appliedOrderPayment.amount)) {
 					var orderPayment = getOrderService().getOrderPayment( appliedOrderPayment.orderPaymentID );
 	
 					var newAccountPaymentApplied = this.newAccountPaymentApplied();
@@ -203,29 +203,31 @@ component extends="HibachiService" accessors="true" output="false" {
 		
 		// If there are errors in the newAccountPayment after save, then add them to the account
 		if(newAccountPayment.hasErrors()) {
-			
 			arguments.account.addError('accountPayment', rbKey('admin.entity.order.addAccountPayment_error'));
 		// If no errors, then we can process a transaction
 		} else {
-			var transactionData = {
-				amount = newAccountPayment.getAmount()
-			};
-
-			if(newAccountPayment.getAccountPaymentType().getSystemCode() eq "aptCharge") {
-				if(newAccountPayment.getPaymentMethod().getPaymentMethodType() eq "creditCard") {
-					if(!isNull(newAccountPayment.getPaymentMethod().getIntegration())) {
-						transactionData.transactionType = 'authorizeAndCharge';	
+			if(newAccountPayment.getAccountPaymentType().getSystemCode() neq 'aptAdjustment'){
+				var transactionData = {
+					amount = newAccountPayment.getAmount()
+				};
+				
+				if(newAccountPayment.getAccountPaymentType().getSystemCode() eq "aptCharge") {
+					
+					if(newAccountPayment.getPaymentMethod().getPaymentMethodType() eq "creditCard") {
+						if(!isNull(newAccountPayment.getPaymentMethod().getIntegration())) {
+							transactionData.transactionType = 'authorizeAndCharge';	
+						} else {
+							transactionData.transactionType = 'receiveOffline';	
+						}
 					} else {
-						transactionData.transactionType = 'receiveOffline';	
+						transactionData.transactionType = 'receive';
 					}
 				} else {
-					transactionData.transactionType = 'receive';
+					transactionData.transactionType = 'credit';
 				}
-			} else {
-				transactionData.transactionType = 'credit';
+	
+				newAccountPayment = this.processAccountPayment(newAccountPayment, transactionData, 'createTransaction');
 			}
-
-			newAccountPayment = this.processAccountPayment(newAccountPayment, transactionData, 'createTransaction');
 			//Loop over the newaccountpayment.getAppliedPayments
 			if(newAccountPayment.hasErrors()){
 				for(var errorKey in newAccountPayment.getErrors()){
