@@ -228,7 +228,12 @@ component displayname="Account Payment" entityname="SlatwallAccountPayment" tabl
 		var totalAmt = 0;
 		
 		for(var i=1; i<=arrayLen(getAppliedAccountPayments()); i++) {
-			totalAmt = getService('HibachiUtilityService').precisionCalculate(totalAmt + getAppliedAccountPayments()[i].getAmount());
+			var appliedAccountPayment = getAppliedAccountPayments()[i];
+			if(appliedAccountPayment.getAccountPaymentType().getSystemCode() == 'aptCharge'){
+				totalAmt = getService('HibachiUtilityService').precisionCalculate(totalAmt + appliedAccountPayment.getAmount());
+			}else{
+				totalAmt = getService('HibachiUtilityService').precisionCalculate(totalAmt - appliedAccountPayment.getAmount());
+			}
 		}
 		
 		return totalAmt;

@@ -177,6 +177,8 @@ component extends="HibachiService" accessors="true" output="false" {
 		
 		if(!newAccountPayment.hasErrors()) {
 			// Loop over all account payments and link them to the AccountPaymentApplied object
+			
+			
 			for (var appliedOrderPayment in processObject.getAppliedOrderPayments()) {
 				if(IsNumeric(appliedOrderPayment.amount)) {
 					var orderPayment = getOrderService().getOrderPayment( appliedOrderPayment.orderPaymentID );
@@ -206,29 +208,48 @@ component extends="HibachiService" accessors="true" output="false" {
 			arguments.account.addError('accountPayment', rbKey('admin.entity.order.addAccountPayment_error'));
 		// If no errors, then we can process a transaction
 		} else {
-			if(newAccountPayment.getAccountPaymentType().getSystemCode() neq 'aptAdjustment'){
+			if(newAccountPayment.getAccountPaymentType().getSystemCode() != 'aptAdjustment'){
 				var transactionData = {
 					amount = newAccountPayment.getAmount()
 				};
 				
 				if(newAccountPayment.getAccountPaymentType().getSystemCode() eq "aptCharge") {
-					
-					if(newAccountPayment.getPaymentMethod().getPaymentMethodType() eq "creditCard") {
-						if(!isNull(newAccountPayment.getPaymentMethod().getIntegration())) {
-							transactionData.transactionType = 'authorizeAndCharge';	
+					if(arguments.processObject.getNetAmountOfAppliedOrderPayments() <= 0){
+						arguments.account.addError('accountPayment', 'Account Payment of Charge must be greater than 0');
+					}else{
+						if(newAccountPayment.getPaymentMethod().getPaymentMethodType() eq "creditCard") {
+							if(!isNull(newAccountPayment.getPaymentMethod().getIntegration())) {
+								transactionData.transactionType = 'authorizeAndCharge';	
+							} else {
+								transactionData.transactionType = 'receiveOffline';	
+							}
 						} else {
-							transactionData.transactionType = 'receiveOffline';	
+							transactionData.transactionType = 'receive';
 						}
-					} else {
-						transactionData.transactionType = 'receive';
 					}
-				} else {
-					transactionData.transactionType = 'credit';
+					
+				} else if(newAccountPayment.getAccountPaymentType().getSystemCode() eq "aptCredit"){
+					if(arguments.processObject.getNetAmountOfAppliedOrderPayments() >= 0){
+						arguments.account.addError('accountPayment', 'Account Payment of Charge must be greater than 0');
+					}else{
+						transactionData.transactionType = 'credit';
+					}
 				}
-	
+				newAccountPayment = this.processAccountPayment(newAccountPayment, transactionData, 'createTransaction');
+			}else{
+				var transactionData = {
+					amount=abs(arguments.processObject.getNetAmountOfAppliedOrderPayments())
+				};
+				if(arguments.processObject.getNetAmountOfAppliedOrderPayments() > 0){
+					transactionData.transactionType = 'receiveOffline';
+				}else{
+					transactionData.transactionType = 'creditOffline';
+				}
+				
 				newAccountPayment = this.processAccountPayment(newAccountPayment, transactionData, 'createTransaction');
 			}
 			//Loop over the newaccountpayment.getAppliedPayments
+			
 			if(newAccountPayment.hasErrors()){
 				for(var errorKey in newAccountPayment.getErrors()){
 					arguments.account.addError(errorKey, newAccountPayment.getErrors()[errorKey]);	
@@ -238,22 +259,30 @@ component extends="HibachiService" accessors="true" output="false" {
 				for (var appliedAccountPayment in newAccountPayment.getAppliedAccountPayments()) {
 					if(!IsNull(appliedAccountPayment.getOrderPayment())) {
 						transactionData = {
-							amount = appliedAccountPayment.getAmount()
+							amount = abs(appliedAccountPayment.getAmount())
 						};
-	
-						if(newAccountPayment.getAccountPaymentType().getSystemCode() eq "aptCharge") {
-							if(newAccountPayment.getPaymentMethod().getPaymentMethodType() eq "creditCard") {
-								if(!isNull(newAccountPayment.getPaymentMethod().getIntegration())) {
-									transactionData.transactionType = 'authorizeAndCharge';	
+						if(newAccountPayment.getAccountPaymentType().getSystemCode() != 'aptAdjustment'){
+							if(newAccountPayment.getAccountPaymentType().getSystemCode() eq "aptCharge") {
+								if(newAccountPayment.getPaymentMethod().getPaymentMethodType() eq "creditCard") {
+									if(!isNull(newAccountPayment.getPaymentMethod().getIntegration())) {
+										transactionData.transactionType = 'authorizeAndCharge';	
+									} else {
+										transactionData.transactionType = 'receiveOffline';	
+									}
 								} else {
-									transactionData.transactionType = 'receiveOffline';	
+									transactionData.transactionType = 'receive';
 								}
-							} else {
-								transactionData.transactionType = 'receive';
+							} else if(newAccountPayment.getAccountPaymentType().getSystemCode() eq "aptCredit"){
+								transactionData.transactionType = 'credit';
 							}
-						} else {
-							transactionData.transactionType = 'credit';
+						}else{
+							if(appliedAccountPayment.getAmount() > 0){
+								transactionData.transactionType = 'receiveOffline';	
+							}else{
+								transactionData.transactionType = 'creditOffline';	
+							}
 						}
+						
 	
 						getOrderService().processOrderPayment(appliedAccountPayment.getOrderPayment(), transactionData, 'createTransaction');
 					}

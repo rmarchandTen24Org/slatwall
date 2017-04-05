@@ -65,6 +65,27 @@ component output="false" accessors="true" extends="HibachiProcess" {
 	property name="paymentMethodIDOptions";
 	property name="accountAddressIDOptions";
 	
+	public numeric function getNetAmountOfAppliedOrderPayments(){
+		var netAmount = 0;
+		
+		for(var appliedOrderPayment in getAppliedOrderPayments()){
+			if(
+				structKeyExists(appliedOrderPayment,'paymentTypeID')
+				&& structKeyExists(appliedOrderPayment,'amount') 
+				&& isNumeric(appliedOrderPayment.amount)
+			){
+				var accountPaymentType = getService('hibachiService').getType(appliedOrderPayment.paymentTypeID);
+			
+				if(accountPaymentType.getSystemCode() == 'aptCharge'){
+					netAmount += appliedOrderPayment.amount;
+				}else if(accountPaymentType.getSystemCode() == 'aptCredit'){
+					netAmount -= appliedOrderPayment.amount;
+				}	
+			}
+		}
+		return netAmount;
+	}
+	
 	public any function setupDefaults() {
 		variables.accountAddressID = getAccountAddressIDOptions()[1]['value'];
 		variables.accountPaymentMethodID = getAccountPaymentMethodIDOptions()[1]['value'];
