@@ -2,6 +2,7 @@
 /// <reference path='../../../typings/tsd.d.ts' />
 
 //import Alert = require('../model/alert');
+
 import {Alert} from "../model/alert";
 
 interface IAlertService {

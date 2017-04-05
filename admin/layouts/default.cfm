@@ -69,7 +69,9 @@ Notes:
 				<cfset baseHREF = "index.cfm/">
 			</cfif>
 
-			<base href="#baseHREF#" />
+			<base href="index.cfm/" />
+		<cfelse>
+			<base href="/" />
 		</cfif>
 		<link href="#request.slatwallScope.getBaseURL()#/org/Hibachi/HibachiAssets/fonts/opensans/opensans.css" rel="stylesheet">
 		<link href="#request.slatwallScope.getBaseURL()#/org/Hibachi/HibachiAssets/css/bootstrap.min.css" rel="stylesheet">

@@ -1,9 +1,18 @@
 /// <reference path='../typings/hibachiTypescript.d.ts' />
 /// <reference path='../typings/tsd.d.ts' />
+import 'zone.js';
+import 'reflect-metadata';
+
+import { PlatformRef, Type } from '@angular/core';
+import { platformBrowserDynamic } from '@angular/platform-browser-dynamic';
+import { Router } from '@angular/router';
+import { UpgradeModule } from '@angular/upgrade/static';
+import { AppModule } from '../../../../admin/client/src/a2app/app2.module';
 import {coremodule} from "./core/core.module";
 declare var angular:any;
 declare var hibachiConfig:any;
 var md5 = require('md5');
+
 //generic bootstrapper
 export class BaseBootStrapper{
     public myApplication:any;
@@ -58,7 +67,13 @@ export class BaseBootStrapper{
         })
         .done(function() {
             //angular.element('#loading').hide();
+            console.log('done');
+            platformBrowserDynamic().bootstrapModule(AppModule).then(platformRef => {
+                const upgrade = platformRef.injector.get(UpgradeModule) as UpgradeModule;
 
+                upgrade.bootstrap(document.documentElement, [myApplication.name]);
+                console.log('aaa',upgrade);
+            });
         });
 
     }

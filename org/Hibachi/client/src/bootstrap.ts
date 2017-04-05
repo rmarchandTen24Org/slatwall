@@ -15,7 +15,9 @@ class bootstrapper extends BaseBootStrapper{
 
 
 }
-
+export class AppModule {
+  ngDoBootstrap() {}
+}
 export = new bootstrapper();
 
 
