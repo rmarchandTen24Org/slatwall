@@ -1,7 +1,7 @@
 /// <reference path='../../../typings/hibachiTypescript.d.ts' />
 /// <reference path='../../../typings/tsd.d.ts' />
 
-require("angular-mocks");
+
 import {SWValidationEmail} from "./swvalidationemail";
 
 class test{
@@ -29,7 +29,7 @@ class test{
 
                 element = $compile('<input sw-validation-email value="ryan.marchand@ten24web.com"/>')($rootScope);
                 $rootScope.$digest();
-                console.log(element);
+
                 console.info('test');
                 angular.mock.dump(element.attr('sw-validation-email-valid'));
                // expect(element.attr('sw-validation-email-valid')).toContain('sw-validation-email-valid');

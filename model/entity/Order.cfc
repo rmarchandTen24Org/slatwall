@@ -208,12 +208,25 @@ component displayname="Order" entityname="SlatwallOrder" table="SwOrder" persist
 
 		return true;
 	}
+	
+	public boolean function hasCreditCardPaymentMethod(){
+		if(!structKeyExists(variables,'hasCreditCardPaymentMethodValue')){
+			variables.hasCreditCardPaymentMethodValue = false;
+			for(var orderPayment in getOrderPayments()){
+				if(orderPayment.getPaymentMethod().getPaymentMethodType() == 'creditCard'){
+					variables.hasCreditCardPaymentMethodValue = true;
+					break;	
+				}
+			}
+		}
+		return variables.hasCreditCardPaymentMethodValue;
+	}
 
 
 	public struct function getAddPaymentRequirementDetails() {
 		if(!structKeyExists(variables, "addPaymentRequirementDetails")) {
 			variables.addPaymentRequirementDetails = {};
-			var requiredAmount = val(precisionEvaluate(getTotal() - getPaymentAmountTotal()));
+			var requiredAmount = getService('HibachiUtilityService').precisionCalculate(getTotal() - getPaymentAmountTotal());
 
 			if(requiredAmount > 0) {
 				variables.addPaymentRequirementDetails.amount = requiredAmount;
@@ -458,13 +471,13 @@ component displayname="Order" entityname="SlatwallOrder" table="SwOrder" persist
 
 				if(orderItem.getQuantityDelivered()) {
 
-					variables.deliveredItemsAmountTotal = val(precisionEvaluate(variables.deliveredItemsAmountTotal + ((orderItem.getQuantityDelivered() / orderItem.getQuantity()) * orderItem.getItemTotal())));
+					variables.deliveredItemsAmountTotal = getService('HibachiUtilityService').precisionCalculate(variables.deliveredItemsAmountTotal + ((orderItem.getQuantityDelivered() / orderItem.getQuantity()) * orderItem.getItemTotal()));
 
 					if(!listFindNoCase(fulfillmentChargeAddedList, orderItem.getOrderFulfillment().getOrderFulfillmentID())) {
 
 						listAppend(fulfillmentChargeAddedList, orderItem.getOrderFulfillment().getOrderFulfillmentID());
 
-						variables.deliveredItemsAmountTotal = val(precisionEvaluate(variables.deliveredItemsAmountTotal + orderItem.getOrderFulfillment().getChargeAfterDiscount()));
+						variables.deliveredItemsAmountTotal = getService('HibachiUtilityService').precisionCalculate(variables.deliveredItemsAmountTotal + orderItem.getOrderFulfillment().getChargeAfterDiscount());
 					}
 				}
 			}
@@ -473,7 +486,7 @@ component displayname="Order" entityname="SlatwallOrder" table="SwOrder" persist
 	}
 
 	public numeric function getDiscountTotal() {
-		return val(precisionEvaluate(getItemDiscountAmountTotal() + getFulfillmentDiscountAmountTotal() + getOrderDiscountAmountTotal()));
+		return getService('HibachiUtilityService').precisionCalculate(getItemDiscountAmountTotal() + getFulfillmentDiscountAmountTotal() + getOrderDiscountAmountTotal());
 
 	}
 
@@ -489,9 +502,9 @@ component displayname="Order" entityname="SlatwallOrder" table="SwOrder" persist
 		var orderItems = getRootOrderItems(); 
 		for(var i=1; i<=arrayLen(orderItems); i++) {
 			if( listFindNoCase("oitSale,oitDeposit",orderItems[i].getTypeCode()) ) {
-				discountTotal = val(precisionEvaluate(discountTotal + orderItems[i].getDiscountAmount()));
+				discountTotal = getService('HibachiUtilityService').precisionCalculate(discountTotal + orderItems[i].getDiscountAmount());
 			} else if ( orderItems[i].getTypeCode() == "oitReturn" ) {
-				discountTotal = val(precisionEvaluate(discountTotal - orderItems[i].getDiscountAmount()));
+				discountTotal = getService('HibachiUtilityService').precisionCalculate(discountTotal - orderItems[i].getDiscountAmount());
 			} else {
 				throw("there was an issue calculating the itemDiscountAmountTotal because of a orderItemType associated with one of the items");
 			}
@@ -502,19 +515,19 @@ component displayname="Order" entityname="SlatwallOrder" table="SwOrder" persist
 	public numeric function getFulfillmentDiscountAmountTotal() {
 		var discountTotal = 0;
 		for(var i=1; i<=arrayLen(getOrderFulfillments()); i++) {
-			discountTotal = val(precisionEvaluate(discountTotal + getOrderFulfillments()[i].getDiscountAmount()));
+			discountTotal = getService('HibachiUtilityService').precisionCalculate(discountTotal + getOrderFulfillments()[i].getDiscountAmount());
 		}
 		return discountTotal;
 	}
 
 	public numeric function getFulfillmentTotal() {
-		return val(precisionEvaluate(getFulfillmentChargeTotal() - getFulfillmentRefundTotal()));
+		return getService('HibachiUtilityService').precisionCalculate(getFulfillmentChargeTotal() - getFulfillmentRefundTotal());
 	}
 
 	public numeric function getFulfillmentChargeTotal() {
 		var fulfillmentChargeTotal = 0;
 		for(var i=1; i<=arrayLen(getOrderFulfillments()); i++) {
-			fulfillmentChargeTotal = val(precisionEvaluate(fulfillmentChargeTotal + getOrderFulfillments()[i].getFulfillmentCharge()));
+			fulfillmentChargeTotal = getService('HibachiUtilityService').precisionCalculate(fulfillmentChargeTotal + getOrderFulfillments()[i].getFulfillmentCharge());
 		}
 		return fulfillmentChargeTotal;
 	}
@@ -522,7 +535,7 @@ component displayname="Order" entityname="SlatwallOrder" table="SwOrder" persist
 	public numeric function getFulfillmentRefundTotal() {
 		var fulfillmentRefundTotal = 0;
 		for(var i=1; i<=arrayLen(getOrderReturns()); i++) {
-			fulfillmentRefundTotal = val(precisionEvaluate(fulfillmentRefundTotal + getOrderReturns()[i].getFulfillmentRefundAmount()));
+			fulfillmentRefundTotal = getService('HibachiUtilityService').precisionCalculate(fulfillmentRefundTotal + getOrderReturns()[i].getFulfillmentRefundAmount());
 		}
 
 		return fulfillmentRefundTotal;
@@ -531,7 +544,7 @@ component displayname="Order" entityname="SlatwallOrder" table="SwOrder" persist
 	public numeric function getFulfillmentChargeAfterDiscountTotal() {
 		var fulfillmentChargeAfterDiscountTotal = 0;
 		for(var i=1; i<=arrayLen(getOrderFulfillments()); i++) {
-			fulfillmentChargeAfterDiscountTotal = val(precisionEvaluate(fulfillmentChargeAfterDiscountTotal + getOrderFulfillments()[i].getChargeAfterDiscount()));
+			fulfillmentChargeAfterDiscountTotal = getService('HibachiUtilityService').precisionCalculate(fulfillmentChargeAfterDiscountTotal + getOrderFulfillments()[i].getChargeAfterDiscount());
 		}
 
 		return fulfillmentChargeAfterDiscountTotal;
@@ -594,7 +607,7 @@ component displayname="Order" entityname="SlatwallOrder" table="SwOrder" persist
 		var discountAmount = 0;
 
 		for(var i=1; i<=arrayLen(getAppliedPromotions()); i++) {
-			discountAmount = val(precisionEvaluate(discountAmount + getAppliedPromotions()[i].getDiscountAmount()));
+			discountAmount = getService('HibachiUtilityService').precisionCalculate(discountAmount + getAppliedPromotions()[i].getDiscountAmount());
 		}
 
 		return discountAmount;
@@ -607,7 +620,7 @@ component displayname="Order" entityname="SlatwallOrder" table="SwOrder" persist
 	public numeric function getOrderPaymentAmountNeeded() {
 
 		var nonNullPayments = getOrderService().getOrderPaymentNonNullAmountTotal(orderID=getOrderID());
-		var orderPaymentAmountNeeded = val(precisionEvaluate(getTotal() - nonNullPayments));
+		var orderPaymentAmountNeeded = getService('HibachiUtilityService').precisionCalculate(getTotal() - nonNullPayments);
 	
 		if(orderPaymentAmountNeeded gt 0 && isNull(getDynamicChargeOrderPayment())) {
 			return orderPaymentAmountNeeded;
@@ -665,7 +678,7 @@ component displayname="Order" entityname="SlatwallOrder" table="SwOrder" persist
 
 	public any function getDynamicChargeOrderPaymentAmount() {
 		var nonNullPayments = getOrderService().getOrderPaymentNonNullAmountTotal(orderID=getOrderID());
-		var orderPaymentAmountNeeded = val(precisionEvaluate(getTotal() - nonNullPayments));
+		var orderPaymentAmountNeeded = getService('HibachiUtilityService').precisionCalculate(getTotal() - nonNullPayments);
 
 		if(orderPaymentAmountNeeded gt 0) {
 			return orderPaymentAmountNeeded;
@@ -676,7 +689,7 @@ component displayname="Order" entityname="SlatwallOrder" table="SwOrder" persist
 
 	public any function getDynamicCreditOrderPaymentAmount() {
 		var nonNullPayments = getOrderService().getOrderPaymentNonNullAmountTotal(orderID=getOrderID());
-		var orderPaymentAmountNeeded = val(precisionEvaluate(getTotal() - nonNullPayments));
+		var orderPaymentAmountNeeded = getService('HibachiUtilityService').precisionCalculate(getTotal() - nonNullPayments);
 
 		if(orderPaymentAmountNeeded lt 0) {
 			return orderPaymentAmountNeeded * -1;
@@ -691,9 +704,9 @@ component displayname="Order" entityname="SlatwallOrder" table="SwOrder" persist
 		for(var orderPayment in getOrderPayments()) {
 			if(orderPayment.getStatusCode() eq "opstActive" && !orderPayment.hasErrors()) {
 				if(orderPayment.getOrderPaymentType().getSystemCode() eq 'optCharge') {
-					totalPayments = val(precisionEvaluate(totalPayments + orderPayment.getAmount()));
+					totalPayments = getService('HibachiUtilityService').precisionCalculate(totalPayments + orderPayment.getAmount());
 				} else {
-					totalPayments = val(precisionEvaluate(totalPayments - orderPayment.getAmount()));
+					totalPayments = getService('HibachiUtilityService').precisionCalculate(totalPayments - orderPayment.getAmount());
 				}
 			}
 		}
@@ -705,7 +718,7 @@ component displayname="Order" entityname="SlatwallOrder" table="SwOrder" persist
 		if(getStatusCode() == 'ostCanceled'){
 			return 0;
 		}
-		return val(precisionEvaluate(precisionEvaluate(getTotal() - getPaymentAmountReceivedTotal()) + getPaymentAmountCreditedTotal()));
+		return getService('HibachiUtilityService').precisionCalculate(getService('HibachiUtilityService').precisionCalculate(getTotal() - getPaymentAmountReceivedTotal()) + getPaymentAmountCreditedTotal());
 	}
 
 	public numeric function getPaymentAmountAuthorizedTotal() {
@@ -713,7 +726,7 @@ component displayname="Order" entityname="SlatwallOrder" table="SwOrder" persist
 
 		for(var orderPayment in getOrderPayments()) {
 			if(orderPayment.getStatusCode() eq "opstActive") {
-				totalPaymentsAuthorized = val(precisionEvaluate(totalPaymentsAuthorized + orderPayment.getAmountAuthorized()));
+				totalPaymentsAuthorized = getService('HibachiUtilityService').precisionCalculate(totalPaymentsAuthorized + orderPayment.getAmountAuthorized());
 			}
 		}
 
@@ -725,7 +738,7 @@ component displayname="Order" entityname="SlatwallOrder" table="SwOrder" persist
 
 		for(var orderPayment in getOrderPayments()) {
 			if(orderPayment.getStatusCode() eq "opstActive") {
-				totalPaymentsReceived = val(precisionEvaluate(totalPaymentsReceived + orderPayment.getAmountReceived()));
+totalPaymentsReceived = getService('HibachiUtilityService').precisionCalculate(totalPaymentsReceived + orderPayment.getAmountReceived());
 			}
 		}
 
@@ -749,9 +762,9 @@ component displayname="Order" entityname="SlatwallOrder" table="SwOrder" persist
 				){
 
 					if(orderPayment.getOrderPaymentType().getSystemCode() eq 'optCharge') {
-						totalPayments = val(precisionEvaluate(totalPayments + orderPayment.getAmount()));
+						totalPayments = getService('HibachiUtilityService').precisionCalculate(totalPayments + orderPayment.getAmount());
 					} else {
-						totalPayments = val(precisionEvaluate(totalPayments - orderPayment.getAmount()));
+						totalPayments = getService('HibachiUtilityService').precisionCalculate(totalPayments - orderPayment.getAmount());
 					}
 			}
 
@@ -890,30 +903,30 @@ component displayname="Order" entityname="SlatwallOrder" table="SwOrder" persist
 		for(var f=1; f<=arrayLen(getOrderFulfillments()); f++) {
 			// If this fulfillment is fully delivered, then just add the entire amount
 			if(getOrderFulfillments()[f].getQuantityUndelivered() == 0) {
-				amountDelivered = val(precisionEvaluate(amountDelivered + getOrderFulfillments()[f].getFulfillmentTotal()));
+				amountDelivered = getService('HibachiUtilityService').precisionCalculate(amountDelivered + getOrderFulfillments()[f].getFulfillmentTotal());
 
 			// If this fulfillment has at least one item delivered
 			} else if(getOrderFulfillments()[f].getQuantityDelivered() > 0) {
 
 				// Add the fulfillmentCharge
-				amountDelivered = val(precisionEvaluate(amountDelivered + getOrderFulfillments()[f].getChargeAfterDiscount()));
+				amountDelivered = getService('HibachiUtilityService').precisionCalculate(amountDelivered + getOrderFulfillments()[f].getChargeAfterDiscount());
 
 				// Loop over the fulfillmentItems and add each of the amounts to the total amount delivered
 				for(var i=1; i<=arrayLen(getOrderFulfillments()[f].getOrderFulfillmentItems()); i++) {
 					var item = getOrderFulfillments()[f].getOrderFulfillmentItems()[i];
 
 					if(item.getQuantityUndelivered() == 0) {
-						amountDelivered = val(precisionEvaluate(amountDelivered + item.getItemTotal()));
+						amountDelivered = getService('HibachiUtilityService').precisionCalculate(amountDelivered + item.getItemTotal());
 					} else if (item.getQuantityDelivered() > 0) {
 						var itemQDValue = (round(item.getItemTotal() * (item.getQuantityDelivered() / item.getQuantity()) * 100) / 100);
-						amountDelivered = val(precisionEvaluate(amountDelivered + itemQDValue));
+						amountDelivered = getService('HibachiUtilityService').precisionCalculate(amountDelivered + itemQDValue);
 					}
 
 				}
 			}
 		}
 
-		return val(precisionEvaluate(amountDelivered - getPaymentAmountReceivedTotal()));
+		return getService('HibachiUtilityService').precisionCalculate(amountDelivered - getPaymentAmountReceivedTotal());
 	}
 
 	public any function getRootOrderItems(){
@@ -963,7 +976,21 @@ component displayname="Order" entityname="SlatwallOrder" table="SwOrder" persist
  		totalDepositAmount = val(precisionEvaluate("round(totalDepositAmount * 100)/100"));
  		return totalDepositAmount;
  	}
- 	
+
+	public boolean function isAllowedToPlaceOrderWithoutPayment(){
+		for(var i=1; i<=arrayLen(getOrderItems()); i++) {
+			//If the setting is null, or the setting is an empty string, or it has a value and the value is greater then 0...
+			if( 
+				isNull(getOrderItems()[i].getSku().setting("skuMinimumPercentageAmountRecievedRequiredToPlaceOrder")) 
+				|| len(getOrderItems()[i].getSku().setting("skuMinimumPercentageAmountRecievedRequiredToPlaceOrder")) == 0 
+				|| val(getOrderItems()[i].getSku().setting("skuMinimumPercentageAmountRecievedRequiredToPlaceOrder")) > 0
+			){
+				return false;
+			}
+		}
+		return true;
+	}
+
  	public boolean function hasDepositItemsOnOrder(){
  		for(var i=1; i<=arrayLen(getOrderItems()); i++) {
  			if(getOrderItems()[i].getOrderItemType().getSystemCode() eq "oitSale" && !isNull(getOrderItems()[i].getSku().setting("skuMinimumPercentageAmountRecievedRequiredToPlaceOrder")) && len(getOrderItems()[i].getSku().setting("skuMinimumPercentageAmountRecievedRequiredToPlaceOrder")) != 0) {
@@ -1053,9 +1080,9 @@ component displayname="Order" entityname="SlatwallOrder" table="SwOrder" persist
 		var orderItems = this.getRootOrderItems();
 		for(var i=1; i<=arrayLen(orderItems); i++) {
 			if( listFindNoCase("oitSale,oitDeposit",orderItems[i].getTypeCode()) ) {
-				subtotal = val(precisionEvaluate(subtotal + orderItems[i].getExtendedPrice()));
+				subtotal = getService('HibachiUtilityService').precisionCalculate(subtotal + orderItems[i].getExtendedPrice());
 			} else if ( orderItems[i].getTypeCode() == "oitReturn" ) {
-				subtotal = val(precisionEvaluate(subtotal - orderItems[i].getExtendedPrice()));
+				subtotal = getService('HibachiUtilityService').precisionCalculate(subtotal - orderItems[i].getExtendedPrice());
 			} else {
 				throw("there was an issue calculating the subtotal because of a orderItemType associated with one of the items");
 			}
@@ -1064,7 +1091,7 @@ component displayname="Order" entityname="SlatwallOrder" table="SwOrder" persist
 	}
 
 	public numeric function getSubtotalAfterItemDiscounts() {
-		return val(precisionEvaluate(getSubtotal() - getItemDiscountAmountTotal()));
+		return getService('HibachiUtilityService').precisionCalculate(getSubtotal() - getItemDiscountAmountTotal());
 	}
 
 	public numeric function getTaxTotal() {
@@ -1072,9 +1099,9 @@ component displayname="Order" entityname="SlatwallOrder" table="SwOrder" persist
 		var orderItems = this.getRootOrderItems(); 
 		for(var i=1; i<=arrayLen(orderItems); i++) {
 			if( listFindNoCase("oitSale,oitDeposit",orderItems[i].getTypeCode()) ) {
-				taxTotal = val(precisionEvaluate(taxTotal + orderItems[i].getTaxAmount()));
+				taxTotal = getService('HibachiUtilityService').precisionCalculate(taxTotal + orderItems[i].getTaxAmount());
 			} else if ( orderItems[i].getTypeCode() == "oitReturn" ) {
-				taxTotal = val(precisionEvaluate(taxTotal - orderItems[i].getTaxAmount()));
+				taxTotal = getService('HibachiUtilityService').precisionCalculate(taxTotal - orderItems[i].getTaxAmount());
 			} else {
 				throw("there was an issue calculating the subtotal because of a orderItemType associated with one of the items");
 			}
@@ -1083,7 +1110,7 @@ component displayname="Order" entityname="SlatwallOrder" table="SwOrder" persist
 	}
 
 	public numeric function getTotal() {
-		return val(precisionEvaluate(getSubtotal() + getTaxTotal() + getFulfillmentTotal() - getDiscountTotal()));
+		return getService('HibachiUtilityService').precisionCalculate(getSubtotal() + getTaxTotal() + getFulfillmentTotal() - getDiscountTotal());
 	}
 
 	public numeric function getTotalItems() {
@@ -1166,9 +1193,22 @@ component displayname="Order" entityname="SlatwallOrder" table="SwOrder" persist
 	// Order Payments (one-to-many)
 	public void function addOrderPayment(required any orderPayment) {
 		arguments.orderPayment.setOrder( this );
+		//clear the cache on whether we have a credit card PaymentMethod
+		if(
+			structKeyExists(variables,'hasCreditCardPaymentMethodValue')
+			&& !variables.hasCreditCardPaymentMethodValue
+			&& !isNull(arguments.orderPayment.getPaymentMethod()) 
+			&& arguments.orderPayment.getPaymentMethod().getPaymentMethodType() == 'creditCard'
+		){
+			structDelete(variables,'hasCreditCardPaymentMethodValue');
+		}
 	}
 	public void function removeOrderPayment(required any orderPayment) {
 		arguments.orderPayment.removeOrder( this );
+		//clear the cache on credit card PaymentMethod
+		if(structKeyExists(variables,'hasCreditCardPaymentMethodValue')){
+			structDelete(variables,'hasCreditCardPaymentMethodValue');	
+		}
 	}
 
 	// Order Returns (one-to-many)

@@ -53,7 +53,83 @@ component extends="Slatwall.meta.tests.unit.SlatwallUnitTestBase" {
 
 		variables.service = request.slatwallScope.getBean("hibachiCollectionService");
 		variables.defaultCollectionOptions = setUpCollectionOptions({});
+		
+//		variables.superUserSession = request.slatwallScope.getSession();
+//		
+//		variables.adminAccountData = {
+//			accountID="",
+//			firstName="adminUser"
+//		};
+//		variables.adminAccount = createPersistedTestEntity('Account',variables.adminAccountData);
+//		variables.adminAccount.setSuperUserFlag(0);
+//		
+//		
+//		variables.adminSessionData = {
+//			sessionID=""
+//			
+//		};
+//		variables.adminSession = createPersistedTestEntity('Session',variables.adminSessionData);
+//		
+//		variables.adminSession.setAccount(variables.adminAccount);
+//		assert(!isNull(variables.adminSession.getAccount()));
+		
 	}
+	
+	/**
+	* @test
+	*/
+	public void function getAPIResponseForCollectionTest_withpermissiongroupAccessToOrderItem(){
+		//set currentUser to an admin user
+		
+		//request.slatwallScope.setSession(variables.adminSessionData);
+		
+		var permissionGroupData ={
+			permissionGroupID="",
+			permissionGroupName=createUUID()&'testPermgroup'
+		};
+		var permissionGroup = createPersistedTestEntity('PermissionGroup',permissionGroupData);
+		request.slatwallSCope.getAccount().addPermissionGroup(permissionGroup);
+		permissionGroup.addAccount(request.slatwallSCope.getAccount());
+		
+		assert(arrayLen(request.slatwallScope.getAccount().getPermissionGroups()));
+		assert(arrayLen(permissionGroup.getAccounts()));
+		var permissionData = {
+			permissionID="",
+			accessType="entity",
+			entityClassName="Order",
+			allowReadFlag=1
+		};
+		
+		var permission = createPersistedTestEntity('Permission',permissionData);
+		permission.setAccessType('entity');
+		permission.setPermissionGroup(permissionGroup);
+		permissionGroup.addPermission(permission);
+		
+		request.slatwallScope.getService('HibachiAuthenticationService').clearEntityPermissionDetails();
+		
+		assert(!isNull(permission.getPermissionGroup()));
+		
+		var collectionEntity = createPersistedTestEntity('collection',{collectionID=""});
+		collectionEntity.setCollectionObject('Product');
+		
+		assert(collectionEntity.getEnforceAuthorization());
+		request.slatwallSCope.getAccount().setSuperUserFlag(0);
+		assertFalse(request.slatwallSCope.getAccount().getSuperUserFlag());
+		var collectionData = variables.service.getAPIResponseForCollection(collectionEntity,{});
+		//assert we don't have access
+		assert(structIsEmpty(collectionData));
+		
+		
+		orderCollectionEntity = createPersistedTestEntity('collection',{collectionID=""});
+		orderCollectionEntity.setCollectionObject('OrderItem');
+		collectionData = variables.service.getAPIResponseForCollection(orderCollectionEntity,{});
+		//assert we do have access
+		assert(!structIsEmpty(collectionData));
+		//set it back at the end to the superUser
+		request.slatwallSCope.getAccount().setSuperUserFlag(1);
+		request.slatwallSCope.getAccount().setPermissionGroups([]);
+	}
+	
 
 	private struct function setUpCollectionOptions(required struct rc){
 		var currentPage = 1;
@@ -118,6 +194,9 @@ component extends="Slatwall.meta.tests.unit.SlatwallUnitTestBase" {
 		return collectionOptions;
 	}
 
+	/**
+	* @test
+	*/
 	public void function getHibachiPropertyIdentifierByCollectionPropertyIdentifierTest(){
 		var collectionPropertyIdentifier = '_sku_product.brand.brandID';
 		var hibachiPropertyIdentifier = variables.service.getHibachiPropertyIdentifierByCollectionPropertyIdentifier(collectionPropertyIdentifier);
@@ -128,6 +207,9 @@ component extends="Slatwall.meta.tests.unit.SlatwallUnitTestBase" {
 
 	}
 
+	/**
+	* @test
+	*/
 	public void function getCapitalCaseTest(){
 		MakePublic(variables.service,'capitalCase');
 		var word = 'testingword';
@@ -135,6 +217,9 @@ component extends="Slatwall.meta.tests.unit.SlatwallUnitTestBase" {
 		assertEquals('Testingword',word);
 	}
 
+	/**
+	* @test
+	*/
 	public void function getTransientCollectionByEntityNameTest(){
 		var entityName = 'product';
 		var collectionEntity = variables.service.getTransientCollectionByEntityName(entityName,variables.defaultCollectionOptions);
@@ -144,6 +229,9 @@ component extends="Slatwall.meta.tests.unit.SlatwallUnitTestBase" {
 	}
 
 
+	/**
+	* @test
+	*/
 	public void function getFormattedPageRecordsTest(){
 		//need product to be able to get in a paginated list
 		var productData = {
@@ -171,6 +259,102 @@ component extends="Slatwall.meta.tests.unit.SlatwallUnitTestBase" {
 		assertTrue(arraylen(formattedPageRecords['pageRecords']));
 	}
 
+	/**
+	* @test
+	*/
+	public void function collectionsExportTest(){
+		var collectionConfig = '{
+			"baseEntityName":"Account",
+			"baseEntityAlias":"_account",
+			"columns":[{"isDeletable":false,"isSearchable":true,"title":"accountID","isVisible":false,"ormtype":"id","propertyIdentifier":"_account.accountID","isExportable":true},{"isDeletable":true,"isSearchable":true,"title":"Super User","isVisible":true,"ormtype":"boolean","propertyIdentifier":"_account.superUserFlag","isExportable":true},{"isDeletable":true,"isSearchable":true,"title":"First Name","isVisible":true,"ormtype":"string","propertyIdentifier":"_account.firstName","isExportable":true},{"isDeletable":true,"isSearchable":true,"title":"Last Name","isVisible":true,"ormtype":"string","propertyIdentifier":"_account.lastName","isExportable":true},{"isDeletable":true,"isSearchable":true,"title":"Company","isVisible":true,"ormtype":"string","propertyIdentifier":"_account.company","isExportable":true},{"isDeletable":true,"isSearchable":true,"title":"Account Locked","isVisible":true,"ormtype":"timestamp","propertyIdentifier":"_account.loginLockExpiresDateTime","isExportable":true},{"isDeletable":true,"isSearchable":true,"title":"Failed Login Attempts","isVisible":true,"ormtype":"integer","propertyIdentifier":"_account.failedLoginAttemptCount","isExportable":true},{"isDeletable":true,"isSearchable":true,"title":"Tax Exempt","isVisible":true,"ormtype":"boolean","propertyIdentifier":"_account.taxExemptFlag","isExportable":true},{"isDeletable":true,"isSearchable":true,"title":"URL Title","isVisible":true,"ormtype":"string","propertyIdentifier":"_account.urlTitle","isExportable":true}]
+		}';
+		var collectionData={
+			collectionID="",
+			collectionConfig=collectionConfig,
+			collectionObject="Account"
+		};
+		var collectionEntity = createPersistedTestEntity('Collection',collectionData);
+		var data = {
+			collectionExportID=collectionEntity.getCollectionID()
+		};
+		var hibachiServiceFake = {};
+		hibachiSerivceFake.export = exportFake;
+		variables.service.setHibachiService(hibachiSerivceFake);
+		variables.service.collectionsExport(data);
+	}
+	
+	
+	
+	private void function exportFake(){
+		return;
+	}
+	
+	/**
+	* @test
+	*/
+	public void function getExportableColumnsByCollectionConfigTest(){
+		var collectionConfig = '{
+			"baseEntityName":"Account",
+			"baseEntityAlias":"_account",
+			"columns":[
+				{"isDeletable":false,"isSearchable":true,"title":"accountID","isVisible":false,"ormtype":"id","propertyIdentifier":"_account.accountID","isExportable":true},
+				{"isDeletable":true,"isSearchable":true,"title":"Super User","isVisible":true,"ormtype":"boolean","propertyIdentifier":"_account.superUserFlag","isExportable":true},
+				{"isDeletable":true,"isSearchable":true,"title":"First Name","isVisible":true,"ormtype":"string","propertyIdentifier":"_account.firstName","isExportable":true},
+				{"isDeletable":true,"isSearchable":true,"title":"Last Name","isVisible":true,"ormtype":"string","propertyIdentifier":"_account.lastName","isExportable":true},
+				{"isDeletable":true,"isSearchable":true,"title":"Failed Login Attempts","isVisible":true,"ormtype":"integer","propertyIdentifier":"_account.failedLoginAttemptCount","isExportable":true},
+				{"isDeletable":true,"isSearchable":true,"title":"Tax Exempt","isVisible":true,"ormtype":"boolean","propertyIdentifier":"_account.taxExemptFlag","isExportable":true},
+				{"isDeletable":true,"isSearchable":true,"title":"URL Title","isVisible":true,"ormtype":"string","propertyIdentifier":"_account.urlTitle","isExportable":true},
+				
+				{"isDeletable":true,"isSearchable":true,"title":"Company","isVisible":true,"ormtype":"string","propertyIdentifier":"_account.company","isExportable":false},
+				{"isDeletable":true,"isSearchable":true,"title":"Account Locked","isVisible":true,"ormtype":"timestamp","propertyIdentifier":"_account.loginLockExpiresDateTime","isExportable":false}
+			]
+		}';
+		var collectionData={
+			collectionID="",
+			collectionConfig=collectionConfig
+		};
+		var collectionEntity = createPersistedTestEntity('Collection',collectionData);
+		var exportableColumns = variables.service.getExportableColumnsByCollectionConfig(collectionEntity.getCollectionConfigStruct());
+		for(var column in exportableColumns){
+			assert(column.propertyIdentifier != '_account.company' && column.propertyIdentifier != '_account.loginLockExpiresDateTime');
+		}
+		
+	}
+	
+	/**
+	* @test
+	*/
+	public void function getHeadersListByCollectionConfigColumnsTest(){
+		var columns = [
+			{"isDeletable"=false,"isSearchable"=true,"title"="accountID","isVisible"=false,"ormtype"="id","propertyIdentifier"="_account.accountID","isExportable"=true},
+			{"isDeletable"=true,"isSearchable"=true,"title"="Super User","isVisible"=true,"ormtype"="boolean","propertyIdentifier"="_account.superUserFlag","isExportable"=true},
+			{"isDeletable"=true,"isSearchable"=true,"title"="First Name","isVisible"=true,"ormtype"="string","propertyIdentifier"="_account.firstName","isExportable"=true},
+			{"isDeletable"=true,"isSearchable"=true,"title"="Last Name","isVisible"=true,"ormtype"="string","propertyIdentifier"="_account.lastName","isExportable"=true},
+			{"isDeletable"=true,"isSearchable"=true,"title"="Failed Login Attempts","isVisible"=true,"ormtype"="integer","propertyIdentifier"="_account.failedLoginAttemptCount","isExportable"=true},
+			{"isDeletable"=true,"isSearchable"=true,"title"="Tax Exempt","isVisible"=true,"ormtype"="boolean","propertyIdentifier"="_account.taxExemptFlag","isExportable"=true},
+			{"isDeletable"=true,"isSearchable"=true,"title"="URL Title","isVisible"=true,"ormtype"="string","propertyIdentifier"="_account.urlTitle","isExportable"=true},
+			
+			{"isDeletable"=true,"isSearchable"=true,"title"="Company","isVisible"=true,"ormtype"="string","propertyIdentifier"="_account.company","isExportable"=false},
+			{"isDeletable"=true,"isSearchable"=true,"title"="Account Locked","isVisible"=true,"ormtype"="timestamp","propertyIdentifier"="_account.loginLockExpiresDateTime","isExportable"=false}
+		];
+		var collectionConfig = '{
+			"baseEntityName":"Account",
+			"baseEntityAlias":"_account"
+		}';
+		var collectionData={
+			collectionID="",
+			collectionConfig=collectionConfig,
+			collectionObject="Account"
+		};
+		var collectionEntity = createPersistedTestEntity('Collection',collectionData);
+		collectionEntity.getCollectionConfigStruct().columns = columns;
+		
+		assertEquals(variables.service.getHeadersListByCollection(collectionEntity),'accountID,superUserFlag,firstName,lastName,failedLoginAttemptCount,taxExemptFlag,urlTitle,company,loginLockExpiresDateTime');
+	}
+	
+	/**
+	* @test
+	*/
 	public void function getPropertyIdentifiersListTest(){
 		var entityName = 'product';
 		var entityProperties = variables.service.getPropertiesByEntityName( entityName );
@@ -216,6 +400,9 @@ component extends="Slatwall.meta.tests.unit.SlatwallUnitTestBase" {
 //		assert(isArray(collectionEntityProperties));
 //	}
 
+	/**
+	* @test
+	*/
 	public void function getAPIResponseForEntityNameTest(){
 		var accountData = {
 			accountid = "",
@@ -230,6 +417,9 @@ component extends="Slatwall.meta.tests.unit.SlatwallUnitTestBase" {
 		assert(isStruct(apiResponse));
 	}
 
+	/**
+	* @test
+	*/
 	public void function getAPIResponseForEntityNameTest_with_propertyIdentifier_parameters(){
 		var accountData = {
 			accountid = "",
@@ -244,6 +434,9 @@ component extends="Slatwall.meta.tests.unit.SlatwallUnitTestBase" {
 		assertTrue(isStruct(apiResponse));
 	}
 
+	/**
+	* @test
+	*/
 	public void function getAPIResponseForBasicEntityWIthIDTest(){
 		var accountData = {
 			accountid = "",
@@ -270,7 +463,11 @@ component extends="Slatwall.meta.tests.unit.SlatwallUnitTestBase" {
 		var apiResponse = variables.service.getAPIResponseForBasicEntityWithID('account',account.getAccountID(), collectionOptions);
 		assertTrue(isStruct(apiResponse));
 	}*/
+	
 
+	/**
+	* @test
+	*/
 	public void function getAPIResponseForCollectionTest(){
 		var accountData = {
 			accountid = "",
@@ -298,6 +495,9 @@ component extends="Slatwall.meta.tests.unit.SlatwallUnitTestBase" {
 		//addToDebug(apiResponse);
 	}
 
+	/**
+	* @test
+	*/
 	public void function getAPIResponseForCollectionTest_with_propertyIdentifier_parameters(){
 		var accountData = {
 			accountid = "",

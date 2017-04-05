@@ -47,13 +47,44 @@ Notes:
 
 */
 component extends="Slatwall.meta.tests.unit.SlatwallUnitTestBase" {
-
+	
 	public void function setUp() {
 		super.setup();
 		
 		variables.smartList = request.slatwallScope.getSmartList("Product");
 	}
+	/**
+	* @test
+	*/
+	public void function getCacheableSmartlistTest(){
+		var smartlist = request.slatwallScope.getSmartList("Product");
+		smartlist.setCacheable(true);
+		var recordsCount = smartlist.getRecordsCount();
+	}
 	
+	/**
+	* @test
+	*/
+	public void function getSaveAndLoadStateSmartlistTest(){
+		var smartlist = request.slatwallScope.getSmartList("Account");
+		smartlist.setPageRecordsShow(2);
+		makePublic(smartlist,'saveState');
+		
+		smartlist.getPageRecords();
+		var newSmartList = request.slatwallScope.getSmartList("Account");
+		newSmartList.setSavedStateID(smartlist.getSavedStateID());
+		assertEquals(newSmartList.getSavedStateID(),smartlist.getSavedStateID());
+		var loaded = newSmartList.loadSavedState(smartlist.getSavedStateID());
+		
+		newSmartList.getPageRecords();
+		
+		assertEquals(newsmartlist.getPageRecordsShow(),smartlist.getPageRecordsShow());
+	}
+	
+		
+	/**
+	* @test
+	*/
 	public void function getFilterOptionsTest(){
 		
 		var parentCategoryData = {
@@ -103,31 +134,46 @@ component extends="Slatwall.meta.tests.unit.SlatwallUnitTestBase" {
 		assert(structKeyExists(parentResults[1],'parentValue'));
 	}
 
-	// buildURL()
+	// buildURL()	
+	/**
+	* @test
+	*/
 	public void function buildURL_1() {
 		var urlResponse = variables.smartList.buildURL(queryAddition="p:current=3", currentURL="?p:current=2");
 		
 		assert(urlResponse eq '?p:current=3');
 	}
-	
+		
+	/**
+	* @test
+	*/
 	public void function buildURL_2() {
 		var urlResponse = variables.smartList.buildURL(queryAddition="p:current=3", currentURL="?f:productName=hello&p:current=2");
 		
 		assert(urlResponse eq '?f:productname=hello&p:current=3');
 	}
-	
+		
+	/**
+	* @test
+	*/
 	public void function buildURL_3() {
 		var urlResponse = variables.smartList.buildURL(queryAddition="f:productName=hello", currentURL="?f:productName=hello");
 			
 		assertEquals('?c=1', urlResponse);
 	}
-	
+		
+	/**
+	* @test
+	*/
 	public void function buildURL_4() {	
 		var urlResponse = variables.smartList.buildURL(queryAddition="f:productName=hello", currentURL="/");
 		
 		assert(urlResponse eq '?f:productName=hello');
 	}
-	
+		
+	/**
+	* @test
+	*/
 	public void function countTest(){
 		var productData = {
 			productID="",

@@ -56,6 +56,9 @@ component extends="Slatwall.meta.tests.unit.entity.SlatwallEntityTestBase" {
 		variables.entity = request.slatwallScope.getService( variables.entityService ).newAccount();
 	}
 
+	/**
+	* @test
+	*/
 	public void function accountCanBeDeleted() {
 		
 		var accountService = request.slatwallScope.getService("accountService");
@@ -79,6 +82,9 @@ component extends="Slatwall.meta.tests.unit.entity.SlatwallEntityTestBase" {
 
 	}
 
+	/**
+	* @test
+	*/
 	public void function password_reset_test() {
 
 		var accountData = {
@@ -101,6 +107,9 @@ component extends="Slatwall.meta.tests.unit.entity.SlatwallEntityTestBase" {
 		assertEquals(lcase("#accountID##hash(auth1ID & accountID)#"), account.getPasswordResetID() );
 	}
 
+	/**
+	* @test
+	*/
 	public void function test_gift_card_relation(){
 		var accountData = {
 			accountID=""
@@ -134,6 +143,9 @@ component extends="Slatwall.meta.tests.unit.entity.SlatwallEntityTestBase" {
 //		assertEquals(resultExistingAdminIcon, "see output first");
 //	}
 
+	/**
+	* @test
+	*/
 	public void function getEmailAddressTest() {
 		//Testing existed accountEmailAddress
 		var accountData = {
@@ -163,6 +175,9 @@ component extends="Slatwall.meta.tests.unit.entity.SlatwallEntityTestBase" {
 		assertTrue(isNull(mockAccount.getEmailAddress()));
 	}
 	
+	/**
+	* @test
+	*/
 	public void function getFullNameTest() {
 		//testing existing FirstName & LastName
 		var accountData = {
@@ -197,6 +212,9 @@ component extends="Slatwall.meta.tests.unit.entity.SlatwallEntityTestBase" {
 		var resultNoName = mockAccount.getFullName();
 		assertEquals(resultNoName, "");
 	}
+	/**
+	* @test
+	*/
 	public void function getAddressTest() {
 		//testing existing PrimaryAddress existing Account Address
 		var accountData = {
@@ -262,6 +280,9 @@ component extends="Slatwall.meta.tests.unit.entity.SlatwallEntityTestBase" {
 		
 	}
 	
+	/**
+	* @test
+	*/
 	public void function getPhoneNumberTest() {
 		//Testing existing primaryPhoneNumber empty accountPhoneNumbers
 		var accountData = {
@@ -311,6 +332,9 @@ component extends="Slatwall.meta.tests.unit.entity.SlatwallEntityTestBase" {
 	
 
 	
+	/**
+	* @test
+	*/
 	public void function getAdminAccountFlagTest() {
 		//testing TRUE SuperUser with PermissionGroup
 		var accountData = {
@@ -351,6 +375,9 @@ component extends="Slatwall.meta.tests.unit.entity.SlatwallEntityTestBase" {
 		assertFalse(resultNSUNoPG);
 	}
 	
+	/**
+	* @test
+	*/
 	public void function getGiftCardSmartListTest() {
 		//testing existed GiftCard SmartList
 		var accountData = {
@@ -396,6 +423,9 @@ component extends="Slatwall.meta.tests.unit.entity.SlatwallEntityTestBase" {
 		assertEquals(arraylen(resultEmptyGC), 0);				
 	}
 	
+	/**
+	* @test
+	*/
 	public void function getOrdersPlacedSmartList_AccountIDFilter_DESCOrderByDate_Test() {
 		var accountData = {
 			accountID = "",
@@ -467,6 +497,9 @@ component extends="Slatwall.meta.tests.unit.entity.SlatwallEntityTestBase" {
 		assertEquals(resultOrdersPlacedSM[1].getAccount().getAccountID(),mockAccount.getAccountID());
 		assertEquals(resultOrdersPlacedSM2[1].getAccount().getAccountID(),mockAccount2.getAccountID());
 	}
+	/**
+	* @test
+	*/
 	public void function getOrdersPlacedSmartList_StatusTypeFilter_Test() {
 		var accountData = {
 			accountID = "",
@@ -580,6 +613,9 @@ public void function getPrimaryEmailAddressesNotInUseFlagTest() {
 		assertFalse(mockAccount2.getPrimaryEmailAddressesNotInUseFlag());	
 	}
 
+	/**
+	* @test
+	*/
 	public void function getOrdersNotPlacedSmartListTest() {
 		var accountData = {
 			accountID = "",
@@ -641,6 +677,9 @@ public void function getPrimaryEmailAddressesNotInUseFlagTest() {
 		assertEquals(resultOrdersNotPlacedSM.getRecords(refresh=true)[1].getOrderNumber(), "orderNumber004");	
 	}
 
+	/**
+	* @test
+	*/
 	public void function getSlatwallAuthenticationExistsFlag_WithPassword_Test() {
 		//testing the authentication w/ Password only, authz flag should be true
 		var accountData2 = {
@@ -659,6 +698,9 @@ public void function getPrimaryEmailAddressesNotInUseFlagTest() {
 		var resultWithPassword = mockAccount2.getSlatwallAuthenticationExistsFlag();		
 		assertTrue(resultWithPassword);
 	}
+	/**
+	* @test
+	*/
 	public void function getSlatwallAuthenticationExistsFlag_WithIntegration_Test() {
 		//testing the authentictions w/ Integration only, shoule be false
 		var accountData3 = {
@@ -680,6 +722,9 @@ public void function getPrimaryEmailAddressesNotInUseFlagTest() {
 		assertFalse(resultWithIntegration);	
 	}
 	
+	/**
+	* @test
+	*/
 	public void function getSlatwallAuthenticationExistsFlag_WithPwdAndIntegration_Test() {
 		//testing tue authentication w/ Integration and w/ Passoword, should be false
 		var accountData4 = {
@@ -701,6 +746,9 @@ public void function getPrimaryEmailAddressesNotInUseFlagTest() {
 		assertFalse(resultPwdIntegration);		
 	}
 	
+	/**
+	* @test
+	*/
 	public void function getSlatwallAuthenticationExistsFlag_TrueActiveFlag_Test() {
 		//Under condition that if the first logical connectives returns true;		
 		//testing normal case, activeFlag is true
@@ -721,6 +769,9 @@ public void function getPrimaryEmailAddressesNotInUseFlagTest() {
 		var resultTrueFlag = mockAccount1.getSlatwallAuthenticationExistsFlag();
 		assertTrue(resultTrueFlag);
 	}
+	/**
+	* @test
+	*/
 	public void function getSlatwallAuthenticationExistsFlag_FalseActiveFlag_Test() {
 		//Under condition that if the first logical connectives returns true;
 		//testing when activeFlag is false
@@ -741,6 +792,9 @@ public void function getPrimaryEmailAddressesNotInUseFlagTest() {
 		var resultFalseFlag = mockAccount2.getSlatwallAuthenticationExistsFlag();
 		assertFalse(resultFalseFlag);
 	}
+	/**
+	* @test
+	*/
 	public void function getSlatwallAuthenticationExistsFlag_NullActiveFlag_Test() {
 		//Under condition that if the first logical connectives returns true
 		//testing when activeFlag is null
@@ -769,6 +823,9 @@ public void function getPrimaryEmailAddressesNotInUseFlagTest() {
 	}
 	
 	
+	/**
+	* @test
+	*/
 	public void function getActiveSubscriptionUsageBenefitsSmartList_endDateTime_Test() {
 		var accountData1 = {
 			accountID = "",
@@ -849,6 +906,9 @@ public void function getPrimaryEmailAddressesNotInUseFlagTest() {
 		assertTrue(listFind(subscriptionUsageBenefitIDList, "#result[1].getsubscriptionUsageBenefitID()#") > 0);
 	}
 	
+	/**
+	* @test
+	*/
 	public void function getActiveSubscriptionUsageBenefitsSmartList_rangeOfExpirationDate_AccountFilter_Test() {
 		//Mocking Data: mockAccount1 -> mockSubscriptionUsage1 (expireDate now+3d)-> mockSubscriptionUsageBenefit1 -> mockSubsUsageBenefitAccount1
 		//Mocking Data: mockAccount1 -> mockSubscriptionUsage2 (expireDate now-3d)-> mockSubscriptionUsageBenefit2 -> mockSubsUsageBenefitAccount2
@@ -919,6 +979,9 @@ public void function getPrimaryEmailAddressesNotInUseFlagTest() {
 	}
 
 
+	/**
+	* @test
+	*/
 	public void function getTermAccountBalance_UnreceivedAndUnassigned_Test() {
 		//testing both for loops have been reached
 		var accountData1 = {
@@ -953,10 +1016,13 @@ public void function getPrimaryEmailAddressesNotInUseFlagTest() {
 			accountPaymentID = "",
 			account = {
 				accountID = mockAccount1.getAccountID()
+			},
+			accountPaymentType = {
+					typeID="444df32dd2b0583d59a19f1b77869025" //aptCharge
 			}
 		};
 		var accountPayment1 = createPersistedTestEntity("AccountPayment", accountPaymentData);
-		
+		//will not factor in without a received amount as it isn't a term payment
 		var accountPaymentAppliedData = {
 			accountPaymentAppliedID = "",
 			amount = 10.00,
@@ -969,9 +1035,12 @@ public void function getPrimaryEmailAddressesNotInUseFlagTest() {
 		};
 		var accountPaymentApplied1 = createPersistedTestEntity("AccountPaymentApplied", accountPaymentAppliedData);
 
-		assertEquals(2290, mockAccount1.getTermAccountBalance());
+		assertEquals(2300, mockAccount1.getTermAccountBalance());
 	}
 	
+	/**
+	* @test
+	*/
 	public void function getTermAccountBalance_UnreceivedOpenOrderPayment_Test() {
 		//testing only the first loop been reached
 		var accountData1 = {
@@ -1016,6 +1085,9 @@ public void function getPrimaryEmailAddressesNotInUseFlagTest() {
 		assertEquals(1500, mockAccount1.getTermAccountBalance());
 	}
 	
+	/**
+	* @test
+	*/
 	public void function getTermAccountBalance_UnassignedPayment_Test() {
 		//testing both for loops have been reached
 		var accountData1 = {
@@ -1037,10 +1109,13 @@ public void function getPrimaryEmailAddressesNotInUseFlagTest() {
 			accountPaymentID = "",
 			account = {
 				accountID = mockAccount1.getAccountID()
+			},
+			accountPaymentType = {
+					typeID="444df32dd2b0583d59a19f1b77869025" //aptCharge
 			}
 		};
 		var accountPayment1 = createPersistedTestEntity("AccountPayment", accountPaymentData);
-		
+		//won't factor in as it isn't a term payment and therefore requires a recieved amount
 		var accountPaymentAppliedData = {
 			accountPaymentAppliedID = "",
 			amount = 10.00,
@@ -1053,10 +1128,13 @@ public void function getPrimaryEmailAddressesNotInUseFlagTest() {
 		};
 		var accountPaymentApplied1 = createPersistedTestEntity("AccountPaymentApplied", accountPaymentAppliedData);
 
-		assertEquals(-10, mockAccount1.getTermAccountBalance());
+		assertEquals(0, mockAccount1.getTermAccountBalance());
 	}
 	
 	
+	/**
+	* @test
+	*/
 	public void function getUnenrolledAccountLoyaltyOptionsTest() {
 		//mocking: 							<- mockAccountLoyalty1ShouldReturn -> mockLoyalty1Active (activeFlag 1)
 		//mocking: mockAccount1RunFunction  <- mockAccountLoyalty2TestAccount  -> mockLoyalty3Active (activeFlag 1)
@@ -1120,6 +1198,9 @@ public void function getPrimaryEmailAddressesNotInUseFlagTest() {
 
 	}
 	
+	/**
+	* @test
+	*/
 	public void function getTermAccountAvailableCreditTest() {
 		//general testing of negative credit limit
 		var accountData1 = {
@@ -1154,10 +1235,14 @@ public void function getPrimaryEmailAddressesNotInUseFlagTest() {
 			accountPaymentID = "",
 			account = {
 				accountID = mockAccount1.getAccountID()
+			},
+			accountPaymentType={
+				//systemCode="aptCharge"
+			 	typeID="444df32dd2b0583d59a19f1b77869025"
 			}
 		};
 		var accountPayment1 = createPersistedTestEntity("AccountPayment", accountPaymentData);
-		
+		//will not factor this in because it is not term and therefore needs a recieved amount
 		var accountPaymentAppliedData = {
 			accountPaymentAppliedID = "",
 			amount = 50.00,
@@ -1177,9 +1262,12 @@ public void function getPrimaryEmailAddressesNotInUseFlagTest() {
 			settingValue = -1000
 		};
 		var settingEntity = createPersistedTestEntity('Setting',settingData);
-		assertEquals(-1250, mockAccount1.getTermAccountAvailableCredit());
+		assertEquals(-1300, mockAccount1.getTermAccountAvailableCredit());
 	}
 	
+	/**
+	* @test
+	*/
 	public void function getGuestAccountFlagTest() {
 		//Mock Data: mockAccount1 -> mockAccountAuthentications1, mockAccountAuthentications2  Should return false
 		//Mock Data: mockAccount2 -> No Account Authentication                                 Should return true
@@ -1213,6 +1301,9 @@ public void function getPrimaryEmailAddressesNotInUseFlagTest() {
 		assertTrue(mockAccount2.getGuestAccountFlag());
 	}
 
+	/**
+	* @test
+	*/
 	public void function getActiveAccountAuthentications_ExistedAuthz_Test() {
 		//When authz existed, the IF statement of Logical Operators will be TRUE if any of the four is true
 		var accountData = {
@@ -1300,6 +1391,9 @@ public void function getPrimaryEmailAddressesNotInUseFlagTest() {
 		assertTrue(ListFind(aaaListForResult, result[4].getAccountAuthenticationID()) > 0);
 	}
 	
+	/**
+	* @test
+	*/
 	public void function getActiveAccountAuthentications_NoAuthz_Test() {
 		//Testing if Authz does not existed, should return array length 0
 		var accountData0 = {
@@ -1311,6 +1405,9 @@ public void function getPrimaryEmailAddressesNotInUseFlagTest() {
 		assertEquals(0, arrayLen(result0));	
 	}
 
+	/**
+	* @test
+	*/
 	public void function getSaveablePaymentMethodsSmartList_filterOnTwoFlags_Test() {
 		var accountData = {
 			accountID = "",
@@ -1410,6 +1507,9 @@ public void function getPrimaryEmailAddressesNotInUseFlagTest() {
 		assertEquals(mockpaymentMethod1.getPaymentMethodID(), result[1].getPaymentMethodID());		
 	}
 	
+	/**
+	* @test
+	*/
 	public void function getSaveablePaymentMethodsSmartList_OverrideSetting_Test() {
 		var accountData = {
 			accountID = "",
@@ -1490,6 +1590,9 @@ public void function getPrimaryEmailAddressesNotInUseFlagTest() {
 		assertEquals(mockpaymentMethod1.getPaymentMethodID(), result[1].getPaymentMethodID());		
 	}
 	
+	/**
+	* @test
+	*/
 	public void function getSaveablePaymentMethodsSmartList_NoneSetting_Test() {
 		var accountData = {
 			accountID = "",
@@ -1540,6 +1643,9 @@ public void function getPrimaryEmailAddressesNotInUseFlagTest() {
 	}
 	
 
+	/**
+	* @test
+	*/
 	public void function getPaymentMethodOptionsSmartListTest() {
 		var accountData1 = {
 			accountID = "",
@@ -1629,6 +1735,9 @@ public void function getPrimaryEmailAddressesNotInUseFlagTest() {
 	
 	
 
+	/**
+	* @test
+	*/
 	public void function getPasswordResetIDTest() {
 		//testing when authentication existed, the result is right
 		var accountData = {
@@ -1684,6 +1793,9 @@ public void function getPrimaryEmailAddressesNotInUseFlagTest() {
 		
 	}
 	
+	/**
+	* @test
+	*/
 	public void function getTermOrderPaymentsByDueDateSmartList_filterInPaymentMethodType_Test() {
 		//Mocking Data: mockAccount1 ->Order1 -> OrderPayment1 -> PaymentMethod1 termPayment
 		//Mocking Data: mockAccount1 ->Order1 -> OrderPayment2 -> PaymentMethod2 giftCard
@@ -1794,6 +1906,9 @@ public void function getPrimaryEmailAddressesNotInUseFlagTest() {
 	}
 	
 
+	/**
+	* @test
+	*/
 	public void function getTermOrderPaymentsByDueDateSmartList_filterInOrderStatusType_filterAccountID_Test() {
 		//Mocking Data: mockAccount1 ->Order1  OrderstatusType = onHold
 		//Mocking Data: mockAccount1 ->Order2  OrderStatusType = canceled
@@ -1884,6 +1999,9 @@ public void function getPrimaryEmailAddressesNotInUseFlagTest() {
 	}
 	
 	
+	/**
+	* @test
+	*/
 	public void function getTermOrderPaymentsByDueDateSmartList_orderByPaymentDueDate_Test() {
 		//Mocking Data: mockAccount1 ->Order1 -> OrderPayment1 DueDate now() +5 days
 		//Mocking Data: mockAccount1 ->Order1 -> OrderPayment2 DueDate now() +2 days
@@ -2002,6 +2120,9 @@ public void function getPrimaryEmailAddressesNotInUseFlagTest() {
 //		var mockAccount = createTestEntity('Account', accountData);
 //	}
 		
+	/**
+	* @test
+	*/
 	public void function getEligibleAccountPaymentMethodsSmartListTest() {
 		var accountData1 = {
 			accountID = "",
@@ -2100,6 +2221,9 @@ public void function getPrimaryEmailAddressesNotInUseFlagTest() {
 	// ============  END TESTING:  Non-Persistent Property Methods =================
 
 	// ================== START TESTING: Overridden Methods ========================
+	/**
+	* @test
+	*/
 	public void function getPrimaryEmailAddressTest() {
 		//testing existing pimaryEamilAddress
 		var accountData = {
@@ -2144,6 +2268,9 @@ public void function getPrimaryEmailAddressesNotInUseFlagTest() {
 		
 	}
 	
+	/**
+	* @test
+	*/
 	public void function getPrimaryPhoneNumberTest() {
 		//Testing existing primaryPhoneNumber
 		var accountData = {
@@ -2187,6 +2314,9 @@ public void function getPrimaryEmailAddressesNotInUseFlagTest() {
 		assertEquals("firstphoneNumber", mockAccount3.getPrimaryPhoneNumber().getPhoneNumber());
 	}
 	
+	/**
+	* @test
+	*/
 	public void function getPrimaryAddressTest() {
 		//testing existing PrimaryAddress
 		var accountData = {
@@ -2224,6 +2354,9 @@ public void function getPrimaryEmailAddressesNotInUseFlagTest() {
 		assert(mockAccount.getPrimaryAddress().getNewFlag());
 	}
 	
+	/**
+	* @test
+	*/
 	public void function getPrimaryPaymentMethodTest() {
 		//testing existing PrimaryPaymentMethod
 		var accountData = {
@@ -2266,6 +2399,9 @@ public void function getPrimaryEmailAddressesNotInUseFlagTest() {
 		assertTrue(resultNonePrimaryPayment.getNewFlag());
 	}
 	
+	/**
+	* @test
+	*/
 	public void function getSuperUserFlagTest() {
 		//testing existing flag == TRUE
 		var accountData = {
@@ -2298,6 +2434,9 @@ public void function getPrimaryEmailAddressesNotInUseFlagTest() {
 		assertFalse(resultEmptySuperUserFlag);
 	}
 	
+	/**
+	* @test
+	*/
 	public void function getSimpleRepresentationTest() {
 		//testing existing FirstName & LastName
 		var accountData = {
@@ -2325,6 +2464,9 @@ public void function getPrimaryEmailAddressesNotInUseFlagTest() {
 	// ================== END TESTING: Overridden Methods ========================
 	
 	// ============= START Testing: Overridden Smart List Getters ================
+	/**
+	* @test
+	*/
 	public void function getAccountContentAccessesSmartListTest() {
 		//testing the filter on AccountID
 		var accountData = {

@@ -57,7 +57,7 @@ component displayname="Account" entityname="SlatwallAccount" table="SwAccount" p
 	property name="loginLockExpiresDateTime" hb_populateEnabled="false" ormtype="timestamp";
 	property name="failedLoginAttemptCount" hb_populateEnabled="false" ormtype="integer" hb_auditable="false";
 	property name="taxExemptFlag" ormtype="boolean";
-	property name="organizationFlag" ormtype="boolean";
+	property name="organizationFlag" ormtype="boolean" default="false";
 	property name="testAccountFlag" ormtype="boolean";
 	property name="accountCode" ormtype="string" hb_populateEnabled="public" index="PI_ACCOUNTCODE";
 	//calucluated property
@@ -334,13 +334,13 @@ component displayname="Account" entityname="SlatwallAccount" table="SwAccount" p
 		// First look at all the unreceived open order payment
 		for(var termAccountOrderPayment in getTermAccountOrderPayments()) {
 			if(!termAccountOrderPayment.getNewFlag()){
-				termAccountBalance = val(precisionEvaluate(termAccountBalance + termAccountOrderPayment.getAmountUnreceived()));
+				termAccountBalance = getService('HibachiUtilityService').precisionCalculate(termAccountBalance + termAccountOrderPayment.getAmountUnreceived());
 			}
 		}
 
 		// Now look for the unassigned payment amount
 		for(var accountPayment in getAccountPayments()) {
-			termAccountBalance = val(precisionEvaluate(termAccountBalance - accountPayment.getAmountUnassigned()));
+			termAccountBalance = getService('HibachiUtilityService').precisionCalculate(termAccountBalance - accountPayment.getAmountUnassigned());
 		}
 
 		return termAccountBalance;

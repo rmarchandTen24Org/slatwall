@@ -88,7 +88,7 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 					shippingMethodStruct[shippingProviderMethod].shippingProviderMethod = shippingMethodResponseBean.getShippingProviderMethod(); 
 					shippingMethodStruct[shippingProviderMethod].totalCharge = shippingMethodResponseBean.getTotalCharge();
 				} else { 
-					shippingMethodStruct[shippingProviderMethod].totalCharge = val(precisionEvaluate(shippingMethodStruct[shippingProviderMethod].totalCharge + shippingMethodResponseBean.getTotalCharge()));
+					shippingMethodStruct[shippingProviderMethod].totalCharge = val(getService('HibachiUtilityService').precisionCalculate(shippingMethodStruct[shippingProviderMethod].totalCharge + shippingMethodResponseBean.getTotalCharge()));
 				} 
 			} 			
 		}
@@ -123,10 +123,21 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 					if( !isNull(shippingMethodRate.getSplitShipmentWeight()) && 
 						ratesRequestBean.getTotalWeight() > shippingMethodRate.getSplitShipmentWeight() &&
 						this.getOrderFulfillmentCanBeSplitShipped(arguments.orderFulfillment, shippingMethodRate.getSplitShipmentWeight())
-					){ 
-						var splitShipmentFlag = true; 
-						ArrayAppend(splitShipmentWeights, shippingMethodRate.getSplitShipmentWeight()); 
-						ArrayAppend(splitShippingMethodRates, shippingMethodRate); 
+					){
+						var hasWeight = false;
+						if(splitShipmentFlag){
+								for(var weight in splitShipmentWeights){
+										if(weight == shippingMethodRate.getSplitShipmentWeight()){
+												hasWeight=true;
+										}
+								}
+						} else {
+								splitShipmentFlag = true;
+						}
+						if(!hasWeight){
+								ArrayAppend(splitShipmentWeights, shippingMethodRate.getSplitShipmentWeight());
+								ArrayAppend(splitShippingMethodRates, shippingMethodRate);
+						}
 					} 
 				}		
 			}
@@ -275,7 +286,7 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 	
 	public numeric function getChargeAmountByShipmentItemMultiplierAndRateMultiplierAmount(required numeric defaultAmount, required numeric shipmentItemMultiplier, required numeric rateMultiplierAmount){
 		
-		var chargeAmount = val(precisionEvaluate(arguments.defaultAmount + (arguments.rateMultiplierAmount * arguments.shipmentItemMultiplier)));
+		var chargeAmount = val(getService('HibachiUtilityService').precisionCalculate(arguments.defaultAmount + (arguments.rateMultiplierAmount * arguments.shipmentItemMultiplier)));
 		return chargeAmount;
 	}
 	
@@ -389,7 +400,6 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 		smsl.addFilter('activeFlag', '1');
 		smsl.addOrder("sortOrder|ASC");
 		var shippingMethods = smsl.getRecords();
-		
 		var integrations = getIntegrationsByOrderFulfillmentAndShippingMethods(arguments.orderFulfillment, shippingMethods);
 
 		// Loop over all of the shipping integrations and add thier rates response to the 'responseBeans' struct that is key'd by integrationID
@@ -518,7 +528,7 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 		}
 
 		// Now if there is no method yet selected, and one shippingMethod exists as an option, we can automatically just select it.
-		if(isNull(arguments.orderFulfillment.getShippingMethod()) && arrayLen(arguments.orderFulfillment.getFulfillmentShippingMethodOptions()) == 1) {
+		if(isNull(arguments.orderFulfillment.getShippingMethod()) && arrayLen(arguments.orderFulfillment.getFulfillmentShippingMethodOptions()) >= 1) {
 
 			// Set the method
 			arguments.orderFulfillment.setShippingMethod( arguments.orderFulfillment.getFulfillmentShippingMethodOptions()[1].getShippingMethodRate().getShippingMethod() );
@@ -652,16 +662,16 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 
 			switch(arguments.shippingMethodRate.setting('shippingMethodRateAdjustmentType')) {
 				case "increasePercentage":
-					returnAmount = val(precisionEvaluate(arguments.originalAmount + (arguments.originalAmount * shippingMethodRateAdjustmentAmount)));
+					returnAmount = val(getService('HibachiUtilityService').precisionCalculate(arguments.originalAmount + (arguments.originalAmount * shippingMethodRateAdjustmentAmount)));
 					break;
 				case "decreasePercentage":
-					returnAmount = val(precisionEvaluate(arguments.originalAmount - (arguments.originalAmount * shippingMethodRateAdjustmentAmount)));
+					returnAmount = val(getService('HibachiUtilityService').precisionCalculate(arguments.originalAmount - (arguments.originalAmount * shippingMethodRateAdjustmentAmount)));
 					break;
 				case "increaseAmount":
-					returnAmount = val(precisionEvaluate(arguments.originalAmount + shippingMethodRateAdjustmentAmount));
+					returnAmount = val(getService('HibachiUtilityService').precisionCalculate(arguments.originalAmount + shippingMethodRateAdjustmentAmount));
 					break;
 				case "decreaseAmount":
-					returnAmount = val(precisionEvaluate(arguments.originalAmount - shippingMethodRateAdjustmentAmount));
+					returnAmount = val(getService('HibachiUtilityService').precisionCalculate(arguments.originalAmount - shippingMethodRateAdjustmentAmount));
 					break;
 			}
 		}

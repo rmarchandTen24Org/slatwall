@@ -4,12 +4,12 @@
  * This validate directive will look at the current element, figure out the context (save, edit, delete) and
  * validate based on that context as defined in the validation properties object.
  */
-import {SWFormController} from "./swForm";
+import {SWFormController} from "./swform";
 import {SWPropertyDisplayController} from "./swpropertydisplay";
 import {SWFPropertyDisplayController} from "./swfpropertydisplay";
 import {SWFormFieldController} from "./swformfield";
-import {ObserverService} from "../../core/services/observerService";
-import {MetaDataService} from "../../core/services/metadataService";
+import {ObserverService} from "../../core/services/observerservice";
+import {MetaDataService} from "../../core/services/metadataservice";
 //defines possible eventoptions
 type EventHandler = "blur" |
 	"change" |
@@ -256,16 +256,16 @@ class SWInputController{
                 inputType="text";
             }
 			template = currencyTitle + '<input type="' + inputType + '" class="' + this.class + '" '+
-				'ng-model="swInput.value" '+
-				'ng-disabled="swInput.editable === false" '+
-				'ng-show="swInput.editing" '+
-				`ng-class="{'form-control':swInput.inListingDisplay, 'input-xs':swInput.inListingDisplay}"` +
-				'name="'+this.property+'" ' +
-				'placeholder="'+placeholder+'" '+
+				' ng-model="swInput.value" '+
+				' ng-disabled="swInput.editable === false" '+
+				' ng-show="swInput.editing" '+
+				` ng-class="{'form-control':swInput.inListingDisplay, 'input-xs':swInput.inListingDisplay} "` +
+				' name="'+this.property+'" ' +
+				' placeholder="'+placeholder+'" '+
 				validations + currencyFormatter +
-				'id="swinput'+this.swForm.name+this.name+'" '+
-				'style="'+style+'"'+
-				this.inputAttributes+
+				' id="swinput'+this.swForm.name+this.name+'" '+
+				' style="' + style + '" ' + " " +
+	            this.inputAttributes + " " +
 				this.eventHandlerTemplate;
 		}
 
@@ -370,13 +370,13 @@ class SWInputController{
 		if (this.object && this.object.metaData && this.object.metaData.className != undefined){
  			var eventNameForUpdateBindingsID = this.object.metaData.className.split('_')[0]+this.property+'updateBindings';
  		}else{
- 			var eventNameForUpdateBindingsID = this.property+this.property+'updateBindings';
+ 			var eventNameForUpdateBindingsID = this.property+'updateBindings';
  		}
         var eventNameForPullBindings = 'pullBindings';
         if (this.object && this.object.metaData && this.object.metaData.className != undefined){
          	var eventNameForPullBindingsID = this.object.metaData.className.split('_')[0]+this.property+'pullBindings';
 		}else{
- 			var eventNameForPullBindingsID = this.property+this.property+'pullBindings';
+ 			var eventNameForPullBindingsID = this.property+'pullBindings';
  		}
 		//attach a successObserver
 		if(this.object){
