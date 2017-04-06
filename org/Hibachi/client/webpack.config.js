@@ -20,7 +20,7 @@ var appConfig = {
     // Turn on sourcemaps
     //devtool: 'source-map',
     resolve: {
-        extensions: ['', '.webpack.js', '.web.js', '.ts', '.js'],
+        extensions: ['', '.webpack.js', '.web.js', '.ts', '.js', '.json'],
         alias:{}
     },
     module: {
@@ -28,6 +28,10 @@ var appConfig = {
         loaders: [
             {
                 test: /\.ts$/, loader: 'ts-loader',
+                exclude: /node_modules/
+            },
+            {
+                test: /\.json$/, loader: 'json-loader',
                 exclude: /node_modules/
             }
         ]
@@ -68,17 +72,16 @@ var appConfig = {
 };
 appConfig
     .addVendor('date','date/date.min.js')
-    .addVendor('angular','angular/angular.min.js')
-    .addVendor('angular-lazy-bootstrap','angular-lazy-bootstrap/bootstrap.js')
+    .addVendor('angular','angular/angular.js')
     .addVendor('ui.bootstrap','angular-ui-bootstrap/ui.bootstrap.min.js')
-    .addVendor('angular-resource','angular/angular-resource.min.js')
-    .addVendor('angular-cookies','angular/angular-cookies.min.js')
-    .addVendor('angular-route','angular/angular-route.min.js')
-    .addVendor('angular-animate','angular/angular-animate.min.js')
-    .addVendor('angular-sanitize','angular/angular-sanitize.min.js')
+    .addVendor('angular-resource','angular/angular-resource.js')
+    .addVendor('angular-cookies','angular/angular-cookies.js')
+    .addVendor('angular-route','angular/angular-route.js')
+    .addVendor('angular-animate','angular/angular-animate.js')
+    .addVendor('angular-sanitize','angular/angular-sanitize.js')
     .addVendor('metismenu','metismenu/metismenu.js')
     .addVendor('angularjs-datetime-picker','angularjs-datetime-picker/angularjs-datetime-picker.js')
-    
-    
-; 
+
+
+;
 module.exports = appConfig;
