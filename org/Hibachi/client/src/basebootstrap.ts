@@ -1,8 +1,13 @@
 /// <reference path='../typings/hibachiTypescript.d.ts' />
 /// <reference path='../typings/tsd.d.ts' />
+
 import {coremodule} from "./core/core.module";
-declare var angular:any;
+import * as config from "../../../../custom/config/config.json";
+import * as enBundle from "../../../../custom/config/resourcebundles/en.json";
+import * as enUsBundle from "../../../../custom/config/resourcebundles/en_us.json";
+
 declare var hibachiConfig:any;
+
 var md5 = require('md5');
 //generic bootstrapper
 export class BaseBootStrapper{
@@ -16,50 +21,9 @@ export class BaseBootStrapper{
 
     constructor(myApplication){
       this.myApplication = myApplication;
-      return angular.lazy(this.myApplication)
-        .resolve(['$http','$q','$timeout', ($http,$q,$timeout)=> {
-            this.$http = $http;
-            this.$q = $q;
-
-
-             var baseURL = hibachiConfig.baseURL;
-             if(baseURL.length && baseURL.slice(-1) !== '/'){
-                baseURL += '/';
-             }
-             return $http.get(baseURL+'?'+hibachiConfig.action+'=api:main.getInstantiationKey')
-
-            .then( (resp)=> {
-                this.instantiationKey = resp.data.data.instantiationKey;
-
-                var invalidCache = [];
-                try{
-                    var hashedData = md5(localStorage.getItem('attributeMetaData'));
-
-                    if(resp.data.data['attributeCacheKey'] === hashedData.toUpperCase()){
-                        coremodule.constant('attributeMetaData',JSON.parse(localStorage.getItem('attributeMetaData')));
-                    }else{
-                        invalidCache.push('attributeCacheKey');
-                    }
-                }catch(e){
-                    invalidCache.push('attributeCacheKey');
-                }
-
-                invalidCache.push('instantiationKey');
-
-               return this.getData(invalidCache);
-            });
-
-        }])
-        .loading(function(){
-            //angular.element('#loading').show();
-        })
-        .error(function(){
-            //angular.element('#error').show();
-        })
-        .done(function() {
-            //angular.element('#loading').hide();
-
-        });
+      coremodule.constant('appConfig',config['data']);
+      coremodule.constant('resourceBundles',{en:enBundle,en_us:enUsBundle});
+      coremodule.constant('attributeMetaData',{});
 
     }
 

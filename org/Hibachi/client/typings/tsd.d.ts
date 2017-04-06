@@ -15,4 +15,7 @@
 interface String {
     startsWith(str: string): boolean;
 }
-
+declare module "*.json" {
+    const value:any;
+    export default value;
+}
