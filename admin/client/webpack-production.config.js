@@ -5,14 +5,14 @@ var devConfig = require('./webpack.config');
 var ngAnnotatePlugin = require('ng-annotate-webpack-plugin');
 
 var stripConsolelogs = {
-	exlude: /node_modules/,
+	exclude: /node_modules/,
 	loader: WebpackStrip.loader('console.log')
 }
 //extend and override the devconfig
 devConfig.module.loaders.push(stripConsolelogs);
 
 var stripLogDebugs = {
-	exlude: /node_modules/,
+	exclude: /node_modules/,
 	loader: WebpackStrip.loader('$log.debug')
 }
 //extend and override the devconfig
@@ -31,10 +31,10 @@ devConfig.plugins= [
             if (stats.compilation.errors && stats.compilation.errors.length)
             {
             	console.error(stats.compilation.errors);
-                
+
                 process.exit(1);
             }
-            
+
         });*/
     }
   ];

@@ -10,8 +10,7 @@ var PATHS = {
 var appConfigService={
     setupApp: function(customPath, bootstrap){
         PATHS = {
-            app: path.join(customPath, '/src'),
-            lib: path.join(customPath, '/lib')
+            app: path.join(customPath, '/src')
         };
         if(typeof bootstrap !== 'undefined'){
             this.entry.app[this.entry.app.length - 1] = bootstrap;
@@ -40,7 +39,7 @@ var appConfigService={
 }
 
 var appConfig = {
-    context:PATHS.app,
+    //context:PATHS.app,
     entry: {
         app:['./bootstrap.ts']
     },
@@ -52,16 +51,15 @@ var appConfig = {
     // Turn on sourcemaps
     //devtool: 'source-map',
     resolve: {
-        extensions: ['', '.webpack.js', '.web.js', '.ts', '.js'],
+        extensions: ['.webpack.js', '.web.js', '.ts', '.js', '.json'],
         alias:{}
     },
     module: {
         noParse: [ /bower_components/ ],
-        loaders: [
-            {
-                test: /\.ts$/, loader: 'ts-loader',
-                exclude: /node_modules/
-            }
+        rules: [
+
+            { test: /\.ts$/, exclude: /node_modules/, loader: 'ts-loader' },
+            { test: /\.json$/, loader: 'json-loader' }
         ]
     },
     plugins: [
@@ -70,19 +68,4 @@ var appConfig = {
 
 
 };
-appConfigService
-    .addVendor(appConfig,'date','date/date.min.js')
-    .addVendor(appConfig,'angular','angular/angular.min.js')
-    .addVendor(appConfig,'angular-lazy-bootstrap','angular-lazy-bootstrap/bootstrap.js')
-    .addVendor(appConfig,'ui.bootstrap','angular-ui-bootstrap/ui.bootstrap.min.js')
-    .addVendor(appConfig,'angular-resource','angular/angular-resource.min.js')
-    .addVendor(appConfig,'angular-cookies','angular/angular-cookies.min.js')
-    .addVendor(appConfig,'angular-route','angular/angular-route.min.js')
-    .addVendor(appConfig,'angular-animate','angular/angular-animate.min.js')
-    .addVendor(appConfig,'angular-sanitize','angular/angular-sanitize.min.js')
-    .addVendor(appConfig,'metismenu','metismenu/metismenu.js')
-    .addVendor(appConfig,'angularjs-datetime-picker','angularjs-datetime-picker/angularjs-datetime-picker.js')
-
-
-;
 module.exports = appConfig;

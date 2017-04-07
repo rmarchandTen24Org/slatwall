@@ -11,6 +11,7 @@
     "md5": "^2.0.0"
   },
   "devDependencies": {
+    "@angular/language-service": "^4.0.1",
     "angular": "*",
     "angular-mocks": "^1.6.0",
     "bower": "*",
@@ -26,9 +27,10 @@
     "run-sequence": "^1.1.4",
     "strip-loader": "^0.1.2",
     "tsify": "*",
+    "tslint-loader": "^3.5.1",
     "typescript": "*",
     "vinyl-source-stream": "^1.1.0",
-    "webpack": "^1.13.3",
+    "webpack": "*",
     "webpack-dev-server": "^1.12.1",
     "webpack-stream": "*"
   },
