@@ -15,6 +15,7 @@
     "angular": "*",
     "angular-mocks": "^1.6.0",
     "bower": "*",
+    "bson": "^1.0.4",
     "force-case-sensitivity-webpack-plugin": "^0.1.1",
     "gulp": "*",
     "gulp-chmod": "^1.3.0",
@@ -29,8 +30,10 @@
     "tsify": "*",
     "tslint-loader": "^3.5.1",
     "typescript": "*",
+    "uglifyjs-webpack-plugin": "^0.4.1",
     "vinyl-source-stream": "^1.1.0",
     "webpack": "*",
+    "webpack-closure-compiler": "^2.1.4",
     "webpack-dev-server": "^1.12.1",
     "webpack-stream": "*"
   },

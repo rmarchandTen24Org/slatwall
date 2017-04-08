@@ -38,15 +38,20 @@ var appConfigService={
     }
 }
 
+
+
 var appConfig = {
     //context:PATHS.app,
     entry: {
-        app:['./bootstrap.ts']
+        app:['./bootstrap.ts'],
+        vendor:[
+            path.join(__dirname,'/src/vendor.ts'),
+        ]
     },
     watch:true,
     output: {
         path: PATHS.app,
-        filename: 'bundle.js'
+        filename: '[name].bundle.js'
     },
     // Turn on sourcemaps
     //devtool: 'source-map',
@@ -63,7 +68,11 @@ var appConfig = {
         ]
     },
     plugins: [
-        new ForceCaseSensitivityPlugin()
+        new ForceCaseSensitivityPlugin(),
+        new webpack.optimize.CommonsChunkPlugin({
+            name: "vendor",
+            minChunks: Infinity
+        })
     ]
 
 
