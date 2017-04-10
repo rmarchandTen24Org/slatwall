@@ -77,6 +77,7 @@ component accessors="true" output="false" extends="HibachiService" {
 
 	public void function generateDocsJson(){
 		var docsJson = {};
+		docsJson['publicprocesses'] = generatePublicProcessJson();
 		docsJson['basecomponents'] = generateBaseComponentJson();
 		docsJson['entities'] = generateEntityJson();
 		docsJson['services'] = generateServiceJson();
@@ -310,6 +311,23 @@ component accessors="true" output="false" extends="HibachiService" {
 		}
 		return daoComponentMetaData;
 	}
+	
+	public struct function generatePublicProcessJson(){
+		var publicProcessJson = {};
+		var componentMetaData = getComponentMetaData('Slatwall.model.service.PublicService');
+		
+		
+		if(structKeyExists(componentMetaData,'functions')){
+			
+			for(var functionData in componentMetaData.functions){
+				publicProcess[functionData.name] = {};
+				publicProcess[functionData.name]['description'] = functionData;
+				
+			}
+		}
+		
+		return publicProcessJson;
+	}
 
 	public struct function generateProcessJson(){
 		var processComponentDirectoryListing = getService('hibachiService').getProcessComponentDirectoryListing();
@@ -319,13 +337,13 @@ component accessors="true" output="false" extends="HibachiService" {
 		for(var componentCFCName in processComponentDirectoryListing){
 			if(componentCFCName != 'HibachiProcess.cfc'){
 				var componentName = listFirst(componentCFCName,'.');
-			var componentMetaData = getComponentMetaData(getService('hibachiService').getProcessComponentPath()&componentName);
-			processComponentMetaData[componentName] = {};
-			processComponentMetaData[componentName]['extends'] = getExtended(componentMetaData);
-			if(structKeyExists(componentMetaData,'functions')){
-				processComponentMetaData[componentName]['functions'] = getFunctions(componentMetaData);
-			}
-			if(structKeyExists(componentMetaData,'properties')){
+				var componentMetaData = getComponentMetaData(getService('hibachiService').getProcessComponentPath()&componentName);
+				processComponentMetaData[componentName] = {};
+				processComponentMetaData[componentName]['extends'] = getExtended(componentMetaData);
+				if(structKeyExists(componentMetaData,'functions')){
+					processComponentMetaData[componentName]['functions'] = getFunctions(componentMetaData);
+				}
+				if(structKeyExists(componentMetaData,'properties')){
 					for(var property in componentMetaData['properties']){
 		    			//use description on the property else find an rbkey hint
 		    			if(!structKeyExists(property,'description')){
@@ -338,8 +356,8 @@ component accessors="true" output="false" extends="HibachiService" {
 							}
 		    			}
 		    		}
-				processComponentMetaData[componentName]['properties'] = componentMetaData.properties;
-			}
+					processComponentMetaData[componentName]['properties'] = componentMetaData.properties;
+				}
 				
 				if(structKeyExists(componentMetaData,'description')){
 	    			processComponentMetaData[componentName]['description'] = componentMetaData.description;
