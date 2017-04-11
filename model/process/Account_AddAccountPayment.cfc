@@ -59,11 +59,20 @@ component output="false" accessors="true" extends="HibachiProcess" {
 	property name="saveAccountPaymentMethodName" hb_rbKey="entity.accountPaymentMethod.accountPaymentMethodName";
 	property name="currencyCode" hb_rbKey="entity.currency" hb_formFieldType="select";
 	property name="appliedOrderPayments" type="array" hb_populateArray="true";
+	property name="accountPaymentType" cfc="Type";
+	property name="accountPaymentTypeID";
 	
 	// Cached Properties
 	property name="accountPaymentMethodIDOptions";
 	property name="paymentMethodIDOptions";
 	property name="accountAddressIDOptions";
+	
+	public any function getAccountPaymentType(){
+		if(!structkeyExists(variables,'accountPaymentType') && !isNull(getAccountPaymentTypeID())){
+			variables.accountPaymentType = getService('TypeService').getType(getAccountPaymentTypeID());
+		}
+		return variables.accountPaymentType;
+	}
 	
 	public numeric function getNetAmountOfAppliedOrderPayments(){
 		var netAmount = 0;

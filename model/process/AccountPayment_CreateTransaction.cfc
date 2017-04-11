@@ -95,7 +95,7 @@ component output="false" accessors="true" extends="HibachiProcess" {
 				}
 			} else if (getAccountPayment().getAccountPaymentType().getSystemCode() eq "optCredit") {
 				variables.transactionType = 'credit';
-			}
+			} 
 		}
 		return variables.transactionType;
 	}

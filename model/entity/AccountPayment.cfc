@@ -227,16 +227,14 @@ component displayname="Account Payment" entityname="SlatwallAccountPayment" tabl
 	public numeric function getAmount() {
 		var totalAmt = 0;
 		
-		if(!isNull(getAccountPaymentType()) && getAccountPaymentType().getSystemCode() == 'aptAdjustment'){
-			return 0;
-		}
-		
 		for(var i=1; i<=arrayLen(getAppliedAccountPayments()); i++) {
 			var appliedAccountPayment = getAppliedAccountPayments()[i];
-			if(appliedAccountPayment.getAccountPaymentType().getSystemCode() == 'aptCharge'){
-				totalAmt = getService('HibachiUtilityService').precisionCalculate(totalAmt + appliedAccountPayment.getAmount());
-			}else{
-				totalAmt = getService('HibachiUtilityService').precisionCalculate(totalAmt - appliedAccountPayment.getAmount());
+			if(!isNull(appliedAccountPayment.getAccountPaymentType())){
+				if(appliedAccountPayment.getAccountPaymentType().getSystemCode() == 'aptCharge'){
+					totalAmt = getService('HibachiUtilityService').precisionCalculate(totalAmt + appliedAccountPayment.getAmount());
+				}else{
+					totalAmt = getService('HibachiUtilityService').precisionCalculate(totalAmt - appliedAccountPayment.getAmount());
+				}
 			}
 		}
 		
@@ -332,7 +330,7 @@ component displayname="Account Payment" entityname="SlatwallAccountPayment" tabl
 		var amountUnassigned = 0;
 		
 		for(var accountPaymentApplied in getAppliedAccountPayments()) {
-			if(isNull(accountPaymentApplied.getOrderPayment())) {
+			if(isNull(accountPaymentApplied.getOrderPayment()) && !isNull(accountPaymentApplied.getAccountPaymentType())) {
 				if(accountPaymentApplied.getAccountPaymentType().getSystemCode() == "aptCharge") {
 					if(getAmountReceived()>0){
 						amountUnassigned = getService('HibachiUtilityService').precisionCalculate(amountUnassigned + accountPaymentApplied.getAmount());

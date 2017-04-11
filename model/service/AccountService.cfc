@@ -142,6 +142,10 @@ component extends="HibachiService" accessors="true" output="false" {
 		if(isNull(newAccountPayment.getAccount())) {
 			newAccountPayment.setAccount( arguments.account );
 		}
+		
+		if(!isNull(arguments.processObject.getAccountPaymentType())){
+			newAccountPayment.setAccountPaymentType(arguments.processObject.getAccountPaymentType());
+		}
 
 		// If this is an existing account payment method, then we can pull the data from there
 		if( len(arguments.processObject.getAccountPaymentMethodID()) ) {
@@ -199,14 +203,12 @@ component extends="HibachiService" accessors="true" output="false" {
 				}
 			}
 		}
-		
 		// Save the newAccountPayment
 		newAccountPayment = this.saveAccountPayment( newAccountPayment );
 		
 		// If there are errors in the newAccountPayment after save, then add them to the account
 		if(newAccountPayment.hasErrors()) {
 			arguments.account.addError('accountPayment', rbKey('admin.entity.order.addAccountPayment_error'));
-			writedump(newAccountPayment.getErrors());abort;
 		// If no errors, then we can process a transaction
 		} else {
 			if(newAccountPayment.getAccountPaymentType().getSystemCode() != 'aptAdjustment'){
@@ -1129,7 +1131,10 @@ component extends="HibachiService" accessors="true" output="false" {
 			}
 
 			// Run the transaction
-			paymentTransaction = getPaymentService().processPaymentTransaction(paymentTransaction, transactionData, 'runTransaction');
+			
+			paymentTransaction = getPaymentService().processPaymentTransaction(paymentTransaction, transactionData, 'runTransaction');	
+		
+			
 
 			// If the paymentTransaction has errors, then add those errors to the accountPayment itself
 			if(paymentTransaction.hasError('runTransaction')) {

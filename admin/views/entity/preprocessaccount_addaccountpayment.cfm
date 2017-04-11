@@ -77,7 +77,7 @@ Notes:
     				                           fieldname="newAccountPayment.currencyCode" edit="#rc.edit#">
     				<hb:hibachipropertydisplay object="#rc.processObject.getNewAccountPayment()#" 
     				                           property="accountPaymentType" 
-    				                           fieldname="newAccountPayment.accountPaymentType.typeID" 
+    				                           fieldname="accountPaymentTypeID" 
     				                           edit="#rc.edit#" 
     				                           fieldattributes="ng-model='paymentType' ng-change='updatePaymentType()' ng-init='paymentType = ""444df32dd2b0583d59a19f1b77869025""'">
     				
@@ -85,7 +85,7 @@ Notes:
     				                           edit="#rc.edit#">
     			</hb:hibachipropertylist>
     			
-    			<hb:hibachidisplaytoggle selector="select[name='newAccountPayment.accountPaymentType.typeID']" 
+    			<hb:hibachidisplaytoggle selector="select[name='accountPaymentTypeID']" 
     			                         loadvisable="#true#" 
     			                         showvalues="444df32e9b448ea196c18c66e1454c46,444df32dd2b0583d59a19f1b77869025">
 	    			<hb:hibachipropertylist divclass="col-md-6">
@@ -266,8 +266,8 @@ Notes:
 					<td>#orderPayment.getOrder().getFormattedValue('paymentAmountDue')#</td>
 					
 					<td>
-						<hb:HibachiFormField fieldType='select' fieldName='appliedOrderPayments[#i#].paymentTypeID' valueOptions='#rc.processObject.getNewAccountPayment().getAccountPaymentAppliedOptions()#' fieldAttributes="ng-model='appliedOrderPayment.input#i#.paymentType' ng-change='updateSubTotal()' ng-init='appliedOrderPayment.input#i#.paymentType = ""444df32dd2b0583d59a19f1b77869025""'" />
-						
+						<hb:HibachiFormField fieldType='select' fieldName='appliedOrderPayments[#i#].paymentTypeID' valueOptions='#rc.processObject.getNewAccountPayment().getAccountPaymentAppliedOptions()#' fieldAttributes="ng-model='appliedOrderPayment.input#i#.paymentType' ng-hide='paymentTypeLock' ng-change='updateSubTotal()' ng-init='appliedOrderPayment.input#i#.paymentType = ""444df32dd2b0583d59a19f1b77869025""'" />
+						<div ng-if="paymentTypeLock">{{paymentTypeName}}</div>
 					</td>
 					<td>
 						<input type="number" name="appliedOrderPayments[#i#].amount" class="span1" ng-model="appliedOrderPayment.input#i#.amount" placeholder="0" min="0" step="0.01" ng-change="updateSubTotal()" />
