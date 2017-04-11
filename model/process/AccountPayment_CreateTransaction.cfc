@@ -112,5 +112,12 @@ component output="false" accessors="true" extends="HibachiProcess" {
 		}
 		return variables.amount;
 	}
+	
+	public void function setAmount(required any amount){
+		if(isNull(arguments.amount) || !len(arguments.amount)){
+			arguments.amount = 0;
+		}
+		variables.amount = arguments.amount;
+	}
 		
 }

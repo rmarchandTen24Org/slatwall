@@ -206,6 +206,7 @@ component extends="HibachiService" accessors="true" output="false" {
 		// If there are errors in the newAccountPayment after save, then add them to the account
 		if(newAccountPayment.hasErrors()) {
 			arguments.account.addError('accountPayment', rbKey('admin.entity.order.addAccountPayment_error'));
+			writedump(newAccountPayment.getErrors());abort;
 		// If no errors, then we can process a transaction
 		} else {
 			if(newAccountPayment.getAccountPaymentType().getSystemCode() != 'aptAdjustment'){
@@ -1068,7 +1069,11 @@ component extends="HibachiService" accessors="true" output="false" {
 		var uncapturedAuthorizations = getPaymentService().getUncapturedPreAuthorizations( arguments.accountPayment );
 
 		// If we are trying to charge multiple pre-authorizations at once we may need to run multiple transacitons
-		if(arguments.processObject.getTransactionType() eq "chargePreAuthorization" && arrayLen(uncapturedAuthorizations) gt 1 && arguments.processObject.getAmount() gt uncapturedAuthorizations[1].chargeableAmount) {
+		if(
+			arguments.processObject.getTransactionType() eq "chargePreAuthorization" 
+			&& arrayLen(uncapturedAuthorizations) gt 1 
+			&& arguments.processObject.getAmount() gt uncapturedAuthorizations[1].chargeableAmount
+		) {
 			var totalAmountCharged = 0;
 
 			for(var a=1; a<=arrayLen(uncapturedAuthorizations); a++) {
@@ -1112,6 +1117,7 @@ component extends="HibachiService" accessors="true" output="false" {
 			paymentTransaction.setAccountPayment( arguments.accountPayment );
 
 			// Setup the transaction data
+			
 			transactionData = {
 				transactionType = arguments.processObject.getTransactionType(),
 				amount = arguments.processObject.getAmount()
