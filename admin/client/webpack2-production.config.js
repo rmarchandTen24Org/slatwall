@@ -11,7 +11,7 @@ devConfig.output.sourceMapFilename= '[name].map';
  devConfig.module.rules.push({ exclude: /node_modules/,  loader: WebpackStrip.loader('$log.debug') });
  devConfig.plugins.push(new ngAnnotatePlugin({ add: true }));
 
-devConfig.devtool('source-map');
+//devConfig.devtool('source-map');
  devConfig.plugins.push(new webpack.optimize.UglifyJsPlugin({
     beautify: false,
     mangle: {

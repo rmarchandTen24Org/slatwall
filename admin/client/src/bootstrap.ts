@@ -6,17 +6,12 @@
 import {BaseBootStrapper} from "../../../org/Hibachi/client/src/basebootstrap";
 import {slatwalladminmodule} from "./slatwall/slatwalladmin.module";
 
-
-
-
 //custom bootstrapper
 class bootstrapper extends BaseBootStrapper{
-    public myApplication;
+    public myApplication:any;
     constructor(){
         super(slatwalladminmodule.name);
 
-
-        console.log(slatwalladminmodule);
         angular.bootstrap(document,[slatwalladminmodule.name])
     }
 

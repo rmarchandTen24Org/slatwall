@@ -43,9 +43,10 @@ var appConfigService={
 var appConfig = {
     //context:PATHS.app,
     entry: {
-        app:['./bootstrap.ts'],
+        app:['./bootstrap'],
+        hibachi:[path.join(__dirname,'/src/hibachi/hibachi.module')],
         vendor:[
-            path.join(__dirname,'/src/vendor.ts'),
+            path.join(__dirname,'/src/vendor'),
         ]
     },
     watch:true,
