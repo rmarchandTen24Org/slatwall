@@ -274,7 +274,7 @@ component extends="FW1.framework" {
 		var status = 200;
 		setupGlobalRequest();
 		var httpRequestData = getHTTPRequestData();
-
+		
 		//Set an account before checking auth in case the user is trying to login via the REST API
 		/* Handle JSON requests */
 		var hasJsonData = false;
@@ -465,7 +465,7 @@ component extends="FW1.framework" {
 			lock scope="Application" timeout="600"  {
 				
 				// Set the request timeout to 600
-				createObject("Slatwall.org.Hibachi.HibachiTagService").cfsetting(requesttimeout=600);
+				createObject("#variables.framework.applicationKey#.org.Hibachi.HibachiTagService").cfsetting(requesttimeout=600);
 
 				// Check again so that the qued requests don't back up
 				if(!getHibachiScope().hasApplicationValue("initialized") || !getHibachiScope().getApplicationValue("initialized")) {
