@@ -832,7 +832,7 @@ component extends="Slatwall.meta.tests.unit.SlatwallUnitTestBase" {
 
 		order = variables.service.process(order,placeOrderData,'placeOrder');
 		variables.service.getDao('hibachiDao').flushOrmSession();
-		assertEquals(sku.getQuantity('QNDOO'),request.slatwallScope.getDao('inventoryDao').getQNDOO(product.getProductID())[1]['QNDOO']);
+		assertEquals(sku.getQuantity('QNDOO'),1);
 		var orderDeliveryData={
 			orderDeliveryID="",
 			preProcessDisplayedFlag=1,
