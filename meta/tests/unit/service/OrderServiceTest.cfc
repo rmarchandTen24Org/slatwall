@@ -726,6 +726,7 @@ component extends="Slatwall.meta.tests.unit.SlatwallUnitTestBase" {
 		stock.addInventory(inventory);
 		
 		variables.service.getDao('hibachiDao').flushOrmSession();
+		ORMClearSession();
 		//verify we are cool at all levels
 		assert(arraylen(stock.getInventory()));
 		assert(arraylen(sku.getStocks()));
@@ -750,7 +751,7 @@ component extends="Slatwall.meta.tests.unit.SlatwallUnitTestBase" {
 		order = variables.service.process(order,orderData,'create');
 
 		variables.service.getDao('hibachiDao').flushOrmSession();
-
+		ORMClearSession();
 		var shippingAddressData={
 			addressID="",
 			firstName="test",
@@ -793,7 +794,7 @@ component extends="Slatwall.meta.tests.unit.SlatwallUnitTestBase" {
 		};
 		order = variables.service.process(order,addOrderItemData,'addOrderItem');
 		variables.service.getDao('hibachiDao').flushOrmSession();
-
+		ORMClearSession();
 		assert(arraylen(order.getOrderFulfillments()));
 
 		var placeOrderData={
@@ -832,6 +833,7 @@ component extends="Slatwall.meta.tests.unit.SlatwallUnitTestBase" {
 
 		order = variables.service.process(order,placeOrderData,'placeOrder');
 		variables.service.getDao('hibachiDao').flushOrmSession();
+		ORMClearSession();
 		addToDebug(sku.getQuantity('QNDOO'));
 		addToDebug(serializeJson(request.slatwallScope.getDao('inventoryDao').getQNDOO(product.getProductID())));
 		assertEquals(sku.getQuantity('QNDOO'),request.slatwallScope.getDao('inventoryDao').getQNDOO(product.getProductID())[1]['QNDOO']);
@@ -866,6 +868,7 @@ component extends="Slatwall.meta.tests.unit.SlatwallUnitTestBase" {
 		var orderDelivery = createTestEntity('OrderDelivery',{});
 		orderDelivery = variables.service.process(orderDelivery,orderDeliveryData,'create');
 		variables.service.getDao('hibachiDao').flushOrmSession();
+		ORMClearSession();
 		
 		assert(arrayLen(orderDelivery.getOrderDeliveryItems()));
 		
