@@ -696,7 +696,7 @@ component displayname="Product" entityname="SlatwallProduct" table="SwProduct" p
 
 	// Quantity
 	public numeric function getQuantity(required string quantityType, string skuID, string locationID, string stockID) {
-		arguments.quantityType = uCase(arguments.quantityType);
+		arguments.quantityType = lCase(arguments.quantityType);
 		// First we check to see if that quantityType is defined, if not we need to go out an get the specific struct, or value and cache it
 		if(!structKeyExists(variables, arguments.quantityType)) {
 			if(listFindNoCase("QOH,QOSH,QNDOO,QNDORVO,QNDOSA,QNRORO,QNROVO,QNROSA", arguments.quantityType)) {

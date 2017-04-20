@@ -84,7 +84,7 @@ component displayname="Stock" entityname="SlatwallStock" table="SwStock" persist
 
 	// Quantity
 	public numeric function getQuantity(required string quantityType) {
-		arguments.quantityType = uCase(arguments.quantityType);
+		arguments.quantityType = lCase(arguments.quantityType);
 		if( !structKeyExists(variables, arguments.quantityType) ) {
 			if(listFindNoCase("QOH,QOSH,QNDOO,QNDORVO,QNDOSA,QNRORO,QNROVO,QNROSA", arguments.quantityType)) {
 				return getSku().getQuantity(quantityType=arguments.quantityType, stockID=this.getStockID());

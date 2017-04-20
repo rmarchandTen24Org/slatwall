@@ -515,7 +515,7 @@ component entityname="SlatwallSku" table="SwSku" persistent=true accessors=true 
 	// START: Quantity Helper Methods
 
 	public numeric function getQuantity(required string quantityType, string locationID, string stockID) {
-		arguments.quantityType = uCase(arguments.quantityType);
+		arguments.quantityType = lCase(arguments.quantityType);
 
 		// Request for calculated quantity
 		if( listFindNoCase("QC,QE,QNC,QATS,QIATS", arguments.quantityType) ) {
