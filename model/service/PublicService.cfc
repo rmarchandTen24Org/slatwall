@@ -359,7 +359,7 @@ component extends="HibachiService"  accessors="true" output="false"
       * @http-return <b>(200)</b> Successfully Sent or <b>(400)</b> Bad or Missing Input Data
       * @ProcessMethod AccountEmailAddress_SendVerificationEmail
       */
-    public void function sendAccountEmailAddressVerificationEmail() {
+    public any function sendAccountEmailAddressVerificationEmail() {
         param name="data.accountEmailAddressID" default="";
         
         var accountEmailAddress = getAccountService().getAccountEmailAddress( data.accountEmailAddressID );
