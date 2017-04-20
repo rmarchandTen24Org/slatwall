@@ -66,6 +66,9 @@ component output="false" accessors="true" persistent="false" extends="HibachiTra
 					if(listFindNoCase('Product,Sku,Stock',this.getClassName())){
 						var inventoryProperties = listToArray('QOH,QOSH,QNDOO,QNDORVO,QNDOSA,QNRORO,QNROVO,QNROSA,QC,QE,QNC,QATS,QIATS');
 						for(var inventoryProperty in inventoryProperties){
+							if(structKeyExists(this,'set#inventoryProperty#')){
+								this.invokeMethod('set#inventoryProperty#',javacast('null',''));
+							}
 							if(structKeyExists(variables,inventoryProperty)){
 								structDelete(variables,inventoryProperty);
 							}
