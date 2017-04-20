@@ -49,7 +49,7 @@ Notes:
 component accessors="true" output="false" extends="Slatwall.integrationServices.BaseIntegration" implements="Slatwall.integrationServices.IntegrationInterface" {
 	
 	public string function getIntegrationTypes() {
-		return "shipping";
+		return "product";
 	}
 	
 	public string function getDisplayName() {
@@ -59,7 +59,9 @@ component accessors="true" output="false" extends="Slatwall.integrationServices.
 	public struct function getSettings() {
 		return {
 			recipeID = {fieldType="text"},
-			partnerBillingKey = {fieldType="password"}
+			partnerBillingKey = {fieldType="password"},
+			apiURL = {fieldType="text"},
+			testMode={fieldType="yesno"}
 		};
 	}
 	
