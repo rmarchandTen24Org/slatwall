@@ -49,7 +49,7 @@ Notes:
 component accessors="true" output="false" extends="Slatwall.integrationServices.BaseIntegration" implements="Slatwall.integrationServices.IntegrationInterface" {
 	
 	public string function getIntegrationTypes() {
-		return "product";
+		return "data";
 	}
 	
 	public string function getDisplayName() {

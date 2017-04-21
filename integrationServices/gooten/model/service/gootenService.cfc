@@ -18,8 +18,10 @@ component accessors="true" extends="Slatwall.org.hibachi.HibachiService"{
 		var gootenItems = getGootenItems(arguments.order.getOrderItems());
 		if(arrayLen(gootenItems)){
 			var gootenOrder = createGootenOrder(arguments.order, gootenItems);
-			sendGootenOrder(gootenOrder);
-			//ADD GOOTEN ORDER ID TO DAKINE ORDER REMOTE ENTITY KINE SPOT
+			var gootenID = sendGootenOrder(gootenOrder);
+			if(len(gootenID)){
+				arguments.order.setRemoteID(gootenID);
+			}
 		}
 	}
 
@@ -43,14 +45,24 @@ component accessors="true" extends="Slatwall.org.hibachi.HibachiService"{
 		return gootenOrder;
 	}
 
-	public any function sendGootenOrder(required any gootenOrder){
+	public string function sendGootenOrder(required any gootenOrder){
 		var requestBean = new Slatwall.model.transient.data.DataRequestBean();
+
 		requestBean.setURLString(getApiURL()&'orders');
 		requestBean.setMethod('POST');
 		requestBean.setQueryString('?recipeid=' & urlEncodedFormat(getRecipeID()));
 		requestBean.setContentType('application/json');
 		requestBean.setBody(serializeJSON(arguments.gootenOrder));
-		writeDump(requestBean.getResponseBean());abort;
+
+		var responseData = requestBean.getResponseBean().getData();
+
+		//Will retry as part of scheduled task
+		if(structKeyExists(responseData, 'HadError') && responseData['HadError']){
+			writeDump(responseData);abort;
+			return '';
+		}
+
+		return responseData['id'];
 	}
 
 	public array function getGootenItems(required array orderItems){
@@ -119,5 +131,12 @@ component accessors="true" extends="Slatwall.org.hibachi.HibachiService"{
 	public any function getGootenPayment(){
 		return {'PartnerBillingKey'=getPartnerBillingKey()};
 	}
+
+	public array function getUnsyncedGootenOrders(){
+		var orders = ormExecuteQuery("SELECT DISTINCT i.order FROM SlatwallOrderItem i WHERE i.sku.product.productType.productTypeName = ? AND i.order.remoteID IS NULL", ['Gooten'], false);
+		return orders;
+	}
+
+
 
 }
