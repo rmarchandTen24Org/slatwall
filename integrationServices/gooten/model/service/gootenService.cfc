@@ -2,15 +2,25 @@ component accessors="true" extends="Slatwall.org.hibachi.HibachiService"{
 	property name="integration" type="any";
 	property name="recipeID" type="string";
 	property name="partnerBillingKey" type="string";
+	property name="stagingRecipeID" type="string";
+	property name="stagingPartnerBillingKey" type="string";
 	property name="apiURL" type="string";
+	property name="stagingAPIUrl" type="string";
+	property name="stagingMode" type="boolean";
 	property name="testMode" type="boolean";
+	property name="gootenDAO" type="any";
 
 	public any function init(){
+		setGootenDAO(getDAO('gootenDAO'));
 		setIntegration(getService('integrationService').getIntegrationByIntegrationPackage('gooten'));
 		setRecipeID(getIntegration().setting('recipeID'));
 		setPartnerBillingKey(getIntegration().setting('partnerBillingKey'));
+		setStagingRecipeID(getIntegration().setting('stagingRecipeID'));
+		setStagingPartnerBillingKey(getIntegration().setting('stagingPartnerBillingKey'));
 		setApiURL(getIntegration().setting('apiURL'));
+		setStagingAPIURL(getIntegration().setting('stagingApiURL'));
 		setTestMode(getIntegration().setting('testMode'));
+		setStagingMode(getIntegration().setting('stagingMode'));
 		return this;
 	}
 
@@ -47,22 +57,26 @@ component accessors="true" extends="Slatwall.org.hibachi.HibachiService"{
 
 	public string function sendGootenOrder(required any gootenOrder){
 		var requestBean = new Slatwall.model.transient.data.DataRequestBean();
-
-		requestBean.setURLString(getApiURL()&'orders');
+		var apiUrl = getStagingMode() ? getStagingAPIURL() : getAPIUrl();
+		requestBean.setURLString(apiUrl&'orders');
 		requestBean.setMethod('POST');
-		requestBean.setQueryString('?recipeid=' & urlEncodedFormat(getRecipeID()));
+		requestBean.setQueryString(getRecipeIDQueryString());
 		requestBean.setContentType('application/json');
 		requestBean.setBody(serializeJSON(arguments.gootenOrder));
 
-		var responseData = requestBean.getResponseBean().getData();
+		var responseBean = requestBean.getResponseBean();
+		var responseData = responseBean.getData();
 
 		//Will retry as part of scheduled task
 		if(structKeyExists(responseData, 'HadError') && responseData['HadError']){
-			writeDump(responseData);abort;
+			logHibachi('Error syncing order #orderNumber# to Gooten.');
 			return '';
 		}
-
-		return responseData['id'];
+		try{
+			return responseData['id'];
+		}catch(any e){
+			logHibachi('Error syncing order #orderNumber# to Gooten.');
+		}
 	}
 
 	public array function getGootenItems(required array orderItems){
@@ -128,15 +142,66 @@ component accessors="true" extends="Slatwall.org.hibachi.HibachiService"{
 		return gootenBilling;
 	}
 
+	public any function pullGootenOrder(required any order){
+		var requestBean = new Slatwall.model.transient.data.DataRequestBean();
+
+		var apiUrl = getAPIUrl();
+
+		requestBean.setURLString(apiUrl&'orders');
+		requestBean.setMethod('GET');
+		requestBean.setQueryString(getRecipeIDQueryString(false) & '&id='&order.getRemoteID());
+
+		var responseData = requestBean.getResponseBean().getData();
+
+		return responseData;
+	}
+
+	public any function syncGootenOrderStatus(required any order, required any gootenOrder){
+		for(var gootenItem in gootenOrder.items){
+			if(structKeyExists(gootenItem, 'Meta') && structKeyExists(gootenItem.meta,'PreconfigSku')){
+				var skuCode = gootenItem.meta.preconfigSku;
+			}else{
+				var skuCode = gootenItem.Sku;
+			}
+			if(gootenItem.Status == 'Test'){ //Needs to be 'Delivered'
+				for(var item in order.getOrderItems()){
+					if(item.getSku().getSkuCode() == skuCode){
+						var orderItem = item;
+					}
+				}
+				if(!arrayLen(orderItem.getOrderDeliveryItems())){
+					var stock = getGootenDAO().getGootenStock(skuCode);
+					var orderDelivery = this.newOrderDelivery();
+
+					orderDelivery.setOrder(order);
+					orderDelivery.setLocation(stock.getLocation());
+					orderDelivery.setFulfillmentMethod(orderItem.getOrderFulfillment().getFulfillmentMethod());
+
+					var orderDeliveryItem = this.newOrderDeliveryItem();
+					orderDeliveryItem.setOrderItem(orderItem);
+					orderDeliveryItem.setOrderDelivery(orderDelivery);
+					orderDeliveryItem.setQuantity(gootenItem.quantity);
+					orderDeliveryItem.setStock(stock);
+
+					this.saveOrderDelivery(orderDelivery);
+					this.saveOrderDeliveryItem(orderDeliveryItem);
+					getHibachiScope().flushOrmSession();
+				}
+			}
+		}
+	}
+
 	public any function getGootenPayment(){
-		return {'PartnerBillingKey'=getPartnerBillingKey()};
+		var partnerBillingKey = getStagingMode() ? getStagingPartnerBillingKey() : getPartnerBillingKey();
+		return {'PartnerBillingKey'=partnerBillingKey};
 	}
 
-	public array function getUnsyncedGootenOrders(){
-		var orders = ormExecuteQuery("SELECT DISTINCT i.order FROM SlatwallOrderItem i WHERE i.sku.product.productType.productTypeName = ? AND i.order.remoteID IS NULL", ['Gooten'], false);
-		return orders;
+	private string function getRecipeIDQueryString(boolean staging=true){
+		if(!getStagingMode() || arguments.staging == false){
+			arguments.staging = false;
+		}
+		var recipeID = arguments.staging ? getStagingRecipeID() : getRecipeID();
+		return '?recipeid=' & urlEncodedFormat(recipeID);
 	}
-
-
 
 }

@@ -51,27 +51,35 @@ Notes:
 component accessors="true" output="false" displayname="Salesforce" extends="Slatwall.org.Hibachi.HibachiObject" {
 	// Variables Saved in this application scope, but not set by end user
 	property name="gootenService" type="any";
+	property name="gootenDAO" type="any";
 	
 	public any function init(){
 		setGootenService(getService('gootenService'));
+		setGootenDAO(getDAO('gootenDAO'));
 		return this;
 	}
 
 	public any function testIntegration() {
-		var orders = pushData();
-		writeDump(var = orders, top=1);
+		pushData();
 	}
 	
 	public any function pushData(){
-		var orders = getGootenService().getUnsyncedGootenOrders();
+		var orders = getGootenDAO().getUnsyncedGootenOrders();
 		for(order in orders){
 			getGootenService().checkGootenOrder(order);
 		}
-		return orders;
 	}
 	
 	public any function pullData(){
-		
+		var orders = getGootenDAO().getOpenGootenOrders();
+		for(order in orders){
+			var gootenOrder = getGootenService().pullGootenOrder(order);
+			getGootenService().syncGootenOrderStatus(order, gootenOrder);
+		}
+		/*Alternately*/
+		//Use webhooks
+		//When notification is received
+			//if item status is delivered, check for/create delivery
 	}
 
 	// @hint helper function to return a Setting

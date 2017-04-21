@@ -60,8 +60,12 @@ component accessors="true" output="false" extends="Slatwall.integrationServices.
 		return {
 			recipeID = {fieldType="text"},
 			partnerBillingKey = {fieldType="password"},
+			stagingRecipeID = {fieldType="text"},
+			stagingPartnerBillingKey = {fieldType="password"},
 			apiURL = {fieldType="text"},
-			testMode={fieldType="yesno"}
+			stagingApiURL = {fieldType="text"},
+			stagingMode={fieldType="yesno", defaultValue=0},
+			testMode={fieldType="yesno", defaultValue=0}
 		};
 	}
 	

@@ -4,7 +4,7 @@ component extends="Slatwall.org.Hibachi.HibachiEventHandler" {
 		getService('gootenService').checkGootenOrder(order);
 	}
 
-	public void function afterOrderSave(required any entity){
-		getService('gootenService').checkGootenOrder(order);
-	}
+	// public void function afterOrderSave(required any entity){
+	// 	getService('gootenService').checkGootenOrder(order);
+	// }
 }
