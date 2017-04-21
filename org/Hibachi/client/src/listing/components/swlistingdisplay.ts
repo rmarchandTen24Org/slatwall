@@ -118,10 +118,10 @@ class SWListingDisplayController{
             this.baseEntityName = this.collection;
             this.collectionObject = this.collection;
             this.collectionConfig = this.collectionConfigService.newCollectionConfig(this.collectionObject);
-             this.$timeout(()=>{
-                this.collection = this.collectionConfig;
-                this.columns = this.collectionConfig.columns;
-            });
+            // this.$timeout(()=>{
+            //    this.collection = this.collectionConfig;
+            //    this.columns = this.collectionConfig.columns;
+            //});
             this.multipleCollectionDeffered.reject();
         }
 		this.initializeState();
@@ -269,6 +269,10 @@ class SWListingDisplayController{
         }
         if(angular.isUndefined(this.expandable)){
             this.expandable = false;
+        }
+
+        if(angular.isUndefined(this.showFilters)){
+            this.showFilters = true;
         }
         //setup export action
         if(angular.isDefined(this.exportAction)){

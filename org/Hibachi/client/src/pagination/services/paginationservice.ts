@@ -83,6 +83,7 @@ class Pagination{
     };
     public setCurrentPage=(currentPage:number):void =>{
         this.currentPage = currentPage;
+        console.log(this.getCollection);
         this.getCollection();
         this.observerService.notify('swPaginationAction',{action:'pageChange', currentPage});
     };

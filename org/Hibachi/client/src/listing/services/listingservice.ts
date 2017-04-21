@@ -689,62 +689,91 @@ class ListingService{
     
 
     public setupDefaultGetCollection = (listingID:string) =>{
+
+        console.log("0");
+
         if(this.getListing(listingID).collectionConfigs.length == 0){
+
+
+            console.log("1");
             this.getListing(listingID).collectionPromise = this.getListing(listingID).collectionConfig.getEntity();
-            
+            console.log("2");
             return () =>{
+                console.log("3");
                 this.getListing(listingID).collectionConfig.setCurrentPage(this.getListing(listingID).paginator.getCurrentPage());
+                console.log("4");
                 this.getListing(listingID).collectionConfig.setPageShow(this.getListing(listingID).paginator.getPageShow());
-                if(this.getListing(listingID).multiSlot){
-                	this.getListing(listingID).getEntity().then(
-                    (data)=>{
-                        this.getListing(listingID).collectionData = data;
-                        this.setupDefaultCollectionInfo(listingID);
-                        this.getListing(listingID).collectionData.pageRecords = data.pageRecords || data.records;
-                        this.getListing(listingID).paginator.setPageRecordsInfo(this.getListing(listingID).collectionData);
-                    },
-                    (reason)=>{
-                        throw("Listing Service encounter a problem when trying to get collection. Reason: " + reason);
-                    }
-                );
-                }else{
-                	this.getListing(listingID).collectionPromise.then(
-                    (data)=>{
-                        this.getListing(listingID).collectionData = data;
-                        this.setupDefaultCollectionInfo(listingID);
-                        this.getListing(listingID).collectionData.pageRecords = data.pageRecords || data.records;
-                        this.getListing(listingID).paginator.setPageRecordsInfo(this.getListing(listingID).collectionData);
-                    },
-                    (reason)=>{
-                        throw("Listing Service encounter a problem when trying to get collection. Reason: " + reason);
-                    }
-                );
-                }
-                
+                console.log("5");
+            //    if(this.getListing(listingID).multiSlot){
+            //        console.log("6", this.getListing(listingID).collectionConfig);
+                	this.getListing(listingID).collectionConfig.getEntity().then(
+                        (data)=>{
+                            console.log("7", this.getListing(listingID).collectionConfig.columns);
+                            if(angular.isUndefined(this.getListing(listingID).collectionConfig.columns) || !this.getListing(listingID).collectionConfig.columns.length){
+
+                               console.log('RESETING COLUMNS')
+                                this.getListing(listingID).collectionConfig.loadJson(data.collectionConfig);
+                                this.getListing(listingID).columns = this.getListing(listingID).collectionConfig.columns;
+                            }
+
+                            this.getListing(listingID).collectionData = data;
+                            //this.setupDefaultCollectionInfo(listingID);
+                            this.getListing(listingID).collectionData.pageRecords = data.pageRecords || data.records;
+                            this.getListing(listingID).paginator.setPageRecordsInfo(this.getListing(listingID).collectionData);
+                        },
+                        (reason)=>{
+                            console.log("8");
+                            throw("Listing Service encounter a problem when trying to get collection. Reason: " + reason);
+                        }
+                    );
+            //    }else{
+            //        console.log("9");
+            //    	this.getListing(listingID).collectionPromise.then(
+            //            (data)=>{
+            //                console.log("10");
+            //                this.getListing(listingID).collectionData = data;
+            //                this.setupDefaultCollectionInfo(listingID);
+            //                this.getListing(listingID).collectionData.pageRecords = data.pageRecords || data.records;
+            //                this.getListing(listingID).paginator.setPageRecordsInfo(this.getListing(listingID).collectionData);
+            //            },
+            //            (reason)=>{
+            //                console.log("11");
+            //                throw("Listing Service encounter a problem when trying to get collection. Reason: " + reason);
+            //            }
+            //        );
+            //    }
+            //
             };
-        
-        } else { 
-            
+
+        } else {
+            console.log("12");
             return () =>{
-                this.getListing(listingID).collectionData = {}; 
+                console.log("13");
+                this.getListing(listingID).collectionData = {};
                 this.getListing(listingID).collectionData.pageRecords = [];
                 var allGetEntityPromises = [];
+                console.log("14");
                 angular.forEach(this.getListing(listingID).collectionConfigs,(collectionConfig,key)=>{
+                    console.log("15");
                     allGetEntityPromises.push(collectionConfig.getEntity());
-                });      
+                });
                 if(allGetEntityPromises.length){
+                    console.log("16");
                     this.$q.all(allGetEntityPromises).then(
                         (results)=>{
+                            console.log("17");
                             angular.forEach(results,(result,key)=>{
+                                console.log("18");
                                 this.getListing(listingID).listingService.setupColumns(listingID,this.getListing(listingID).collectionConfigs[key], this.getListing(listingID).collectionObjects[key]);
-                                this.getListing(listingID).collectionData.pageRecords = this.getListing(listingID).collectionData.pageRecords.concat(result.records); 
+                                this.getListing(listingID).collectionData.pageRecords = this.getListing(listingID).collectionData.pageRecords.concat(result.records);
                             });
                         },
                         (reason)=>{
+                            console.log("19");
                            throw("listing service had trouble getting collection data because: " + reason);
                         }
-                    ); 
-                } 
+                    );
+                }
             }
         }
     };
@@ -843,7 +872,7 @@ class ListingService{
     public getKeyOfMatchedDisableRule = (listingID:string, pageRecord)=>{
         var disableRuleMatchedKey = -1; 
         if(angular.isDefined(this.getListing(listingID).disableRules)){   
-            angular.forEach(this.getListing(listingID).disableRules, (rule, key)=>{
+            angular.forEach(this.getListing(listingID).disableRules, (rule, key:any)=>{
                 if(angular.isDefined(pageRecord[rule.filterPropertyIdentifier])){ 
                     if(angular.isString(pageRecord[rule.filterPropertyIdentifier])){
                         var pageRecordValue = pageRecord[rule.filterPropertyIdentifier].trim(); 
@@ -882,7 +911,7 @@ class ListingService{
         if(angular.isDefined(this.getListing(listingID)) &&
            angular.isDefined(this.getListing(listingID).expandableRules)
         ){
-            angular.forEach(this.getListing(listingID).expandableRules, (rule, key)=>{
+            angular.forEach(this.getListing(listingID).expandableRules, (rule, key:any)=>{
                 if(angular.isDefined(pageRecord[rule.filterPropertyIdentifier])){
                     if(angular.isString(pageRecord[rule.filterPropertyIdentifier])){
                         var pageRecordValue = pageRecord[rule.filterPropertyIdentifier].trim(); 
@@ -936,7 +965,7 @@ class ListingService{
         if(keyOfExpandableRuleMet != -1){
            var childCollectionConfig = this.getListing(listingID).expandableRules[keyOfExpandableRuleMet].childrenCollectionConfig.clone();
            angular.forEach(childCollectionConfig.filterGroups[0], (filterGroup, key)=>{ 
-                angular.forEach(filterGroup, (filter,key)=>{
+                angular.forEach(filterGroup, (filter:any,key)=>{
                     if(angular.isString(filter.value) 
                         && filter.value.length 
                         && filter.value.charAt(0) == '$'
