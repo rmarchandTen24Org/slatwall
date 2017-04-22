@@ -69,14 +69,26 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
         var entities = [];
         var processContextsStruct = getService('hibachiService').getEntitiesProcessContexts();
         var entitiesListArray = listToArray(structKeyList(getService('hibachiService').getEntitiesMetaData()));
-
-        for(var entityName in entitiesListArray) {
+		
+		var fileDirectory = expandPath('/#getDao("HibachiDao").getApplicationKey()#') & '/custom/config/model/';
+		
+		var modelTSString = "";
+		var exportString = "export{";
+		
+        for(var i=1; i <= arraylen(entitiesListArray);i++) {
+        	var entityName = entitiesListArray[i];
+        	var importString = 'import * as #entityName#Model from "./#entityName#.json";';
+        	modelTsString &= importString;
+        	exportString &= "#entityName#Model";
+        	if(i != arrayLen(entitiesListArray)){
+        		exportString &= ",";
+        	}
         	var model = {};
         	model['entities'] = {};
 	        model['validations'] = {};
 	        model['defaultValues'] = {};
             var entity = getService('hibachiService').getEntityObject(entityName);
-
+			
             formatEntity(entity,model);
             //add process objects to the entites array
             if(structKeyExists(processContextsStruct,entityName)){
@@ -90,13 +102,18 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
                 }
             }
             
-            var fileDirectory = expandPath('/#getDao("HibachiDao").getApplicationKey()#') & '/custom/config/model/';
+            
             if(!directoryExists(fileDirectory)){
             	directoryCreate(fileDirectory);
             }
             var filePath = fileDirectory & '#entityName#.json';
 			fileWrite(filePath,serializeJson(model));
         }
+        exportString &= "};";
+        modelTSString &= exportString;
+        
+        var tsFilePath = fileDirectory & 'model.ts';
+        fileWrite(tsFilePath,modelTSString);
 
 		ORMClearSession();
 
