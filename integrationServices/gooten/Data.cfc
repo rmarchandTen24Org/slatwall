@@ -76,10 +76,6 @@ component accessors="true" output="false" displayname="Salesforce" extends="Slat
 			var gootenOrder = getGootenService().pullGootenOrder(order);
 			getGootenService().syncGootenOrderStatus(order, gootenOrder);
 		}
-		/*Alternately*/
-		//Use webhooks
-		//When notification is received
-			//if item status is delivered, check for/create delivery
 	}
 
 	// @hint helper function to return a Setting

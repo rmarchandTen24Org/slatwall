@@ -31,6 +31,7 @@ component accessors="true" extends="Slatwall.org.hibachi.HibachiService"{
 			var gootenID = sendGootenOrder(gootenOrder);
 			if(len(gootenID)){
 				arguments.order.setRemoteID(gootenID);
+				this.saveOrder(order);
 			}
 		}
 	}
@@ -69,12 +70,15 @@ component accessors="true" extends="Slatwall.org.hibachi.HibachiService"{
 
 		//Will retry as part of scheduled task
 		if(structKeyExists(responseData, 'HadError') && responseData['HadError']){
+			writeDump(responseBean);
 			logHibachi('Error syncing order #orderNumber# to Gooten.');
 			return '';
 		}
 		try{
 			return responseData['id'];
 		}catch(any e){
+			writeDump('error');
+			writeDump(responseBean);abort;
 			logHibachi('Error syncing order #orderNumber# to Gooten.');
 		}
 	}
