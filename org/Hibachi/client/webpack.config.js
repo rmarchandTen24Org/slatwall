@@ -1,6 +1,7 @@
 var webpack = require('webpack');
 var ForceCaseSensitivityPlugin = require('force-case-sensitivity-webpack-plugin');
 
+
 var path = require('path');
 var PATHS = {
     app: path.join(__dirname, '/src'),
@@ -10,7 +11,8 @@ var PATHS = {
 var appConfig = {
     context:PATHS.app,
     entry: {
-        app:['./bootstrap.ts']
+        app:['./bootstrap.ts'],
+        vendor:[]
     },
     watch:true,
     output: {
@@ -37,7 +39,8 @@ var appConfig = {
         ]
     },
     plugins: [
-        new ForceCaseSensitivityPlugin()
+        new ForceCaseSensitivityPlugin(),
+        new webpack.optimize.CommonsChunkPlugin(/* chunkName= */"vendor", /* filename= */"vendor.bundle.js")
     ],
     setupApp: function(customPath, bootstrap){
         PATHS = {
@@ -57,7 +60,7 @@ var appConfig = {
     },
     addVendor: function (name, vendorPath) {
         this.resolve.alias[name] =  path.join(PATHS.lib, vendorPath);
-        this.entry.app.splice(this.entry.app.length - 1, 0, name);
+        this.entry.vendor.splice(this.entry.vendor.length - 1, 0, name);
         return this;
     },
     addPlugin: function(plugin){

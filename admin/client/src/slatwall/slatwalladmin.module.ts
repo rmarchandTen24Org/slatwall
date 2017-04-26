@@ -59,7 +59,7 @@ var slatwalladminmodule = angular.module('slatwalladmin',[
      
      for(var key in model){
          for(var typeKey in model[key]){
-            Object.assign(appConfig.modelConfig[typeKey],model[key][typeKey]);     
+            (<any>Object).assign(appConfig.modelConfig[typeKey],model[key][typeKey]);     
          }
         
      }
