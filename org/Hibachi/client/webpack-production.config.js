@@ -12,7 +12,7 @@ var stripConsolelogs = {
 devConfig.module.loaders.push(stripConsolelogs);
 
 var stripLogDebugs = {
-	exlude: /node_modules/,
+	exclude: /node_modules/,
 	loader: WebpackStrip.loader('$log.debug')
 }
 //extend and override the devconfig
@@ -23,8 +23,8 @@ devConfig.plugins= [
   	new ngAnnotatePlugin({
         add: true,
         // other ng-annotate options here 
-    }),
-    function()
+    })
+    /*,function()
     {
         this.plugin("done", function(stats)
         {
@@ -35,7 +35,7 @@ devConfig.plugins= [
             }
             // ...
         });
-    }
+    }*/
     
   ];
 //change output filename

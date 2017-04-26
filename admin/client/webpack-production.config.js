@@ -1,6 +1,6 @@
 //webpack --config webpack-production.config.js -p
-
 var WebpackStrip = require('strip-loader');
+var webpack = require('webpack');
 var devConfig = require('./webpack.config');
 var ngAnnotatePlugin = require('ng-annotate-webpack-plugin');
 
@@ -24,6 +24,7 @@ devConfig.plugins= [
         add: true,
         // other ng-annotate options here
     }),
+   	new webpack.optimize.UglifyJsPlugin(),
     function()
     {
         /*this.plugin("done", function(stats)

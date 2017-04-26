@@ -1,0 +1,10 @@
+import './date/date.min.js';
+import './angular/angular.js';
+import './angular-ui-bootstrap/ui.bootstrap.min.js';
+import './angular/angular-resource.js';
+import './angular/angular-cookies.min.js';
+import './angular/angular-route.min.js';
+import './angular/angular-animate.min.js';
+import './angular/angular-sanitize.min.js';
+import './metismenu/metismenu.js';
+import './angularjs-datetime-picker/angularjs-datetime-picker.js';

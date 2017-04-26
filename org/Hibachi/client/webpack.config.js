@@ -11,13 +11,13 @@ var PATHS = {
 var appConfig = {
     context:PATHS.app,
     entry: {
-        app:['./bootstrap.ts'],
-        vendor:[]
+        vendor:[PATHS.lib+'/vendor.ts'],
+        app:['./bootstrap.ts']
     },
     watch:true,
     output: {
         path: PATHS.app,
-        filename: 'bundle.js'
+        filename: '[name].bundle.js',
     },
     // Turn on sourcemaps
     //devtool: 'source-map',
@@ -40,7 +40,12 @@ var appConfig = {
     },
     plugins: [
         new ForceCaseSensitivityPlugin(),
-        new webpack.optimize.CommonsChunkPlugin(/* chunkName= */"vendor", /* filename= */"vendor.bundle.js")
+        new webpack.optimize.CommonsChunkPlugin({
+        	name:"vendor",
+        	filename:"vendor.bundle.js",
+            minChunks: Infinity
+        })
+
     ],
     setupApp: function(customPath, bootstrap){
         PATHS = {
@@ -74,18 +79,5 @@ var appConfig = {
 
 };
 appConfig
-    .addVendor('date','date/date.min.js')
-    .addVendor('angular','angular/angular.js')
-
-    .addVendor('ui.bootstrap','angular-ui-bootstrap/ui.bootstrap.min.js')
-    .addVendor('angular-resource','angular/angular-resource.js')
-    .addVendor('angular-cookies','angular/angular-cookies.min.js')
-    .addVendor('angular-route','angular/angular-route.min.js')
-    .addVendor('angular-animate','angular/angular-animate.min.js')
-    .addVendor('angular-sanitize','angular/angular-sanitize.min.js')
-    .addVendor('metismenu','metismenu/metismenu.js')
-    .addVendor('angularjs-datetime-picker','angularjs-datetime-picker/angularjs-datetime-picker.js')
-
-
 ;
 module.exports = appConfig;

@@ -1,5 +1,7 @@
 var devConfig = require('../../org/Hibachi/client/webpack.config');
-devConfig.addVendor('jquery-ui-timepicker-addon','../../HibachiAssets/js/jquery-ui-timepicker-addon-1.3.1.js')
-.addVendor('jquery-typewatch','../../HibachiAssets/js/jquery-typewatch-2.0.js')
+var path = require('path');
+devConfig.output.path = __dirname+'/src';
+devConfig.entry.app = __dirname+'/src/bootstrap.ts';
+devConfig.entry.vendor.push(__dirname+'/lib/vendor.ts')
 ;
-module.exports = devConfig.setupApp(__dirname);
+module.exports = devConfig;
