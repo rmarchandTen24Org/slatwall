@@ -1,8 +1,8 @@
 /// <reference path="../../typings/tsd.d.ts" />
 /// <reference path="../../typings/slatwallTypescript.d.ts" />
-import {hibachimodule} from "../../../../org/Hibachi/client/src/hibachi/hibachi.module";
-import {workflowmodule} from "../../../../org/Hibachi/client/src/workflow/workflow.module";
+//import {hibachimodule} from "../../../../org/Hibachi/client/src/hibachi/hibachi.module";
 import {entitymodule} from "../../../../org/Hibachi/client/src/entity/entity.module";
+/*import {workflowmodule} from "../../../../org/Hibachi/client/src/workflow/workflow.module";
 import {contentmodule} from "../content/content.module";
 import {formbuildermodule} from "../formbuilder/formbuilder.module";
 import {giftcardmodule} from "../giftcard/giftcard.module";
@@ -10,7 +10,7 @@ import {optiongroupmodule} from "../optiongroup/optiongroup.module";
 import {orderitemmodule} from "../orderitem/orderitem.module";
 import {productmodule} from "../product/product.module";
 import {productbundlemodule} from "../productbundle/productbundle.module";
-import {skumodule} from "../sku/sku.module";
+import {skumodule} from "../sku/sku.module";*/
 
 //constant
 import {SlatwallPathBuilder} from "./services/slatwallpathbuilder";
@@ -21,24 +21,24 @@ import {SWCurrencyFormatter} from "./components/swcurrencyformatter"
 
 import {SWCurrency} from "./filters/swcurrency";
 
-import * as model from "../../../../custom/config/model/model";
+//import * as model from "../../../../custom/config/model/model";
 
 //declare variables out of scope
 declare var $:any;
 
 var slatwalladminmodule = angular.module('slatwalladmin',[
   //custom modules
-  hibachimodule.name,
-  entitymodule.name,
-  contentmodule.name,
-  formbuildermodule.name,
-  giftcardmodule.name,
-  optiongroupmodule.name,
-  orderitemmodule.name,
-  productmodule.name,
-  productbundlemodule.name,
-  skumodule.name,
-  workflowmodule.name
+  //hibachimodule.name,
+  entitymodule.name
+  //contentmodule.name,
+  //formbuildermodule.name,
+  //giftcardmodule.name,
+  //optiongroupmodule.name,
+  //orderitemmodule.name,
+  //productmodule.name,
+  //productbundlemodule.name,
+  //skumodule.name,
+  //workflowmodule.name
 ])
 .constant("baseURL", $.slatwall.getConfig().baseURL)
 .constant('slatwallPathBuilder', new SlatwallPathBuilder()).config(["$provide",'$logProvider','$filterProvider','$httpProvider','$routeProvider','$injector','$locationProvider','datepickerConfig', 'datepickerPopupConfig','slatwallPathBuilder','appConfig',
@@ -68,7 +68,7 @@ var slatwalladminmodule = angular.module('slatwalladmin',[
 
 
  }])
- .run(['$rootScope','$filter','$anchorScroll','$hibachi','dialogService','observerService','utilityService','slatwallPathBuilder', ($rootScope,$filter,$anchorScroll,$hibachi,dialogService,observerService,utilityService,slatwallPathBuilder) => {
+ .run(['$rootScope','$filter','$anchorScroll','$hibachi','publicService','dialogService','observerService','utilityService','slatwallPathBuilder', ($rootScope,$filter,$anchorScroll,$hibachi,publicService,dialogService,observerService,utilityService,slatwallPathBuilder) => {
         $anchorScroll.yOffset = 100;
 
         $rootScope.openPageDialog = function( partial ) {
@@ -81,7 +81,15 @@ var slatwalladminmodule = angular.module('slatwalladmin',[
 
         $rootScope.createID = utilityService.createID;
 
+        $rootScope.hibachiScope = publicService;
+        $rootScope.hasAccount = publicService.hasAccount;
+        $rootScope.hibachiScope.getAccount();
+        $rootScope.hibachiScope.getCart();
+        $rootScope.hibachiScope.getCountries();
+        $rootScope.hibachiScope.getStates();
+     
         $rootScope.slatwall = $rootScope.hibachiScope;
+        
         $rootScope.slatwall.getProcessObject = $hibachi.newEntity;
     }])
  //services
