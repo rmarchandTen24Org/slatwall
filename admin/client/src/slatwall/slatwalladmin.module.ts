@@ -21,7 +21,7 @@ import {SWCurrencyFormatter} from "./components/swcurrencyformatter"
 
 import {SWCurrency} from "./filters/swcurrency";
 
-//import * as model from "../../../../custom/config/model/model";
+import * as model from "../../../../custom/config/model/model";
 
 //declare variables out of scope
 declare var $:any;
