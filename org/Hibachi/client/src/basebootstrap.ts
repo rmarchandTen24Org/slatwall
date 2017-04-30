@@ -14,6 +14,7 @@ import { platformBrowserDynamic } from '@angular/platform-browser-dynamic';
 import { BrowserModule } from '@angular/platform-browser';
 import { UpgradeModule } from '@angular/upgrade/static';
 import { AppModule } from "./app/app.module";
+import { UpgradeAdapter} from "@angular/upgrade";
 import 'zone.js/dist/zone';
 import * as ngZone from "@angular/core";
 
@@ -33,12 +34,10 @@ export class BaseBootStrapper{
 
     constructor(myApplication){
       this.myApplication = myApplication;
-      //monkey path the lazy service.
-      console.log("Bootstrapping: ", this.myApplication);
-      
-      //Monkey patch the bootstrap to use the upgrade instead. 
+      //Kicks off the Angular upgrade to bootstrap the appModule which is the root component for the
+      //Angular side of the app.
       platformBrowserDynamic().bootstrapModule(AppModule).then(platformRef => {
-        const upgrade = platformRef.injector.get(UpgradeModule) as UpgradeModule;
+        const upgradeAdaptor = platformRef.injector.get(UpgradeModule) as UpgradeModule;
       });
       
       return angular.lazy(this.myApplication)

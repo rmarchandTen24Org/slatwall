@@ -11,8 +11,6 @@ class bootstrapper extends BaseBootStrapper{
         var angular:any = super(slatwalladminmodule.name);
         angular.bootstrap()
     }
-
-
 }
 
 export = new bootstrapper();

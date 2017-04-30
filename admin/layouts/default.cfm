@@ -324,14 +324,13 @@ Notes:
 			</cfif>
 
 			<section class="content s-body-margin" id="j-main-content">
-
+				<ng-app></ng-app>
 				<div class="col-md-12">
 					<cfif structKeyExists(url, 'ng')>
 						
 						<ng-view></ng-view>
 						
 					<cfelse>
-					<ng-app></ng-app>
 							#body#
 					</cfif>
 				</div>
