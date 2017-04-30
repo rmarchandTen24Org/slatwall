@@ -62,7 +62,7 @@ Notes:
 				<card-view>
 					<!-- Icon Cards -->
 					<card id="batchID" icon="shopping-cart" name="Batch ID" body="#rc.fulfillmentBatch.getFulfillmentBatchNumber()#"></card>
-					<!---<card id="user" icon="user" name="User" body="#rc.fulfillmentBatch.getAssignedAccount().getFirstName()# #rc.fulfillmentBatch.getAssignedAccount().getLastName()#"></card>--->
+					<card id="user" icon="user" name="User" body="#rc.fulfillmentBatch.getAssignedAccount().getFirstName()# #rc.fulfillmentBatch.getAssignedAccount().getLastName()#"></card>
 				</card-view>
 					
 				<sw-card-view id="location" card-size="sm">

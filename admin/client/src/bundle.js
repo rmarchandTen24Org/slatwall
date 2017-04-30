@@ -96509,13 +96509,14 @@
 	};
 	Object.defineProperty(exports, "__esModule", { value: true });
 	var core_1 = __webpack_require__(379);
+	var card_service_1 = __webpack_require__(596);
 	var CardComponent = (function () {
 	    /** Get the values from the dom attributes since this is a top level component. */
-	    function CardComponent(ref) {
+	    function CardComponent(ref, cardService) {
+	        //private 
 	        this.blockSize = 'md';
 	        this.useInner = true;
 	        this.inner = '';
-	        console.log("Found ");
 	        var native = ref.nativeElement;
 	        this.name = native.getAttribute("name");
 	        this.body = native.getAttribute("body");
@@ -96525,19 +96526,43 @@
 	        if (this.useInner) {
 	            this.inner = '-inner';
 	        }
+	        this.cardService = cardService;
+	        console.log("Init announce card");
+	        this.cardService.announceCard({
+	            name: this.name,
+	            body: this.body,
+	            icon: this.icon,
+	            blockSize: this.blockSize,
+	            useInner: this.useInner
+	        });
 	    }
+	    CardComponent.prototype.ngOnInit = function () {
+	    };
 	    return CardComponent;
 	}());
 	__decorate([
-	    core_1.Output('card'),
-	    __metadata("design:type", core_1.EventEmitter)
-	], CardComponent.prototype, "initCard", void 0);
+	    core_1.Input(),
+	    __metadata("design:type", String)
+	], CardComponent.prototype, "name", void 0);
+	__decorate([
+	    core_1.Input(),
+	    __metadata("design:type", String)
+	], CardComponent.prototype, "body", void 0);
+	__decorate([
+	    core_1.Input(),
+	    __metadata("design:type", String)
+	], CardComponent.prototype, "icon", void 0);
+	__decorate([
+	    core_1.Input(),
+	    __metadata("design:type", String)
+	], CardComponent.prototype, "id", void 0);
 	CardComponent = __decorate([
 	    core_1.Component({
 	        selector: 'card',
-	        template: "\n    <div id=\"{{id}}\" class=\"s-{{blockSize}}-content-block{{inner}}\" style=\"margin-bottom:7px\">                \n      <card-icon icon=\"{{icon}}\" *ngIf=\"icon\"></card-icon>\n      <card-title title=\"{{name}}\" *ngIf=\"name\"></card-title>\n      <card-body body=\"{{body}}\" *ngIf=\"body\"></card-body>\n    </div>\n  "
+	        template: "\n    <div id=\"{{id}}\" class=\"s-{{blockSize}}-content-block{{inner}}\" style=\"margin-bottom:7px\">                \n      <card-icon icon=\"{{icon}}\" *ngIf=\"icon\"></card-icon>\n      <card-title title=\"{{name}}\" *ngIf=\"name\"></card-title>\n      <card-body body=\"{{body}}\" *ngIf=\"body\"></card-body>\n    </div>\n  ",
+	        providers: [card_service_1.CardService]
 	    }),
-	    __metadata("design:paramtypes", [core_1.ElementRef])
+	    __metadata("design:paramtypes", [core_1.ElementRef, card_service_1.CardService])
 	], CardComponent);
 	exports.CardComponent = CardComponent;
 
@@ -96558,24 +96583,79 @@
 	};
 	Object.defineProperty(exports, "__esModule", { value: true });
 	var core_1 = __webpack_require__(379);
+	var card_service_1 = __webpack_require__(596);
 	var CardViewComponent = (function () {
-	    /** Get the values from the dom attributes since this is a top level component. */
-	    function CardViewComponent(elementRef) {
+	    /** Get the values from the dom attributes since this is a top level component.
+	     * if needed, get the attributes from top level component here and set on this.
+	     * var native = this.elementRef.nativeElement;
+	     * this.id = native.getAttribute("id");
+	     */
+	    function CardViewComponent(elementRef, cardService) {
+	        var _this = this;
 	        this.elementRef = elementRef;
-	        //if needed, get the attributes from top level component here and set on this.
-	        /*var native = this.elementRef.nativeElement;
-	        this.id = native.getAttribute("id");*/
+	        this.cardService = cardService;
+	        this.cards = new Array();
+	        //Subscribe to register events from the child.
+	        this.cardRegisterSubscription = this.cardService.cardRegisterAnnounced$.subscribe(
+	        //next
+	        function (card) {
+	            console.log("Pushing Card: ", card);
+	            _this.cards.push(card);
+	        }, 
+	        //error
+	        function (error) {
+	            console.log("Error registering card", error);
+	        });
 	    }
+	    CardViewComponent.prototype.ngOnDestroy = function () {
+	        // prevent memory leak when component destroyed
+	        this.cardRegisterSubscription.unsubscribe();
+	    };
 	    return CardViewComponent;
 	}());
 	CardViewComponent = __decorate([
 	    core_1.Component({
 	        selector: 'card-view',
-	        template: "\n    <ng-content select='card'></ng-content>\n  "
+	        template: "\n    <!-- when a child calls to register a card -->\n  ",
+	        providers: [card_service_1.CardService]
 	    }),
-	    __metadata("design:paramtypes", [core_1.ElementRef])
+	    __metadata("design:paramtypes", [core_1.ElementRef, card_service_1.CardService])
 	], CardViewComponent);
 	exports.CardViewComponent = CardViewComponent;
+
+
+/***/ }),
+/* 596 */
+/***/ (function(module, exports, __webpack_require__) {
+
+	"use strict";
+	var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
+	    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+	    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+	    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+	    return c > 3 && r && Object.defineProperty(target, key, r), r;
+	};
+	Object.defineProperty(exports, "__esModule", { value: true });
+	var core_1 = __webpack_require__(379);
+	var Subject_1 = __webpack_require__(410);
+	var CardService = (function () {
+	    function CardService() {
+	        // Observable string sources
+	        this.cardRegisterSource = new Subject_1.Subject();
+	        // Observable string streams
+	        this.cardRegisterAnnounced$ = this.cardRegisterSource.asObservable();
+	    }
+	    // Service announce that a new card is being added.
+	    CardService.prototype.announceCard = function (card) {
+	        console.log("Card to be registered: ", card);
+	        this.cardRegisterSource.next(card);
+	    };
+	    return CardService;
+	}());
+	CardService = __decorate([
+	    core_1.Injectable()
+	], CardService);
+	exports.CardService = CardService;
 
 
 /***/ })
