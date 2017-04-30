@@ -2,7 +2,7 @@
 /// <reference path='../../../typings/tsd.d.ts' />
 
 import * as Prototypes from '../prototypes/Observable';
-import {Observable, Subject} from 'rxjs';
+//import {Observable, Subject} from 'rxjs';
 
 type Action = any;
 
@@ -13,18 +13,18 @@ class TypeaheadService implements Prototypes.Observable.IObservable {
     public typeaheadStates = {}; 
     public state:any;
 
-    public typeaheadStore:Observable<any>;
+    //public typeaheadStore:Observable<any>;
     /**
      * This will contain the stream of actions which I'm defining as an object
      */
-    public actionStream:any;
+    //public actionStream:any;
 
     /**
      * The reducer handles changes from one state to the next. Every state transition is defined as an action.
      * @param Reducer 
      * @param observerService 
      */
-     public reducer:any;
+     //public reducer:any;
 
 
     //@ngInject
@@ -35,7 +35,7 @@ class TypeaheadService implements Prototypes.Observable.IObservable {
          this.observers = new Array<Prototypes.Observable.IObserver>();
          
          //Setup the action stream
-         this.actionStream = new Subject();
+         /*this.actionStream = new Subject();
          this.state = {};
 
          //Setup the basic reducer. This only handles adding a selection right now. ...state means any number of properties.
@@ -56,7 +56,7 @@ class TypeaheadService implements Prototypes.Observable.IObservable {
         //Setup the store that will handle all state.
         this.actionStream.startWith(this.state).scan(this.reducer);
         console.log("Action Stream: ", this.actionStream);
-        console.log("Store", this.typeaheadStore);
+        console.log("Store", this.typeaheadStore);*/
 
     }
 

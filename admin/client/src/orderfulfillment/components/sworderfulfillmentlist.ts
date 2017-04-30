@@ -2,7 +2,7 @@
 /// <reference path='../../../typings/tsd.d.ts' />
 
 import * as Prototypes from '../../../../../org/hibachi/client/src/core/prototypes/Observable';
-import * as rxjs from 'rxjs';
+//import * as rxjs from 'rxjs';
 
 module FulfillmentsList {
     export enum Views {
@@ -78,7 +78,7 @@ class SWOrderFulfillmentListController implements Prototypes.Observable.IObserve
         this.typeaheadService.registerObserver(this);
 
         // Higher order function to send actions to the action stream
-        const actionDispatcher = (func) => (...args) =>  this.typeaheadService.actionStream.next(func(...args));
+        /*const actionDispatcher = (func) => (...args) =>  this.typeaheadService.actionStream.next(func(...args));
 
         // Example action function for adding a selection.
         this.addSelection = actionDispatcher((payload) => ({  
@@ -101,7 +101,7 @@ class SWOrderFulfillmentListController implements Prototypes.Observable.IObserve
         var test:any = [{id: 1,name:"ian"},{id:2, name:"casey"},{id:3,name:"john"},{id:4, name:"dan"}];
         var testObservable = rxjs.Observable.from<any>(test);
         testObservable.map(o => (o.id + '_' + o.name) ).take(2).map((result) => { console.log(result) }).subscribe();
-        
+        */
     }
 
     /**

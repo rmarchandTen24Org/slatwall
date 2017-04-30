@@ -1,9 +1,26 @@
 /// <reference path='../typings/hibachiTypescript.d.ts' />
 /// <reference path='../typings/tsd.d.ts' />
+//angular 2 helpers
+
+
+//core
+import 'reflect-metadata';
+import 'core-js/es6';
+import 'core-js/es7/reflect';
+
 import {coremodule} from "./core/core.module";
+//upgrade healers
+import { platformBrowserDynamic } from '@angular/platform-browser-dynamic';
+import { BrowserModule } from '@angular/platform-browser';
+import { UpgradeModule } from '@angular/upgrade/static';
+import { AppModule } from "./app/app.module";
+import 'zone.js/dist/zone';
+import * as ngZone from "@angular/core";
+
 declare var angular:any;
 declare var hibachiConfig:any;
 var md5 = require('md5');
+
 //generic bootstrapper
 export class BaseBootStrapper{
     public myApplication:any;
@@ -16,6 +33,14 @@ export class BaseBootStrapper{
 
     constructor(myApplication){
       this.myApplication = myApplication;
+      //monkey path the lazy service.
+      console.log("Bootstrapping: ", this.myApplication);
+      
+      //Monkey patch the bootstrap to use the upgrade instead. 
+      platformBrowserDynamic().bootstrapModule(AppModule).then(platformRef => {
+        const upgrade = platformRef.injector.get(UpgradeModule) as UpgradeModule;
+      });
+      
       return angular.lazy(this.myApplication)
         .resolve(['$http','$q','$timeout', ($http,$q,$timeout)=> {
             this.$http = $http;
@@ -58,8 +83,8 @@ export class BaseBootStrapper{
         })
         .done(function() {
             //angular.element('#loading').hide();
-
         });
+
 
     }
 
@@ -205,6 +230,7 @@ export class BaseBootStrapper{
         return resourceBundlePromises;
 
     }
+    
 }
 
 

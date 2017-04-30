@@ -2,7 +2,9 @@
   "compilerOptions": {
     "target":"es5",
     "module": "commonjs",
-    "sourceMap": true
+    "sourceMap": true,
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata": true
   },
   "files": [
     "typings/hibachiTypescript.d.ts",

@@ -1,6 +1,7 @@
 /// <reference path='../../typings/hibachiTypescript.d.ts' />
 /// <reference path='../../typings/tsd.d.ts' />
 
+
 import {HibachiInterceptor,IHibachi,IHibachiConfig,HibachiJQueryStatic} from "./services/hibachiinterceptor";
 //constant
 import {HibachiPathBuilder} from "./services/hibachipathbuilder";
@@ -88,6 +89,8 @@ import {dialogmodule} from "../dialog/dialog.module";
 
 
 import {BaseObject} from "./model/baseobject";
+
+
 declare var $:any;
 
 var coremodule = angular.module('hibachi.core',[
