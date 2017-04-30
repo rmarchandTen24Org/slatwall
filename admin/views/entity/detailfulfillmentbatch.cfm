@@ -59,19 +59,12 @@ Notes:
 	<section class="s-pick-pack-detail container">
 		<div class="row s-detail-modules-wrapper">
 			<div class="col-sm-6 col-md-6 col-lg-4 s-detail-module s-md-content-block">
-				<!--- Icon Properties --->
-				<sw-card-view id="batchNumber" card-size="sm">
-					<sw-card-icon icon-name="shopping-cart"></sw-card-icon>
-					<sw-card-header style="border-bottom:none">Batch ID</sw-card-header>
-					<sw-card-body>#rc.fulfillmentBatch.getFulfillmentBatchNumber()#</sw-card-body>
-				</sw-card-view>
-				
-				<sw-card-view id="assignedAccount" card-size="sm">
-					<sw-card-icon icon-name="user"></sw-card-icon>
-					<sw-card-header style="border-bottom:none">User</sw-card-header>
-					<sw-card-body>#rc.fulfillmentBatch.getAssignedAccount().getFirstName()# #rc.fulfillmentBatch.getAssignedAccount().getLastName()#</sw-card-body>
-				</sw-card-view>
-
+				<card-view>
+					<!-- Icon Cards -->
+					<card id="batchID" icon="shopping-cart" name="Batch ID" body="#rc.fulfillmentBatch.getFulfillmentBatchNumber()#"></card>
+					<!---<card id="user" icon="user" name="User" body="#rc.fulfillmentBatch.getAssignedAccount().getFirstName()# #rc.fulfillmentBatch.getAssignedAccount().getLastName()#"></card>--->
+				</card-view>
+					
 				<sw-card-view id="location" card-size="sm">
 					<sw-card-icon icon-name="building"></sw-card-icon>
 					<sw-card-header style="border-bottom:none">Location</sw-card-header>

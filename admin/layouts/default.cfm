@@ -324,7 +324,7 @@ Notes:
 			</cfif>
 
 			<section class="content s-body-margin" id="j-main-content">
-				<ng-app></ng-app>
+				<ng-app><!-- Content Managed by Angular instead of AngularJS -->LOADING...</ng-app>
 				<div class="col-md-12">
 					<cfif structKeyExists(url, 'ng')>
 						

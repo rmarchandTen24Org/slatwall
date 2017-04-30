@@ -74110,6 +74110,12 @@
 	var platform_browser_1 = __webpack_require__(414);
 	var static_1 = __webpack_require__(415);
 	var app_component_1 = __webpack_require__(417);
+	//Cards
+	var card_view_component_1 = __webpack_require__(595); //root component and secondary entry way into application
+	var card_component_1 = __webpack_require__(594);
+	var card_body_component_1 = __webpack_require__(591);
+	var card_title_component_1 = __webpack_require__(592);
+	var card_icon_component_1 = __webpack_require__(593);
 	var AppModule = (function () {
 	    function AppModule() {
 	    }
@@ -74124,8 +74130,12 @@
 	            platform_browser_1.BrowserModule,
 	            static_1.UpgradeModule
 	        ],
-	        declarations: [app_component_1.AppComponent],
-	        bootstrap: [app_component_1.AppComponent]
+	        declarations: [app_component_1.AppComponent, card_view_component_1.CardViewComponent, card_component_1.CardComponent, card_title_component_1.CardTitleComponent, card_icon_component_1.CardIconComponent, card_body_component_1.CardBodyComponent],
+	        bootstrap: [app_component_1.AppComponent, card_component_1.CardComponent],
+	        entryComponents: [
+	            app_component_1.AppComponent,
+	            card_component_1.CardComponent
+	        ]
 	    })
 	], AppModule);
 	exports.AppModule = AppModule;
@@ -74146,14 +74156,14 @@
 	var core_1 = __webpack_require__(379);
 	var AppComponent = (function () {
 	    function AppComponent() {
-	        this.title = 'Hello World!';
+	        this.title = 'Slatwall Admin';
 	    }
 	    return AppComponent;
 	}());
 	AppComponent = __decorate([
 	    core_1.Component({
 	        selector: 'ng-app',
-	        template: '<h3>Title: {{title}}</h3>',
+	        template: '',
 	    })
 	], AppComponent);
 	exports.AppComponent = AppComponent;
@@ -96379,6 +96389,193 @@
 	    return SWCurrency;
 	}());
 	exports.SWCurrency = SWCurrency;
+
+
+/***/ }),
+/* 591 */
+/***/ (function(module, exports, __webpack_require__) {
+
+	"use strict";
+	var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
+	    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+	    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+	    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+	    return c > 3 && r && Object.defineProperty(target, key, r), r;
+	};
+	var __metadata = (this && this.__metadata) || function (k, v) {
+	    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
+	};
+	Object.defineProperty(exports, "__esModule", { value: true });
+	var core_1 = __webpack_require__(379);
+	var CardBodyComponent = (function () {
+	    function CardBodyComponent() {
+	    }
+	    return CardBodyComponent;
+	}());
+	__decorate([
+	    core_1.Input('body'),
+	    __metadata("design:type", String)
+	], CardBodyComponent.prototype, "body", void 0);
+	CardBodyComponent = __decorate([
+	    core_1.Component({
+	        selector: 'card-body',
+	        template: "\n    <div class=\"s-body\">{{body}}</div>\n  "
+	    })
+	], CardBodyComponent);
+	exports.CardBodyComponent = CardBodyComponent;
+
+
+/***/ }),
+/* 592 */
+/***/ (function(module, exports, __webpack_require__) {
+
+	"use strict";
+	var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
+	    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+	    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+	    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+	    return c > 3 && r && Object.defineProperty(target, key, r), r;
+	};
+	var __metadata = (this && this.__metadata) || function (k, v) {
+	    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
+	};
+	Object.defineProperty(exports, "__esModule", { value: true });
+	var core_1 = __webpack_require__(379);
+	var CardTitleComponent = (function () {
+	    function CardTitleComponent() {
+	    }
+	    return CardTitleComponent;
+	}());
+	__decorate([
+	    core_1.Input(),
+	    __metadata("design:type", String)
+	], CardTitleComponent.prototype, "title", void 0);
+	CardTitleComponent = __decorate([
+	    core_1.Component({
+	        selector: 'card-title',
+	        template: "\n    <div class=\"s-title\" >{{title}}</div>\n  "
+	    })
+	], CardTitleComponent);
+	exports.CardTitleComponent = CardTitleComponent;
+
+
+/***/ }),
+/* 593 */
+/***/ (function(module, exports, __webpack_require__) {
+
+	"use strict";
+	var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
+	    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+	    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+	    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+	    return c > 3 && r && Object.defineProperty(target, key, r), r;
+	};
+	var __metadata = (this && this.__metadata) || function (k, v) {
+	    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
+	};
+	Object.defineProperty(exports, "__esModule", { value: true });
+	var core_1 = __webpack_require__(379);
+	var CardIconComponent = (function () {
+	    function CardIconComponent() {
+	    }
+	    return CardIconComponent;
+	}());
+	__decorate([
+	    core_1.Input(),
+	    __metadata("design:type", String)
+	], CardIconComponent.prototype, "icon", void 0);
+	CardIconComponent = __decorate([
+	    core_1.Component({
+	        selector: 'card-icon',
+	        template: "\n    <div class=\"col-xs-1 col-sm-1 col-md-2 col-lg-2 s-icon\">\n        <i class=\"fa fa-{{icon}} fa-2\"></i>\n    </div>\n  "
+	    })
+	], CardIconComponent);
+	exports.CardIconComponent = CardIconComponent;
+
+
+/***/ }),
+/* 594 */
+/***/ (function(module, exports, __webpack_require__) {
+
+	"use strict";
+	var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
+	    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+	    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+	    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+	    return c > 3 && r && Object.defineProperty(target, key, r), r;
+	};
+	var __metadata = (this && this.__metadata) || function (k, v) {
+	    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
+	};
+	Object.defineProperty(exports, "__esModule", { value: true });
+	var core_1 = __webpack_require__(379);
+	var CardComponent = (function () {
+	    /** Get the values from the dom attributes since this is a top level component. */
+	    function CardComponent(ref) {
+	        this.blockSize = 'md';
+	        this.useInner = true;
+	        this.inner = '';
+	        console.log("Found ");
+	        var native = ref.nativeElement;
+	        this.name = native.getAttribute("name");
+	        this.body = native.getAttribute("body");
+	        this.icon = native.getAttribute("icon");
+	        this.blockSize = (this.icon == undefined) ? 'md' : 'sm';
+	        this.useInner = this.blockSize == 'md';
+	        if (this.useInner) {
+	            this.inner = '-inner';
+	        }
+	    }
+	    return CardComponent;
+	}());
+	__decorate([
+	    core_1.Output('card'),
+	    __metadata("design:type", core_1.EventEmitter)
+	], CardComponent.prototype, "initCard", void 0);
+	CardComponent = __decorate([
+	    core_1.Component({
+	        selector: 'card',
+	        template: "\n    <div id=\"{{id}}\" class=\"s-{{blockSize}}-content-block{{inner}}\" style=\"margin-bottom:7px\">                \n      <card-icon icon=\"{{icon}}\" *ngIf=\"icon\"></card-icon>\n      <card-title title=\"{{name}}\" *ngIf=\"name\"></card-title>\n      <card-body body=\"{{body}}\" *ngIf=\"body\"></card-body>\n    </div>\n  "
+	    }),
+	    __metadata("design:paramtypes", [core_1.ElementRef])
+	], CardComponent);
+	exports.CardComponent = CardComponent;
+
+
+/***/ }),
+/* 595 */
+/***/ (function(module, exports, __webpack_require__) {
+
+	"use strict";
+	var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
+	    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+	    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+	    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+	    return c > 3 && r && Object.defineProperty(target, key, r), r;
+	};
+	var __metadata = (this && this.__metadata) || function (k, v) {
+	    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
+	};
+	Object.defineProperty(exports, "__esModule", { value: true });
+	var core_1 = __webpack_require__(379);
+	var CardViewComponent = (function () {
+	    /** Get the values from the dom attributes since this is a top level component. */
+	    function CardViewComponent(elementRef) {
+	        this.elementRef = elementRef;
+	        //if needed, get the attributes from top level component here and set on this.
+	        /*var native = this.elementRef.nativeElement;
+	        this.id = native.getAttribute("id");*/
+	    }
+	    return CardViewComponent;
+	}());
+	CardViewComponent = __decorate([
+	    core_1.Component({
+	        selector: 'card-view',
+	        template: "\n    <ng-content select='card'></ng-content>\n  "
+	    }),
+	    __metadata("design:paramtypes", [core_1.ElementRef])
+	], CardViewComponent);
+	exports.CardViewComponent = CardViewComponent;
 
 
 /***/ })
