@@ -1,7 +1,14 @@
 /// <reference path='../../../typings/hibachiTypescript.d.ts' />
 /// <reference path='../../../typings/tsd.d.ts' />
+import {GET_COLLECTION} from "../constants";
 
+const getCollection = collectionConfig => ({ type: GET_COLLECTION, payload: collectionConfig });
 class SWListingDisplayController{
+
+    // action creators
+
+    //const fetchUserFulfilled = payload => ({ type: FETCH_USER_FULFILLED, payload });
+
     /* local state variables */
     public  actions = [];
     public adminattributes;
@@ -125,9 +132,9 @@ class SWListingDisplayController{
             this.multipleCollectionDeffered.reject();
         }
 		this.initializeState();
-		
+
 		this.hasCollectionPromise = angular.isDefined(this.collectionPromise);
-		        
+
         if(angular.isDefined(this.collectionPromise)){
              this.hasCollectionPromise = true;
              this.multipleCollectionDeffered.reject();
@@ -142,7 +149,7 @@ class SWListingDisplayController{
         //this is performed after the listing state is set above to populate columns and multiple collectionConfigs if present
         this.$transclude(this.$scope,()=>{});
         console.log('multislot',this.multiSlot);
-        
+
 		if(this.multiSlot){
         this.singleCollectionPromise.then(()=>{
             this.multipleCollectionDeffered.reject();
@@ -176,7 +183,7 @@ class SWListingDisplayController{
         }
 
     }
-    
+
     private setupCollectionPromise=()=>{
     	if(angular.isUndefined(this.getCollection)){
             this.getCollection = this.listingService.setupDefaultGetCollection(this.tableID);

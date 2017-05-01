@@ -1,6 +1,6 @@
 /// <reference path='../../../typings/hibachiTypescript.d.ts' />
 /// <reference path='../../../typings/tsd.d.ts' />
-
+import {Observable} from "rx";
 //import pagination = require('../services/paginationservice');
 //var PaginationService = pagination.PaginationService;
 //'use strict';
