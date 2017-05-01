@@ -1,8 +1,5 @@
 /// <reference path='../../../typings/hibachiTypescript.d.ts' />
 /// <reference path='../../../typings/tsd.d.ts' />
-import {GET_COLLECTION} from "../constants";
-
-const getCollection = collectionConfig => ({ type: GET_COLLECTION, payload: collectionConfig });
 class SWListingDisplayController{
 
     // action creators

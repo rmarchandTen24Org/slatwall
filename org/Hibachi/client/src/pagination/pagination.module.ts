@@ -5,10 +5,17 @@ import {PaginationService} from "./services/paginationservice";
 import {SWPaginationBar} from "./components/swpaginationbar";
 import {coremodule} from '../core/core.module';
 
-var paginationmodule = angular.module('hibachi.pagination', [coremodule.name])
-// .config(['$provide','baseURL',($provide,baseURL)=>{
-// 	$provide.constant('paginationPartials', baseURL+basePartialsPath+'pagination/components/');
-// }])
+import * as reducers from './reducers/paginationreducers';
+import { combineReducers } from 'redux';
+//import loggingMiddleware from './loggingMiddleware';
+import ngRedux from 'ng-redux';
+
+var paginationmodule = angular.module('hibachi.pagination', [ngRedux,coremodule.name])
+ .config(['$ngReduxProvider',($ngReduxProvider)=>{
+    $ngReduxProvider.createStoreWith(reducers, ['promiseMiddleware'
+		//, loggingMiddleware
+	]);
+ }])
 .run([()=> {
 }])
 //services

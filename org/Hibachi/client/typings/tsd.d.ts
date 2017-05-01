@@ -16,3 +16,6 @@ interface String {
     startsWith(str: string): boolean;
 }
 
+declare interface ObjectConstructor {
+    assign(...objects: Object[]): Object;
+}

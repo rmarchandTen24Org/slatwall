@@ -32,7 +32,7 @@
 		    </li>
 		    <li ng-if="swPaginationBar.paginator.recordsCount > swPaginationBar.paginator.pageShow">
 		        <ul class="pagination pagination-sm" ng-show="swPaginationBar.paginator.pageShowOptions.selectedPageShowOption.value !== 'Auto'">
-		            <li ng-click="swPaginationBar.paginator.previousPage()" ng-class="{disabled:swPaginationBar.paginator.hasPrevious()}">
+		            <li ng-click="swPaginationBar.previousPage()" ng-class="{disabled:swPaginationBar.paginator.hasPrevious()}">
 		                <a href="#">&laquo;</a>
 		            </li>
 		            <li ng-show="swPaginationBar.paginator.showPreviousJump()">

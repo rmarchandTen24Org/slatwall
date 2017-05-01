@@ -1,19 +1,21 @@
 /// <reference path='../../../typings/hibachiTypescript.d.ts' />
 /// <reference path='../../../typings/tsd.d.ts' />
-import {Observable} from "rx";
+import {Observable, Subject} from "rx";
+import * as actions from "../actions/paginationactions";
 //import pagination = require('../services/paginationservice');
 //var PaginationService = pagination.PaginationService;
 //'use strict';
 
 class SWPaginationBarController{
     public paginator;
+    public prevPage = () => store.dispatch(actions.PREVIOUS_PAGE());
+
     //@ngInject
     constructor(
         public paginationService
     ){
-        if(angular.isUndefined(this.paginator)){
-            this.paginator = paginationService.createPagination();
-        }
+
+
     }
 }
 

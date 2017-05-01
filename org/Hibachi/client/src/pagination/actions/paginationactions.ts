@@ -26,7 +26,6 @@ export const NEXT_JUMP='NEXT_JUMP';
 export const SHOW_PAGE_NUMBER='SHOW_PAGE_NUMBER';
 export const SET_PAGE_RECORDS_INFO='SET_PAGE_RECORDS_INFO';
 
-//action creators
 export function previousPage(pagination){
 	return {
 		type:PREVIOUS_PAGE,
