@@ -12,18 +12,7 @@ dependencies:
     - git config --global push.default current
     - git config core.fileMode false
 
-    #add hibachicore as another remote in slatwall project
-    - git remote add hibachicore ssh://git@github.com/ten24/hibachicore.git && git fetch hibachicore
 
-    #populate repo locally
-    
-
-    #create a local branch for hibachi core of of develop
-    - git branch develop-hibachicoreupdatedevelop hibachicore/develop
-    - git branch develop-hibachicoreupdatemaster hibachicore/master
-
-    #assign subdirectory as subtree and associate with local branch
-    #- git read-tree —prefix=org/Hibachi/ -u develop-hibachicoredevelop
 
     # Install node modules for building JS
     - npm install -g webpack@1.13.3 gulp less
@@ -86,6 +75,24 @@ test:
   post:
     # Kill the Sauce Labs tunnel
     #- if [[ ! -z $SAUCE_USERNAME ]] ; then cd sc-*-linux && kill $(cat sc.pid); fi
+    #add hibachicore as another remote in slatwall project
+    - git remote add hibachicore ssh://git@github.com/ten24/hibachicore.git && git fetch hibachicore
+
+    #populate repo locally
+    
+
+    #create a local branch for hibachi core of of develop
+    - git branch develop-hibachicoreupdatedevelop hibachicore/develop
+    - git branch develop-hibachicoreupdatemaster hibachicore/master
+
+    #assign subdirectory as subtree and associate with local branch
+    - git read-tree —prefix=org/Hibachi/ -u develop-hibachicoredevelop
+
+    #overwrite branch with what’s in slatwall
+    - git pull -s subtree -Xsubtree=org/Hibachi -Xours hibachicore develop
+
+    #push branch and make a PR
+    - git subtree push --prefix=org/Hibachi hibachicore develop-hibachicoredevelop
 deployment:
 
   # As long as this build passed, we can commit JS builds, Version #, and do downstream merging when necessary
@@ -93,3 +100,4 @@ deployment:
     branch: [master, hotfix, develop, /develop-.*/]
     commands:
       - meta/ci/version_merge.sh
+
