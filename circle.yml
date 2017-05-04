@@ -10,6 +10,17 @@ dependencies:
     - git config --global user.email "info@slatwallcommerce.com"
     - git config --global user.name "Big Boy (Slatwall Robot)"
     - git config --global push.default current
+    - git config core.fileMode false
+
+    #add hibachicore as another remote in slatwall project
+    - git remote add hibachicore ssh://git@github.com/ten24/hibachicore.git
+
+    #populate repo locally
+    - git fetch hibachicore
+
+    #create a local branch for hibachi core of of develop
+    - git branch develop-hibachicoreupdatedevelop hibachicore/develop
+    - git branch develop-hibachicoreupdatemaster hibachicore/master
 
     # Install node modules for building JS
     - npm install -g webpack@1.13.3 gulp less
