@@ -84,7 +84,7 @@ test:
     - git fetch hibachicore
 
     #create a local branch for hibachi core of of develop
-    - git branch -d develop-hibachicoreupdatedevelop
+    - git branch -D develop-hibachicoreupdatedevelop
     - git branch develop-hibachicoreupdatedevelop hibachicore/develop
 
     #assign subdirectory as subtree and associate with local branch
