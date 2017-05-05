@@ -76,10 +76,10 @@ test:
     # Kill the Sauce Labs tunnel
     #- if [[ ! -z $SAUCE_USERNAME ]] ; then cd sc-*-linux && kill $(cat sc.pid); fi
     #add hibachicore as another remote in slatwall project
-    - git remote add hibachicore ssh://git@github.com/ten24/hibachicore.git && git fetch hibachicore
+    - git remote add hibachicore ssh://git@github.com/ten24/hibachicore.git
 
     #populate repo locally
-    
+    - git fetch hibachicore
 
     #create a local branch for hibachi core of of develop
     - git branch develop-hibachicoreupdatedevelop hibachicore/develop
