@@ -29,8 +29,8 @@ dependencies:
     - cd org/Hibachi/client && gulp gen-ts-refs && webpack --config webpack-frontend-production.config.js -p --display-error-details
     - cd admin/client && gulp gen-ts-refs
     # Minify JS
-    - cd admin/client && webpack --config webpack-production.config.js -p --display-error-details 
-    # Minify 
+    - cd admin/client && webpack --config webpack-production.config.js -p --display-error-details
+    # Minify
     - cd admin/client/css && lessc main.less main.css
     # Update docker-compose
     - curl -L https://github.com/docker/compose/releases/download/1.4.1/docker-compose-`uname -s`-`uname -m` > docker-compose
@@ -63,15 +63,15 @@ test:
     # Run Build
     #- sudo lxc-attach -n "$(docker inspect --format '{{.Id}}' slatwallci_slatwallweb_1)" -- ant -f /var/www/meta/tests/build.xml buildDocsAndTests
   override:
-    
+
     # Run Sauce Labs Integration Admin Tests, 2 side by side at a time
     #- if [[ ! -z $SAUCE_USERNAME ]] ; then node meta/tests/integration/se-interpreter/interpreter.js --parallel=5 --listener=meta/tests/integration/se-interpreter/utils/se_sauce_junit_listener.js --listener-path=meta/tests/testresults/xml/integration meta/tests/integration/admin_config.json --silent; fi
 
     # Run Unit Tests
-    
+
     - sudo lxc-attach -n "$(docker inspect --format '{{.Id}}' slatwallci_slatwallweb_1)" -- ant -f /var/www/meta/tests/build.xml run-junit -Dslatwall.outputfile "results" -Dtest.directory "meta.tests.unit";:
         timeout: 1800
-        
+
   post:
     # Kill the Sauce Labs tunnel
     #- if [[ ! -z $SAUCE_USERNAME ]] ; then cd sc-*-linux && kill $(cat sc.pid); fi
@@ -90,8 +90,8 @@ test:
     #assign subdirectory as subtree and associate with local branch
 
     #overwrite branch with what’s in slatwall
-    - git pull --squash -s subtree --no-commit -Xsubtree=org/Hibachi -Xours hibachicore develop
-    
+    - git pull -s subtree -Xsubtree=org/Hibachi -Xours hibachicore develop
+
     #push branch and make a PR
     - git subtree push --prefix=org/Hibachi hibachicore develop-hibachicoreupdatedevelop
 deployment:
