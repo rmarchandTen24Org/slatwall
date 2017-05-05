@@ -77,6 +77,7 @@ test:
     #- if [[ ! -z $SAUCE_USERNAME ]] ; then cd sc-*-linux && kill $(cat sc.pid); fi
 
     #add hibachicore as another remote in slatwall project
+    - git remote remove hibachicore
     - git remote add hibachicore ssh://git@github.com/ten24/hibachicore.git
 
     #populate repo locally
@@ -84,16 +85,12 @@ test:
 
     #create a local branch for hibachi core of of develop
     - git branch develop-hibachicoreupdatedevelop hibachicore/develop
-    - git branch develop-hibachicoreupdatemaster hibachicore/master
 
     #assign subdirectory as subtree and associate with local branch
     - git read-tree —prefix=org/Hibachi/ -u develop-hibachicoredevelop
 
     #overwrite branch with what’s in slatwall
     - git pull --squash -s subtree -Xsubtree=org/Hibachi -Xours hibachicore develop
-
-    #commit
-    - git commit -a "hibachicore" -s subtree -Xsubtree=org/Hibachi -Xours hibachicore develop
 
     #push branch and make a PR
     - git subtree push --prefix=org/Hibachi hibachicore develop-hibachicoredevelop
