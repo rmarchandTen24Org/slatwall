@@ -91,7 +91,7 @@ test:
 
     #overwrite branch with what’s in slatwall
     - git pull --squash -s subtree --no-commit -Xsubtree=org/Hibachi -Xours hibachicore develop
-
+    - git commit -m "merging hibachi core"
     #push branch and make a PR
     - git subtree push --prefix=org/Hibachi hibachicore develop-hibachicoreupdatedevelop
 deployment:
