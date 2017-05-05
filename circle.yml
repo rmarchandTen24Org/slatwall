@@ -75,6 +75,7 @@ test:
   post:
     # Kill the Sauce Labs tunnel
     #- if [[ ! -z $SAUCE_USERNAME ]] ; then cd sc-*-linux && kill $(cat sc.pid); fi
+
     #add hibachicore as another remote in slatwall project
     - git remote add hibachicore ssh://git@github.com/ten24/hibachicore.git
 
@@ -89,7 +90,7 @@ test:
     - git read-tree —prefix=org/Hibachi/ -u develop-hibachicoredevelop
 
     #overwrite branch with what’s in slatwall
-    - git pull -s subtree -Xsubtree=org/Hibachi -Xours hibachicore develop --squash
+    - git pull --squash -s subtree -Xsubtree=org/Hibachi -Xours hibachicore develop
 
     #commit
     - git commit -a "hibachicore" -s subtree -Xsubtree=org/Hibachi -Xours hibachicore develop
