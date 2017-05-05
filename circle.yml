@@ -10,6 +10,9 @@ dependencies:
     - git config --global user.email "info@slatwallcommerce.com"
     - git config --global user.name "Big Boy (Slatwall Robot)"
     - git config --global push.default current
+    - git config core.fileMode false
+
+
 
     # Install node modules for building JS
     - npm install -g webpack@1.13.3 gulp less
@@ -72,6 +75,25 @@ test:
   post:
     # Kill the Sauce Labs tunnel
     #- if [[ ! -z $SAUCE_USERNAME ]] ; then cd sc-*-linux && kill $(cat sc.pid); fi
+
+    #add hibachicore as another remote in slatwall project
+    - git remote remove hibachicore
+    - git remote add hibachicore ssh://git@github.com/ten24/hibachicore.git
+
+    #populate repo locally
+    - git fetch hibachicore
+
+    #create a local branch for hibachi core of of develop
+    - git branch -D develop-hibachicoreupdatedevelop
+    - git branch develop-hibachicoreupdatedevelop hibachicore/develop
+
+    #assign subdirectory as subtree and associate with local branch
+
+    #overwrite branch with what’s in slatwall
+    - git pull --squash -s subtree --no-commit -Xsubtree=org/Hibachi -Xours hibachicore develop
+    
+    #push branch and make a PR
+    - git subtree push --prefix=org/Hibachi hibachicore develop-hibachicoreupdatedevelop
 deployment:
 
   # As long as this build passed, we can commit JS builds, Version #, and do downstream merging when necessary
