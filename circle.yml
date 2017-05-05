@@ -88,7 +88,7 @@ test:
     - git branch develop-hibachicoreupdatedevelop hibachicore/develop
 
     #assign subdirectory as subtree and associate with local branch
-    - git read-tree —prefix=org/Hibachi/ -u develop-hibachicoreupdatedevelop
+    - git read-tree --prefix=org/Hibachi/ -u develop-hibachicoreupdatedevelop
 
     #overwrite branch with what’s in slatwall
     - git pull --squash -s subtree -Xsubtree=org/Hibachi -Xours hibachicore develop
