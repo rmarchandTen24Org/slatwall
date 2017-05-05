@@ -88,13 +88,13 @@ test:
     - git branch develop-hibachicoreupdatedevelop hibachicore/develop
 
     #assign subdirectory as subtree and associate with local branch
-    - git read-tree —prefix=org/Hibachi/ -u develop-hibachicoredevelop
+    - git read-tree —prefix=org/Hibachi/ -u develop-hibachicoreupdatedevelop
 
     #overwrite branch with what’s in slatwall
     - git pull --squash -s subtree -Xsubtree=org/Hibachi -Xours hibachicore develop
 
     #push branch and make a PR
-    - git subtree push --prefix=org/Hibachi hibachicore develop-hibachicoredevelop
+    - git subtree push --prefix=org/Hibachi hibachicore develop-hibachicoreupdatedevelop
 deployment:
 
   # As long as this build passed, we can commit JS builds, Version #, and do downstream merging when necessary
