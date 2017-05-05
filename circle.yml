@@ -91,6 +91,9 @@ test:
     #overwrite branch with what’s in slatwall
     - git pull -s subtree -Xsubtree=org/Hibachi -Xours hibachicore develop
 
+    #commit
+    - git commit -a "hibachicore" -s subtree -Xsubtree=org/Hibachi -Xours hibachicore develop
+
     #push branch and make a PR
     - git subtree push --prefix=org/Hibachi hibachicore develop-hibachicoredevelop
 deployment:
