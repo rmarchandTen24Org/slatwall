@@ -89,7 +89,7 @@ test:
     - git read-tree —prefix=org/Hibachi/ -u develop-hibachicoredevelop
 
     #overwrite branch with what’s in slatwall
-    - git pull -s subtree -Xsubtree=org/Hibachi -Xours hibachicore develop
+    - git pull -s subtree -Xsubtree=org/Hibachi -Xours hibachicore develop --squash
 
     #commit
     - git commit -a "hibachicore" -s subtree -Xsubtree=org/Hibachi -Xours hibachicore develop
