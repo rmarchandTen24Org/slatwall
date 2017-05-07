@@ -79,7 +79,7 @@ test:
     #add hibachicore as another remote in slatwall project
     - git remote remove hibachicore
     - git remote add hibachicore ssh://git@github.com/ten24/hibachicore.git
-
+    
     #populate repo locally
     - git fetch hibachicore
 
@@ -90,8 +90,9 @@ test:
     #assign subdirectory as subtree and associate with local branch
 
     #overwrite branch with what’s in slatwall
-    - git pull --squash -s subtree --no-commit -Xsubtree=org/Hibachi -Xours hibachicore develop
-    - git subtree add -P --squash org/Hibachi hibachicore develop-hibachicoreupdatedevelop
+    - git subtree add -P org/Hibachi hibachiCore develop --squash
+    #- git pull --squash -s subtree --no-commit -Xsubtree=org/Hibachi -Xours hibachicore develop
+    - git subtree add -P org/Hibachi hibachicore develop-hibachicoreupdatedevelop
 
     #push branch and make a PR
     - git subtree push --prefix=org/Hibachi hibachicore develop-hibachicoreupdatedevelop
