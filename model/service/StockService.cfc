@@ -354,15 +354,20 @@ component extends="HibachiService" accessors="true" output="false" {
 				stockReceiverItem.setStock(stockAdjustmentItem.getToStock());
 			}
 			
-			this.saveStockReceiver( stockReceiver );
+				this.saveStockReceiver( stockReceiver );
+				if (!stockReceiver.hasErrors()){
+					getDao('hibachiDao').flushOrmSession();
+				}
 		}
 		
 		// Outgoing (Transfer or ManualOut)
 		if( listFindNoCase("satLocationTransfer,satManualOut", arguments.stockAdjustment.getStockAdjustmentType().getSystemCode()) ) {
+			
 			var stockAdjustmentDelivery = this.newStockAdjustmentDelivery();
 			stockAdjustmentDelivery.setStockAdjustment(arguments.stockAdjustment);
 			
 			for(var i=1; i <= arrayLen(arguments.stockAdjustment.getStockAdjustmentItems()); i++) {
+				
 				var stockAdjustmentItem = arguments.stockAdjustment.getStockAdjustmentItems()[i];
 				var stockAdjustmentDeliveryItem = this.newStockAdjustmentDeliveryItem();
 				stockAdjustmentDeliveryItem.setStockAdjustmentDelivery(stockAdjustmentDelivery);
@@ -371,7 +376,11 @@ component extends="HibachiService" accessors="true" output="false" {
 				stockAdjustmentDeliveryItem.setStock(stockAdjustmentItem.getFromStock());
 			}
 			
+			
 			this.saveStockAdjustmentDelivery(stockAdjustmentDelivery);
+			if (!stockAdjustmentDelivery.hasErrors()){
+				getDao('hibachiDao').flushOrmSession();
+			}
 		}
 		
 		
