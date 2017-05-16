@@ -27,7 +27,7 @@
 	<!--- used to clear template cache --->
 	<cfset expireUrl= "*#attributes.hibachiScope.content().getUrlTitlePath()#?clearTemplateCache=true"/>
 	<cfsavecontent variable="hibachiTagContent" >
-		<cfoutput><cfcache expireURL="#expireUrl#" key="#attributes.cacheKey#" timespan="#attributes.timespan#">#now()# & #thisTag.generatedContent#</cfcache></cfoutput>	
+		<cfoutput><cfcache expireURL="#expireUrl#" key="#attributes.cacheKey#" timespan="#attributes.timespan#">#thisTag.generatedContent#</cfcache></cfoutput>	
 	</cfsavecontent>
 	<cfset templateString = "\$\[\[insertUnCachedKey\]\]"/>
 	<cfset uncachedStrings =  reMatchNoCase(templateString,hibachiTagContent)>
