@@ -101,7 +101,7 @@ Notes:
 
 
 	function generateRenderedContent() {
-
+		
 		var site = arguments.slatwallScope.getSite();
 		var templatePath = site.getApp().getAppRootPath() & '/' & site.getSiteCode() & '/templates/';
 		var contentPath = '';
@@ -225,11 +225,9 @@ Notes:
 			arguments.slatwallScope.setContent(content);
 		}
 		
-		
 		arguments.contentPath = contentPath;
 		
 		var templateData = buildRenderedContent(argumentCollection=arguments);
-		
 		templateBody = arguments.slatwallScope.getService('hibachiUtilityService').replaceStringTemplate(templateData,arguments.slatwallScope.getContent());
 		templateBody = arguments.slatwallScope.getService('hibachiUtilityService').replaceStringEvaluateTemplate(template=templateBody,object=this);
 		
@@ -242,13 +240,15 @@ Notes:
 	<cffunction name="buildRenderedContent">
 		<cfset request.context.fw = arguments.slatwallScope.getApplicationValue("application")/>
 		<cfset var $ = getApplicationScope(argumentCollection=arguments)/>
-		<!---add cfimport of hibachitags so that we can take advantage of HibachiCache--->
 		
-		<cfsavecontent variable="local.templateData">
-			<cfimport prefix="hb" taglib="/Slatwall/org/Hibachi/HibachiTags"/>
-			<hb:HibachiCache>
-				<cfinclude template="#arguments.contentPath#"/>
-			</hb:HibachiCache>
+		<!---add cfimport of hibachitags so that we can take advantage of HibachiCache--->
+		<cfimport prefix="hb" taglib="/Slatwall/org/Hibachi/HibachiTags"/>
+		<cfsavecontent variable="local.templateData" >
+			<cfoutput>
+				<hb:HibachiCache>
+					<cfinclude template="#arguments.contentPath#"/>
+				</hb:HibachiCache>
+			</cfoutput>
 		</cfsavecontent>
 		<cfreturn local.templateData/>
 	</cffunction>
