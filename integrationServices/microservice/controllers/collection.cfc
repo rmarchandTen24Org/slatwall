@@ -195,6 +195,7 @@ component extends="Slatwall.org.Hibachi.HibachiController" output="false" access
 	    	var response['AccountEmailAddressID'] = account.getPrimaryEmailAddress().getAccountEmailAddressID();
 	    	var response['Email2'] = account.getPrimaryEmailAddress().getEmailAddress();
 	    	var response['Name2'] = account.getFirstName() & " " & account.getLastName();
+	    
 	    }catch(any restError){
 	    	response['error'] = restError;
 	    }
