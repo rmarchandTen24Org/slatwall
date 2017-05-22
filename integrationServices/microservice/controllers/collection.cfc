@@ -183,7 +183,7 @@ component extends="Slatwall.org.Hibachi.HibachiController" output="false" access
 			
 			var queryData = getHibachiScope().getService("#arguments.entityName#Service").invokeMethod("get#arguments.entityName#CollectionList");
 		    queryData.addFilter("#arguments.entityName#ID", arguments.entityID,"=");
-		    queryData.addDisplayProperty("primaryEmailAddress.accountEmailAddressID");
+		    /*queryData.addDisplayProperty("primaryEmailAddress.accountEmailAddressID");
 		    queryData.addDisplayProperty("primaryEmailAddress.emailAddress");
 		    
 		    response['detail'] = queryData.getRecords();
@@ -194,7 +194,7 @@ component extends="Slatwall.org.Hibachi.HibachiController" output="false" access
 	    	var response['Email'] = account.getPrimaryEmailAddress().getEmailAddress();
 	    	var response['AccountEmailAddressID'] = account.getPrimaryEmailAddress().getAccountEmailAddressID();
 	    	var response['Email2'] = account.getPrimaryEmailAddress().getEmailAddress();
-	    	var response['Name2'] = account.getFirstName() & " " & account.getLastName();
+	    	var response['Name2'] = account.getFirstName() & " " & account.getLastName();*/
 	    
 	    }catch(any restError){
 	    	response['error'] = restError;
