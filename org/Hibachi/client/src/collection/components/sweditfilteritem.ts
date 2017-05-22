@@ -12,8 +12,7 @@ class SWEditFilterItem{
 			metadataService,
 			hibachiPathBuilder,
             rbkeyService,
-            observerService,
-            utilityService
+            observerService
 		)=> new SWEditFilterItem(
 			$log,
 			$filter,
@@ -24,8 +23,7 @@ class SWEditFilterItem{
 			metadataService,
 			hibachiPathBuilder,
             rbkeyService,
-            observerService,
-            utilityService
+            observerService
 		);
 		directive.$inject = [
 			'$log',
@@ -37,8 +35,7 @@ class SWEditFilterItem{
 			'metadataService',
 			'hibachiPathBuilder',
             'rbkeyService',
-            'observerService',
-            'utilityService'
+            'observerService'
 		];
 		return directive;
 	}
@@ -52,8 +49,7 @@ class SWEditFilterItem{
 		metadataService,
 		hibachiPathBuilder,
         rbkeyService,
-        observerService,
-        utilityService
+        observerService
 	){
 		return {
 			require:'^swFilterGroups',
@@ -356,7 +352,7 @@ class SWEditFilterItem{
 											filterItem.displayValue += ((filterItem.criteriaNumberOf > 1)?'s':'')+' Ago';
 										}
 									}else{
-										var dateValueString = utilityService.removeTimeOffset(selectedFilterProperty.criteriaRangeStart) + '-' + utilityService.removeTimeOffset(selectedFilterProperty.criteriaRangeEnd);
+										var dateValueString = selectedFilterProperty.criteriaRangeStart + '-' + selectedFilterProperty.criteriaRangeEnd;
 										filterItem.value = dateValueString;
 										var formattedDateValueString = $filter('date')(angular.copy(selectedFilterProperty.criteriaRangeStart),'MM/dd/yyyy @ h:mma') + '-' + $filter('date')(angular.copy(selectedFilterProperty.criteriaRangeEnd),'MM/dd/yyyy @ h:mma');
 										filterItem.displayValue = formattedDateValueString;
