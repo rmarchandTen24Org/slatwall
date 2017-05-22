@@ -167,7 +167,7 @@ component extends="Slatwall.org.Hibachi.HibachiController" output="false" access
 	* @produces application/json,application/xml
 	* @authenticated Requires Basic Authentication using your access-key and access-key-secret as the username and password.
 	*/
-	function detail(required string entityName, required string entityID) {
+	function findBy(required string entityName, required string entityID) {
 		//Check that the user is authenticated through one of the authentication processes.
 		if (!isAuthenticated()){
 			pc = getPageContext().getResponse();
@@ -180,6 +180,7 @@ component extends="Slatwall.org.Hibachi.HibachiController" output="false" access
 	    };
 	    
 		try{
+			
 			var queryData = getHibachiScope().getService("#arguments.entityName#Service").invokeMethod("get#arguments.entityName#CollectionList");
 		    queryData.addFilter("#arguments.entityName#ID", arguments.entityID,"=");
 		    queryData.addDisplayProperty("primaryEmailAddress.accountEmailAddressID");
@@ -189,7 +190,6 @@ component extends="Slatwall.org.Hibachi.HibachiController" output="false" access
 		    
 		    //Test the collection proxy. The proxy turns the collection row into a traversable object.
 	    	var account = new CollectionProxy(queryData.getRecords()[1]);
-	    	
 	    	var response['Name'] = account.getFirstName() & " " & account.getLastName();
 	    	var response['Email'] = account.getPrimaryEmailAddress().getEmailAddress();
 	    	var response['AccountEmailAddressID'] = account.getPrimaryEmailAddress().getAccountEmailAddressID();
