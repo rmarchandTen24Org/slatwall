@@ -156,6 +156,38 @@ component extends="Slatwall.org.Hibachi.HibachiController" output="false" access
 	    return response;
 	}
 	
+	
+	/**
+	* @hint Returns entity validation rules of data given an {entityName}
+	* @restpath {entityName}/validations
+	* @httpmethod GET
+	* @entityName.restargsource "Path"
+	* @entityID.restargsource "Path"
+	* @returnType struct
+	* @access remote
+	* @produces application/json,application/xml
+	* @authenticated Requires Basic Authentication using your access-key and access-key-secret as the username and password.
+	*/
+	function validations(required string entityName) {
+		//Check that the user is authenticated through one of the authentication processes.
+		if (!isAuthenticated()){
+			pc = getPageContext().getResponse();
+			pc.addHeader("WWW-Authenticate", "Use basic Authentication against this endpoint where the username is your access-key and password is access-key-secret.");
+			pc.sendError(401, "Not Authorized.");
+		}
+		var response = {
+	        "validation" = {}
+	    };
+	    try{
+		    var validation = getHibachiScope().getService("HibachiValidationService").getCoreValidation("#arguments.entityName#");
+		    response.validation = validations;
+		    
+	    }catch(any restError){
+	    	response['error'] = restError; 
+	    }
+	    return response;
+   }
+   
    /**
 	* @hint Returns an collection of data given an {entityName} and/or {entityID}
 	* @restpath /{entityName}/{entityID}
