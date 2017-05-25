@@ -180,8 +180,40 @@ component extends="Slatwall.org.Hibachi.HibachiController" output="false" access
 	    };
 	    try{
 		    var validation = getHibachiScope().getService("HibachiValidationService").getCoreValidation("#arguments.entityName#");
-		    response.validation = validations;
+		    response.validation = validation;
 		    
+	    }catch(any restError){
+	    	response['error'] = restError; 
+	    }
+	    return response;
+   }
+   
+   /**
+	* @hint Returns entity validation rules of data given an {entityName}
+	* @restpath {entityName}/multi
+	* @httpmethod GET
+	* @entityName.restargsource "Path"
+	* @entityID.restargsource "Path"
+	* @me.restargsource "Query"
+	* @returnType struct
+	* @access remote
+	* @produces application/json,application/xml
+	* @authenticated Requires Basic Authentication using your access-key and access-key-secret as the username and password.
+	*/
+	function multi(required string entityName, string me) {
+		//Check that the user is authenticated through one of the authentication processes.
+		if (!isAuthenticated()){
+			pc = getPageContext().getResponse();
+			pc.addHeader("WWW-Authenticate", "Use basic Authentication against this endpoint where the username is your access-key and password is access-key-secret.");
+			pc.sendError(401, "Not Authorized.");
+		}
+		var response = {
+	        "data" = {}
+	    };
+	    try{
+		    var session = ormGetSessionFactory("Slatwall").openSession();
+		    var data = session.createQuery("select new Map(account.accountID as accountID) from SlatwallAccount account").list();
+		    response.data=data; 
 	    }catch(any restError){
 	    	response['error'] = restError; 
 	    }
@@ -215,6 +247,9 @@ component extends="Slatwall.org.Hibachi.HibachiController" output="false" access
 			
 			var queryData = getHibachiScope().getService("#arguments.entityName#Service").invokeMethod("get#arguments.entityName#CollectionList");
 		    queryData.addFilter("#arguments.entityName#ID", arguments.entityID,"=");
+		    
+		    response.detail = queryData.getRecords();
+		    
 		    /*queryData.addDisplayProperty("primaryEmailAddress.accountEmailAddressID");
 		    queryData.addDisplayProperty("primaryEmailAddress.emailAddress");
 		    
