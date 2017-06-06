@@ -1182,7 +1182,10 @@ component extends="HibachiService"  accessors="true" output="false"
         var stateCodeOptions = country.getStateCodeOptions();
         
         arguments.data.ajaxResponse["stateCodeOptions"] = stateCodeOptions;
-        
+        //get the address options.
+        if (!isNull(arguments.data.countryCode)){
+        	getAddressOptionsByCountryCode(arguments.data);
+        }
     }
     
     /** Given a country - this returns all of the address options for that country */
