@@ -2,8 +2,8 @@ var webpack = require('webpack');
 
 var path = require('path');
 var PATHS = {
-    app: path.join(__dirname),
-    lib: path.join(__dirname)
+    app: path.join(__dirname, '/src'),
+    lib: path.join(__dirname, '/lib')
 };
 
 var appConfig = {
