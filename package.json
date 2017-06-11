@@ -11,6 +11,10 @@
     "md5": "^2.0.0"
   },
   "devDependencies": {
+    "@types/angularjs": "^1.5.14-alpha",
+    "@types/jasmine": "^2.5.51",
+    "@types/protractor": "^4.0.0",
+    "@types/protractor-helpers": "^1.0.33",
     "angular": "*",
     "angular-mocks": "^1.6.0",
     "bower": "*",
@@ -42,6 +46,7 @@
     "test-single-run": "karma start test/karma.conf.js  --single-run",
     "preupdate-webdriver": "npm install",
     "update-webdriver": "webdriver-manager update",
+    "buildProtractor": "cd meta/tests/integration/protractor/src && tsc **/*.spec.ts",
     "preprotractor": "npm run update-webdriver && webpack --config meta/tests/integration/protractor/webpack-test.config.js",
     "protractor": "protractor meta/tests/integration/protractor/conf.js",
     "update-index-async": "node -e \"require('shelljs/global'); sed('-i', /\\/\\/@@NG_LOADER_START@@[\\s\\S]*\\/\\/@@NG_LOADER_END@@/, '//@@NG_LOADER_START@@\\n' + cat('app/bower_components/angular-loader/angular-loader.min.js') + '\\n//@@NG_LOADER_END@@', 'app/index-async.html');\"",

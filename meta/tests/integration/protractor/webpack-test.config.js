@@ -9,13 +9,13 @@ var PATHS = {
 var appConfig = {
     context:PATHS.app,
     entry: {
-        app:['./alltests.ts']
+        app:['./**/*.spec.ts']
+    },
+    output: {
+        path: path.join(__dirname, "dist"),
+        filename: "[name].spec.js"
     },
     watch:false,
-    output: {
-        path: PATHS.app,
-        filename: 'protractor-bundle.js'
-    },
     // Turn on sourcemaps
     //devtool: 'source-map',
     resolve: {
