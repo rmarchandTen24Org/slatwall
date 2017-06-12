@@ -1,3 +1,4 @@
+<input type="hidden" name="sRedirect" value="?sRedirect=entity.editcontent&contentID={{swAssignedProducts.contentId}}" />
 <sw-listing-display data-multi-slot="true"
                     data-custom-listing-controls="true"
                     data-edit="swAssignedProducts.edit"
@@ -84,7 +85,7 @@
                                             data-in-listing-display="true"
                                             data-collection-config="swAssignedProducts.alreadySelectedProductsCollectionConfig"
                                             data-sort-default-direction-field-name="productSortDefaultDirection"
-                                            data-sort-property-field-name="productSortProperty"
+                                            data-sort-property-field-name="productID"
                                             data-initial-sort-default-direction="{{swAssignedProducts.productSortDefaultDirection}}"
                                             data-initial-sort-property="{{swAssignedProducts.productSortProperty}}"
                                             data-edit="swAssignedProducts.edit"
@@ -95,7 +96,7 @@
                     </sw-custom-listing-controls>
 
                     <sw-listing-delete-action>
-                        <sw-typeahead-remove-selection data-disabled="!swAssignedProducts.edit" data-typeahead-data-key="{{swAssignedProducts.typeaheadDataKey}}"></sw-typeahead-remove-selection>
+                        <sw-typeahead-remove-selection data-disabled="!swAssignedProducts.edit" data-typeahead-data-key="{{swAssignedProducts.productSortProperty}}"></sw-typeahead-remove-selection>
                     </sw-listing-delete-action>
 
 </sw-listing-display>

@@ -15,7 +15,8 @@ class SWActionCallerController{
     public disabled:boolean;
     public actionItemEntityName:string;
     public hibachiPathBuilder:any;
-
+    public sredirect:string;
+    public fredirect:string;
     public actionUrl:string;
     public queryString:string;
     public isAngularRoute:boolean;
@@ -117,7 +118,13 @@ class SWActionCallerController{
     public submit = () => {
         this.$timeout(()=>{
             if(this.form.$valid){
-                this.formController.submit(this.action);
+                if (this.sredirect != undefined){
+                    this.formController.submit(this.action, this.sredirect);
+                 }else if (this.fredirect != undefined && this.sredirect != undefined){
+                     this.formController.submit(this.action, this.sredirect, this.fredirect);
+                 }else{
+                     this.formController.submit(this.action);
+                 }
             }
             this.form.$submitted = true;
         });
@@ -288,7 +295,9 @@ class SWActionCaller implements ng.IDirective{
         modal:"=",
         modalFullWidth:"=",
         id:"@",
-        isAngularRoute:"=?"
+        isAngularRoute:"=?",
+        sredirect:"<?",
+        fredirect:"<?"
     };
     public require={formController:"^?swForm",form:"^?form"};
     public controller=SWActionCallerController;
