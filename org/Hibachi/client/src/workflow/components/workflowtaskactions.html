@@ -134,7 +134,7 @@
                                             <div class="input-group">
                                                 <div class="s-input-btn">
                                                     <!-- Need to display the workflow event name if it exists -->
-                                                    <input type="search" class="form-control" placeholder="Search&hellip;" data-ng-model="swWorkflowTaskActions.searchProcess.name" data-ng-focus="swWorkflowTaskActions.searchProcess.name = ''" data-ng-change="swWorkflowTaskActions.getProcessOptions(swWorkflowTaskActions.workflowTask.data.workflow.data.workflowObject)">
+                                                    <input type="search" class="form-control" name="processMethod" placeholder="Search&hellip;" data-ng-model="swWorkflowTaskActions.searchProcess.name" data-ng-focus="swWorkflowTaskActions.searchProcess.name = ''" data-ng-change="swWorkflowTaskActions.getProcessOptions(swWorkflowTaskActions.workflowTask.data.workflow.data.workflowObject)">
                                                     <!--														<!--<span class="glyphicon glyphicon-remove"></span>-->
                                                     <!--<i class="fa fa-refresh fa-spin"></i>--><!-- Loading Icon -->
 
@@ -146,7 +146,7 @@
                                         </div>
                                         <!-- Dropdown wrapper -->
                                         <div class="dropdown s-search-results-wrapper" data-ng-if="swWorkflowTaskActions.showProcessOptions">
-                                            <ul class="dropdown-menu">
+                                            <ul class="dropdown-menu" ng-if="swWorkflowTaskActions.processOptions">
                                                 <li data-ng-repeat="processOption in swWorkflowTaskActions.processOptions | filter:swWorkflowTaskActions.searchProcess.name">
                                                     <a data-ng-click="swWorkflowTaskActions.selectProcess(processOption)">{{processOption.name}}</a>
                                                 </li>

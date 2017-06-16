@@ -16,8 +16,7 @@ component accessors="true" extends="Slatwall.org.Hibachi.HibachiController"{
         getFW().setView("public:main.blank");
         arguments.rc.requestHeaderData = getHTTPRequestData();
         arguments.rc['ajaxRequest'] = true;
-        param name="rc.headers.contentType" default="application/json";
-        arguments.rc.headers["Content-Type"] = rc.headers.contentType;
+        arguments.rc.headers["Content-Type"] = 'application/json';
     }
 
     public any function get( required struct rc ) {
@@ -55,7 +54,7 @@ component accessors="true" extends="Slatwall.org.Hibachi.HibachiController"{
                 //iterate through all the actions calling the method.
                 for (var eachAction in actions){
                     //Make sure there are no errors if we have multiple.
-                    if (!arguments.rc.$.slatwall.cart().hasErrors() && !arguments.rc.$.slatwall.account().hasErrors()){
+                    if (!arguments.rc.$["#getDao('hibachiDao').getApplicationValue('applicationKey')#"].cart().hasErrors() && !arguments.rc.$["#getDao('hibachiDao').getApplicationValue('applicationKey')#"].account().hasErrors()){
                           getHibachiScope().flushORMSession();
                           publicService.invokeMethod("#eachAction#", {data=arguments['rc']});
                     }else{

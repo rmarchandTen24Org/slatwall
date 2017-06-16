@@ -100,6 +100,11 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 			}
 		}
 
+		if(arguments.order.getPaymentAmountTotal() == 0 && arguments.order.isAllowedToPlaceOrderWithoutPayment()){
+			//If is allowed to place order without payment and there is no payment, skip payment order
+			return orderRequirementsList;
+		}
+
 		if(arguments.order.getPaymentAmountTotal() != arguments.order.getTotal()) {
 			orderRequirementsList = listAppend(orderRequirementsList, "payment");
 
@@ -119,7 +124,7 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 		//only do this check if no payment has been added yet.
 		if (!listFindNoCase(orderRequirementsList, "payment")){
 			//Check if there is subscription with autopay flag without order payment with account payment method.
-			if (arguments.order.hasSubscriptionWithAutoPay() && !arguments.order.hasSavedAccountPaymentMethod()){
+			if (this.validateHasNoSavedAccountPaymentMethodAndSubscriptionWithAutoPay(arguments.order)){
 				orderRequirementsList = listAppend(orderRequirementsList, "payment");
 			}
 		}
@@ -304,20 +309,32 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 				}
 
 			}
-
+			
+			// Check the fullfillment for a pickup location.
+			if (!isNull(orderFulfillment.getPickupLocation())){
+				
+				// The item being added to the cart should have its stockID added based on that location
+				var location = orderFulfillment.getPickupLocation();
+				var stock = getService("StockService").getStockBySkuAndLocation(sku=processObject.getSku(), location=location);
+				
+				//If we found a stock for that location, then set the stock to the process.
+				if (!isNull(stock)){
+					arguments.processObject.setStock(stock);
+				}
+			}
+			
 			// Check for the sku in the orderFulfillment already, so long that the order doens't have any errors
 			if(!arguments.order.hasErrors()) {
 				for(var orderItem in orderFulfillment.getOrderFulfillmentItems()){
-					// If the sku, price, attributes & stock all match then just increase the quantity
-
-					if(arguments.processObject.matchesOrderItem( orderItem )){
+					// If the sku, price, attributes & stock all match then just increase the quantity if and only if the match parent orderitem is null.
+					if(arguments.processObject.matchesOrderItem( orderItem ) && isNull(orderItem.getParentOrderItem())){
 						foundItem = true;
 						var foundOrderItem = orderItem;
-						orderItem.setQuantity(orderItem.getQuantity() + arguments.processObject.getQuantity());
-						orderItem.validate(context='save');
-						if(orderItem.hasErrors()) {
-							arguments.order.addError('addOrderItem', orderItem.getErrors());
-						}
+						foundOrderItem.setQuantity(orderItem.getQuantity() + arguments.processObject.getQuantity());
+						foundOrderItem.validate(context='save');
+						if(foundOrderItem.hasErrors()) {
+							arguments.order.addError('addOrderItem', foundOrderItem.getErrors());
+						} 
 						break;
 					}
 				}
@@ -349,7 +366,10 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 			// Create a new Order Item
 			var newOrderItem = this.newOrderItem();
 
-
+			if (!isNull(arguments.processObject.getStock())){
+				newOrderItem.setStock(arguments.processObject.getStock());	
+			}
+			
 			// Set Header Info
 			newOrderItem.setOrder( arguments.order );
 			newOrderItem.setPublicRemoteID( arguments.processObject.getPublicRemoteID() );
@@ -504,6 +524,10 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 
 						// Create new event registration	 record
 						var eventRegistration = this.newEventRegistration();
+						
+						eventRegistration.setEventRegistrationStatusType(getTypeService().getTypeBySystemCode("erstNotPlaced"));
+						eventRegistration.generateAndSetAttendanceCode();
+						
 						if(depositsOnlyFlag) {
 							eventRegistration.setOrderItem(depositOrderItem);
 							eventRegistration.setSku(depositOrderItem.getSku());
@@ -511,7 +535,6 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 							eventRegistration.setOrderItem(newOrderItem);
 							eventRegistration.setSku(newOrderItem.getSku());
 						}
-						eventRegistration.generateAndSetAttendanceCode();
 
 						// If newAccount registrant should contain an accountID otherwise should contain first, last, email, phone
 						if(registrant.newAccountFlag == 0) {
@@ -540,18 +563,13 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 							eventRegistration.setAccount(newAccount);
 
 						}
-
-						// Set registration status - Should this be done when order is placed instead?
-						if(arguments.processObject.getSku().setting('skuRegistrationApprovalRequiredFlag')) {
-							eventRegistration.setEventRegistrationStatusType(getTypeService().getTypeBySystemCode("erstPendingApproval"));
-						} else {
-							if( depositsOnlyFlag || registrant.toWaitlistFlag == "1" ) {
-								depositsCount++;
-								eventRegistration.setEventRegistrationStatusType(getTypeService().getTypeBySystemCode("erstWaitlisted"));
-							} else {
+						
+						if( depositsOnlyFlag || registrant.toWaitlistFlag == "1" ) {								
+							depositsCount++;
+							
+						}else {
 								if( (arguments.processObject.getSku().getEventCapacity() > (currentRegistrantCount + salesCount) )  ) {
 									salesCount++;
-									eventRegistration.setEventRegistrationStatusType(getTypeService().getTypeBySystemCode("erstRegistered"));
 
 								} else {
 									// If we have an unexprected waitlister due to event filling before order item was created
@@ -563,13 +581,10 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 										salesOnlyFlag = true;
 									} else {
 										newOrderItem.setOrderItemType( getTypeService().getTypeBySystemCode('oitDeposit') );
-										eventRegistration.setEventRegistrationStatusType(getTypeService().getTypeBySystemCode("erstWaitlisted"));
 									}
 
 								}
 							}
-
-						}
 
 						eventRegistration = getEventRegistrationService().saveEventRegistration( eventRegistration );
 
@@ -657,7 +672,7 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 	}
 
 	public any function processOrder_addOrderPayment(required any order, required any processObject) {
-
+		
 		// Get the populated newOrderPayment out of the processObject
 		var newOrderPayment = processObject.getNewOrderPayment();
 		// If this is an existing account payment method, then we can pull the data from there
@@ -696,16 +711,23 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 
         // If this was a giftCard payment
         if(!isNull(newOrderPayment.getPaymentMethod()) && newOrderPayment.getPaymentMethod().getPaymentMethodType() eq 'giftCard'){
-            if(!len(arguments.processObject.getCopyFromType()) && !isNull(arguments.processObject.getGiftCard())){
+            if((!len(arguments.processObject.getCopyFromType()) || arguments.processObject.getCopyFromType()=="accountGiftCard")
+            	&& !isNull(arguments.processObject.getGiftCard())
+            ){
 	            var giftCard = arguments.processObject.getGiftCard();
             } else if(len(arguments.processObject.getAccountPaymentMethodID()) && getAccountService().getAccountPaymentMethod(arguments.processObject.getAccountPaymentMethodID()).isGiftCardAccountPaymentMethod()) {
             	var giftCard = getAccountService().getAccountPaymentMethod(arguments.processObject.getAccountPaymentMethodID()).getGiftCard();
             }
   			if(!isNull(giftCard)){
             	newOrderPayment.setGiftCardNumberEncrypted(giftCard.getGiftCardCode());
+            	if( arguments.order.getPaymentAmountDueAfterGiftCards() > giftCard.getBalanceAmount() ){
+					newOrderPayment.setAmount(giftCard.getBalanceAmount());
+				} else {
+					newOrderPayment.setAmount(arguments.order.getPaymentAmountDueAfterGiftCards());
+				}
             } else {
             	newOrderPayment.addError('giftCard', rbKey('validate.giftCardCode.invalid'));
-            }
+  			}
         }
 
 		// We need to call updateOrderAmounts so that if the tax is updated from the billingAddress that change is put in place.
@@ -713,7 +735,7 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 
 		// Save the newOrderPayment
 		newOrderPayment = this.saveOrderPayment( newOrderPayment );
-
+		
 		//check if the order payments paymentMethod is set to allow account to save. if true set the saveAccountPaymentMethodFlag to true
 		if (arguments.order.hasSavableOrderPaymentAndSubscriptionWithAutoPay()){
 			for (var orderPayment in arguments.processObject.getOrder().getOrderPayments() ){
@@ -817,7 +839,7 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 		for(var orderPayment in arguments.order.getOrderPayments()) {
 
            if(orderPayment.getStatusCode() eq "opstActive") {
-				var totalReceived = precisionEvaluate(orderPayment.getAmountReceived() - orderPayment.getAmountCredited());
+				var totalReceived = getService('HibachiUtilityService').precisionCalculate(orderPayment.getAmountReceived() - orderPayment.getAmountCredited());
 				if(totalReceived gt 0) {
 					var transactionData = {
 						amount = totalReceived,
@@ -891,7 +913,7 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 		}
 
 		// As long as there is no payment transactions, then we can delete the order
-		if( !hasPaymentTransaction ) {
+		if( !hasPaymentTransaction  && !arguments.order.isNew()) {
 			this.deleteOrder( arguments.order );
 
 		// Otherwise we can just remove the account so that it isn't remember as an open cart for this account
@@ -920,7 +942,10 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 			arguments.order.addError('create', account.getErrors());
 		} else {
 			arguments.order.setAccount(account);
-
+			//set up as Test Order if account is a test account
+			if(!isNull(account.getTestAccountFlag()) && account.getTestAccountFlag()){
+				arguments.order.setTestOrderFlag(true);
+			}
 			// Setup Order Type
 			arguments.order.setOrderType( getTypeService().getType( processObject.getOrderTypeID() ) );
 
@@ -939,6 +964,9 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 
 			// Save the order
 			arguments.order = this.saveOrder(arguments.order);
+
+			// Generate Short Reference for Quote Number
+			arguments.order.getShortReferenceID(true);
 
 		}
 
@@ -1026,7 +1054,7 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 				returnOrderPayment.setOrder( returnOrder );
 				returnOrderPayment.setCurrencyCode( returnOrder.getCurrencyCode() );
 				returnOrderPayment.setOrderPaymentType( getTypeService().getTypeBySystemCode( 'optCredit' ) );
-				returnOrderPayment.setAmount( precisionEvaluate(returnOrder.getTotal() * -1) );
+				returnOrderPayment.setAmount( getService('HibachiUtilityService').precisionCalculate(returnOrder.getTotal() * -1) );
 			}
 
 		}
@@ -1039,10 +1067,11 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 				returnOrder = this.processOrder(returnOrder, {}, 'placeOrder');
 
 				// If the process object was set to automatically receive these items, then we will do that
-				if(!returnOrder.hasErrors() && processObject.getReceiveItemsFlag()) {
+				if(!returnOrder.hasErrors() && (arguments.processObject.getReceiveItemsFlag() || arguments.processObject.getStockLossFlag())) {
 					var receiveData = {};
 					receiveData.locationID = orderReturn.getReturnLocation().getLocationID();
 					receiveData.orderReturnItems = [];
+					receiveData.stockLossFlag = arguments.processObject.getStockLossFlag();
 					for(var returnItem in orderReturn.getOrderReturnItems()) {
 						var thisData = {};
 						thisData.orderReturnItem.orderItemID = returnItem.getOrderItemID();
@@ -1180,7 +1209,10 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 		newOrderItem.setPrice( arguments.orderItem.getPrice() );
 		newOrderItem.setSkuPrice( arguments.orderItem.getSkuPrice() );
 		newOrderItem.setCurrencyCode( arguments.orderItem.getCurrencyCode() );
-		newOrderItem.setQuantity(arguments.orderItem.getQuantity() );
+		if(!isNull(arguments.orderItem.getBundleItemQuantity())){
+			newOrderItem.setBundleItemQuantity(arguments.orderItem.getBundleItemQuantity()); 
+		}
+		newOrderItem.setQuantity(arguments.orderItem.getQuantity());
 		newOrderItem.setOrderItemType( arguments.orderItem.getOrderItemType() );
 		newOrderItem.setOrderItemStatusType( arguments.orderItem.getOrderItemStatusType() );
 		newOrderItem.setSku( arguments.orderItem.getSku() );
@@ -1288,126 +1320,175 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 			if(arguments.order.getOrderStatusType().getSystemCode() == "ostNotPlaced") {
 
 				// Call the saveOrder method so that accounts, fulfillments & payments are updated
-				arguments.order = this.saveOrder(arguments.order, arguments.data);
-
-				// As long as the order doesn't have any errors after updating fulfillment & payments we can continue
-				if(!arguments.order.hasErrors()) {
-
-					//Setup Site Origin if using slatwall cms
-					if(!isNull(getHibachiScope().getSite()) && getHibachiScope().getSite().isSlatwallCMS()){
-						arguments.order.setOrderPlacedSite(getHibachiScope().getSite());
-					}
-
-					// If the orderTotal is less than the orderPaymentTotal, then we can look in the data for a "newOrderPayment" record, and if one exists then try to add that orderPayment
-					if(arguments.order.getTotal() != arguments.order.getPaymentAmountTotal()
-						|| (
-							arguments.order.hasSavableOrderPaymentAndSubscriptionWithAutoPay()
-							&& !arguments.order.hasSavedAccountPaymentMethod()
-						)
-					) {
-						arguments.order = this.processOrder(arguments.order, arguments.data, 'addOrderPayment');
-					}
-
-					if(!arguments.order.hasSavedAccountPaymentMethod() && arguments.order.hasSubscriptionWithAutoPay()){
-						arguments.order.addError('placeOrder',rbKey('entity.order.process.placeOrder.hasSubscriptionWithAutoPayFlagWithoutOrderPaymentWithAccountPaymentMethod_info'));
-					}
-
-					// Generate the order requirements list, to see if we still need action to be taken
-					var orderRequirementsList = getOrderRequirementsList( arguments.order );
-
-					// Verify the order requirements list, to make sure that this order has everything it needs to continue
-					if(len(orderRequirementsList)) {
-
-						if(listFindNoCase(orderRequirementsList, "account")) {
-							arguments.order.addError('account',rbKey('entity.order.process.placeOrder.accountRequirementError'));
+				arguments.order.validate('save');
+				if(!arguments.order.hasErrors()){
+					arguments.order = this.saveOrder(arguments.order, arguments.data);
+					
+					// As long as the order doesn't have any errors after updating fulfillment & payments we can continue
+					if(!arguments.order.hasErrors()) {
+	
+						//Setup Site Origin if using slatwall cms
+						if(!isNull(getHibachiScope().getSite()) && getHibachiScope().getSite().isSlatwallCMS()){
+							arguments.order.setOrderPlacedSite(getHibachiScope().getSite());
 						}
-						if(listFindNoCase(orderRequirementsList, "fulfillment")) {
-							arguments.order.addError('fulfillment',rbKey('entity.order.process.placeOrder.fulfillmentRequirementError'));
-						}
-						if(listFindNoCase(orderRequirementsList, "return")) {
-							arguments.order.addError('return',rbKey('entity.order.process.placeOrder.returnRequirementError'));
-						}
-						if(listFindNoCase(orderRequirementsList, "payment")) {
-							arguments.order.addError('payment',rbKey('entity.order.process.placeOrder.paymentRequirementError'));
-						}
-
-
-					} else {
-
-						// Setup a value to log the amount received, credited or authorized.  If any of these exists then we need to place the order
-						var amountAuthorizeCreditReceive = 0;
-
-						// Process All Payments and Save the ones that were successful
-						for(var orderPayment in arguments.order.getOrderPayments()) {
-							// As long as this orderPayment is active then we can run the place order transaction
-							if(orderPayment.getStatusCode() == 'opstActive') {
-								// Call the placeOrderTransactionType for the order payment
-								orderPayment = this.processOrderPayment(orderPayment, {}, 'runPlaceOrderTransaction');
-								amountAuthorizeCreditReceive = precisionEvaluate(amountAuthorizeCreditReceive + orderPayment.getAmountAuthorized() + orderPayment.getAmountReceived() + orderPayment.getAmountCredited());
+	
+						//check if is payment is needed to place order and addPayment
+						if(!arguments.order.isAllowedToPlaceOrderWithoutPayment() ||
+							( arguments.order.isAllowedToPlaceOrderWithoutPayment() && arguments.order.getPaymentAmountTotal() > 0)
+						){
+							// If the orderTotal is less than the orderPaymentTotal, then we can look in the data for a "newOrderPayment" record, and if one exists then try to add that orderPayment
+							if (arguments.order.getTotal() != arguments.order.getPaymentAmountTotal()
+							|| (
+								arguments.order.hasSavableOrderPaymentAndSubscriptionWithAutoPay()
+								&& !arguments.order.hasSavedAccountPaymentMethod()
+							)
+							) {
+								arguments.order = this.processOrder(arguments.order, arguments.data, 'addOrderPayment');
 							}
 						}
-
-						if(arguments.order.getPaymentAmountDue() > 0 && arguments.order.hasGiftCardOrderPaymentAmount()){
-							arguments.order.addMessage('paymentProcessedMessage', rbKey('entity.order.process.placeOrder.paymentProcessedMessage'));
+	
+	
+	
+						//set an error
+						if (this.validateHasNoSavedAccountPaymentMethodAndSubscriptionWithAutoPay(arguments.order)){
+							arguments.order.addError('placeOrder',rbKey('entity.order.process.placeOrder.hasSubscriptionWithAutoPayFlagWithoutOrderPaymentWithAccountPaymentMethod_info'));
 						}
-
-						// After all of the processing, double check that the order does not have errors.  If one of the payments didn't go through, then an error would have been set on the order.
-						if((!arguments.order.hasErrors() || amountAuthorizeCreditReceive gt 0) && arguments.order.getOrderPaymentAmountNeeded() == 0) {
-
-							if(arguments.order.hasErrors()) {
-								arguments.order.addMessage('paymentProcessedMessage', rbKey('entity.order.process.placeOrder.paymentProcessedMessage'));
+						
+	
+						// Generate the order requirements list, to see if we still need action to be taken
+						var orderRequirementsList = getOrderRequirementsList( arguments.order );
+	
+						// Verify the order requirements list, to make sure that this order has everything it needs to continue
+						if(len(orderRequirementsList)) {
+	
+							if(listFindNoCase(orderRequirementsList, "account")) {
+								arguments.order.addError('account',rbKey('entity.order.process.placeOrder.accountRequirementError'));
 							}
-
-
-							// Clear this order out of all sessions
-							getOrderDAO().removeOrderFromAllSessions(orderID=arguments.order.getOrderID());
-
-							if(!isNull(getHibachiScope().getSession().getOrder()) && arguments.order.getOrderID() == getHibachiScope().getSession().getOrder().getOrderID()) {
-								getHibachiScope().getSession().setOrder(javaCast("null", ""));
+							if(listFindNoCase(orderRequirementsList, "fulfillment")) {
+								arguments.order.addError('fulfillment',rbKey('entity.order.process.placeOrder.fulfillmentRequirementError'));
 							}
-
-							// Loop over all orderPayments and if it's a term payment set the payment due date
-							for(var orderPayment in order.getOrderPayments()) {
-								if((orderPayment.getStatusCode() == 'opstActive') && orderPayment.getPaymentMethodType() == 'termPayment' && !isNull(orderPayment.getPaymentTerm())) {
-									orderPayment.setPaymentDueDate( orderPayment.getPaymentTerm().getTerm().getEndDate() );
+							if(listFindNoCase(orderRequirementsList, "return")) {
+								arguments.order.addError('return',rbKey('entity.order.process.placeOrder.returnRequirementError'));
+							}
+							if(listFindNoCase(orderRequirementsList, "payment")) {
+								
+								arguments.order.addError('payment',rbKey('entity.order.process.placeOrder.paymentRequirementError'));
+							
+							}
+	
+	
+						} else {
+	
+							// Setup a value to log the amount received, credited or authorized.  If any of these exists then we need to place the order
+							var amountAuthorizeCreditReceive = 0;
+	
+							// Process All Payments and Save the ones that were successful
+							for(var orderPayment in arguments.order.getOrderPayments()) {
+								// As long as this orderPayment is active then we can run the place order transaction
+								if(orderPayment.getStatusCode() == 'opstActive') {
+									orderPayment = this.processOrderPayment(orderPayment, {}, 'runPlaceOrderTransaction');
+									amountAuthorizeCreditReceive = val(getService('HibachiUtilityService').precisionCalculate(amountAuthorizeCreditReceive + orderPayment.getAmountAuthorized() + orderPayment.getAmountReceived() + orderPayment.getAmountCredited()));
 								}
 							}
-
-							// Update the order status
-							order.setOrderStatusType( getTypeService().getTypeBySystemCode("ostNew") );
-
-							// Update the orderPlaced
-							order.confirmOrderNumberOpenDateCloseDatePaymentAmount();
-
-							// Save the order to the database
-							getHibachiDAO().save( arguments.order );
-
-							// Do a flush so that the order is commited to the DB
-							getHibachiDAO().flushORMSession();
-
-							// Log that the order was placed
-							logHibachi(message="New Order Processed - Order Number: #order.getOrderNumber()# - Order ID: #order.getOrderID()#", generalLog=true);
-
-							// Loop over the orderItems looking for any skus that are 'event' skus, and setting their registration value
-							/*for(var orderitem in arguments.order.getOrderItems()) {
-								if(orderitem.getSku().getBaseProductType() == "event") {
-									for(var eventRegistration in orderitem.getEventRegistrations()) {
-										if(orderItem.getSku().setting('skuAllowWaitlistingFlag')) {
-											eventRegistration.setEventRegistrationStatusType(getTypeService().getTypeBySystemCode("erstPending"));
-										} else {
-											eventRegistration.setEventRegistrationStatusType(getTypeService().getTypeBySystemCode("erstRegistered"));
+	
+							
+							
+							// Loop over the orderItems looking for any skus that are 'event' skus, and setting their registration value 
+							for(var orderitem in arguments.order.getOrderItems()) {
+								var errors = orderItem.validate('save').getErrors();
+								if(StructCount(errors)){
+									for(var errorKey in errors){
+										for(var message in errors[errorKey]){
+											arguments.order.addError('orderItem',message);	
 										}
 									}
 								}
-							}*/
-
-							// Look for 'auto' order fulfillments
-							for(var i=1; i<=arrayLen( arguments.order.getOrderFulfillments() ); i++) {
-								createOrderDeliveryForAutoFulfillmentMethod(arguments.order.getOrderFulfillments()[i]);
+								if(orderitem.getSku().getBaseProductType() == "event") {
+									if(!orderItem.getSku().getAvailableForPurchaseFlag() OR !orderItem.getSku().allowWaitlistedRegistrations() ){
+										arguments.order.addError('payment','Event: #orderItem.getSku().getProduct().getProductName()# is unavailable for registration. The registration period has closed.');
+									}
+									if(!orderItem.hasEventRegistration()){
+										arguments.order.addError('orderItem','Error when trying to register for: #orderItem.getSku().getProduct().getProductName()#. Please verify your registration details.');
+									}
+									
+									if (!arguments.order.hasErrors()){
+										for ( var eventRegistration in orderItem.getEventRegistrations() ) {
+											// Set registration status - Should this be done when order is placed instead?
+											if (orderItem.getOrderItemType().getSystemCode() == 'oitDeposit'){
+												eventRegistration.setEventRegistrationStatusType(getTypeService().getTypeBySystemCode("erstWaitlisted"));
+											}else if( orderitem.getSku().setting('skuRegistrationApprovalRequiredFlag')) {
+												eventRegistration.setEventRegistrationStatusType(getTypeService().getTypeBySystemCode("erstPendingApproval"));
+											}else if (orderitem.getSku().getAvailableSeatCount() > 0) {
+												eventRegistration.setEventRegistrationStatusType(getTypeService().getTypeBySystemCode("erstRegistered"));
+											}else{
+												eventRegistration.setEventRegistrationStatusType(getTypeService().getTypeBySystemCode("erstWaitlisted"));
+											}
+										}
+									}
+								}
+							}
+	
+							// After all of the processing, double check that the order does not have errors.  If one of the payments didn't go through, then an error would have been set on the order.
+							if((!arguments.order.hasErrors() || amountAuthorizeCreditReceive gt 0) && (arguments.order.getOrderPaymentAmountNeeded() == 0 || (arguments.order.getPaymentAmountTotal() == 0 && arguments.order.isAllowedToPlaceOrderWithoutPayment()))) {
+	
+								if(arguments.order.hasErrors()) {
+									arguments.order.addMessage('paymentProcessedMessage', rbKey('entity.order.process.placeOrder.paymentProcessedMessage'));
+								}
+	
+	
+								// Clear this order out of all sessions
+								getOrderDAO().removeOrderFromAllSessions(orderID=arguments.order.getOrderID());
+	
+								if(!isNull(getHibachiScope().getSession().getOrder()) && arguments.order.getOrderID() == getHibachiScope().getSession().getOrder().getOrderID()) {
+									getHibachiScope().getSession().setOrder(javaCast("null", ""));
+								}
+	
+								// Loop over all orderPayments and if it's a term payment set the payment due date
+								for(var orderPayment in order.getOrderPayments()) {
+									if((orderPayment.getStatusCode() == 'opstActive') && orderPayment.getPaymentMethodType() == 'termPayment' && !isNull(orderPayment.getPaymentTerm())) {
+										orderPayment.setPaymentDueDate( orderPayment.getPaymentTerm().getTerm().getEndDate() );
+									}
+								}
+	
+								// Update the order status
+								order.setOrderStatusType( getTypeService().getTypeBySystemCode("ostNew") );
+	
+								// Update the orderPlaced
+								order.confirmOrderNumberOpenDateCloseDatePaymentAmount();
+	
+								// Save the order to the database
+								getHibachiDAO().save( arguments.order );
+	
+								// Do a flush so that the order is commited to the DB
+								getHibachiDAO().flushORMSession();
+	
+								// Log that the order was placed
+								logHibachi(message="New Order Processed - Order Number: #order.getOrderNumber()# - Order ID: #order.getOrderID()#", generalLog=true);
+								// if order had error but payment was captured, clear error and log to hibachi
+								if(arguments.order.hasErrors()) {
+									arguments.order.addMessage('paymentProcessedMessage', rbKey('entity.order.process.placeOrder.paymentProcessedMessage'));
+									for(var errorName in arguments.order.getErrors()) {
+										for(var i=1; i<=arrayLen(arguments.order.getErrors()[errorName]); i++) {
+											logHibachi(message="Order was placed but it had an error with an errorName: #errorName# and errorMessage: #arguments.order.getErrors()[errorName][i]#", generalLog=true);	
+										}
+									}
+									arguments.order.getHibachiErrors().setErrors(structnew());
+								}
+								// Look for 'auto' order fulfillments
+								for(var i=1; i<=arrayLen( arguments.order.getOrderFulfillments() ); i++) {
+									//don't auto fulfill if the deposit has been paid but not the full amount.
+									createOrderDeliveryForAutoFulfillmentMethod(arguments.order.getOrderFulfillments()[i]);
+								}
+								for(var orderItem in order.getOrderItems()){
+									//run calculated props if success on product, sku and order item
+									//product must run before sku because sku depends on product info to calculate correctly
+									orderItem.getSku().getProduct().updateCalculatedProperties(true);
+									orderItem.getSku().updateCalculatedProperties(true);
+									orderItem.updateCalculatedProperties(true);
+								}
 							}
 						}
 					}
-
 				}
 
 			} else {
@@ -1420,27 +1501,22 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 
 		return arguments.order;
 	}
-
+	
+	public any function validateHasNoSavedAccountPaymentMethodAndSubscriptionWithAutoPay(order){
+		if(!arguments.order.hasSavedAccountPaymentMethod() && arguments.order.hasSubscriptionWithAutoPay()){
+			return true;
+		}
+		return false;
+	}
+	
 	public any function createOrderDeliveryForAutoFulfillmentMethod(required any orderFulfillment){
 
 		var order = arguments.orderFulfillment.getOrder();
 
 		// As long as the amount received for this orderFulfillment is within the treshold of the auto fulfillment setting
 		if(
-			arguments.orderFulfillment.getFulfillmentMethodType() == "auto"
-            || (
-                !isNull(arguments.orderFulfillment.getFulfillmentMethod().getAutoFulfillFlag()) &&
-                		arguments.orderFulfillment.getFulfillmentMethod().getAutoFulfillFlag()
-            )
-			&& (
-				order.getTotal() == 0
-				|| arguments.orderFulfillment.getFulfillmentMethod().setting('fulfillmentMethodAutoMinReceivedPercentage') <= precisionEvaluate( order.getPaymentAmountReceivedTotal() * 100 / order.getTotal() )
-			)
-			&& (
-				arguments.orderFulfillment.hasGiftCardRecipients()
-			)
+		    arguments.orderFulfillment.isAutoFulfillmentReadyToBeFulfilled()
 		){
-
 			// Setup the processData
 			var newOrderDelivery = this.newOrderDelivery();
 			var processData = {};
@@ -1491,7 +1567,7 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 			for(var n = ArrayLen(orderItemsToRemove); n >=1; n--)	{
 				var orderItem = this.getOrderItem(orderItemsToRemove[n]);
 				// Check to see if this item is the same ID as the one passed in to remove
-				if(arrayFindNoCase(orderItemsToRemove, orderItem.getOrderItemID())) {
+				if(!isNull(orderItem) && arrayFindNoCase(orderItemsToRemove, orderItem.getOrderItemID())) {
 
 					var okToRemove = true;
 
@@ -1608,7 +1684,7 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 		if(!listFindNoCase("ostNotPlaced,ostOnHold,ostClosed,ostCanceled", arguments.order.getOrderStatusType().getSystemCode())) {
 
 			// We can check to see if all the items have been delivered and the payments have all been received then we can close this order
-			if(precisionEvaluate(arguments.order.getPaymentAmountReceivedTotal() - arguments.order.getPaymentAmountCreditedTotal()) == arguments.order.getTotal() && arguments.order.getQuantityUndelivered() == 0 && arguments.order.getQuantityUnreceived() == 0)	{
+			if(val(getService('HibachiUtilityService').precisionCalculate(arguments.order.getPaymentAmountReceivedTotal() - arguments.order.getPaymentAmountCreditedTotal())) == arguments.order.getTotal() && arguments.order.getQuantityUndelivered() == 0 && arguments.order.getQuantityUnreceived() == 0)	{
 				arguments.order.setOrderStatusType(  getTypeService().getTypeBySystemCode("ostClosed") );
 			// The default case is just to set it to processing
 			} else {
@@ -1702,7 +1778,7 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 			if(arguments.order.getOrderStatusType().getSystemCode() == "ostNotPlaced") {
 				for(var orderItem in arguments.order.getOrderItems()){
 					var skuPrice = val(orderItem.getSkuPrice());
-					var SkuPriceByCurrencyCode = val(orderItem.getSku().getPriceByCurrencyCode(orderItem.getCurrencyCode()));
+					var SkuPriceByCurrencyCode = val(orderItem.getSku().getPriceByCurrencyCode(orderItem.getCurrencyCode(), orderItem.getQuantity()));
  					if(listFindNoCase("oitSale,oitDeposit",orderItem.getOrderItemType().getSystemCode()) && skuPrice != SkuPriceByCurrencyCode){
  						if(!orderItem.getSku().getUserDefinedPriceFlag()) {
  							orderItem.setPrice(SkuPriceByCurrencyCode);
@@ -1727,14 +1803,14 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 		}
 		return arguments.order;
 	}
-	
+
 	public numeric function getAmountToBeCapturedByCaptureAuthorizationPayments(required any orderDelivery, required any processObject){
 		var amountToBeCaptured = arguments.processObject.getCapturableAmount();
 		for(var orderPayment in arguments.processObject.getOrder().getOrderPayments()) {
 			if(
-				orderPayment.getStatusCode() == 'opstActive' 
-				&& orderPayment.getPaymentMethod().getPaymentMethodType() == "creditCard" 
-				&& orderPayment.getAmountUnreceived() > 0 
+				orderPayment.getStatusCode() == 'opstActive'
+				&& orderPayment.getPaymentMethod().getPaymentMethodType() == "creditCard"
+				&& orderPayment.getAmountUnreceived() > 0
 				&& amountToBeCaptured > 0
 			) {
 				var transactionData = {
@@ -1749,15 +1825,15 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 				orderPayment = this.processOrderPayment(orderPayment, transactionData, 'createTransaction');
 
 				if(!orderPayment.hasErrors()) {
-					amountToBeCaptured = precisionEvaluate(amountToBeCaptured - transactionData.amount);
+					amountToBeCaptured = val(getService('HibachiUtilityService').precisionCalculate(amountToBeCaptured - transactionData.amount));
 				}
 			}
 		}
 		return amountToBeCaptured;
 	}
-	
-	
-	
+
+
+
 	public any function addOrderFulfillmentItemsToOrderDelivery(required any orderDelivery, required any processObject){
 		// Loop over delivery items from processObject and add them with stock to the orderDelivery
 		for(var i=1; i<=arrayLen(arguments.processObject.getOrderFulfillment().getOrderFulfillmentItems()); i++) {
@@ -1779,33 +1855,33 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 		}
 		return arguments.orderDelivery;
 	}
-	
+
 	public any function addOrderDeliveryItemToOrderDeliveryStruct(
-		required any orderDelivery, 
+		required any orderDelivery,
 		required struct orderDeliveryItemStuct
 	){
 		// Create a new orderDeliveryItem
 		var newOrderDeliveryItem = this.newOrderDeliveryItem();
 
 		// Populate with the data
-		newOrderDeliveryItem.setOrderItem( 
-			this.getOrderItem( 
-				orderDeliveryItemStuct.orderItem.orderItemID 
-			) 
+		newOrderDeliveryItem.setOrderItem(
+			this.getOrderItem(
+				orderDeliveryItemStuct.orderItem.orderItemID
+			)
 		);
 		newOrderDeliveryItem.setQuantity( orderDeliveryItemStuct.quantity );
-		
+
 		var stock = getStockService().getStockBySkuAndLocation(
-			sku=newOrderDeliveryItem.getOrderItem().getSku(), 
+			sku=newOrderDeliveryItem.getOrderItem().getSku(),
 			location=arguments.orderDelivery.getLocation()
 		);
-		newOrderDeliveryItem.setStock( 
+		newOrderDeliveryItem.setStock(
 			stock
 		);
 		newOrderDeliveryItem.setOrderDelivery( arguments.orderDelivery );
 		return arguments.orderDelivery;
 	}
-	
+
 	public any function addOrderDeliveryItemsToOrderDelivery(required any orderDelivery, required any processObject){
 		// Loop over delivery items from processObject and add them with stock to the orderDelivery
 		for(var i=1; i<=arrayLen(arguments.processObject.getOrderDeliveryItems()); i++) {
@@ -1814,7 +1890,7 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 		}
 		return arguments.orderDelivery;
 	}
-	
+
 	// Process: Order Delivery
 	public any function processOrderDelivery_create(required any orderDelivery, required any processObject, struct data={}) {
 
@@ -1837,24 +1913,33 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 			if(
 				arguments.orderDelivery.getFulfillmentMethod().getFulfillmentMethodType() == "shipping"
 			) {
-				arguments.orderDelivery.setShippingMethod( arguments.processObject.getShippingMethod() );
-				arguments.orderDelivery.setShippingAddress( arguments.processObject.getShippingAddress().copyAddress( saveNewAddress=true ) );
+				
+				
+				if (!isNull(arguments.processObject.getShippingMethod())){
+ 					arguments.orderDelivery.setShippingMethod( arguments.processObject.getShippingMethod() );
+ 				}
+ 				
+ 				if (!isNull(arguments.processObject.getShippingAddress())){
+ 					arguments.orderDelivery.setShippingAddress( arguments.processObject.getShippingAddress().copyAddress( saveNewAddress=true ) );
+ 				}
+ 				
+				
+				// Setup the tracking number if we have it
+				if(
+					!isNull(arguments.processObject.getTrackingNumber())
+					&& len(arguments.processObject.getTrackingNumber())
+				) {
+					arguments.orderDelivery.setTrackingNumber(arguments.processObject.getTrackingNumber());
+				}
+
+				if(
+					!isNull(arguments.processObject.getContainerLabel())
+					&& len(arguments.processObject.getContainerLabel())
+				){
+					arguments.orderDelivery.setContainerLabel(arguments.processObject.getContainerLabel());
+				}
 			}
-			
-			// Setup the tracking number if we have it
-			if(
-				!isNull(arguments.processObject.getTrackingNumber()) 
-				&& len(arguments.processObject.getTrackingNumber())
-			) {
-				arguments.orderDelivery.setTrackingNumber(arguments.processObject.getTrackingNumber());
-			}
-			
-			if(
-				!isNull(arguments.processObject.getContainerLabel())
-				&& len(arguments.processObject.getContainerLabel())
-			){
-				arguments.orderDelivery.setContainerLabel(arguments.processObject.getContainerLabel());
-			}
+
 			// If the orderFulfillmentMethod is auto, and there aren't any delivery items then we can just fulfill all that are "undelivered"
 			if(
 				(
@@ -1863,12 +1948,12 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 					!isNull(arguments.orderDelivery.getFulfillmentMethod().getAutoFulfillFlag())
 					&& arguments.orderDelivery.getFulfillmentMethod().getAutoFulfillFlag()
 					)
-				) 
+				)
 				&& !arrayLen(arguments.processObject.getOrderDeliveryItems())
 				&& getSettingService().getSettingValue("skuGiftCardAutoGenerateCode")
 			) {
 				addOrderFulfillmentItemsToOrderDelivery(arguments.orderDelivery,arguments.processObject);
-				
+
 			} else {
 				addOrderDeliveryItemsToOrderDelivery(arguments.orderDelivery,arguments.processObject);
 			}
@@ -2072,6 +2157,9 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 			// Set quantity if needed
 			if(isNull(arguments.childOrderItem.getQuantity())) {
 				arguments.childOrderItem.setQuantity( 1 );
+			}	
+			if(isNull(arguments.childOrderItem.getBundleItemQuantity())){
+				arguments.childOrderItem.setBundleItemQuantity(arguments.childOrderItem.getQuantity());
 			}
 			// Set orderFulfillment if needed
 			if(isNull(arguments.childOrderItem.getOrderFulfillment())) {
@@ -2171,10 +2259,10 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 	public any function processOrderItem_updateEventRegistrationQuantity(required any orderItem,struct data={}) {
 
 		// We need LESS event registrations due to order adjustment before order has been placed
-		if( arrayLen(orderItem.getActiveEventRegistrations()) > orderItem.getQuantity() && arguments.orderItem.getOrder().getStatusCode() == "ostNotPlaced" ) {
+		if( orderItem.getActiveEventRegistrations().getRecordsCount() > orderItem.getQuantity() && arguments.orderItem.getOrder().getStatusCode() == "ostNotPlaced" ) {
 
 			var removableEvents = [];
-			var numberToRemove = arrayLen(orderItem.getEventRegistrations()) - orderItem.getQuantity();
+			var numberToRemove = orderItem.getActiveEventRegistrations().getRecordsCount() - orderItem.getQuantity();
 
 			// Create an array of registrations we can safely remove, i.e. not associated with an account
 			for(var eventRegistration in orderItem.getEventRegistrations()) {
@@ -2197,13 +2285,13 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 		}
 
 		// We need less event registration, but couldn't do it... add error
-		if(arrayLen(orderItem.getEventRegistrations()) > orderItem.getQuantity()) {
+		if(orderItem.getActiveEventRegistrations().getRecordsCount() > orderItem.getQuantity()) {
 			orderItem.addError('updateRegistrationQuantity', rbKey('validate.orderItem.quantity.tooManyEventRegistrations'));
 		}
 
 		// We need MORE event registrations due to order adjustment before order has been placed
-		if(arrayLen(orderItem.getEventRegistrations()) < orderItem.getQuantity()) {
-			for(var i=1; i <= orderItem.getQuantity() - arrayLen(orderItem.getEventRegistrations()); i++ ) {
+		if(orderItem.getActiveEventRegistrations().getRecordsCount() < orderItem.getQuantity()) {
+			for(var i=1; i <= orderItem.getQuantity() - orderItem.getActiveEventRegistrations().getRecordsCount(); i++ ) {
 				var eventRegistration = this.newEventRegistration();
 				eventRegistration.setOrderItem(orderitem);
 				eventRegistration.seteventRegistrationStatusType( getTypeService().getTypeBySystemCode("erstNotPlaced") );
@@ -2253,10 +2341,10 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 
 	// Process: Order Return
 	public any function processOrderReturn_receive(required any orderReturn, required any processObject) {
-
 		var stockReceiver = getStockService().newStockReceiver();
 		stockReceiver.setReceiverType( "order" );
 		stockReceiver.setOrder( arguments.orderReturn.getOrder() );
+		var stockAdjustments = [];
 
 		if(!isNull(processObject.getPackingSlipNumber())) {
 			stockReceiver.setPackingSlipNumber( processObject.getPackingSlipNumber() );
@@ -2282,6 +2370,34 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 					stockReceiverItem.setStock( stock );
 					stockReceiverItem.setOrderItem( orderReturnItem );
 					stockReceiverItem.setStockReceiver( stockReceiver );
+
+				}
+				//create a stock adjustment with a comment for items that were added back in
+				if(arguments.processObject.getStockLossFlag()){
+					var newStockAdjustment = getStockService().newStockAdjustment();
+					//stockadjustmentType:manual out
+					var stockAdjustmentType = getStockService().getType('444df2e7dba550b7a24a03acbb37e717');
+					newStockAdjustment.setStockAdjustmentType(stockAdjustmentType);
+					newStockAdjustment.setFromLocation(location);
+					var addStockAdjustmentItemData = {
+						skuID=orderReturnItem.getSku().getSkuID(),
+						quantity=thisRecord.quantity,
+						stockAdjustment=newStockAdjustment
+					};
+					newStockAdjustment = getStockService().processStockAdjustment(newStockAdjustment,addStockAdjustmentItemData,'addStockAdjustmentItem');
+
+					var comment = getCommentService().newComment();
+					comment.setPublicFlag(false);
+					comment.setComment(getHibachiScope().getRbKey('define.stockloss'));
+					var commentRelationship = getCommentService().newCommentRelationship();
+					commentRelationship.setStockAdjustment(newStockAdjustment);
+					commentRelationship.setComment(comment);
+					commentRelationship.setStockAdjustment(newStockAdjustment);
+					commentRelationship = getCommentService().saveCommentRelationship(commentRelationship);
+					comment = getCommentService().saveComment(comment,{});
+
+					newStockAdjustment = getStockService().saveStockAdjustment(newStockAdjustment);
+					arrayAppend(stockAdjustments,newStockAdjustment);
 				}
 
 			}
@@ -2301,13 +2417,15 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 			}
 
 			// If there was one or more accountContentAccess associated with the referenced orderItem then we need to remove them.
-			var accountContentAccessSmartList = getAccountService().getAccountContentAccessSmartList();
-			accountContentAccessSmartList.addFilter("OrderItem.orderItemID", stockReceiverItem.getOrderItem().getReferencedOrderItem().getOrderItemID());
-			var accountContentAccesses = accountContentAccessSmartList.getRecords();
-			for (var accountContentAccess in accountContentAccesses){
+			if(!isnull(stockReceiverItem.getOrderItem().getReferencedOrderItem())){
+				var accountContentAccessSmartList = getAccountService().getAccountContentAccessSmartList();
+				accountContentAccessSmartList.addFilter("OrderItem.orderItemID", stockReceiverItem.getOrderItem().getReferencedOrderItem().getOrderItemID());
+				var accountContentAccesses = accountContentAccessSmartList.getRecords();
+				for (var accountContentAccess in accountContentAccesses){
 
-    			getAccountService().deleteAccountContentAccess( accountContentAccess );
+    				getAccountService().deleteAccountContentAccess( accountContentAccess );
 
+				}
 			}
 		}
 
@@ -2321,8 +2439,14 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 			getAccountService().processAccountLoyalty(accountLoyalty, orderItemReceivedData, 'orderItemReceived');
 		}
 
+		for(var stockAdjustment in stockAdjustments) {
+			getStockService().processStockAdjustment(stockAdjustment,{},'processAdjustment');
+		}
+
 		// Update the orderStatus
 		this.processOrder(arguments.orderReturn.getOrder(), {updateItems=true}, 'updateStatus');
+
+
 
 		return arguments.orderReturn;
 	}
@@ -2338,7 +2462,7 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 
 			for(var a=1; a<=arrayLen(uncapturedAuthorizations); a++) {
 
-				var thisToCharge = precisionEvaluate(arguments.processObject.getAmount() - totalAmountCharged);
+				var thisToCharge = val(getService('HibachiUtilityService').precisionCalculate(arguments.processObject.getAmount() - totalAmountCharged));
 
 				if(thisToCharge gt uncapturedAuthorizations[a].chargeableAmount) {
 					thisToCharge = uncapturedAuthorizations[a].chargeableAmount;
@@ -2365,7 +2489,7 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 				if(paymentTransaction.hasError('runTransaction')) {
 					arguments.orderPayment.addError('createTransaction', paymentTransaction.getError('runTransaction'), true);
 				} else {
-					precisionEvaluate(totalAmountCharged + paymentTransaction.getAmountReceived());
+					val(getService('HibachiUtilityService').precisionCalculate(totalAmountCharged + paymentTransaction.getAmountReceived()));
 				}
 
 			}
@@ -2465,34 +2589,91 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 			// Clear out any previous 'createTransaction' process objects
 			arguments.orderPayment.clearProcessObject( 'createTransaction' );
 
-			// Call the processing method
-			arguments.orderPayment = this.processOrderPayment(arguments.orderPayment, processData, 'createTransaction');
 
-			// If there was expected authorize, receive, or credit
-			if(
-				arguments.orderPayment.hasErrors()
-					||
-				(listFindNoCase("authorize", processData.transactionType) && arguments.orderPayment.getAmountAuthorized() lt arguments.orderPayment.getAmount())
-					||
-				(listFindNoCase("authorizeAndCharge,receive", processData.transactionType) && arguments.orderPayment.getAmountReceived() lt arguments.orderPayment.getAmount())
-					||
-				(listFindNoCase("credit", processData.transactionType) && arguments.orderPayment.getAmountCredited() lt arguments.orderPayment.getAmount())
-			) {
-
-				// Add a generic payment processing error and make it persistable
-				arguments.orderPayment.getOrder().addError('runPlaceOrderTransaction', rbKey('entity.order.process.placeOrder.paymentProcessingError'), true);
-
-				// Add the actual message
-				if(arguments.orderPayment.hasError('createTransaction')) {
-					arguments.orderPayment.getOrder().addError('runPlaceOrderTransaction', arguments.orderPayment.getError('createTransaction'), true);
+			// Call the method below if getPlaceOrderChargeTransactionType = "Authorize"
+			// then do another call for create transaction with transactionType = AuthAndCharge and amount = deposit amount
+			// if the getPlaceOrderChargeTransactionType = "AuthandCharge", set the amount to deposit amount
+			if (arguments.orderPayment.getOrder().hasDepositItemsOnOrder()){
+				
+				//if this is authorize and there is a deposit amount needed.
+				/*if (arguments.orderPayment.getPaymentMethod().getPlaceOrderChargeTransactionType() == 'authorize'){
+					//Only authorize for the deposit amount instead of the full amount.
+					//processData.amount = arguments.orderPayment.getOrder().getTotalDepositAmount();
+					
+					//call the method below if getPlaceOrderChargeTransactionType = "Authorize"
+					arguments.orderPayment = this.createTransactionAndCheckErrors(arguments.orderPayment, processData);
+					
+					// then do another call for create transaction with transactionType = AuthAndCharge and amount = deposit amount
+					//set the transaction type and amount.
+					if (!arguments.orderPayment.hasErrors()){
+						arguments.orderPayment.clearProcessObject( 'createTransaction' );
+						processData.transactionType = "authorizeAndCharge";
+						processData.amount = arguments.orderPayment.getOrder().getTotalDepositAmount();
+						arguments.orderPayment = this.createTransactionAndCheckErrors(arguments.orderPayment, processData);
+					}
+				// if the getPlaceOrderChargeTransactionType = "AuthandCharge", set the amount to deposit amount
+				}else */
+				if(arguments.orderPayment.getPaymentMethod().getPlaceOrderChargeTransactionType() == 'authorizeAndCharge'){
+					
+					//auth the full amount.
+					/*	arguments.orderPayment.clearProcessObject( 'createTransaction' );
+						processData.transactionType = "authorize";
+						processData.amount = arguments.orderPayment.getOrder().getTotal();
+						arguments.orderPayment = this.createTransactionAndCheckErrors(arguments.orderPayment, processData);
+					*/
+					// then do another call for create transaction with transactionType = auth and amount = payment amount due.
+					//charge the partial amount.
+					//if (!arguments.orderPayment.hasErrors()){
+						//arguments.orderPayment.clearProcessObject( 'createTransaction' );
+						//just set the deposit amount
+						processData.transactionType = "authorizeAndCharge";
+						processData.amount = arguments.orderPayment.getOrder().getTotalDepositAmount();
+						arguments.orderPayment = this.createTransactionAndCheckErrors(arguments.orderPayment, processData);
+					
+					//}
+					
 				}
 
+			}else{
+				arguments.orderPayment = this.createTransactionAndCheckErrors(arguments.orderPayment, processData);
 			}
-
 		}
-
 		return arguments.orderPayment;
 	}
+	
+	public any function createTransactionAndCheckErrors(required any orderPayment, required any processData){
+  		// Call the processing method
+  		arguments.orderPayment = this.processOrderPayment(arguments.orderPayment, processData, 'createTransaction');
+  
+  		// If there was expected authorize, receive, or credit
+  		/*
+  		(arguments.orderPayment.getOrder().hasDepositItemsOnOrder() == true && listFindNoCase("authorize", processData.transactionType) && arguments.orderPayment.getAmountAuthorized() lt arguments.orderPayment.getOrder().getTotalDepositAmount())
+  				||
+  		*/
+  		if(arguments.orderPayment.hasErrors()
+  				||
+  			(arguments.orderPayment.getOrder().hasDepositItemsOnOrder() == false && listFindNoCase("authorize", processData.transactionType) && arguments.orderPayment.getAmountAuthorized() lt arguments.orderPayment.getAmount())
+  				||
+  			(arguments.orderPayment.getOrder().hasDepositItemsOnOrder() == false && listFindNoCase("authorizeAndCharge,receive", processData.transactionType) && arguments.orderPayment.getAmountReceived() lt arguments.orderPayment.getAmount())
+  				||
+  			(arguments.orderPayment.getOrder().hasDepositItemsOnOrder() == true && listFindNoCase("authorizeAndCharge,receive", processData.transactionType) && arguments.orderPayment.getAmountReceived() lt arguments.orderPayment.getOrder().getTotalDepositAmount())
+  				||
+  			(listFindNoCase("credit", processData.transactionType) && arguments.orderPayment.getAmountCredited() lt arguments.orderPayment.getAmount())
+  		) {
+  			
+  			// Add a generic payment processing error and make it persistable
+  			arguments.orderPayment.getOrder().addError('runPlaceOrderTransaction', rbKey('entity.order.process.placeOrder.paymentProcessingError'), true);
+  
+  			// Add the actual message
+  			if(arguments.orderPayment.hasError('createTransaction')) {
+  				arguments.orderPayment.getOrder().addError('runPlaceOrderTransaction', arguments.orderPayment.getError('createTransaction'), true);
+  			}
+  
+  		}
+  
+  		
+  		return arguments.orderPayment;
+  	}
 
 	// =====================  END: Process Methods ============================
 
@@ -2604,10 +2785,47 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 	}
 
 	public any function saveOrderFulfillment(required any orderFulfillment, struct data={}, string context="save") {
+		//if we have a new account address then override shippingaddress data. This must happen before populate
+		if(
+			(
+				structKeyExists(arguments.data,'accountAddress.accountAddressID')
+				&& len(arguments.data['accountAddress.accountAddressID']) 
+			)
+			&& (
+				isNull(arguments.orderFulfillment.getShippingAddress())
+				|| arguments.data['accountAddress.accountAddressID'] != arguments.orderFulfillment.getShippingAddress().getAddressID()
+			)
+		) {
+			var keyPrefix = 'shippingAddress';
+			for(var key in arguments.data){
+				if((left(key,len(keyPrefix)) == keyPrefix)){
+					structDelete(arguments.data,key);
+				}
+			}
+		}
 
 		// Call the generic save method to populate and validate
 		arguments.orderFulfillment = save(arguments.orderFulfillment, arguments.data, arguments.context);
-
+		
+		
+ 		//Update the pickup location on the orderItem if the pickup location was updated on the orderFulfillment.
+ 		if(arguments.orderFulfillment.getFulfillmentMethodType() eq "pickup") {
+ 			if (!isNull(data.pickupLocation.locationID)){
+ 				var location = getService("LocationService").getLocation(data.pickupLocation.locationID);
+ 				if (!isNull(location)){
+ 					for (var orderItem in orderFulfillment.getOrderFulfillmentItems()){
+ 						//set the stock based on location.
+ 						var stock = getService("StockService").getStockBySkuAndLocation(sku=orderItem.getSku(), location=location);
+ 						
+ 						if (!isNull(stock)){
+ 							orderItem.setStock(stock);
+ 							getService("OrderService").saveOrderItem(orderItem);
+ 						}
+ 					}
+ 				}
+ 			}
+ 		}
+ 
 		// If there were no errors, and the order is not placed, then we can make necessary implicit updates
 		if(!arguments.orderFulfillment.hasErrors() && arguments.orderFulfillment.getOrder().getStatusCode() == "ostNotPlaced") {
 
@@ -2620,7 +2838,6 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 				// Save the accountAddress if needed
 				arguments.orderFulfillment.checkNewAccountAddressSave();
 			}
-
 		}
 
 		// Recalculate the order amounts for tax and promotions
@@ -2659,7 +2876,6 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 
 		// If there were no errors, and the order is not placed, then we can make necessary implicit updates
 		if(!arguments.orderItem.hasErrors() && arguments.orderItem.getOrder().getStatusCode() == "ostNotPlaced") {
-
 			// If this item was part of a shipping fulfillment then update that fulfillment
 			if(!isNull(arguments.orderItem.getOrderFulfillment()) && arguments.orderItem.getOrderFulfillment().getFulfillmentMethodType() eq "shipping" && !isNull(arguments.orderItem.getOrderFulfillment().getShippingMethod())) {
 				getShippingService().updateOrderFulfillmentShippingMethodOptions( arguments.orderItem.getOrderFulfillment() );
@@ -2859,10 +3075,106 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 
 		return false;
 	}
+	public any function deleteShippingAddress( required any shippingAddress ) {
 
+		// Check delete validation
+		if(arguments.shippingAddress.isDeletable()) {
 
+			// Remove the primary fields so that we can delete this entity
+			var order = arguments.shippingAddress.getOrder();
+
+			order.removeShippingAddress( arguments.shippingAddress );
+
+			// Actually delete the entity
+			getHibachiDAO().delete( arguments.shippingAddress );
+
+			return true;
+		}
+
+		return false;
+	}
+	public any function deleteBillingAddress( required any billingAddress ) {
+
+		// Check delete validation
+		if(arguments.billingAddress.isDeletable()) {
+
+			// Remove the primary fields so that we can delete this entity
+			var order = arguments.billingAddress.getOrder();
+
+			order.removeBillingAddress( arguments.billingAddress );
+
+			// Actually delete the entity
+			getHibachiDAO().delete( arguments.billingAddress );
+
+			return true;
+		}
+
+		return false;
+	}
 	// =====================  END: Delete Overrides ===========================
+	
+	/** Given an orderfulfillment, this will return the shipping method options. */
+	public any function getShippingMethodOptions(any orderFulfillment) {
+		//update the shipping method options with the shipping service to insure qualifiers are re-evaluated    		
+		getService("shippingService").updateOrderFulfillmentShippingMethodOptions( orderFulfillment );
 
+		// At this point they have either been populated just before, or there were already options
+		var optionsArray = [];
+		var sortType = orderFulfillment.getFulfillmentMethod().setting('fulfillmentMethodShippingOptionSortType');
+		for(var shippingMethodOption in orderFulfillment.getFulfillmentShippingMethodOptions()) {
+
+			var thisOption = {};
+			thisOption['name'] = shippingMethodOption.getSimpleRepresentation();
+			thisOption['value'] = shippingMethodOption.getShippingMethodRate().getShippingMethod().getShippingMethodID();
+			thisOption['totalCharge'] = shippingMethodOption.getTotalCharge();
+			thisOption['totalChargeAfterDiscount'] = shippingMethodOption.getTotalChargeAfterDiscount();
+			thisOption['shippingMethodSortOrder'] = shippingMethodOption.getShippingMethodRate().getShippingMethod().getSortOrder();
+			if( !isNull(shippingMethodOption.getShippingMethodRate().getShippingMethod().getShippingMethodCode()) ){
+				thisOption['shippingMethodCode'] = shippingMethodOption.getShippingMethodRate().getShippingMethod().getShippingMethodCode();
+			}
+
+			var inserted = false;
+
+			for(var i=1; i<=arrayLen(optionsArray); i++) {
+				var thisExistingOption = optionsArray[i];
+
+				if( ((sortType eq 'price' && thisOption.totalCharge < thisExistingOption.totalCharge)
+				  	||
+					(sortType eq 'sortOrder' && thisOption.shippingMethodSortOrder < thisExistingOption.shippingMethodSortOrder)) && !this.hasOption(optionsArray, thisOption)) {
+					
+					arrayInsertAt(optionsArray, i, thisOption);
+					inserted = true;
+					break;
+				}
+				
+			}
+
+			if(!inserted && !this.hasOption(optionsArray, thisOption)) {
+				
+				arrayAppend(optionsArray, thisOption);
+			}
+
+		}
+
+		if(!arrayLen(optionsArray)) {
+			arrayPrepend(optionsArray, {name=rbKey('define.select'), value=''});
+		}
+    	return optionsArray;
+    }
+	
+	public any function hasOption(optionsArray, option){
+		var found = false;
+		for(var i=1; i<=arrayLen(optionsArray); i++) {
+			var thisExistingOption = optionsArray[i];
+			if (option.value == thisExistingOption.value){
+				found = true;
+				break;
+			}
+		}
+		return found;
+	}
+	
+	
 	// ================== START: Private Helper Functions =====================
 
 	private void function removeOrderItemAndChildItemRelationshipsAndDelete( required any orderItem ) {

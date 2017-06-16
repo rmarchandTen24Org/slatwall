@@ -57,7 +57,7 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 		if (!file.getNewFlag() && fileExists(file.getFilePath())) {
 			// Download file
 			try {
-				getService("hibachiUtilityService").downloadFile(fileType=file.getFileType(),fileName=file.getURLTitle(), filePath=file.getFilePath(), contentType=file.getMimeType(), deleteFile=false);
+				getService("hibachiUtilityService").downloadFile(fileName=file.getURLTitle()&'.'&file.getFileType(), filePath=file.getFilePath(), contentType=file.getMimeType(), deleteFile=false);
 			} catch (any error) {
 				file.addError("fileDownload", rbKey("entity.file.download.fileDownloadError"));
 			}
@@ -174,28 +174,30 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 	public any function deleteFile(required any file) {
 		var deleteOK = delete(entity=arguments.file);
 
+		
 		// Only delete file if entity successfully deleted
 		if (deleteOK) {
 			if (fileExists(file.getFilePath())) {
 				fileDelete(file.getFilePath());
 			}
 		}
-
+		
 		return deleteOK;
 	}
 
 	public any function deleteFileRelationship(required any fileRelationship)
 	{
-		var deleteOK = delete(entity=arguments.fileRelationship);
-
 		var relatedFile = fileRelationship.getFile();
 		fileRelationship.removeFile(relatedFile);
-
+		
+		var deleteOK = delete(entity=arguments.fileRelationship);
+		
 		// Automatically delete file if it no longer has any entity relationships
-		if (!relatedFile.hasFileRelationship()) {
+		if ( deleteOK && !relatedFile.hasFileRelationship()) {
+			getHibachiScope().getDAO("hibachiDAO").flushORMSession();
 			deleteFile(relatedFile);
 		}
-
+		
 		return deleteOK;
 	}
 

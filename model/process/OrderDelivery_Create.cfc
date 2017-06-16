@@ -84,8 +84,10 @@ component output="false" accessors="true" extends="HibachiProcess" {
 	
 	public boolean function getUseShippingIntegrationForTrackingNumber(){
 		return (
-			!isNull(getorderfulfillment().getSelectedShippingMethodOption().getShippingMethodRate())
+			!isNull(getorderfulfillment().getSelectedShippingMethodOption())
+			&& !isNull(getorderfulfillment().getSelectedShippingMethodOption().getShippingMethodRate())
 			&& !isNull(getorderfulfillment().getSelectedShippingMethodOption().getShippingMethodRate().getShippingIntegration())
+			&& getHibachiScope().setting('globalUseShippingIntegrationForTrackingNumberOption')
 		);
 	}
 
@@ -108,6 +110,8 @@ component output="false" accessors="true" extends="HibachiProcess" {
 			//get tracking number from integration if specified
 			if(getUseShippingIntegrationForTrackingNumber()){
 				processShipmentRequest();
+			}else{
+				return "";
 			}
 		}
 		return variables.trackingNumber;
@@ -118,6 +122,8 @@ component output="false" accessors="true" extends="HibachiProcess" {
 			//get tracking number from integration if specified
 			if(getUseShippingIntegrationForTrackingNumber()){
 				processShipmentRequest();
+			}else{
+				return "";
 			}
 		}
 		return variables.containerLabel;
@@ -128,9 +134,12 @@ component output="false" accessors="true" extends="HibachiProcess" {
 		var selectedIntegration = getShippingIntegration();
 		var shippingIntegrationCFC = getService('integrationService').getShippingIntegrationCFC(selectedIntegration);
 		//create OrderDelivery and get tracking Number and generate label if shipping.cfc has method
-		if(structKeyExists(shippingIntegrationCFC,'processShipmentRequestWithOrderDelivery_Create')){
-			shippingIntegrationCFC.processShipmentRequestWithOrderDelivery_Create(this);
-		}
+		if(structKeyExists(shippingIntegrationCFC,'processShipmentRequest')){
+  			shippingIntegrationCFC.processShipmentRequestWithOrderDelivery_Create(this);
+ 		} else {
+ 			this.setTrackingNumber("");
+ 			this.setContainerLabel("");
+  		}
 		
 	}
 	
@@ -186,14 +195,14 @@ component output="false" accessors="true" extends="HibachiProcess" {
 					if(thisQuantity > orderItem.getQuantityUndelivered()) {
 						thisQuantity = orderItem.getQuantityUndelivered();
 					}
-					variables.capturableAmount = precisionEvaluate(variables.capturableAmount + ((orderItem.getItemTotal()/orderItem.getQuantity()) * thisQuantity ));
+					variables.capturableAmount = getService('HibachiUtilityService').precisionCalculate(variables.capturableAmount + ((orderItem.getItemTotal()/orderItem.getQuantity()) * thisQuantity ));
 				}
 			}
 
 			if(getOrder().getPaymentAmountReceivedTotal() eq 0) {
-				variables.capturableAmount = precisionEvaluate(variables.capturableAmount + getOrderFulfillment().getChargeAfterDiscount());
+				variables.capturableAmount = getService('HibachiUtilityService').precisionCalculate(variables.capturableAmount + getOrderFulfillment().getChargeAfterDiscount());
 			} else {
-				variables.capturableAmount = precisionEvaluate(variables.capturableAmount - (getOrder().getPaymentAmountReceivedTotal() - getOrder().getDeliveredItemsAmountTotal()));
+				variables.capturableAmount = getService('HibachiUtilityService').precisionCalculate(variables.capturableAmount - (getOrder().getPaymentAmountReceivedTotal() - getOrder().getDeliveredItemsAmountTotal()));
 			}
 
 			if(variables.capturableAmount < 0) {
@@ -209,7 +218,7 @@ component output="false" accessors="true" extends="HibachiProcess" {
 	public boolean function getCaptureAuthorizedPaymentsFlag() {
 		if(!structKeyExists(variables, "captureAuthorizedPaymentsFlag")) {
 			variables.captureAuthorizedPaymentsFlag = 0;
-			if(getCapturableAmount()) {
+			if(getCapturableAmount() && getOrder().hasCreditCardPaymentMethod()) {
 				variables.captureAuthorizedPaymentsFlag = 1;
 			}
 		}

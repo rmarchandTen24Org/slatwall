@@ -124,27 +124,29 @@ class SWWorkflowTasks{
 
 			  /**
                  * --------------------------------------------------------------------------------------------------------
-                 * Saves the workflow task by calling the objects $$save method.
+                 * Saves the workflow task by calling the objects $$save method. In addition to calling save here,
+				 * we also refresh the data by calling getWorkflowTasks followed by calling the global entity.$$save.
                  * @param task
                  * --------------------------------------------------------------------------------------------------------
                  */
                 scope.saveWorkflowTask = function (task, context) {
-                    console.log("Context: " + context);
-                    console.log("saving task");
-                    console.log(scope.workflowTasks.selectedTask);
 
                     //scope.workflowTasks.selectedTask.$$setWorkflow(scope.workflow);
-
                     scope.workflowTasks.selectedTask.$$save().then(function(res){
                         scope.done = true;
                         delete scope.workflowTasks.selectedTask;
                     	if (context === 'add'){
-            				logger("SaveWorkflowTask", "Save and New");
             				scope.addWorkflowTask();
             				scope.finished = true;
                         }else if (context == "finish"){
                 			scope.finished = false;
                 		}
+						//refresh the task information.
+						delete scope.workflow.data.workflowTasks;
+						scope.getWorkflowTasks();
+
+						//Save the workflow entity automatically.
+						scope.workflow.$$save();
                     }, function (err) {
                     })
                 }//<--end save*/
@@ -154,12 +156,11 @@ class SWWorkflowTasks{
 				 */
 				scope.selectWorkflowTask = function(workflowTask){
 					scope.done = false;
-					logger("selectWorkflowTask", "selecting a workflow task");
 					$log.debug(workflowTask);
 					scope.finished = false;
 					scope.workflowTasks.selectedTask = undefined;
 
-					var filterPropertiesPromise = $hibachi.getFilterPropertiesByBaseEntityName(scope.workflow.data.workflowObject);
+					var filterPropertiesPromise = $hibachi.getFilterPropertiesByBaseEntityName(scope.workflow.data.workflowObject, true);
 					filterPropertiesPromise.then(function(value){
 						scope.filterPropertiesList = {
 							baseEntityName:scope.workflow.data.workflowObject,
@@ -175,7 +176,6 @@ class SWWorkflowTasks{
 
 				/* Does a delete of the property using delete */
 				scope.softRemoveTask = function(workflowTask){
-					logger("SoftRemoveTask", "calling delete");
 					if(workflowTask === scope.workflowTasks.selectedTask){
 						delete scope.workflowTasks.selectedTask;
 					}
@@ -185,7 +185,6 @@ class SWWorkflowTasks{
 
 				/* Does an API call delete using $$delete */
 				scope.hardRemoveTask = function(workflowTask){
-					logger("HardRemoveTask", "$$delete");
 					var deletePromise = workflowTask.$$delete();
     					deletePromise.then(function(){
     						if(workflowTask === scope.workflowTasks.selectedTask){

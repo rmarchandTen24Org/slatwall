@@ -8,11 +8,12 @@ class SWEditFilterItem{
             $timeout,
 			$hibachi,
 			collectionPartialsPath,
-			collectionService,
+			collectionService, 
 			metadataService,
 			hibachiPathBuilder,
             rbkeyService,
-            observerService
+            observerService,
+            utilityService
 		)=> new SWEditFilterItem(
 			$log,
 			$filter,
@@ -23,7 +24,8 @@ class SWEditFilterItem{
 			metadataService,
 			hibachiPathBuilder,
             rbkeyService,
-            observerService
+            observerService,
+            utilityService
 		);
 		directive.$inject = [
 			'$log',
@@ -35,7 +37,8 @@ class SWEditFilterItem{
 			'metadataService',
 			'hibachiPathBuilder',
             'rbkeyService',
-            'observerService'
+            'observerService',
+            'utilityService'
 		];
 		return directive;
 	}
@@ -49,7 +52,8 @@ class SWEditFilterItem{
 		metadataService,
 		hibachiPathBuilder,
         rbkeyService,
-        observerService
+        observerService,
+        utilityService
 	){
 		return {
 			require:'^swFilterGroups',
@@ -224,6 +228,54 @@ class SWEditFilterItem{
                         return;
                     }
 
+                    if((selectedFilterProperty.propertyIdentifier.match(/_/g) || []).length > 1 ){
+                        var propertyIdentifierStart = (selectedFilterProperty.propertyIdentifier.charAt(0)  == '_') ? 1 : 0;
+                        var propertyIdentifierEnd = (selectedFilterProperty.propertyIdentifier.indexOf('.') == -1) ? selectedFilterProperty.propertyIdentifier.length : selectedFilterProperty.propertyIdentifier.indexOf('.');
+                        var propertyIdentifierJoins = selectedFilterProperty.propertyIdentifier.substring(propertyIdentifierStart, propertyIdentifierEnd);
+                        var propertyIdentifierParts = propertyIdentifierJoins.split('_');
+                        var  current_collection = $hibachi.getEntityExample(scope.collectionConfig.baseEntityName);
+                        var _propertyIdentifier = '';
+                        var joins = [];
+
+                        if(angular.isDefined(scope.collectionConfig.joins)){
+                            joins = scope.collectionConfig.joins;
+                        }
+
+                        for(var i = 1; i < propertyIdentifierParts.length; i++){
+                            if (angular.isDefined(current_collection.metaData[propertyIdentifierParts[i]]) && ('cfc' in current_collection.metaData[propertyIdentifierParts[i]])) {
+                                current_collection = $hibachi.getEntityExample(current_collection.metaData[propertyIdentifierParts[i]].cfc);
+                                _propertyIdentifier += '_' + propertyIdentifierParts[i];
+                                var newJoin = {
+                                    associationName: _propertyIdentifier.replace(/_([^_]+)$/,'.$1').substring(1),
+                                    alias: '_'+propertyIdentifierParts[0]+ _propertyIdentifier
+                                };
+                                var joinFound = false;
+                                for (var j = 0; j < joins.length; j++) {
+                                    if (joins[j].alias === newJoin.alias) {
+                                        joinFound = true;
+                                        break;
+                                    }
+                                }
+                                if(!joinFound){
+                                    joins.push(newJoin);
+                                }
+                            }
+                        }
+                        scope.collectionConfig.joins = joins;
+
+                        if (angular.isDefined(scope.collectionConfig.columns) && (angular.isUndefined(scope.collectionConfig.groupBys) || scope.collectionConfig.groupBys.split(',').length != scope.collectionConfig.columns.length)) {
+                            var groupbyArray = angular.isUndefined(scope.collectionConfig.groupBys) ? [] : scope.collectionConfig.groupBys.split(',');
+                            for (var column = 0; column < scope.collectionConfig.columns.length; column++) {
+                                if (groupbyArray.indexOf(scope.collectionConfig.columns[column].propertyIdentifier) == -1) {
+                                    groupbyArray.push(scope.collectionConfig.columns[column].propertyIdentifier);
+                                }
+                            }
+                            scope.collectionConfig.groupBys = groupbyArray.join(',');
+                        }
+
+
+                    }
+
                     if(angular.isDefined(selectedFilterProperty) && angular.isDefined(selectedFilterProperty.selectedCriteriaType)){
                         //populate filterItem with selectedFilterProperty values
                         filterItem.$$isNew = false;
@@ -274,9 +326,37 @@ class SWEditFilterItem{
                                             filterItem.criteriaNumberOf = selectedFilterProperty.criteriaNumberOf;
                                         }
 
-                                    }else
-                                    {
-                                        var dateValueString = selectedFilterProperty.criteriaRangeStart + '-' + selectedFilterProperty.criteriaRangeEnd;
+                                    }else if(angular.isDefined(selectedFilterProperty.selectedCriteriaType.dateInfo.type) && selectedFilterProperty.selectedCriteriaType.dateInfo.type === 'exactDate'){
+                                        if(angular.isUndefined(selectedFilterProperty.selectedCriteriaType.dateInfo.measureType)){
+                                            filterItem.value = selectedFilterProperty.criteriaRangeStart + '-' + selectedFilterProperty.criteriaRangeEnd;
+                                            filterItem.displayValue = $filter('date')(angular.copy(selectedFilterProperty.criteriaRangeStart),'MM/dd/yyyy @ h:mma') + '-' + $filter('date')(angular.copy(selectedFilterProperty.criteriaRangeEnd),'MM/dd/yyyy @ h:mma');
+                                        }else{
+                                            filterItem.measureType = selectedFilterProperty.selectedCriteriaType.dateInfo.measureType;
+                                            filterItem.measureCriteria = selectedFilterProperty.selectedCriteriaType.dateInfo.type;
+                                            filterItem.criteriaNumberOf = "0";
+
+
+                                            if(angular.isDefined(selectedFilterProperty.criteriaNumberOf)){
+                                                filterItem.criteriaNumberOf = selectedFilterProperty.criteriaNumberOf;
+                                            }
+                                            filterItem.value = filterItem.criteriaNumberOf;
+                                            filterItem.displayValue = filterItem.criteriaNumberOf;
+
+                                            switch(filterItem.measureType){
+                                                case 'd':
+                                                    filterItem.displayValue +=' Day';
+                                                    break;
+                                                case 'm':
+                                                    filterItem.displayValue +=' Month';
+                                                    break;
+                                                case 'y':
+                                                    filterItem.displayValue +=' Year';
+                                                    break;
+                                            }
+                                            filterItem.displayValue += ((filterItem.criteriaNumberOf > 1)?'s':'')+' Ago';
+                                        }
+                                    }else{
+										var dateValueString = utilityService.removeTimeOffset(selectedFilterProperty.criteriaRangeStart) + '-' + utilityService.removeTimeOffset(selectedFilterProperty.criteriaRangeEnd);
                                         filterItem.value = dateValueString;
                                         var formattedDateValueString = $filter('date')(angular.copy(selectedFilterProperty.criteriaRangeStart),'MM/dd/yyyy @ h:mma') + '-' + $filter('date')(angular.copy(selectedFilterProperty.criteriaRangeEnd),'MM/dd/yyyy @ h:mma');
                                         filterItem.displayValue = formattedDateValueString;
@@ -304,12 +384,17 @@ class SWEditFilterItem{
                                         filterItem.value = decimalValueString;
                                     }
                                 }
+                                if(angular.isDefined(selectedFilterProperty.aggregate)){
+                                    filterItem.aggregate = selectedFilterProperty.aggregate;
+                                }
                                 filterItem.displayValue = filterItem.value;
                                 break;
 
                         }
 
                         switch(selectedFilterProperty.fieldtype){
+                            case 'one-to-many':
+                            case 'many-to-many':
                             case 'many-to-one':
                                 filterItem.comparisonOperator = selectedFilterProperty.selectedCriteriaType.comparisonOperator;
                                 //is null, is not null
@@ -318,14 +403,14 @@ class SWEditFilterItem{
                                 }
                                 filterItem.displayValue = filterItem.value;
                                 break;
-                            case 'one-to-many':
-
-                            case 'many-to-many':
-                                filterItem.collectionID = selectedFilterProperty.selectedCollection.collectionID;
-                                filterItem.displayValue = selectedFilterProperty.selectedCollection.collectionName;
-                                filterItem.criteria = selectedFilterProperty.selectedCriteriaType.comparisonOperator;
-
-                                break;
+                            //case 'one-to-many':
+                            //
+                            //case 'many-to-many':
+                            //    filterItem.collectionID = selectedFilterProperty.selectedCollection.collectionID;
+                            //    filterItem.displayValue = selectedFilterProperty.selectedCollection.collectionName;
+                            //    filterItem.criteria = selectedFilterProperty.selectedCriteriaType.comparisonOperator;
+                            //
+                            //    break;
                         }
 
                         if(angular.isUndefined(filterItem.displayValue)){

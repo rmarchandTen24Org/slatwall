@@ -64,6 +64,7 @@ Notes:
 		<swa:SlatwallSetting settingName="skuHoldBackQuantity" settingObject="#rc.productType#" />
 		<swa:SlatwallSetting settingName="skuOrderMinimumQuantity" settingObject="#rc.productType#" />
 		<swa:SlatwallSetting settingName="skuOrderMaximumQuantity" settingObject="#rc.productType#" />
+        <swa:SlatwallSetting settingName="skuMinimumPercentageAmountRecievedRequiredToPlaceOrder" settingObject="#rc.productType#" />
 		<swa:SlatwallSetting settingName="skuShippingWeight" settingObject="#rc.productType#" />
 		<swa:SlatwallSetting settingName="skuShippingWeightUnitCode" settingObject="#rc.productType#" />
 		<swa:SlatwallSetting settingName="skuTrackInventoryFlag" settingObject="#rc.productType#" />
@@ -73,6 +74,8 @@ Notes:
 		<swa:SlatwallSetting settingName="skuTaxCategory" settingObject="#rc.productType#" />
 		<cfif rc.productType.getBaseProductType() eq "merchandise">
 			<!--- Wrap this arround settings if you want to disable them for certain product types --->
+		<cfelseif  rc.productType.getBaseProductType() eq "event">
+			<swa:SlatwallSetting settingName="skuEventEnforceConflicts" settingObject="#rc.productType#" />
 		</cfif>
 	</swa:SlatwallSettingTable>
 </cfoutput>

@@ -12,6 +12,7 @@
 			<hb:HibachiPropertyDisplay object="#rc.account#" property="company" edit="#rc.edit#">
 			<hb:HibachiPropertyDisplay object="#rc.account#" property="superUserFlag" edit="#rc.edit and $.slatwall.getAccount().getSuperUserFlag()#">
 			<hb:HibachiPropertyDisplay object="#rc.account#" property="taxExemptFlag" edit="#rc.edit#">
+			<hb:HibachiPropertyDisplay object="#rc.account#" property="testAccountFlag" edit="#rc.edit#">
 		</hb:HibachiPropertyList>
 		
 		<!--- Overview --->
@@ -30,7 +31,7 @@
 					<cfsavecontent variable="thisValue">
 						<hb:HibachiActionCaller text="#$.slatwall.rbKey('define.remove')#" action="admin:entity.deleteAccountAuthentication" queryString="accountAuthenticationID=#accountAuthentication.getAccountAuthenticationID()#&redirectAction=admin:entity.detailAccount&accountID=#rc.account.getAccountID()#" />
 					</cfsavecontent>
-					<hb:HibachiFieldDisplay title="#accountAuthentication.getSimpleRepresentation()#" value="#thisValue#" edit="false" displayType="table">	
+					<hb:HibachiFieldDisplay ignoreHTMLEditFormat="true" title="#accountAuthentication.getSimpleRepresentation()#" value="#thisValue#" edit="false" displayType="table">	
 				</cfloop>
 			</hb:HibachiPropertyTable>
 		</hb:HibachiPropertyList>

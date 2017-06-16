@@ -92,11 +92,18 @@ component displayname="Location" entityname="SlatwallLocation" table="SwLocation
 		return (arraylen(getchildLocations()) > 0);
 	}
 	
+	public numeric function getChildLocationCount(){
+		return getService('locationService').getChildLocationCount(this);
+	}
+	
 	public any function getPrimaryAddress() {
-		if(isNull(variables.primaryAddress)) {
-			return getService("locationService").newLocationAddress();
-		} else {
+		if(!isNull(variables.primaryAddress)) {
 			return variables.primaryAddress;
+		} else if (arrayLen(getLocationAddresses())) {
+			variables.primaryAddress = getLocationAddresses()[1];
+			return variables.primaryAddress;
+		} else {
+			return getService("locationService").newLocationAddress();
 		}
 	}
 	
@@ -116,6 +123,10 @@ component displayname="Location" entityname="SlatwallLocation" table="SwLocation
 			}
 		}
 		return variables.locationPathName;
+	}
+	
+	public any function getLocationOptions(){
+		return getService("locationService").getLocationOptions(this.getLocationID());
 	}
 	
 	// ============  END:  Non-Persistent Property Methods =================
@@ -190,11 +201,17 @@ component displayname="Location" entityname="SlatwallLocation" table="SwLocation
 	}
 	
 	public string function getSimpleRepresentation() {
+		
 		if(!isNull(getParentLocation())) {
-			return getParentLocation().getSimpleRepresentation() & " &raquo; " & getLocationName();
+			return getParentLocation().getSimpleRepresentation() & " » " & getLocationName();
 		}
-		return getLocationName();
+		
+		if(!isNull(getLocationName())){
+			return getLocationName();	
+		}
+		return '';
 	}
+	
 	
 	// ==================  END:  Overridden Methods ========================
 		
@@ -206,7 +223,7 @@ component displayname="Location" entityname="SlatwallLocation" table="SwLocation
 	}
 	
 	public void function preUpdate(struct oldData){
-		setLocationIDPath( buildIDPathList( "parentLocation" ) );;
+		setLocationIDPath( buildIDPathList( "parentLocation" ) );
 		super.preUpdate(argumentcollection=arguments);
 	}
 	

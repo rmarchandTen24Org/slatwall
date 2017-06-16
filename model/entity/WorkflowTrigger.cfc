@@ -44,11 +44,13 @@ component entityname="SlatwallWorkflowTrigger" table="SwWorkflowTrigger" persist
 	property name="objectPropertyIdentifier" ormtype="string";
 	property name="triggerEvent" ormtype="string";
 	property name="triggerEventTitle" ormtype="string";
-
+	property name="saveTriggerHistoryFlag" ormType="boolean" hb_formatType="yesno" default="true";
 	property name="runningFlag" ormtype="boolean" hb_formatType="yesno";
 	property name="nextRunDateTime" ormtype="timestamp";
 	property name="startDateTime" ormtype="timestamp";
 	property name="endDateTime" ormtype="timestamp" hb_nullRBKey="define.forever";
+	property name="collectionFetchSize" ormtype="integer";
+	property name="timeout" ormtype="integer" default="90"; 
 	
 	// Calculated Properties
 
@@ -76,6 +78,18 @@ component entityname="SlatwallWorkflowTrigger" table="SwWorkflowTrigger" persist
 	property name="modifiedByAccountID" hb_populateEnabled="false" ormtype="string";
 	
 	// Non-Persistent Properties
+	
+	property name="workflowTriggerException" persistent="false";
+	
+	public void function setWorkflowTriggerException(required any e){
+		variables.workflowTriggerException = arguments.e;
+	}
+	
+	public any function getWorkflowTriggerException(){
+		if(structKeyExists(variables,"workflowTriggerException")){
+			return variables.workflowTriggerException;
+		}
+	}
 	
 	
 	// Workflow (many-to-one)
@@ -121,6 +135,18 @@ component entityname="SlatwallWorkflowTrigger" table="SwWorkflowTrigger" persist
 	// ===============  END: Custom Formatting Methods =====================
 	
 	// ============== START: Overridden Implicit Getters ===================
+	
+	public void function setTriggerEvent(required string triggerEvent){
+		variables.triggerEvent = arguments.triggerEvent;
+		var eventNameOptions = {};
+		if(!isNull(this.getWorkflow()) && !isNull(this.getWorkflow().getWorkflowObject())){
+			eventNameOptions = getService('hibachiEventService').getTriggerEventRBKeyHashMapByEntityName(this.getWorkflow().getWorkflowObject());	
+		}
+		
+		if(structKeyExists(eventNameOptions,arguments.triggerEvent)){
+			variables.triggerEventTitle = eventNameOptions[arguments.triggerEvent];
+		}
+	}
 	
 	// ==============  END: Overridden Implicit Getters ====================
 	

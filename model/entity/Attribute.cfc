@@ -59,12 +59,14 @@ component displayname="Attribute" entityname="SlatwallAttribute" table="SwAttrib
 	property name="attributeHint" hb_populateEnabled="public" ormtype="string";
 	property name="attributeInputType" hb_populateEnabled="public" ormtype="string" hb_formFieldType="select" hb_formatType="rbKey";
 	property name="defaultValue" hb_populateEnabled="public" ormtype="string";
+	property name="formEmailConfirmationFlag" hb_populateEnabled="public" ormtype="boolean" default="false" ; 
 	property name="requiredFlag" hb_populateEnabled="public" ormtype="boolean" default="false" ;
 	property name="sortOrder" ormtype="integer" sortContext="attributeSet";
 	property name="validationMessage" hb_populateEnabled="public" ormtype="string";
 	property name="validationRegex" hb_populateEnabled="public" ormtype="string";
 	property name="decryptValueInAdminFlag" ormtype="boolean";
 	property name="relatedObject" hb_populateEnabled="public" ormtype="string" hb_formFieldType="select";
+	property name="maxFileSize" hb_populateEnabled="public" ormtype="integer";
 
 	// Calculated Properties
 
@@ -122,6 +124,7 @@ component displayname="Attribute" entityname="SlatwallAttribute" table="SwAttrib
 			{value="checkboxGroup", name=rbKey("entity.attribute.attributeInputType.checkboxGroup")},
 			{value="date", name=rbKey("entity.attribute.attributeInputType.date")},
 			{value="dateTime", name=rbKey("entity.attribute.attributeInputType.dateTime")},
+			{value="email", name=rbKey("etity.attribute.attributeInputType.email")},
 			{value="file", name=rbKey("entity.attribute.attributeInputType.file")},
 			{value="multiselect", name=rbKey("entity.attribute.attributeInputType.multiselect")},
 			{value="password", name=rbKey("entity.attribute.attributeInputType.password")},
@@ -207,6 +210,10 @@ component displayname="Attribute" entityname="SlatwallAttribute" table="SwAttrib
 	public array function getAttributeOptionsOptions() {
 		if(!structKeyExists(variables, "attributeOptionsOptions")) {
 			variables.attributeOptionsOptions = [];
+			
+			var unselectedValue = {};
+			unselectedValue['name'] = rbKey('define.select');
+			unselectedValue['value'] = '';
 
 			if(listFindNoCase('checkBoxGroup,multiselect,radioGroup,select', getAttributeInputType())) {
 
@@ -217,7 +224,7 @@ component displayname="Attribute" entityname="SlatwallAttribute" table="SwAttrib
 				variables.attributeOptionsOptions = smartList.getRecords();
 
 				if(getAttributeInputType() == 'select') {
-					arrayPrepend(variables.attributeOptionsOptions, {name=rbKey('define.select'), value=''});
+					arrayPrepend(variables.attributeOptionsOptions, unselectedValue);
 				}
 
 			} else if(listFindNoCase('relatedObjectSelect', getAttributeInputType()) && !isNull(getRelatedObject())) {
@@ -230,8 +237,8 @@ component displayname="Attribute" entityname="SlatwallAttribute" table="SwAttrib
 				smartList.addSelect(propertyIdentifier=getService( "hibachiService" ).getPrimaryIDPropertyNameByEntityName( getRelatedObject() ), alias="value");
 
 				variables.attributeOptionsOptions = smartList.getRecords();
-
-				arrayPrepend(variables.attributeOptionsOptions, {name=rbKey('define.select'), value=''});
+				
+				arrayPrepend(variables.attributeOptionsOptions, unselectedValue);
 
 			} else if(listFindNoCase('typeSelect', getAttributeInputType()) && !isNull(getTypeSet())) {
 
@@ -241,8 +248,7 @@ component displayname="Attribute" entityname="SlatwallAttribute" table="SwAttrib
 				smartList.addFilter(propertyIdentifier='parentType.typeID', value=getTypeSet().getTypeID());
 
 				variables.attributeOptionsOptions = smartList.getRecords();
-
-				arrayPrepend(variables.attributeOptionsOptions, {name=rbKey('define.select'), value=''});
+				arrayPrepend(variables.attributeOptionsOptions,unselectedValue);
 			}
 
 		}

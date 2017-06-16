@@ -53,16 +53,11 @@ Notes:
 		
 		<!--- TODO: This needs to query DB and return an array of ALL workflow events --->
 		<!--- ['onOrderSaveSuccess','onOrderProcess_placeOrderSuccess'] --->
-		<cfreturn ORMExecuteQuery('SELECT
-										triggerEvent
+		<cfreturn ORMExecuteQuery('SELECT triggerEvent
 									FROM
 										SlatwallWorkflowTrigger
 									WHERE
-										triggerType = :triggerType
-									AND
-										startDateTime >= CURRENT_TIMESTAMP()
-									AND
-										(endDateTime IS NULL OR startDateTime < CURRENT_TIMESTAMP())'
+										triggerType = :triggerType'
 									,{triggerType="Event"}) 
 									/>
 	</cffunction>
@@ -74,6 +69,14 @@ Notes:
 		but it should only be unique workflows that have a workflowTrigger with the eventName passed in --->
 		<cfreturn ORMExecuteQuery('FROM SlatwallWorkflowTrigger where triggerEvent = :triggerEvent',{triggerEvent=arguments.eventName})/>
 	</cffunction>
+
+	<cffunction name="getRunningWorkflows" access="public" returntype="array"> 
+		
+		<cfreturn ORMExecuteQuery('SELECT new map(t.workflowTriggerID as workflowTriggerID, t.timeout as timeout)
+								   FROM	SlatwallWorkflowTrigger t 
+								   WHERE runningFlag=true') />
+
+	</cffunction> 
 
 	<cffunction name="getDueWorkflows" access="public" returntype="array">
 		<cfreturn ORMExecuteQuery('FROM
@@ -91,10 +94,16 @@ Notes:
 	<cffunction name="updateWorkflowTriggerRunning">
 		<cfargument name="workflowTriggerID" required="true" type="string" />
 		<cfargument name="runningFlag" required="true" type="boolean" />
+		<cfargument name="timeout" required="false" type="numeric" />
 
 		<cfset var rs = "" />
 		<cfquery name="rs">
-			UPDATE SwWorkflowTrigger SET runningFlag = <cfqueryparam cfsqltype="cf_sql_bit" value="#arguments.runningFlag#"> WHERE workflowTriggerID = <cfqueryparam cfsqltype="cf_sql_varchar" value="#arguments.workflowTriggerID#">
+			UPDATE SwWorkflowTrigger 
+			SET runningFlag = <cfqueryparam cfsqltype="cf_sql_bit" value="#arguments.runningFlag#"> 
+			WHERE workflowTriggerID = <cfqueryparam cfsqltype="cf_sql_varchar" value="#arguments.workflowTriggerID#">
+			<cfif structKeyExists(arguments, "timeout")>
+				AND nextRunDateTime <= <cfqueryparam cfsqltype="cf_sql_timestamp" value="#dateAdd('n',(-1 * arguments.timeout),now())#"> 
+			</cfif> 
 		</cfquery>
 	</cffunction>
 	

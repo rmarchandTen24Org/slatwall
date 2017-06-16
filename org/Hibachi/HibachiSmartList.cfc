@@ -40,8 +40,6 @@ component accessors="true" persistent="false" output="false" extends="HibachiObj
 	
 	public any function setup(required string entityName, struct data={}, numeric pageRecordsStart=1, numeric pageRecordsShow=10, string currentURL="") {
 		// Make sure that the containers for smart list saved states are in place
-		param name="session.entitySmartList" type="struct" default="#structNew()#";
-		param name="session.entitySmartList.savedStates" type="array" default="#arrayNew(1)#";
 		
 		// Set defaults for the main properties
 		setEntities({});
@@ -469,7 +467,7 @@ component accessors="true" persistent="false" output="false" extends="HibachiObj
 		return variables.whereGroups[ arguments.whereGroup ].ranges; 
 	}
 	
-	public void function addOrder(required string orderStatement, numeric position) {
+	public void function addOrder(required string orderStatement) {
 		var propertyIdentifier = listFirst(arguments.orderStatement, variables.orderDirectionDelimiter);
 		var orderDirection = "ASC";
 		if(listLen(arguments.orderStatement, variables.orderDirectionDelimiter) > 1 && listFindNoCase("D,DESC", listLast(arguments.orderStatement, variables.orderDirectionDelimiter))) {
@@ -485,6 +483,22 @@ component accessors="true" persistent="false" output="false" extends="HibachiObj
 			}
 			if(!found) {
 				arrayAppend(variables.orders, {property=aliasedProperty, direction=orderDirection});	
+			}
+		}
+	}
+
+	public void function removeOrder(required string orderStatement) {
+		var propertyIdentifier = listFirst(arguments.orderStatement, variables.orderDirectionDelimiter);
+		var orderDirection = "ASC";
+		if(listLen(arguments.orderStatement, variables.orderDirectionDelimiter) > 1 && listFindNoCase("D,DESC", listLast(arguments.orderStatement, variables.orderDirectionDelimiter))) {
+			orderDirection = "DESC";
+		}
+		var aliasedProperty = getAliasedProperty(propertyIdentifier=propertyIdentifier);
+		for(var i=1; i <= arraylen(this.getOrders());i++){
+			var order = this.getOrders()[i];
+			if(order.property == aliasedProperty && orderDirection == order.direction){
+				arrayDeleteAt(this.getOrders(),i);
+				break;
 			}
 		}
 	}
@@ -581,8 +595,13 @@ component accessors="true" persistent="false" output="false" extends="HibachiObj
 	public string function getHQLWhere(boolean suppressWhere=false, searchOrder=false) {
 		var hqlWhere = "";
 		variables.hqlParams = {};
-		
-		
+						
+		// Add formatter based on dbtype
+ 		var formatter = '';
+ 		if(getHibachiScope().getApplicationValue("databaseType")=="Oracle10g"){
+ 			formatter = "LOWER";
+ 		}
+ 
 		// Loop over where groups
 		for(var i=1; i<=arrayLen(variables.whereGroups); i++) {
 			if( structCount(variables.whereGroups[i].filters) || structCount(variables.whereGroups[i].likeFilters) || structCount(variables.whereGroups[i].inFilters) || structCount(variables.whereGroups[i].ranges) ) {
@@ -606,6 +625,8 @@ component accessors="true" persistent="false" output="false" extends="HibachiObj
 						for(var ii=1; ii<=listLen(variables.whereGroups[i].filters[filter], variables.valueDelimiter); ii++) {
 							if(listGetAt(variables.whereGroups[i].filters[filter], ii, variables.valueDelimiter) eq "NULL") {
 								hqlWhere &= " #filter# IS NULL OR";	
+							} else if(listGetAt(variables.whereGroups[i].filters[filter], ii, variables.valueDelimiter) eq "NOT NULL"){
+								hqlWhere &= " #filter# IS NOT NULL OR";
 							} else {
 								var paramID = "F#replace(filter, ".", "", "all")##i##ii#";
 								addHQLParam(paramID, listGetAt(variables.whereGroups[i].filters[filter], ii, variables.valueDelimiter));
@@ -616,6 +637,8 @@ component accessors="true" persistent="false" output="false" extends="HibachiObj
 					} else {
 						if(variables.whereGroups[i].filters[filter] == "NULL") {
 							hqlWhere &= " #filter# IS NULL AND";
+						} else if(variables.whereGroups[i].filters[filter] == "NOT NULL"){
+							hqlWhere &= " #filter# IS NOT NULL AND";
 						} else {
 							var paramID = "F#replace(filter, ".", "", "all")##i#";
 							addHQLParam(paramID, variables.whereGroups[i].filters[filter]);
@@ -631,13 +654,13 @@ component accessors="true" persistent="false" output="false" extends="HibachiObj
 						for(var ii=1; ii<=listLen(variables.whereGroups[i].likeFilters[likeFilter], variables.valueDelimiter); ii++) {
 							var paramID = "LF#replace(likeFilter, ".", "", "all")##i##ii#";
 							addHQLParam(paramID, lcase(listGetAt(variables.whereGroups[i].likeFilters[likeFilter], ii, variables.valueDelimiter)));
-							hqlWhere &= " LOWER(#likeFilter#) LIKE :#paramID# OR";
+							hqlWhere &= " #formatter#(#likeFilter#) LIKE :#paramID# OR";
 						}
 						hqlWhere = left(hqlWhere, len(hqlWhere)-2) & ") AND";
 					} else {
 						var paramID = "LF#replace(likeFilter, ".", "", "all")##i#";
 						addHQLParam(paramID, lcase(variables.whereGroups[i].likeFilters[likeFilter]));
-						hqlWhere &= " LOWER(#likeFilter#) LIKE :#paramID# AND";
+						hqlWhere &= " #formatter#(#likeFilter#) LIKE :#paramID# AND";
 					}
 				}
 				
@@ -709,7 +732,7 @@ component accessors="true" persistent="false" output="false" extends="HibachiObj
 				hqlWhere &= " (";
 				for(var keywordProperty in variables.keywordProperties) {
 					
-					hqlWhere &= " LOWER(#keywordProperty#) LIKE :#paramID# OR";
+					hqlWhere &= " #formatter#(#keywordProperty#) LIKE :#paramID# OR";
 				}
 				
 				//Loop over all attributes and find any matches
@@ -766,16 +789,17 @@ component accessors="true" persistent="false" output="false" extends="HibachiObj
 		} else if (!structCount(variables.selects)) {
 			
 			var baseEntityObject = getService('hibachiService').getEntityObject( getBaseEntityName() );
-			
+			var direction = "ASC";			
 			if(structKeyExists(baseEntityObject.getThisMetaData(), "hb_defaultOrderProperty")) {
 				var obProperty = getAliasedProperty( baseEntityObject.getThisMetaData().hb_defaultOrderProperty );
 			} else if ( baseEntityObject.hasProperty( "createdDateTime" ) ) {
 				var obProperty = getAliasedProperty( "createdDateTime" );
+				direction = "DESC";
 			} else {
 				var obProperty = getAliasedProperty( getService("hibachiService").getPrimaryIDPropertyNameByEntityName( getBaseEntityName() ) );
 			}
 			
-			hqlOrder &= " ORDER BY #obProperty# ASC";
+			hqlOrder &= " ORDER BY #obProperty# #direction#";
 		}
 		
 		return hqlOrder;
@@ -801,22 +825,49 @@ component accessors="true" persistent="false" output="false" extends="HibachiObj
 		return variables.pageRecords;
 	}
 	
+	public any function getFirstRecord(boolean refresh=false) {
+		if( !structKeyExists(variables, "firstRecord") || arguments.refresh == true) {
+			saveState();
+			variables.firstRecord = ormExecuteQuery(getHQL(), getHQLParams(), true, {maxresults=1, ignoreCase="true", cacheable=getCacheable(), cachename="pageRecords-#getCacheName()#"});
+		}
+		return variables.firstRecord;
+	}
+	
 	public void function clearRecordsCount() {
 		structDelete(variables, "recordsCount");
 	}
 	
 	public numeric function getRecordsCount() {
 		if(!structKeyExists(variables, "recordsCount")) {
-			if(getCacheable() && structKeyExists(application.entitySmartList, getCacheName()) && structKeyExists(application.entitySmartList[getCacheName()], "recordsCount")) {
-				variables.recordsCount = application.entitySmartList[ getCacheName() ].recordsCount;
+			//retrieve from cache
+			if(
+				getCacheable() 
+				&& !isNull(getService('HibachiCacheService').getDatabaseCacheByDatabaseCacheKey('entitySmartList' & getSessionCacheName()))
+			) {
+				var cacheKey = 'entitySmartList'&getSessionCacheName();
+				var DatabaseCache = getService('HibachiCacheService').getDatabaseCacheByDatabaseCacheKey(cacheKey);
+				if(!isNull(DatabaseCache)){
+					var cacheValue = deserializeJson(DatabaseCache.getDatabaseCacheValue());
+					if(structKeyExists(cacheValue,'recordsCount')){
+						variables.recordsCount = cacheValue.recordsCount;		
+					}
+				}
+				
 			} else {
 				if(!structKeyExists(variables,"records")) {
 					var HQL = "#getHQLSelect(countOnly=true)##getHQLFrom(allowFetch=false)##getHQLWhere()#";
 					var recordCount = ormExecuteQuery(HQL, getHQLParams(), true, {ignoreCase="true"});
 					variables.recordsCount = recordCount;
+					//write to cache
 					if(getCacheable()) {
-						application.entitySmartList[ getCacheName() ] = {};
-						application.entitySmartList[ getCacheName() ].recordsCount = variables.recordsCount;
+						var cacheKey = 'entitySmartList'&getSessionCacheName();
+						var DatabaseCache = getService('HibachiCacheService').newDatabaseCache();
+						DatabaseCache.setDatabaseCacheKey(cacheKey);
+						var cacheValue = {};
+						cacheValue.recordsCount = variables.recordsCount;
+						DatabaseCache.setDatabaseCacheValue(serializeJson(cacheValue));
+						getService('HibachiCacheService').saveDatabaseCache(DatabaseCache);
+						getHibachiScope().flushOrmSession();
 					}
 				} else {
 					variables.recordsCount = arrayLen(getRecords());	
@@ -970,9 +1021,17 @@ component accessors="true" persistent="false" output="false" extends="HibachiObj
 		return exists;
 	}
 	
-	public array function getFilterOptions(required string valuePropertyIdentifier, required string namePropertyIdentifier) {
+	public array function getFilterOptions(
+		required string valuePropertyIdentifier, 
+		required string namePropertyIdentifier,
+		string parentPropertyIdentifier
+	) {
 		var nameProperty = getAliasedProperty(propertyIdentifier=arguments.namePropertyIdentifier);
 		var valueProperty = getAliasedProperty(propertyIdentifier=arguments.valuePropertyIdentifier);
+		
+		if(structKeyExists(arguments,'parentPropertyIdentifier')){
+			 var parentProperty = getAliasedProperty(propertyIdentifier=arguments.parentPropertyIdentifier);
+		}
 		
 		var originalWhereGroup = duplicate(variables.whereGroups);
 		
@@ -984,21 +1043,34 @@ component accessors="true" persistent="false" output="false" extends="HibachiObj
 			}
 		}
 			
-		var results = ormExecuteQuery("SELECT NEW MAP(
+		var hql = "SELECT NEW MAP(
 			#nameProperty# as name,
 			#valueProperty# as value,
 			count(#nameProperty#) as count
-			)
-		#getHQLFrom(allowFetch=false)#
-		#getHQLWhere()# #IIF(len(getHQLWhere()), DE('AND'), DE('WHERE'))#
+			";
+		
+		if(structKeyExists(arguments,'parentPropertyIdentifier')){
+			hql &= ", #parentProperty# as parentValue";
+		}
+		hql &=")";
+		
+		hql &="#getHQLFrom(allowFetch=false)#
+		#getHQLWhere()# #getHibachiScope().getService('hibachiUtilityService').hibachiTernary(len(getHQLWhere()), 'AND', 'WHERE')#
 				#nameProperty# IS NOT NULL
 			AND
 				#valueProperty# IS NOT NULL
 		GROUP BY
 			#nameProperty#,
-			#valueProperty#
+			#valueProperty#";
+			
+		if(structKeyExists(arguments,'parentPropertyIdentifier')){
+			hql &= ", #parentProperty#";
+		}
+			
+		hql &= "
 		ORDER BY
-			#nameProperty# ASC", getHQLParams());
+			#nameProperty# ASC";
+		var results = ormExecuteQuery(hql, getHQLParams());
 		
 		variables.whereGroups = originalWhereGroup;
 		
@@ -1035,9 +1107,12 @@ component accessors="true" persistent="false" output="false" extends="HibachiObj
 	
 	public void function loadSavedState(required string savedStateID) {
 		var savedStates = [];
-		if(getHibachiScope().hasSessionValue('smartListSavedState')) {
-			savedStates = getHibachiScope().getSessionValue('smartListSavedState');	
+		
+		var DatabaseCache = getService('HibachiCacheService').getDatabaseCacheByDatabaseCacheKey('smartListSavedState'&getHibachiScope().getSession().getSessionCookieNPSID());
+		if(!isNull(DatabaseCache)) {
+			savedStates = deserializeJson(DatabaseCache.getDatabaseCacheValue());	
 		}
+		
 		for(var s=1; s<=arrayLen(savedStates); s++) {
 			if(savedStates[s].savedStateID eq arguments.savedStateID) {
 				for(var key in savedStates[s]) {
@@ -1048,46 +1123,37 @@ component accessors="true" persistent="false" output="false" extends="HibachiObj
 	}
 	
 	private void function saveState() {
-		// Make sure that the saved states structure and array exists
-		if(!getHibachiScope().hasSessionValue('smartListSavedState')) {
-			getHibachiScope().setSessionValue('smartListSavedState', []);
+		var states = [];
+		var DatabaseCache = getService('HibachiCacheService').getDatabaseCacheByDatabaseCacheKey('smartListSavedState'&getHibachiScope().getSession().getSessionCookieNPSID());
+		if(!isNull(DatabaseCache)){
+			states = deserializeJson(DatabaseCache.getDatabaseCacheValue());
+		}else{
+			DatabaseCache = getService('HibachiCacheService').newDatabaseCache();
 		}
+		// Setup the state
+		var state = getStateStruct();
+		state.savedStateID = getSavedStateID();
 		
-		var sessionKey = "";
-		if(structKeyExists(COOKIE, "JSESSIONID")) {
-			sessionKey = COOKIE.JSESSIONID;
-		} else if (structKeyExists(COOKIE, "CFTOKEN")) {
-			sessionKey = COOKIE.CFTOKEN;
-		} else if (structKeyExists(COOKIE, "CFID")) {
-			sessionKey = COOKIE.CFID;
-		}
-		
-		// Lock the session so that we can manipulate based on saved state
-		lock name="#sessionKey#_#getHibachiInstanceApplicationScopeKey()#_smartListSavedStateUpdateLogic" timeout="10" {
-		
-			// Get the saved state struct
-			var states = getHibachiScope().getSessionValue('smartListSavedState');
-			
-			// Setup the state
-			var state = getStateStruct();
-			state.savedStateID = getSavedStateID();
-			
-			// If the savedState already existed, then delete it
-			for(var e=1; e<=arrayLen(states); e++) {
-				if(states[e].savedStateID eq state.savedStateID) {
-					arrayDeleteAt(states, e);
-				}
+		// If the savedState already existed, then delete it
+		for(var e=1; e<=arrayLen(states); e++) {
+			if(states[e].savedStateID eq state.savedStateID) {
+				arrayDeleteAt(states, e);
 			}
-			
-			// Add the state to the states array
-			arrayPrepend(states, state);
-				
-			for(var s=arrayLen(states); s>30; s--) {
-				arrayDeleteAt(states, s);
-			}
-			
-			getHibachiScope().setSessionValue('smartListSavedState', states);
 		}
+		
+		// Add the state to the states array
+		arrayPrepend(states, state);
+			
+		for(var s=arrayLen(states); s>30; s--) {
+			arrayDeleteAt(states, s);
+		}
+		
+		DatabaseCache.setDatabaseCacheKey('smartListSavedState'&getHibachiScope().getSession().getSessionCookieNPSID());
+		DatabaseCache.setDatabaseCacheValue(serializeJson(states));
+		getService('HibachiCacheService').saveDatabaseCache(DatabaseCache);
+		
+		getHibachiScope().flushOrmSession();
+		
 	}
 	
 	public string function getSavedStateID() {
@@ -1125,5 +1191,9 @@ component accessors="true" persistent="false" output="false" extends="HibachiObj
 		
 		// Turn the array back into a list, lcase, and hash for the name
 		return hash(lcase(arrayToList(valueArray,",")));
+	}
+	
+	public any function getSessionCacheName(){
+		return getHibachiScope().getSession().getSessionCookieNPSID()&getCacheName();
 	}
 }
