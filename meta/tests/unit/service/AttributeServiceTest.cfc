@@ -60,7 +60,7 @@ component extends="Slatwall.meta.tests.unit.SlatwallUnitTestBase" {
 		var attributeSetData = {
 			attributeSetID="",
 			attributeSetName="unitTestAttributeSet",
-			attributeSetCode="unitTestAttributeSetCode"&generateRandomString(),
+			attributeSetCode="utas#replaceAll(createUUID(),'-','')#",
 			attributeSetObject="Account"
 		};
 		var attributeSet = createPersistedTestEntity('attributeSet',attributeSetData);
@@ -68,7 +68,7 @@ component extends="Slatwall.meta.tests.unit.SlatwallUnitTestBase" {
 		var attributeData = {
 			attributeID="",
 			attributeName="unitTestAttribute",
-			attributeCode="unitTestAttributeCode"&generateRandomInteger(),
+			attributeCode="uta#replaceAll(createUUID(),'-','')#",
 			attributeSet={
 				attributeSetID=attributeSet.getAttributeSetID()
 			}
@@ -117,7 +117,7 @@ component extends="Slatwall.meta.tests.unit.SlatwallUnitTestBase" {
 		var attributeData = {
 			attributeID="",
 			attributeName="unitTestAttribute",
-			attributeCode="unitTestAttributeCode"&generateRandomInteger(),
+			attributeCode="uta#replaceAll(createUUID(),'-','')#",
 			attributeSet={
 				attributeSetID=attributeSet.getAttributeSetID()
 			},
