@@ -57,10 +57,11 @@ component extends="Slatwall.meta.tests.unit.SlatwallUnitTestBase" {
 	* @test
 	*/
 	public void function saveAttributeTest_cacheClearedOnAttributeSave(){
+		var attributeSetCode = "utas#rereplace(createUUID(),'-','','all')#";
 		var attributeSetData = {
 			attributeSetID="",
 			attributeSetName="unitTestAttributeSet",
-			attributeSetCode="utas#rereplace(createUUID(),'-','','all')#",
+			attributeSetCode=attributeSetCode,
 			attributeSetObject="Account"
 		};
 		var attributeSet = createPersistedTestEntity('attributeSet',attributeSetData);
@@ -78,7 +79,7 @@ component extends="Slatwall.meta.tests.unit.SlatwallUnitTestBase" {
 		request.slatwallScope.getService('hibachiCacheService').resetCachedKey('attributeService_getAttributeModel');
 		request.slatwallScope.getService('hibachiCacheService').resetCachedKey('attributeService_getAttributeModel_#attributeSet.getAttributeSetObject()#');
 		
-		request.slatwallScope.getService('hibachiCacheService').resetCachedKey('attribtueService_getAttributeModel_#attributeSet.getAttributeSetObject()#_#attributeSet.getAttributeSetCode()#');
+		request.slatwallScope.getService('hibachiCacheService').resetCachedKey('attribtueService_getAttributeModel_#attributeSet.getAttributeSetObject()#_#attributeSetCode#');
 		
 		
 		var attributeMetaData = variables.service.getAttributeModel();
@@ -86,7 +87,7 @@ component extends="Slatwall.meta.tests.unit.SlatwallUnitTestBase" {
 		//assert that the cache was built
 		assert(request.slatwallScope.getService('hibachiCacheService').hasCachedValue('attributeService_getAttributeModel') == true);
 		assert(request.slatwallScope.getService('hibachiCacheService').hasCachedValue('attributeService_getAttributeModel_#attributeSet.getAttributeSetObject()#') == true);
-		assert(request.slatwallScope.getService('hibachiCacheService').hasCachedValue('attribtueService_getAttributeModel_#attributeSet.getAttributeSetObject()#_#attributeSet.getAttributeSetCode()#') == true);
+		assert(request.slatwallScope.getService('hibachiCacheService').hasCachedValue('attribtueService_getAttributeModel_#attributeSet.getAttributeSetObject()#_#attributeSetCode#') == true);
 		//saving clears the cache
 		var attributeName = 'adf'&generateRandomString();
 		attribute = variables.service.saveAttribute(attribute,{attributeName=attributeName,attributeType="text"});
@@ -98,18 +99,18 @@ component extends="Slatwall.meta.tests.unit.SlatwallUnitTestBase" {
 		//make sure that the cache did clear
 		assertFalse(request.slatwallScope.getService('hibachiCacheService').hasCachedValue('attributeService_getAttributeModel') == true);
 		assertFalse(request.slatwallScope.getService('hibachiCacheService').hasCachedValue('attributeService_getAttributeModel_#attributeSet.getAttributeSetObject()#'));
-		assertFalse(request.slatwallScope.getService('hibachiCacheService').hasCachedValue('attribtueService_getAttributeModel_#attributeSet.getAttributeSetObject()#_#attributeSet.getAttributeSetCode()#') == true);
+		assertFalse(request.slatwallScope.getService('hibachiCacheService').hasCachedValue('attribtueService_getAttributeModel_#attributeSet.getAttributeSetObject()#_#attributeSetCode#') == true);
 	}
 		
 	/**
 	* @test
 	*/
 	public void function getAttributeModelTest(){
-		
+		var attributeSetCode = "utas#rereplace(createUUID(),'-','','all')#";
 		var attributeSetData = {
 			attributeSetID="",
 			attributeSetName="unitTestAttributeSet",
-			attributeSetCode="utas#rereplace(createUUID(),'-','','all')#",
+			attributeSetCode=attributeSetCode,
 			attributeSetObject="Account"
 		};
 		var attributeSet = createPersistedTestEntity('attributeSet',attributeSetData);
@@ -138,25 +139,25 @@ component extends="Slatwall.meta.tests.unit.SlatwallUnitTestBase" {
 		
 		assert(structKeyExists(attributeMetaData,'Account'),'no entity');
 		if(structKeyExists(attributeMetaData,'Account')){
-			assert(structKeyExists(attributeMetaData['Account'],trim(attributeSet.getAttributeSetCode())),'no attribute set id of #attributeSet.getAttributeSetCode()# for #serializeJson(attributeMetaData)#');
+			assert(structKeyExists(attributeMetaData['Account'],attributeSetCode),'no attribute set id of #attributeSetCode# for #serializeJson(attributeMetaData)#');
 		}
-		if(structKeyExists(attributeMetaData['Account'],attributeSet.getAttributeSetCode())){
-			assert(attributeMetaData['Account'][attributeSet.getAttributeSetCode()]['attributeSetName'] == attributeSet.getAttributeSetName(),'no attribute set name');
-			assert(structKeyExists(attributeMetaData['Account'][attributeSet.getAttributeSetCode()],'attributes'),'no attributes');
-			if(structKeyExists(attributeMetaData['Account'][attributeSet.getAttributeSetCode()],'attributes')){
+		if(structKeyExists(attributeMetaData['Account'],attributeSetCode)){
+			assert(attributeMetaData['Account'][attributeSetCode]['attributeSetName'] == attributeSet.getAttributeSetName(),'no attribute set name');
+			assert(structKeyExists(attributeMetaData['Account'][attributeSetCode],'attributes'),'no attributes');
+			if(structKeyExists(attributeMetaData['Account'][attributeSetCode],'attributes')){
 				assert(
 					structKeyExists(
-						attributeMetaData['Account'][attributeSet.getAttributeSetCode()]['attributes'],
+						attributeMetaData['Account'][attributeSetCode]['attributes'],
 						attribute.getAttributeCode()
 					),'no attribute code'
 				);
 				if(
 					structKeyExists(
-						attributeMetaData['Account'][attributeSet.getAttributeSetCode()]['attributes'],
+						attributeMetaData['Account'][attributeSetCode]['attributes'],
 						attribute.getAttributeCode()
 					)
 				){
-					assert(attributeMetaData['Account'][attributeSet.getAttributeSetCode()]['attributes'][attribute.getAttributeCode()]['attributeName']==attribute.getAttributeName(),'no attribute name');
+					assert(attributeMetaData['Account'][attributeSetCode]['attributes'][attribute.getAttributeCode()]['attributeName']==attribute.getAttributeName(),'no attribute name');
 				}
 			}
 		}
