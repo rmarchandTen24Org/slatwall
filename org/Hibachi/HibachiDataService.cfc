@@ -134,6 +134,7 @@ component accessors="true" output="false" extends="HibachiService" {
 
 			// Loop over files, read them, and send to loadData function
 			for(var i=1; i<= arrayLen(dirList); i++) {
+				var startTime = getTickCount();
 				if(len(dirList[i]) gt 7 && right(dirList[i],7) == "xml.cfm"){
 					var xmlRaw = FileRead(dirList[i]);
 
@@ -153,6 +154,7 @@ component accessors="true" output="false" extends="HibachiService" {
 					}
 
 				}
+				var endTime = getTickCount();
 			}
 		} while (runPopulation);
 
@@ -165,7 +167,7 @@ component accessors="true" output="false" extends="HibachiService" {
 		var columns = {};
 		var idColumns = "";
 		var includesCircular = false;
-
+		
 		// Loop over each column to parse xml
 		for(var ii=1; ii<= arrayLen(xmlData.Table.Columns.xmlChildren); ii++) {
 			columns[  xmlData.Table.Columns.xmlChildren[ii].xmlAttributes.name ] = xmlData.Table.Columns.xmlChildren[ii].xmlAttributes;
@@ -216,10 +218,23 @@ component accessors="true" output="false" extends="HibachiService" {
 
 			var insertedData = getHibachiDataDAO().getInsertedDataFile();
 			var updateOnly = ignorePreviouslyInserted && listFindNoCase(insertedData, idKey);
-
-			getHibachiDataDAO().recordUpdate(xmlData.table.xmlAttributes.tableName, idColumns, updateData, insertData, updateOnly);
-			getHibachiDataDAO().updateInsertedDataFile( idKey );
+			
+			thread 	name="loadDataFromXMLRaw#createUUID#" 
+				tableName="#xmlData.table.xmlAttributes.tableName#"
+				idColumns="#idColumns#" 
+				updateData="#updateData#"
+				insertData="#insertData#"
+				updateOnly="#updateOnly#"
+				idKey="#idKey#"
+			{
+				getHibachiDataDAO().recordUpdate(
+					attributes.tableName, attributes.idColumns, attributes.updateData, attributes.insertData, attributes.updateOnly
+				);
+				getHibachiDataDAO().updateInsertedDataFile( attributes.idKey );
+			}
+			
 		}
+		threadJoin();
 
 		return includesCircular;
 	}
