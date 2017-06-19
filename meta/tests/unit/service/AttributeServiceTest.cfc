@@ -109,7 +109,7 @@ component extends="Slatwall.meta.tests.unit.SlatwallUnitTestBase" {
 		var attributeSetData = {
 			attributeSetID="",
 			attributeSetName="unitTestAttributeSet",
-			attributeSetCode="unitTestAttributeSetCode"&generateRandomInteger(),
+			attributeSetCode="utas#replaceAll(createUUID(),'-','')#",
 			attributeSetObject="Account"
 		};
 		var attributeSet = createPersistedTestEntity('attributeSet',attributeSetData);
