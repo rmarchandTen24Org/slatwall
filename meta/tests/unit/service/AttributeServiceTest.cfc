@@ -138,7 +138,7 @@ component extends="Slatwall.meta.tests.unit.SlatwallUnitTestBase" {
 		
 		assert(structKeyExists(attributeMetaData,'Account'),'no entity');
 		if(structKeyExists(attributeMetaData,'Account')){
-			assert(structKeyExists(attributeMetaData['Account'],attributeSet.getAttributeSetCode()),'no attribute set');
+			assert(structKeyExists(attributeMetaData['Account'],attributeSet.getAttributeSetCode()),'no attribute set for #serializeJson(attributeMetaData)#');
 		}
 		if(structKeyExists(attributeMetaData['Account'],attributeSet.getAttributeSetCode())){
 			assert(attributeMetaData['Account'][attributeSet.getAttributeSetCode()]['attributeSetName'] == attributeSet.getAttributeSetName(),'no attribute set name');
