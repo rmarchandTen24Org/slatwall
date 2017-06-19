@@ -100,6 +100,10 @@ component extends="Slatwall.meta.tests.unit.SlatwallUnitTestBase" {
 		assertFalse(request.slatwallScope.getService('hibachiCacheService').hasCachedValue('attributeService_getAttributeModel') == true);
 		assertFalse(request.slatwallScope.getService('hibachiCacheService').hasCachedValue('attributeService_getAttributeModel_#attributeSet.getAttributeSetObject()#'));
 		assertFalse(request.slatwallScope.getService('hibachiCacheService').hasCachedValue('attribtueService_getAttributeModel_#attributeSet.getAttributeSetObject()#_#attributeSetCode#') == true);
+		request.slatwallScope.getService('hibachiCacheService').resetCachedKey('attributeService_getAttributeModel');
+		request.slatwallScope.getService('hibachiCacheService').resetCachedKey('attributeService_getAttributeModel_#attributeSet.getAttributeSetObject()#');
+		
+		request.slatwallScope.getService('hibachiCacheService').resetCachedKey('attribtueService_getAttributeModel_#attributeSet.getAttributeSetObject()#_#attributeSetCode#');
 	}
 		
 	/**
@@ -171,7 +175,10 @@ component extends="Slatwall.meta.tests.unit.SlatwallUnitTestBase" {
 		addToDebug(notCachedTime);
 		addToDebug(cachedTime);
 		assert(cachedTime < notCachedTime);
+		request.slatwallScope.getService('hibachiCacheService').resetCachedKey('attributeService_getAttributeModel');
+		request.slatwallScope.getService('hibachiCacheService').resetCachedKey('attributeService_getAttributeModel_#attributeSet.getAttributeSetObject()#');
 		
+		request.slatwallScope.getService('hibachiCacheService').resetCachedKey('attribtueService_getAttributeModel_#attributeSet.getAttributeSetObject()#_#attributeSetCode#');
 	}
 }
 

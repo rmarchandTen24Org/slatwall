@@ -92,6 +92,14 @@ component accessors="true" output="false" extends="HibachiService" {
 		}
 	}
 	
+	public void function clearCacheValue(required string key){
+		if(getInternalCacheFlag()){
+			structKeyDelete(getCache(),arguments.key);
+		}else if(!getInternalCacheFlag){
+			cacheRemove(arguments.key);
+		}
+	}
+	
 	public any function setCachedValue( required string key, required any value ) {
 		// If using the internal cache, then set value there
 		if(getInternalCacheFlag()) {
