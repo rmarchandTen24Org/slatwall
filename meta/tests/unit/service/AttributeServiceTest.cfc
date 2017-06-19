@@ -66,6 +66,11 @@ component extends="Slatwall.meta.tests.unit.SlatwallUnitTestBase" {
 		};
 		var attributeSet = createPersistedTestEntity('attributeSet',attributeSetData);
 		
+		request.slatwallScope.getService('hibachiCacheService').clearCachedValue('attributeService_getAttributeModel');
+		request.slatwallScope.getService('hibachiCacheService').clearCachedValue('attributeService_getAttributeModel_#attributeSet.getAttributeSetObject()#');
+		
+		request.slatwallScope.getService('hibachiCacheService').clearCachedValue('attribtueService_getAttributeModel_#attributeSet.getAttributeSetObject()#_#attributeSetCode#');
+		
 		var attributeData = {
 			attributeID="",
 			attributeName="unitTestAttribute",
@@ -111,6 +116,9 @@ component extends="Slatwall.meta.tests.unit.SlatwallUnitTestBase" {
 	*/
 	public void function getAttributeModelTest(){
 		var attributeSetCode = "utas#rereplace(createUUID(),'-','','all')#";
+		
+		
+		
 		var attributeSetData = {
 			attributeSetID="",
 			attributeSetName="unitTestAttributeSet",
@@ -118,6 +126,11 @@ component extends="Slatwall.meta.tests.unit.SlatwallUnitTestBase" {
 			attributeSetObject="Account"
 		};
 		var attributeSet = createPersistedTestEntity('attributeSet',attributeSetData);
+		
+		request.slatwallScope.getService('hibachiCacheService').clearCachedValue('attributeService_getAttributeModel');
+		request.slatwallScope.getService('hibachiCacheService').clearCachedValue('attributeService_getAttributeModel_#attributeSet.getAttributeSetObject()#');
+		
+		request.slatwallScope.getService('hibachiCacheService').clearCachedValue('attribtueService_getAttributeModel_#attributeSet.getAttributeSetObject()#_#attributeSetCode#');
 		
 		var attributeData = {
 			attributeID="",
