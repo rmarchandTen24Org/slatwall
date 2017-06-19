@@ -60,7 +60,7 @@ component extends="Slatwall.meta.tests.unit.SlatwallUnitTestBase" {
 		var attributeSetData = {
 			attributeSetID="",
 			attributeSetName="unitTestAttributeSet",
-			attributeSetCode="utas#replaceAll(createUUID(),'-','')#",
+			attributeSetCode="utas#rereplace(createUUID(),'-','','all')#",
 			attributeSetObject="Account"
 		};
 		var attributeSet = createPersistedTestEntity('attributeSet',attributeSetData);
@@ -68,7 +68,7 @@ component extends="Slatwall.meta.tests.unit.SlatwallUnitTestBase" {
 		var attributeData = {
 			attributeID="",
 			attributeName="unitTestAttribute",
-			attributeCode="uta#replaceAll(createUUID(),'-','')#",
+			attributeCode="uta#rereplace(createUUID(),'-','','all')#",
 			attributeSet={
 				attributeSetID=attributeSet.getAttributeSetID()
 			}
@@ -109,7 +109,7 @@ component extends="Slatwall.meta.tests.unit.SlatwallUnitTestBase" {
 		var attributeSetData = {
 			attributeSetID="",
 			attributeSetName="unitTestAttributeSet",
-			attributeSetCode="utas#replaceAll(createUUID(),'-','')#",
+			attributeSetCode="utas#rereplace(createUUID(),'-','','all')#",
 			attributeSetObject="Account"
 		};
 		var attributeSet = createPersistedTestEntity('attributeSet',attributeSetData);
@@ -117,7 +117,7 @@ component extends="Slatwall.meta.tests.unit.SlatwallUnitTestBase" {
 		var attributeData = {
 			attributeID="",
 			attributeName="unitTestAttribute",
-			attributeCode="uta#replaceAll(createUUID(),'-','')#",
+			attributeCode="uta#rereplace(createUUID(),'-','','all')#",
 			attributeSet={
 				attributeSetID=attributeSet.getAttributeSetID()
 			},
