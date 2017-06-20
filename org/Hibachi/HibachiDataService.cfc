@@ -219,7 +219,7 @@ component accessors="true" output="false" extends="HibachiService" {
 			var insertedData = getHibachiDataDAO().getInsertedDataFile();
 			var updateOnly = ignorePreviouslyInserted && listFindNoCase(insertedData, idKey);
 			
-			thread 	name="loadDataFromXMLRaw#createUUID#" 
+			thread 	name="loadDataFromXMLRaw#createUUID()#" 
 				tableName="#xmlData.table.xmlAttributes.tableName#"
 				idColumns="#idColumns#" 
 				updateData="#updateData#"

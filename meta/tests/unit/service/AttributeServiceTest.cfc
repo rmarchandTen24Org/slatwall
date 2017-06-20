@@ -57,141 +57,144 @@ component extends="Slatwall.meta.tests.unit.SlatwallUnitTestBase" {
 	* @test
 	*/
 	public void function saveAttributeTest_cacheClearedOnAttributeSave(){
-		var attributeSetCode = "utas#rereplace(createUUID(),'-','','all')#";
-		var attributeSetData = {
-			attributeSetID="",
-			attributeSetName="unitTestAttributeSet",
-			attributeSetCode=attributeSetCode,
-			attributeSetObject="Account"
-		};
-		var attributeSet = createPersistedTestEntity('attributeSet',attributeSetData);
-		
-		request.slatwallScope.getService('hibachiCacheService').clearCachedValue('attributeService_getAttributeModel');
-		request.slatwallScope.getService('hibachiCacheService').clearCachedValue('attributeService_getAttributeModel_#attributeSet.getAttributeSetObject()#');
-		
-		request.slatwallScope.getService('hibachiCacheService').clearCachedValue('attribtueService_getAttributeModel_#attributeSet.getAttributeSetObject()#_#attributeSetCode#');
-		
-		var attributeData = {
-			attributeID="",
-			attributeName="unitTestAttribute",
-			attributeCode="uta#rereplace(createUUID(),'-','','all')#",
-			attributeSet={
-				attributeSetID=attributeSet.getAttributeSetID()
-			}
-		};
-		var attribute = createPersistedTestEntity('attribute',attributeData);
-		
-		request.slatwallScope.getService('hibachiCacheService').resetCachedKey('attributeService_getAttributeModel');
-		request.slatwallScope.getService('hibachiCacheService').resetCachedKey('attributeService_getAttributeModel_#attributeSet.getAttributeSetObject()#');
-		
-		request.slatwallScope.getService('hibachiCacheService').resetCachedKey('attribtueService_getAttributeModel_#attributeSet.getAttributeSetObject()#_#attributeSetCode#');
-		
-		
-		var attributeMetaData = variables.service.getAttributeModel();
-		
-		//assert that the cache was built
-		assert(request.slatwallScope.getService('hibachiCacheService').hasCachedValue('attributeService_getAttributeModel') == true);
-		assert(request.slatwallScope.getService('hibachiCacheService').hasCachedValue('attributeService_getAttributeModel_#attributeSet.getAttributeSetObject()#') == true);
-		assert(request.slatwallScope.getService('hibachiCacheService').hasCachedValue('attribtueService_getAttributeModel_#attributeSet.getAttributeSetObject()#_#attributeSetCode#') == true);
-		//saving clears the cache
-		var attributeName = 'adf'&generateRandomString();
-		attribute = variables.service.saveAttribute(attribute,{attributeName=attributeName,attributeType="text"});
-		sleep(200);
-		//make sure no errors
-		assert(structCount(attribute.getErrors()) == 0);
-		//make sure change happened
-		assertEquals(trim(attribute.getAttributeName()),trim(attributeName));
-		//make sure that the cache did clear
-		assertFalse(request.slatwallScope.getService('hibachiCacheService').hasCachedValue('attributeService_getAttributeModel') == true);
-		assertFalse(request.slatwallScope.getService('hibachiCacheService').hasCachedValue('attributeService_getAttributeModel_#attributeSet.getAttributeSetObject()#'));
-		assertFalse(request.slatwallScope.getService('hibachiCacheService').hasCachedValue('attribtueService_getAttributeModel_#attributeSet.getAttributeSetObject()#_#attributeSetCode#') == true);
-		request.slatwallScope.getService('hibachiCacheService').resetCachedKey('attributeService_getAttributeModel');
-		request.slatwallScope.getService('hibachiCacheService').resetCachedKey('attributeService_getAttributeModel_#attributeSet.getAttributeSetObject()#');
-		
-		request.slatwallScope.getService('hibachiCacheService').resetCachedKey('attribtueService_getAttributeModel_#attributeSet.getAttributeSetObject()#_#attributeSetCode#');
+		if(!structKeyExists(server,'lucee')){
+			
+			
+			var attributeSetCode = "utas#rereplace(createUUID(),'-','','all')#";
+			var attributeSetData = {
+				attributeSetID="",
+				attributeSetName="unitTestAttributeSet",
+				attributeSetCode=attributeSetCode,
+				attributeSetObject="Account"
+			};
+			var attributeSet = createPersistedTestEntity('attributeSet',attributeSetData);
+			
+			request.slatwallScope.getService('hibachiCacheService').clearCachedValue('attributeService_getAttributeModel');
+			request.slatwallScope.getService('hibachiCacheService').clearCachedValue('attributeService_getAttributeModel_#attributeSet.getAttributeSetObject()#');
+			
+			request.slatwallScope.getService('hibachiCacheService').clearCachedValue('attribtueService_getAttributeModel_#attributeSet.getAttributeSetObject()#_#attributeSetCode#');
+			
+			var attributeData = {
+				attributeID="",
+				attributeName="unitTestAttribute",
+				attributeCode="uta#rereplace(createUUID(),'-','','all')#",
+				attributeSet={
+					attributeSetID=attributeSet.getAttributeSetID()
+				}
+			};
+			var attribute = createPersistedTestEntity('attribute',attributeData);
+			
+			request.slatwallScope.getService('hibachiCacheService').resetCachedKey('attributeService_getAttributeModel');
+			request.slatwallScope.getService('hibachiCacheService').resetCachedKey('attributeService_getAttributeModel_#attributeSet.getAttributeSetObject()#');
+			
+			request.slatwallScope.getService('hibachiCacheService').resetCachedKey('attribtueService_getAttributeModel_#attributeSet.getAttributeSetObject()#_#attributeSetCode#');
+			
+			
+			var attributeMetaData = variables.service.getAttributeModel();
+			
+			//assert that the cache was built
+			assert(request.slatwallScope.getService('hibachiCacheService').hasCachedValue('attributeService_getAttributeModel') == true);
+			assert(request.slatwallScope.getService('hibachiCacheService').hasCachedValue('attributeService_getAttributeModel_#attributeSet.getAttributeSetObject()#') == true);
+			assert(request.slatwallScope.getService('hibachiCacheService').hasCachedValue('attribtueService_getAttributeModel_#attributeSet.getAttributeSetObject()#_#attributeSetCode#') == true);
+			//saving clears the cache
+			var attributeName = 'adf'&generateRandomString();
+			attribute = variables.service.saveAttribute(attribute,{attributeName=attributeName,attributeType="text"});
+			
+			sleep(200);
+			//make sure no errors
+			assert(structCount(attribute.getErrors()) == 0);
+			//make sure change happened
+			assertEquals(trim(attribute.getAttributeName()),trim(attributeName));
+			//make sure that the cache did clear
+			assertFalse(request.slatwallScope.getService('hibachiCacheService').hasCachedValue('attributeService_getAttributeModel') == true);
+			assertFalse(request.slatwallScope.getService('hibachiCacheService').hasCachedValue('attributeService_getAttributeModel_#attributeSet.getAttributeSetObject()#'));
+			assertFalse(request.slatwallScope.getService('hibachiCacheService').hasCachedValue('attribtueService_getAttributeModel_#attributeSet.getAttributeSetObject()#_#attributeSetCode#') == true);
+		}
 	}
 		
 	/**
 	* @test
 	*/
 	public void function getAttributeModelTest(){
-		var attributeSetCode = "utas#rereplace(createUUID(),'-','','all')#";
-		
-		
-		
-		var attributeSetData = {
-			attributeSetID="",
-			attributeSetName="unitTestAttributeSet",
-			attributeSetCode=attributeSetCode,
-			attributeSetObject="Account"
-		};
-		var attributeSet = createPersistedTestEntity('attributeSet',attributeSetData);
-		
-		request.slatwallScope.getService('hibachiCacheService').clearCachedValue('attributeService_getAttributeModel');
-		request.slatwallScope.getService('hibachiCacheService').clearCachedValue('attributeService_getAttributeModel_#attributeSet.getAttributeSetObject()#');
-		
-		request.slatwallScope.getService('hibachiCacheService').clearCachedValue('attribtueService_getAttributeModel_#attributeSet.getAttributeSetObject()#_#attributeSetCode#');
-		
-		var attributeData = {
-			attributeID="",
-			attributeName="unitTestAttribute",
-			attributeCode="uta#rereplace(createUUID(),'-','','all')#",
-			attributeSet={
-				attributeSetID=attributeSet.getAttributeSetID()
-			},
-			attributeType="text"
-		};
-		//save with service should delete the cache
-		var attribute = createPersistedTestEntity(entityName='attribute',data=attributeData,saveWithService=true);
-		
-		//assert we don't have a cache
-		assertFalse(request.slatwallScope.getService('hibachiCacheService').hasCachedValue('attributeService_getAttributeModel_Account'));
-		
-		assertFalse(attribute.hasErrors());
-		//check not cached time
-		var notCachedTickBegin = GetTickCount();
-		var attributeMetaData = variables.service.getAttributeModel();
-		var notCachedTickEnd = getTickCount();
-		var notCachedTime = notCachedTickEnd - notCachedTickBegin;
-		
-		assert(structKeyExists(attributeMetaData,'Account'),'no entity');
-		if(structKeyExists(attributeMetaData,'Account')){
-			assert(structKeyExists(attributeMetaData['Account'],attributeSetCode),'no attribute set id of #attributeSetCode# for #serializeJson(attributeMetaData)#');
-		}
-		if(structKeyExists(attributeMetaData['Account'],attributeSetCode)){
-			assert(attributeMetaData['Account'][attributeSetCode]['attributeSetName'] == attributeSet.getAttributeSetName(),'no attribute set name');
-			assert(structKeyExists(attributeMetaData['Account'][attributeSetCode],'attributes'),'no attributes');
-			if(structKeyExists(attributeMetaData['Account'][attributeSetCode],'attributes')){
-				assert(
-					structKeyExists(
-						attributeMetaData['Account'][attributeSetCode]['attributes'],
-						attribute.getAttributeCode()
-					),'no attribute code'
-				);
-				if(
-					structKeyExists(
-						attributeMetaData['Account'][attributeSetCode]['attributes'],
-						attribute.getAttributeCode()
-					)
-				){
-					assert(attributeMetaData['Account'][attributeSetCode]['attributes'][attribute.getAttributeCode()]['attributeName']==attribute.getAttributeName(),'no attribute name');
+		if(!structKeyExists(server,'lucee')){
+			var attributeSetCode = "utas#rereplace(createUUID(),'-','','all')#";
+			
+			
+			
+			var attributeSetData = {
+				attributeSetID="",
+				attributeSetName="unitTestAttributeSet",
+				attributeSetCode=attributeSetCode,
+				attributeSetObject="Account"
+			};
+			var attributeSet = createPersistedTestEntity('attributeSet',attributeSetData);
+			
+			request.slatwallScope.getService('hibachiCacheService').clearCachedValue('attributeService_getAttributeModel');
+			request.slatwallScope.getService('hibachiCacheService').clearCachedValue('attributeService_getAttributeModel_#attributeSet.getAttributeSetObject()#');
+			
+			request.slatwallScope.getService('hibachiCacheService').clearCachedValue('attribtueService_getAttributeModel_#attributeSet.getAttributeSetObject()#_#attributeSetCode#');
+			
+			var attributeData = {
+				attributeID="",
+				attributeName="unitTestAttribute",
+				attributeCode="uta#rereplace(createUUID(),'-','','all')#",
+				attributeSet={
+					attributeSetID=attributeSet.getAttributeSetID()
+				},
+				attributeType="text"
+			};
+			//save with service should delete the cache
+			var attribute = createPersistedTestEntity(entityName='attribute',data=attributeData,saveWithService=true);
+			
+			//assert we don't have a cache
+			assertFalse(request.slatwallScope.getService('hibachiCacheService').hasCachedValue('attributeService_getAttributeModel_Account'));
+			
+			assertFalse(attribute.hasErrors());
+			//check not cached time
+			var notCachedTickBegin = GetTickCount();
+			var attributeMetaData = variables.service.getAttributeModel();
+			var notCachedTickEnd = getTickCount();
+			var notCachedTime = notCachedTickEnd - notCachedTickBegin;
+			
+			assert(structKeyExists(attributeMetaData,'Account'),'no entity');
+			if(structKeyExists(attributeMetaData,'Account')){
+				assert(structKeyExists(attributeMetaData['Account'],attributeSetCode),'no attribute set id of #attributeSetCode# for #serializeJson(attributeMetaData)#');
+			}
+			if(structKeyExists(attributeMetaData['Account'],attributeSetCode)){
+				assert(attributeMetaData['Account'][attributeSetCode]['attributeSetName'] == attributeSet.getAttributeSetName(),'no attribute set name');
+				assert(structKeyExists(attributeMetaData['Account'][attributeSetCode],'attributes'),'no attributes');
+				if(structKeyExists(attributeMetaData['Account'][attributeSetCode],'attributes')){
+					assert(
+						structKeyExists(
+							attributeMetaData['Account'][attributeSetCode]['attributes'],
+							attribute.getAttributeCode()
+						),'no attribute code'
+					);
+					if(
+						structKeyExists(
+							attributeMetaData['Account'][attributeSetCode]['attributes'],
+							attribute.getAttributeCode()
+						)
+					){
+						assert(attributeMetaData['Account'][attributeSetCode]['attributes'][attribute.getAttributeCode()]['attributeName']==attribute.getAttributeName(),'no attribute name');
+					}
 				}
 			}
+			
+			//assert the cache is populated
+			assert(request.slatwallScope.getService('hibachiCacheService').hasCachedValue('attributeService_getAttributeModel_Account'));
+			var cachedTickBegin = GetTickCount();
+			attributeMetaData = variables.service.getAttributeModel();
+			var cachedTickEnd = getTickCount();
+			var cachedTime = cachedTickEnd - cachedTickBegin;
+			addToDebug(notCachedTime);
+			addToDebug(cachedTime);
+			assert(cachedTime < notCachedTime);
+			request.slatwallScope.getService('hibachiCacheService').resetCachedKey('attributeService_getAttributeModel');
+			request.slatwallScope.getService('hibachiCacheService').resetCachedKey('attributeService_getAttributeModel_#attributeSet.getAttributeSetObject()#');
+			
+			request.slatwallScope.getService('hibachiCacheService').resetCachedKey('attribtueService_getAttributeModel_#attributeSet.getAttributeSetObject()#_#attributeSetCode#');
 		}
-		
-		//assert the cache is populated
-		assert(request.slatwallScope.getService('hibachiCacheService').hasCachedValue('attributeService_getAttributeModel_Account'));
-		var cachedTickBegin = GetTickCount();
-		attributeMetaData = variables.service.getAttributeModel();
-		var cachedTickEnd = getTickCount();
-		var cachedTime = cachedTickEnd - cachedTickBegin;
-		addToDebug(notCachedTime);
-		addToDebug(cachedTime);
-		assert(cachedTime < notCachedTime);
-		request.slatwallScope.getService('hibachiCacheService').resetCachedKey('attributeService_getAttributeModel');
-		request.slatwallScope.getService('hibachiCacheService').resetCachedKey('attributeService_getAttributeModel_#attributeSet.getAttributeSetObject()#');
-		
-		request.slatwallScope.getService('hibachiCacheService').resetCachedKey('attribtueService_getAttributeModel_#attributeSet.getAttributeSetObject()#_#attributeSetCode#');
 	}
 }
 
