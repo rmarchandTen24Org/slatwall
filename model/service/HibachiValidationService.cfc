@@ -1,4 +1,4 @@
-component accessors="true" output="false" extends="Slatwall.org.Hibachi.HibachiTagService" {
+component accessors="true" output="false" extends="Slatwall.org.Hibachi.HibachiValidationService" {
 	
 
 }
