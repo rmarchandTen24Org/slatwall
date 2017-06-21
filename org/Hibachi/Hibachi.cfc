@@ -642,7 +642,7 @@ component extends="FW1.framework" {
 		return createObject("java", "java.net.InetAddress").localhost.getHostAddress();
 	}
 
-	public void function setupIoc(){
+	public any function setupIoc(){
 		var BFPathList = "/#variables.framework.applicationKey#/model";
 		if(directoryExists("#getHibachiScope().getApplicationValue("applicationRootMappingPath")#/custom/model")) {
 			BFPathList = listAppend(BFPathList,"/#variables.framework.applicationKey#/custom/model");
@@ -657,86 +657,12 @@ component extends="FW1.framework" {
 		coreBF.addBean("hibachiInstanceApplicationScopeKey", getHibachiInstanceApplicationScopeKey());
 
 		// If the default singleton beans were not found in the model, add a reference to the core one in hibachi
-		if(!coreBF.containsBean("hibachiDAO")) {
-			coreBF.declareBean("hibachiDAO", "#variables.framework.applicationKey#.org.Hibachi.HibachiDAO", true);
-		}
-		if(!coreBF.containsBean("hibachiService")) {
-			coreBF.declareBean("hibachiService", "#variables.framework.applicationKey#.org.Hibachi.HibachiService", true);
-		}
-		if(!coreBF.containsBean("hibachiAuthenticationService")) {
-			coreBF.declareBean("hibachiAuthenticationService", "#variables.framework.applicationKey#.org.Hibachi.HibachiAuthenticationService", true);
-		}
-		if(!coreBF.containsBean("hibachiCacheService")) {
-			coreBF.declareBean("hibachiCacheService", "#variables.framework.applicationKey#.org.Hibachi.HibachiCacheService", true);
-		}
-		if(!coreBF.containsBean("hibachiDataService")) {
-			coreBF.declareBean("hibachiDataService", "#variables.framework.applicationKey#.org.Hibachi.HibachiDataService", true);
-		}
-		if(!coreBF.containsBean("hibachiDocsService")) {
-			coreBF.declareBean("hibachiDocsService", "#variables.framework.applicationKey#.org.Hibachi.HibachiDocsService", true);
-		}
-		if(!coreBF.containsBean("hibachiEventService")) {
-			coreBF.declareBean("hibachiEventService", "#variables.framework.applicationKey#.org.Hibachi.HibachiEventService", true);
-		}
-		if(!coreBF.containsBean("hibachiRBService")) {
-			coreBF.declareBean("hibachiRBService", "#variables.framework.applicationKey#.org.Hibachi.HibachiRBService", true);
-		}
-		if(!coreBF.containsBean("hibachiReportService")) {
-			coreBF.declareBean("hibachiReportService", "#variables.framework.applicationKey#.org.Hibachi.HibachiReportService", true);
-		}
-		if(!coreBF.containsBean("hibachiSessionService")) {
-			coreBF.declareBean("hibachiSessionService", "#variables.framework.applicationKey#.org.Hibachi.HibachiSessionService", true);
-		}
-		if(!coreBF.containsBean("hibachiTagService")) {
-			coreBF.declareBean("hibachiTagService", "#variables.framework.applicationKey#.org.Hibachi.HibachiTagService", true);
-		}
-		if(!coreBF.containsBean("hibachiUtilityService")) {
-			coreBF.declareBean("hibachiUtilityService", "#variables.framework.applicationKey#.org.Hibachi.HibachiUtilityService", true);
-		}
-		if(!coreBF.containsBean("hibachiValidationService")) {
-			coreBF.declareBean("hibachiValidationService", "#variables.framework.applicationKey#.org.Hibachi.HibachiValidationService", true);
-		}
-		if(!coreBF.containsBean("hibachiCollectionService")) {
-            coreBF.declareBean("hibachiCollectionService", "#variables.framework.applicationKey#.org.Hibachi.HibachiCollectionService", true);
-        }
-        if(!coreBF.containsBean("hibachiYamlService")) {
-            coreBF.declareBean("hibachiYamlService", "#variables.framework.applicationKey#.org.Hibachi.HibachiYamlService", true);
-        }
-        if(!coreBF.containsBean("hibachiJWTService")) {
-            coreBF.declareBean("hibachiJWTService", "#variables.framework.applicationKey#.org.Hibachi.HibachiJWTService", true);
-        }
-        if(!coreBF.containsBean("hibachiJsonService")){
-			coreBF.declareBean("hibachiJsonService", "#variables.framework.applicationKey#.org.Hibachi.HibachiJsonService",true);
-		}
-		if(!coreBF.containsBean("hibachiEntityQueueService")) {
-			coreBF.declareBean("hibachiEntityQueueService", "#variables.framework.applicationKey#.org.Hibachi.HibachiEntityQueueService", true);
-		}
-		// If the default transient beans were not found in the model, add a reference to the core one in hibachi
-		if(!coreBF.containsBean("hibachiScope")) {
-			coreBF.declareBean("hibachiScope", "#variables.framework.applicationKey#.org.Hibachi.HibachiScope", false);
-		}
-		if(!coreBF.containsBean("hibachiSmartList")) {
-			coreBF.declareBean("hibachiSmartList", "#variables.framework.applicationKey#.org.Hibachi.HibachiSmartList", false);
-		}
-		if(!coreBF.containsBean("hibachiErrors")) {
-			coreBF.declareBean("hibachiErrors", "#variables.framework.applicationKey#.org.Hibachi.HibachiErrors", false);
-		}
-		if(!coreBF.containsBean("hibachiMessages")) {
-			coreBF.declareBean("hibachiMessages", "#variables.framework.applicationKey#.org.Hibachi.HibachiMessages", false);
-		}
-		if(!coreBF.containsBean("hibachiJWT")){
-			coreBF.declareBean("hibachiJWT", "#variables.framework.applicationKey#.org.Hibachi.HibachiJWT",false);
-		}
-		if(!coreBF.containsBean("hibachiEntityParser")){
-			coreBF.declareBean("hibachiEntityParser", "#variables.framework.applicationKey#.org.Hibachi.hibachiEntityParser",false);
-		}
-		if(!coreBF.containsBean("hibachiRecaptcha")){
-			coreBF.declareBean("hibachiRecaptcha", "#variables.framework.applicationKey#.org.Hibachi.HibachiRecaptcha",false);
-		}
+		
 
 		// Setup the custom bean factory
 		setBeanFactory(coreBF);
 		writeLog(file="#variables.framework.applicationKey#", text="General Log - Bean Factory Set");
+		return coreBF;
 	}
 
 	public void function renderApiResponse(){

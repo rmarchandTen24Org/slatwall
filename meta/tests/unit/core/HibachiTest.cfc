@@ -47,15 +47,42 @@ Notes:
 
 */
 component extends="Slatwall.meta.tests.unit.SlatwallUnitTestBase" {
-	
+
 	/**
 	* @test
 	*/
 	public void function setupIocTest() {
 		var Hibachi = createObject('Slatwall.org.Hibachi.Hibachi');
-		
-		hibachi.setupIoc();
-		
+
+		var coreBF = hibachi.setupIoc();
+
+		assert(coreBF.containsBean("hibachiDAO"));
+		assert(coreBF.containsBean("hibachiService"));
+		assert(coreBF.containsBean("hibachiAuthenticationService"));
+		assert(coreBF.containsBean("hibachiCacheService"));
+		assert(coreBF.containsBean("hibachiDataService"));
+		assert(coreBF.containsBean("hibachiDocsService"));
+		assert(coreBF.containsBean("hibachiEventService"));
+		assert(coreBF.containsBean("hibachiRBService"));
+		assert(coreBF.containsBean("hibachiReportService"));
+		assert(coreBF.containsBean("hibachiSessionService"));
+		assert(coreBF.containsBean("hibachiTagService"));
+		assert(coreBF.containsBean("hibachiUtilityService"));
+		assert(coreBF.containsBean("hibachiValidationService"));
+		assert(coreBF.containsBean("hibachiCollectionService"));
+        assert(coreBF.containsBean("hibachiYamlService"));
+        assert(coreBF.containsBean("hibachiJWTService"));
+        assert(coreBF.containsBean("hibachiJsonService"));
+		assert(coreBF.containsBean("hibachiEntityQueueService"));
+		// If the default transient beans were not found in the model, add a reference to the core one in hibachi
+		assert(coreBF.containsBean("hibachiScope"));
+		assert(coreBF.containsBean("hibachiSmartList"));
+		assert(coreBF.containsBean("hibachiErrors"));
+		assert(coreBF.containsBean("hibachiMessages"));
+		assert(coreBF.containsBean("hibachiJWT"));
+		assert(coreBF.containsBean("hibachiEntityParser"));
+		assert(coreBF.containsBean("hibachiRecaptcha"));
+
 	}
 
 }
