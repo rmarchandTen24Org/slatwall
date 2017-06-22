@@ -3,7 +3,7 @@ component extends="FW1.framework" {
 	// ======= START: ENVIORNMENT CONFIGURATION =======
 
 	// =============== configApplication
-
+	variables.start=getTickCount();
 	// Defaults
 	this.name = "hibachi" & hash(getCurrentTemplatePath());
 	this.sessionManagement = true;
@@ -95,6 +95,7 @@ component extends="FW1.framework" {
 	variables.framework.hibachi.sessionCookieSecure = "";
 	variables.framework.hibachi.lineBreakStyle = SERVER.OS.NAME;
 	variables.framework.hibachi.disableFullUpdateOnServerStartup = false;
+	
 
 	// Allow For Application Config
 	try{include "../../config/configFramework.cfm";}catch(any e){}
@@ -177,7 +178,7 @@ component extends="FW1.framework" {
 	// ==================== END: PRE UPDATE SCRIPTS ======================
 
 	// =======  END: ENVIORNMENT CONFIGURATION  =======
-
+	
 	public any function bootstrap() {
 		setupGlobalRequest();
 
@@ -202,6 +203,7 @@ component extends="FW1.framework" {
 		var httpRequestData = GetHttpRequestData();
 
 		if(!structKeyExists(request, "#variables.framework.applicationKey#Scope")) {
+			
             if(fileExists(expandPath('/#variables.framework.applicationKey#') & "/custom/model/transient/HibachiScope.cfc")) {
                 request["#variables.framework.applicationKey#Scope"] = createObject("component", "#variables.framework.applicationKey#.custom.model.transient.HibachiScope").init();
             } else {
@@ -209,6 +211,7 @@ component extends="FW1.framework" {
             }
 
 			// Verify that the application is setup
+			
 			verifyApplicationSetup();
 			
 			if(getHibachiScope().getService('hibachiCacheService').isServerInstanceCacheExpired(getServerInstanceIPAddress())){
@@ -511,7 +514,6 @@ component extends="FW1.framework" {
 							writeLog(file="#variables.framework.applicationKey#", text="General Log - Application Init '#key#' as: #applicationInitData[key]#");
 						}
 					}
-
 					// Application Setup Started
 					application[ getHibachiInstanceApplicationScopeKey() ] = applicationInitData;
 					writeLog(file="#variables.framework.applicationKey#", text="General Log - Application cache cleared, and init values set.");
@@ -529,19 +531,24 @@ component extends="FW1.framework" {
 					// ================ END: Required Application Setup ==================
 
 					//========================= IOC SETUP ====================================
-
-
+					variables.framework.hibachi.BFPathList = "/#variables.framework.applicationKey#/model";
+					if(directoryExists("#applicationInitData["applicationRootMappingPath"]#/custom/model")) {
+						variables.framework.hibachi.BFPathList = listAppend(variables.framework.hibachi.BFPathList,"/#variables.framework.applicationKey#/custom/model");
+					}
+		
 					setupIoc();
-
-
+					onFirstRequest();		
+					
 					//========================= END: IOC SETUP ===============================
 
 					// Call the onFirstRequest() Method for the parent Application.cfc
-					onFirstRequest();
+
+
 
 					//==================== START: EVENT HANDLER SETUP ========================
 
 					getBeanFactory().getBean('hibachiEventService').registerEventHandlers();
+
 
 
 					//===================== END: EVENT HANDLER SETUP =========================
@@ -592,8 +599,9 @@ component extends="FW1.framework" {
 					onFirstRequestPostUpdate();
 
 					//==================== START: JSON BUILD SETUP ========================
-
-					getBeanFactory().getBean('hibachiJsonService').createJson();
+					if(structKeyExists(url,'createJson')){
+						getBeanFactory().getBean('hibachiJsonService').createJson();
+					}
 
 					//===================== END: JSON BUILD SETUP =========================
 					
@@ -617,11 +625,13 @@ component extends="FW1.framework" {
 
 					// Announce the applicationSetup event
 					getHibachiScope().getService("hibachiEventService").announceEvent("onApplicationSetup");
-
+					variables.end=getTickCount();
+	writedump(variables.end - variables.start);abort;
 				}
 			}
 		}
 	}
+	
 
 	public void function populateAPIHeaders(){
 		param name="request.context.headers" default="#structNew()#";
@@ -643,21 +653,23 @@ component extends="FW1.framework" {
 	}
 
 	public any function setupIoc(){
-		var BFPathList = "/#variables.framework.applicationKey#/model";
-		if(directoryExists("#getHibachiScope().getApplicationValue("applicationRootMappingPath")#/custom/model")) {
-			BFPathList = listAppend(BFPathList,"/#variables.framework.applicationKey#/custom/model");
-		}
-		var coreBF = new DI1.ioc(BFPathList, {
+		
+		var coreBF = new DI1.ioc(variables.framework.hibachi.BFPathList, {
 			transients=["entity", "process", "transient", "report"],
 			exclude=["/#variables.framework.applicationKey#/custom/model/entity"],
-			transientPattern="Bean$"
+			transientPattern="Bean$",
+			// If the default singleton beans were not found in the model, add a reference to the core one in hibachi
+			singulars={
+				entity="entityBean",
+				transients="transientBean",
+				process="processBean",
+				report="reportBean"
+			},
+			constants={
+				applicationKey=variables.framework.applicationKey,
+				hibachiInstanceApplicationScopeKey=getHibachiInstanceApplicationScopeKey()
+			}
 		});
-
-		coreBF.addBean("applicationKey", variables.framework.applicationKey);
-		coreBF.addBean("hibachiInstanceApplicationScopeKey", getHibachiInstanceApplicationScopeKey());
-
-		// If the default singleton beans were not found in the model, add a reference to the core one in hibachi
-		
 
 		// Setup the custom bean factory
 		setBeanFactory(coreBF);

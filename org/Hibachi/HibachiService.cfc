@@ -797,9 +797,9 @@
 				var entityNamesArr = listToArray(structKeyList(ORMGetSessionFactory().getAllClassMetadata()));
 				var allMD = {};
 				for(var entityName in entityNamesArr) {
-					var entity = entityNew(entityName);
+					var entity = getEntityObject(entityName,false);
 					if(structKeyExists(entity, "getThisMetaData")) {
-						var entityMetaData = entityNew(entityName).getThisMetaData();
+						var entityMetaData = entity.getThisMetaData();
 						if(isStruct(entityMetaData) && structKeyExists(entityMetaData, "fullname")) {
 							var entityShortName = listLast(entityMetaData.fullname, '.');
 							allMD[ entityShortName ] = entityMetaData;
@@ -827,9 +827,10 @@
 		}
 		
 		// @hint returns the metaData struct for an entity
-		public any function getEntityObject( required string entityName ) {
-			
-			arguments.entityName = getProperlyCasedFullEntityName( arguments.entityName );
+		public any function getEntityObject( required string entityName, boolean verifyEntityName=true ) {
+			if(arguments.verifyEntityName){
+				arguments.entityName = getProperlyCasedFullEntityName( arguments.entityName );	
+			}
 			
 			if(!structKeyExists(variables.entityObjects, arguments.entityName)) {
 				variables.entityObjects[ arguments.entityName ] = entityNew(arguments.entityName);
