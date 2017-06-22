@@ -795,18 +795,20 @@
 		public any function getEntitiesMetaData() {
 			if(!structCount(variables.entitiesMetaData)) {
 				var entityNamesArr = listToArray(structKeyList(ORMGetSessionFactory().getAllClassMetadata()));
-				var allMD = {};
 				for(var entityName in entityNamesArr) {
-					var entity = getEntityObject(entityName,false);
-					if(structKeyExists(entity, "getThisMetaData")) {
-						var entityMetaData = entity.getThisMetaData();
-						if(isStruct(entityMetaData) && structKeyExists(entityMetaData, "fullname")) {
-							var entityShortName = listLast(entityMetaData.fullname, '.');
-							allMD[ entityShortName ] = entityMetaData;
+					thread name="getEntitiesMetaData#createUUID()#" entityName="#entityName#" {
+						var entity = getEntityObject(attributes.entityName,false);
+						if(structKeyExists(entity, "getThisMetaData")) {
+							var entityMetaData = entity.getThisMetaData();
+							if(isStruct(entityMetaData) && structKeyExists(entityMetaData, "fullname")) {
+								var entityShortName = listLast(entityMetaData.fullname, '.');
+								variables.entitiesMetaData[ entityShortName ] = entityMetaData;
+							}
 						}
 					}
 				}
-				variables.entitiesMetaData = allMD;
+				threadJoin();
+				
 			}
 			
 			return variables.entitiesMetaData;

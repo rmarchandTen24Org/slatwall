@@ -537,6 +537,8 @@ component extends="FW1.framework" {
 					}
 		
 					setupIoc();
+					
+	
 					onFirstRequest();		
 					
 					//========================= END: IOC SETUP ===============================
@@ -597,11 +599,10 @@ component extends="FW1.framework" {
 
 					// Call the onFirstRequestPostUpdate() Method for the parent Application.cfc
 					onFirstRequestPostUpdate();
-
 					//==================== START: JSON BUILD SETUP ========================
-					if(structKeyExists(url,'createJson')){
-						getBeanFactory().getBean('hibachiJsonService').createJson();
-					}
+					getBeanFactory().getBean('hibachiJsonService').createJson();
+					variables.end=getTickCount();
+writedump(variables.end - variables.start);abort;
 
 					//===================== END: JSON BUILD SETUP =========================
 					
@@ -625,8 +626,7 @@ component extends="FW1.framework" {
 
 					// Announce the applicationSetup event
 					getHibachiScope().getService("hibachiEventService").announceEvent("onApplicationSetup");
-					variables.end=getTickCount();
-	writedump(variables.end - variables.start);abort;
+					
 				}
 			}
 		}
