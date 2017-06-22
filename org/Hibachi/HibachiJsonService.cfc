@@ -67,7 +67,7 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
         var model = {};
         var entities = [];
         var processContextsStruct = getService('hibachiService').getEntitiesProcessContexts();
-        var entitiesListArray = listToArray(structKeyList(getService('hibachiService').getEntitiesMetaData()));
+        var entitiesListArray = getService('hibachiService').getEntitiesMetaData();
 
 
         model['entities'] = {};
