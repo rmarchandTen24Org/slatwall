@@ -537,10 +537,8 @@ component extends="FW1.framework" {
 					}
 		
 					setupIoc();
-					variables.start = getTickCount();
 					onFirstRequest();		
-					variables.end=getTickCount();
-writedump(variables.end - variables.start);abort;
+					
 					getBeanFactory().getBean('hibachiEventService').getEntitiesMetaData();
 					//========================= END: IOC SETUP ===============================
 
@@ -602,7 +600,8 @@ writedump(variables.end - variables.start);abort;
 					onFirstRequestPostUpdate();
 					//==================== START: JSON BUILD SETUP ========================
 					getBeanFactory().getBean('hibachiJsonService').createJson();
-					
+					variables.end=getTickCount();
+//writedump(variables.end - variables.start);abort;
 
 					//===================== END: JSON BUILD SETUP =========================
 					

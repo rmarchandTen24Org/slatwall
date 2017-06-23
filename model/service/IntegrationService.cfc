@@ -172,7 +172,7 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 			UPDATE #getDao('hibachiDao').getApplicationKey()#Integration
 			Set activeFlag=0, installedFlag=0
 			WHERE integrationPackage not in :integrationList
-		',{integrationList=installedIntegrationList});
+		',{integrationList=listToArray(installedIntegrationList)});
 		getHibachiDAO().flushORMSession();
 		
 		return getBeanFactory();
