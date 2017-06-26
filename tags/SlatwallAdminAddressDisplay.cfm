@@ -52,7 +52,7 @@ Notes:
 <cfparam name="attributes.edit" type="boolean" default="true" />
 <cfparam name="attributes.fieldNamePrefix" type="string" default="" />
 <cfparam name="attributes.showCountry" type="boolean" default="true" />
-<cfparam name="attributes.showPhoneNumber" type="boolean" default="false" />
+<cfparam name="attributes.showPhoneNumber" type="boolean" default="true" />
 <cfparam name="attributes.showEmailAddress" type="boolean" default="false" />
 <cfparam name="attributes.showName" type="boolean" default="true" />
 <cfparam name="attributes.showCompany" type="boolean" default="true" />
@@ -69,7 +69,7 @@ Notes:
 
 <cfif thisTag.executionMode is "start">
 	<cfoutput>
-		<div class="slatwall-address-container form-horizontal">
+		<div class="slatwall-address-container">
 			<input type="hidden" name="#attributes.fieldNamePrefix#addressID" value="#attributes.address.getAddressID()#" />
 			<cfif attributes.showCountry>
 				<hb:HibachiPropertyDisplay object="#attributes.address#" fieldName="#attributes.fieldNamePrefix#countryCode" property="countryCode" fieldType="select" edit="#attributes.edit#" fieldClass="slatwall-address-countryCode" />
