@@ -73,32 +73,32 @@
 							Payment Information
 						</h3>
 					</div>
-					<div ng-show="slatwall.showPaymentTabBody()">
+					<div ng-if="slatwall.cartDataPromise.$$state.status" ng-show="slatwall.showPaymentTabBody()">
 						<div class="col-sm-12">
 							<div class="alert alert-success" ng-if="slatwall.hasSuccessfulAction('addOrderPayment')">Successfully added order payment.</div>
 							<div class="alert alert-success" ng-if="slatwall.hasSuccessfulAction('removeOrderPayment')">Successfully removed order payment.</div>
 							<swf-directive partial-name="ordererrors"></swf-directive>
 							<div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
-			                    <div class="panel radio panel-default" ng-cloak>
-			                        <div class="panel-heading" role="tab" id="headingOne">
+			                    <div class="panel radio panel-default" ng-cloak ng-repeat="paymentMethod in slatwall.getEligibleCreditCardPaymentMethods() track by $index">
+			                        <div class="panel-heading" role="tab" id="{{paymentMethod.paymentMethodType + $index}}heading">
 			                            <h4 class="panel-title">
-			                                <a class="collapsed" data-toggle="collapse" data-parent="##accordion" href="##collapse1" aria-expanded="false" aria-controls="collapseOne">
-			                                    <span class="dot"></span> Credit Card
+			                                <a class="collapsed" data-toggle="collapse" data-parent="##accordion" href="##collapse{{paymentMethod.paymentMethodType + $index}}" aria-expanded="false" aria-controls="collapseOne">
+			                                    <span class="dot"></span> {{paymentMethod.paymentMethodName}}
 			                                </a>
 			                            </h4>
 			                        </div>
-			                        <div id="collapse1" class="panel-collapse collapse" role="tabpanel" aria-labelledby="heading1" aria-expanded="false">
+			                        <div id="collapse{{paymentMethod.paymentMethodType + $index}}" class="panel-collapse collapse" role="tabpanel" aria-labelledby="heading1" aria-expanded="false">
 			                            <div class="panel-body">
 											<div class="row">
 												<div class="col-md-12">
 													<!--- Credit card --->
-													<swf-directive partial-name="orderpaymentpartial"></swf-directive>
+													<swf-directive partial-name="orderpaymentpartial" variables="{paymentMethodID:paymentMethod.paymentMethodID}"></swf-directive>
 												</div>
 											</div>
 			                            </div>
 			                        </div>
 			                    </div>
-			                    <div class="panel panel-default">
+			                    <div class="panel panel-default" ng-if="slatwall.getEligiblePurchaseOrderPaymentMethod()" ng-init="paymentMethod = slatwall.getEligiblePurchaseOrderPaymentMethod()">
 			                        <div class="panel-heading" >
 			                            <h4 class="panel-title">
 			                                <a class="collapsed" data-toggle="collapse" data-parent="##accordion" href="##purchaseOrder" aria-expanded="false" aria-controls="purchaseOrder">
@@ -111,32 +111,32 @@
 			                        		<div class="row">
 			                        			<div class="col-md-12">
 			                        				<!--- Purchase Order --->
-			                        				<swf-directive partial-name="purchaseorderpartial"></swf-directive>
+			                        				<swf-directive partial-name="purchaseorderpartial" variables="{paymentMethodID:paymentMethod.paymentMethodID}"></swf-directive>
 			                        			</div>
 			                        		</div>
 			                        	</div>
 			                        </div>
 			                    </div>
-			                    <div class="panel panel-default">
+			                    <div class="panel panel-default" ng-repeat="paymentMethod in slatwall.getEligibleCheckPaymentMethods() track by $index">
 			                        <div class="panel-heading" >
 			                            <h4 class="panel-title">
-			                                <a class="collapsed" data-toggle="collapse" data-parent="##accordion" href="##moneyOrder" aria-expanded="false" aria-controls="moneyOrder">
-			                                    <span class="dot"></span> Check/Money Order
+			                                <a class="collapsed" data-toggle="collapse" data-parent="##accordion" href="##collapse{{paymentMethod.paymentMethodType + $index}}" aria-expanded="false" aria-controls="moneyOrder">
+			                                    <span class="dot"></span> {{paymentMethod.paymentMethodName}}
 			                                </a>
 			                            </h4>
 			                        </div>
-			                        <div id="moneyOrder" class="panel-collapse collapse" role="tabpanel" aria-labelledby="moneyOrder" aria-expanded="false">
+			                        <div id="collapse{{paymentMethod.paymentMethodType + $index}}" class="panel-collapse collapse" role="tabpanel" aria-labelledby="moneyOrder" aria-expanded="false">
 			                        	<div class="panel-body">
 			                        		<div class="row">
 			                        			<div class="col-md-12">
 			                        				<!--- Purchase Order --->
-			                        				<swf-directive partial-name="checkpartial"></swf-directive>
+			                        				<swf-directive partial-name="checkpartial" variables="{paymentMethodID:paymentMethod.paymentMethodID}"></swf-directive>
 			                        			</div>
 			                        		</div>
 			                        	</div>
 			                        </div>
 			                    </div>
-			                    <div class="panel panel-default">
+			                    <div class="panel panel-default" ng-repeat="paymentMethod in slatwall.getEligibleExternalPaymentMethods() track by $index">
 			                        <div class="panel-heading" role="tab" id="headingTwo">
 			                            <h4 class="panel-title">
 			                                <a class="collapsed" data-toggle="collapse" data-parent="##accordion" href="##collapse2" aria-expanded="false" aria-controls="collapseTwo">

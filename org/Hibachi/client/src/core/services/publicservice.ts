@@ -1052,11 +1052,28 @@ class PublicService {
     public getEligiblePaymentMethodsForPaymentMethodType = (paymentMethodType) => {
         return this.cart.eligiblePaymentMethodDetails.filter(paymentMethod =>{
             return paymentMethod.paymentMethod.paymentMethodType == paymentMethodType;
-        });
+        }).map(paymentMethod=>{return paymentMethod.paymentMethod});
     }
 
     public getEligibleCreditCardPaymentMethods = () => {
         return this.getEligiblePaymentMethodsForPaymentMethodType('creditCard');
+    }
+
+    public getEligibleTermPaymentMethods = () => {
+        return this.getEligiblePaymentMethodsForPaymentMethodType('termPayment');
+    }
+
+    public getEligiblePurchaseOrderPaymentMethod = () => {
+        return this.getEligibleTermPaymentMethods().reduce((result,current)=>{
+            if(!result && current.paymentMethodName == 'Purchase Order'){
+                return current;
+            }
+            return result;
+        },false);
+    }
+
+    public getEligibleCheckPaymentMethods = () => {
+        return this.getEligiblePaymentMethodsForPaymentMethodType('check');
     }
 
     public getPickupLocation = (fulfillmentIndex) => {

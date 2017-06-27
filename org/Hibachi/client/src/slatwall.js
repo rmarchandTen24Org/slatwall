@@ -2103,6 +2103,26 @@
 	                return request_2.promise;
 	            }
 	        };
+	        this.uploadFile = function (action, data) {
+	            _this.uploadingFile = true;
+	            var url = hibachiConfig.baseURL + action;
+	            var formData = new FormData();
+	            formData.append("fileName", data.fileName);
+	            formData.append("uploadFile", data.uploadFile);
+	            var xhr = new XMLHttpRequest();
+	            xhr.open('POST', url, true);
+	            xhr.onload = function (result) {
+	                var response = JSON.parse(xhr.response);
+	                if (xhr.status === 200) {
+	                    _this.successfulActions = response.successfulActions;
+	                    _this.failureActions = response.failureActions;
+	                }
+	                _this.$timeout(function () {
+	                    _this.uploadingFile = false;
+	                });
+	            };
+	            xhr.send(formData);
+	        };
 	        this.processAction = function (response, request) {
 	            //Run any specific adjustments needed
 	            _this.runCheckoutAdjustments(response);
@@ -2705,10 +2725,24 @@
 	        this.getEligiblePaymentMethodsForPaymentMethodType = function (paymentMethodType) {
 	            return _this.cart.eligiblePaymentMethodDetails.filter(function (paymentMethod) {
 	                return paymentMethod.paymentMethod.paymentMethodType == paymentMethodType;
-	            });
+	            }).map(function (paymentMethod) { return paymentMethod.paymentMethod; });
 	        };
 	        this.getEligibleCreditCardPaymentMethods = function () {
 	            return _this.getEligiblePaymentMethodsForPaymentMethodType('creditCard');
+	        };
+	        this.getEligibleTermPaymentMethods = function () {
+	            return _this.getEligiblePaymentMethodsForPaymentMethodType('termPayment');
+	        };
+	        this.getEligiblePurchaseOrderPaymentMethod = function () {
+	            return _this.getEligibleTermPaymentMethods().reduce(function (result, current) {
+	                if (!result && current.paymentMethodName == 'Purchase Order') {
+	                    return current;
+	                }
+	                return result;
+	            }, false);
+	        };
+	        this.getEligibleCheckPaymentMethods = function () {
+	            return _this.getEligiblePaymentMethodsForPaymentMethodType('check');
 	        };
 	        this.getPickupLocation = function (fulfillmentIndex) {
 	            if (!_this.cart.data.orderFulfillments[fulfillmentIndex])
@@ -2760,6 +2794,16 @@
 	            for (var _i = 0, _a = actionList.split(','); _i < _a.length; _i++) {
 	                var action = _a[_i];
 	                if (_this.successfulActions.indexOf(action) > -1) {
+	                    return true;
+	                }
+	            }
+	            return false;
+	        };
+	        /** Returns true if any action in comma-delimited list exists in this.failureActions */
+	        this.hasFailureAction = function (actionList) {
+	            for (var _i = 0, _a = actionList.split(','); _i < _a.length; _i++) {
+	                var action = _a[_i];
+	                if (_this.failureActions.indexOf(action) > -1) {
 	                    return true;
 	                }
 	            }
@@ -2841,18 +2885,22 @@
 	        this.updateOrderItemQuantity = function (event) {
 	            event.swForm.submit();
 	        };
-	        this.getOrderAttributeValues = function () {
+	        this.getOrderAttributeValues = function (allowedAttributeSets) {
 	            var attributeValues = {};
 	            var orderAttributeModel = JSON.parse(localStorage.attributeMetaData)["Order"];
 	            for (var attributeSetCode in orderAttributeModel) {
 	                var attributeSet = orderAttributeModel[attributeSetCode];
-	                for (var attributeCode in attributeSet.attributes) {
-	                    var attribute = attributeSet.attributes[attributeCode];
-	                    attributeValues[attribute.attributeCode] = {
-	                        attributeCode: attribute.attributeCode,
-	                        attributeName: attribute.attributeName,
-	                        attributeValue: _this.cart[attribute.attributeCode]
-	                    };
+	                if (allowedAttributeSets.indexOf(attributeSetCode) !== -1) {
+	                    for (var attributeCode in attributeSet.attributes) {
+	                        var attribute = attributeSet.attributes[attributeCode];
+	                        attributeValues[attribute.attributeCode] = {
+	                            attributeCode: attribute.attributeCode,
+	                            attributeName: attribute.attributeName,
+	                            attributeValue: _this.cart[attribute.attributeCode],
+	                            inputType: attribute.attributeInputType,
+	                            requiredFlag: attribute.requiredFlag
+	                        };
+	                    }
 	                }
 	            }
 	            return attributeValues;
@@ -19939,7 +19987,7 @@
 	            _this.$log.debug("Name is:" + name + " and form is: " + form);
 	            if (_this.metadataService.isAttributePropertyByEntityAndPropertyIdentifier(_this.object, _this.propertyIdentifier)) {
 	                _this.object.validations.properties[name] = [];
-	                if (_this.object.metaData[_this.propertyIdentifier].requiredFlag && _this.object.metaData[_this.propertyIdentifier].requiredFlag.trim().toLowerCase() == "yes") {
+	                if (_this.object.metaData[_this.propertyIdentifier].requiredFlag && (_this.object.metaData[_this.propertyIdentifier].requiredFlag.trim().toLowerCase() == "yes" || _this.object.metaData[_this.propertyIdentifier].requiredFlag == "true")) {
 	                    _this.object.validations.properties[name].push({
 	                        contexts: "save",
 	                        required: true
