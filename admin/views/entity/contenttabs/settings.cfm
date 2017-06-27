@@ -64,5 +64,7 @@ Notes:
 		<swa:SlatwallSetting settingName="contentMetaKeywordsString" settingObject="#rc.content#" />
 		<swa:SlatwallSetting settingName="contentTemplateFile" settingObject="#rc.content#" />
 		<swa:SlatwallSetting settingName="contentTemplateCacheInSeconds" settingObject="#rc.content#" />
+		<swa:SlatwallSetting settingName="contentEnableTrackingFlag" settingObject="#rc.content#" />
+		
 	</swa:SlatwallSettingTable>
 </cfoutput>
