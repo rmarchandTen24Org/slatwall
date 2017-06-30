@@ -234,7 +234,9 @@ component accessors="true" output="false" extends="HibachiService" {
 				getHibachiDataDAO().recordUpdate(xmlData.table.xmlAttributes.tableName, idColumns, updateData, insertData, updateOnly);
 				getHibachiDataDAO().updateInsertedDataFile( idKey );
 			}
-			
+			if(r % 10 == 0){
+				threadJoin();
+			}
 		}
 		threadJoin();
 
