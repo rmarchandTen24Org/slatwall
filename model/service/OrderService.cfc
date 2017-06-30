@@ -3172,6 +3172,7 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 	
 	public any function getOrderAttributePropertylist(){
 		var propertyList = '';
+		if(structKeyExists(getService('AttributeService').getAttributeModel(),'Order')){
 		var orderAttributeModel = getService('AttributeService').getAttributeModel().Order;
 		if(!isNull(orderAttributeModel)){
 			for(var attributeSetName in orderAttributeModel){
@@ -3181,6 +3182,8 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 				}
 			}
 		}
+		}
+		
 		return propertyList;
 	}
 	// ================== START: Private Helper Functions =====================

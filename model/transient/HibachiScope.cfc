@@ -273,10 +273,10 @@ component output="false" accessors="true" extends="Slatwall.org.Hibachi.HibachiS
 	// =================== JS helper methods  ===========================
 
 	public any function getAvailableAccountPropertyList() {
-		return "accountID,firstName,lastName,company,remoteID,primaryPhoneNumber.accountPhoneNumberID,primaryPhoneNumber.phoneNumber,primaryEmailAddress.accountEmailAddressID,primaryEmailAddress.emailAddress,
+		return ReReplace("accountID,firstName,lastName,company,remoteID,primaryPhoneNumber.accountPhoneNumberID,primaryPhoneNumber.phoneNumber,primaryEmailAddress.accountEmailAddressID,primaryEmailAddress.emailAddress,
 			primaryAddress.accountAddressID,
 			accountAddresses.accountAddressName,accountAddresses.accountAddressID,
-			accountAddresses.address.addressID,accountAddresses.address.streetAddress,accountAddresses.address.street2Address,accountAddresses.address.city,accountAddresses.address.statecode,accountAddresses.address.postalCode,accountAddresses.address.countrycode, accountAddresses.address.name, accountAddresses.address.company, accountAddresses.address.phoneNumber, accountPaymentMethods.accountPaymentMethodID, accountPaymentMethods.creditCardLastFour, accountPaymentMethods.creditCardType, accountPaymentMethods.nameOnCreditCard, accountPaymentMethods.expirationMonth, accountPaymentMethods.expirationYear, accountPaymentMethods.accountPaymentMethodName";
+			accountAddresses.address.addressID,accountAddresses.address.streetAddress,accountAddresses.address.street2Address,accountAddresses.address.city,accountAddresses.address.statecode,accountAddresses.address.postalCode,accountAddresses.address.countrycode,accountAddresses.address.name,accountAddresses.address.company,accountAddresses.address.phoneNumber,accountPaymentMethods.accountPaymentMethodID,accountPaymentMethods.creditCardLastFour,accountPaymentMethods.creditCardType,accountPaymentMethods.nameOnCreditCard,accountPaymentMethods.expirationMonth,accountPaymentMethods.expirationYear,accountPaymentMethods.accountPaymentMethodName","[[:space:]]","","all");
 	}
 	
 	public any function getAccountData(string propertyList) {
@@ -323,7 +323,7 @@ component output="false" accessors="true" extends="Slatwall.org.Hibachi.HibachiS
 			orderFulfillments.pickupLocation.primaryAddress.address.city, orderFulfillments.pickupLocation.primaryAddress.address.statecode, orderFulfillments.pickupLocation.primaryAddress.address.postalCode,
 			orderPayments.orderPaymentID,orderPayments.amount,orderPayments.currencyCode,orderPayments.creditCardType,orderPayments.expirationMonth,orderPayments.expirationYear,orderPayments.nameOnCreditCard, orderPayments.creditCardLastFour,orderPayments.purchaseOrderNumber,
 			orderPayments.billingAddress.addressID,orderPayments.billingAddress.streetAddress,orderPayments.billingAddress.street2Address,orderPayments.billingAddress.city,orderPayments.billingAddress.statecode,orderPayments.billingAddress.postalCode,orderPayments.billingAddress.countrycode,
-			orderPayments.paymentMethod.paymentMethodID,orderPayments.paymentMethod.paymentMethodName, orderPayments.giftCard.balanceAmount, orderPayments.giftCard.giftCardCode, promotionCodes.promotionCode,promotionCodes.promotion.promotionName,eligiblePaymentMethodDetails.paymentMethod.paymentMethodName,eligiblePaymentMethodDetails.paymentMethod.paymentMethodType,eligiblePaymentMethodDetails.paymentMethod.paymentMethodID,eligiblePaymentMethodDetails.maximumAmount","\s","","ALL");
+			orderPayments.paymentMethod.paymentMethodID,orderPayments.paymentMethod.paymentMethodName, orderPayments.giftCard.balanceAmount, orderPayments.giftCard.giftCardCode, promotionCodes.promotionCode,promotionCodes.promotion.promotionName,eligiblePaymentMethodDetails.paymentMethod.paymentMethodName,eligiblePaymentMethodDetails.paymentMethod.paymentMethodType,eligiblePaymentMethodDetails.paymentMethod.paymentMethodID,eligiblePaymentMethodDetails.maximumAmount","[[:space:]]","");
 	}
 	
 	public any function getCartData(string propertyList) {
