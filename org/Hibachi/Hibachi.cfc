@@ -106,7 +106,8 @@ component extends="FW1.framework" {
 
 	// Defaults
 	this.mappings[ "/#variables.framework.applicationKey#" ] = replace(replace(getDirectoryFromPath(getCurrentTemplatePath()),"\","/","all"), "/org/Hibachi/", "");
-
+	this.mappings[ "/framework" ] = replace(getDirectoryFromPath(getCurrentTemplatePath()) & 'FW1/',"\","/","all");
+	
 	// Allow For Application Config
 	try{include "../../config/configMappings.cfm";}catch(any e){}
 	// Allow For Instance Config
@@ -530,10 +531,11 @@ component extends="FW1.framework" {
 					// ================ END: Required Application Setup ==================
 
 					//========================= IOC SETUP ====================================
-
-					var coreBF = new DI1.ioc("/#variables.framework.applicationKey#/model", {
+					var interceptors = [{type="entity",interceptorName="afterInterceptor"}];
+					var coreBF = new AOP1.aop("/#variables.framework.applicationKey#/model", {
 						transients=["entity", "process", "transient", "report"],
-						transientPattern="Bean$"
+						transientPattern="Bean$",
+						interceptors=interceptors
 					});
 
 					coreBF.addBean("applicationKey", variables.framework.applicationKey);
@@ -619,13 +621,13 @@ component extends="FW1.framework" {
 
 					// Setup the custom bean factory
 					if(directoryExists("#getHibachiScope().getApplicationValue("applicationRootMappingPath")#/custom/model")) {
-						var customBF = new DI1.ioc("/#variables.framework.applicationKey#/custom/model", {
+						var customBF = new AOP1.aop("/#variables.framework.applicationKey#/custom/model", {
 							transients=["process", "transient", "report"],
 							exclude=["entity"]
 						});
 
 						// Folder argument is left blank because at this point bean discovery has already occurred and we will not be looking at directories
-						var aggregateBF = new DI1.ioc("");
+						var aggregateBF = new AOP1.aop("");
 
 						// Process factories, last takes precendence
 						var beanFactories = [coreBF, customBF];

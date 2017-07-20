@@ -14,6 +14,14 @@ component output="false" accessors="true" persistent="false" extends="HibachiTra
 	property name="createdByAccount" persistent="false";
 	property name="modifiedByAccount" persistent="false";
 
+	function before(targetBean, methodName, args, result) {
+		writedump('afterinit');abort;
+	}
+	
+	function after(targetBean, methodName, args, result) {
+		writedump('afterinit');abort;
+	}
+	
 	// @hint global constructor arguments.  All Extended entities should call super.init() so that this gets called
 	public any function init() {
 		variables.processObjects = {};
@@ -31,7 +39,23 @@ component output="false" accessors="true" persistent="false" extends="HibachiTra
 				variables.activeFlag = 1;
 			}
 		}
-
+//		if(!this.getNewFlag() && getClassName() != 'ShortReference'){
+//			writedump(this.getNewFlag());
+//			writeLog(file="Slatwall", text="General Log - #getClassName()#.");
+//			var entityCollectionList = getService('HibachiCollectionService').invokeMethod('get#this.getClassName()#CollectionList');
+//			var entityService = getService('HibachiService').getServiceByEntityName( entityName=getClassName() );
+//			var primaryIDName = getService('HibachiService').getPrimaryIDPropertyNameByEntityName(getClassName());
+//			entityCollectionList.setDisplayProperties(primaryIDName);
+//			entityCollectionList.addFilter(primaryIDName,getPrimaryIDValue());
+//			var entityCollectionRecordsCount = entityCollectionList.getRecordsCount();
+//			//if the collection returns a record then 
+//			writedump(entityCollectionRecordsCount);
+//			writedump(getPrimaryIDValue());
+//			if(!entityCollectionRecordsCount){
+//				redirect(action="#getSubsystem(request.context[ getAction() ])#:#getHibachiScope().getApplicationValue("hibachiConfig").noaccessDefaultSection#.#getHibachiScope().getApplicationValue("hibachiConfig").noaccessDefaultItem#", queryString="entityName=#getClassName()#");
+//			}
+//		}
+		
 		return super.init();
 	}
 	
@@ -851,6 +875,8 @@ component output="false" accessors="true" persistent="false" extends="HibachiTra
 			return true;
 		}
 		return false;
+		var entityManager = ORMGetSession();
+		return !entityManager.contains(this);
 	}
 
 	public boolean function getEncryptedPropertiesExistFlag() {

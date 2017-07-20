@@ -247,7 +247,7 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 							}
 						}
 						
-						var integrationBF = new Slatwall.org.Hibachi.DI1.ioc("/Slatwall/integrationServices/#integrationPackage#/model", {
+						var integrationBF = new Slatwall.org.Hibachi.AOP1.aop("/Slatwall/integrationServices/#integrationPackage#/model", {
 							transients=["process", "transient", "report"],
 							exclude=["entity"]
 						});

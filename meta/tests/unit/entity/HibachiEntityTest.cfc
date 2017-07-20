@@ -54,6 +54,19 @@ component extends="Slatwall.meta.tests.unit.entity.SlatwallEntityTestBase" {
 		
 		variables.entity = request.slatwallScope.newEntity('product');
 	}
+	
+	/**
+	* @test
+	*/
+	public void function getNewFlagTest(){
+		var transient = createTestEntity('Account');
+		assert(transient.getNewFlag());
+		var persistedEntity = createPersistedTestEntity('Account',{accountID=""});
+		assertFalse(persistedEntity.getNewFlag());
+		
+		persistTestEntity(transient,{accountID=""});
+		assertFalse(transient.getNewFlag());
+	}
 		
 	/**
 	* @test

@@ -180,7 +180,7 @@ component displayname="Order" entityname="SlatwallOrder" table="SwOrder" persist
 //		variables.orderDAO = arguments.orderDAO
 //	}
 
-
+	
 	//======= End of Mocking Injection ========
 
 	public string function getStatus() {

@@ -122,9 +122,10 @@ component extends="Slatwall.meta.tests.unit.SlatwallUnitTestBase" {
 			
 		};
 		var peasantyAccount = createPersistedTestEntity('Account',accountData);
+		
 		//make sure the account is going to enforce permission groups
 		peasantyAccount.setSuperUserFlag(false);
-
+		
 		//set up a 		
 		var permissionGroupData ={
 			permissionGroupID="",
@@ -151,6 +152,11 @@ component extends="Slatwall.meta.tests.unit.SlatwallUnitTestBase" {
 		permissionGroup.addPermission(permission);
 		
 		assert(!isNull(permission.getPermissionGroup()));
+		
+		var getAccount = function(peasantyAccount){
+			return peasantyAccount;
+		};
+		request.slatwallScope.getAccount = getAccount;
 		//double check that read perms are good so far
 		var canRead = request.slatwallScope.getService('HibachiAuthenticationService').authenticateEntityCrudByAccount("read","order",peasantyAccount);
 		assert(canRead);
@@ -223,12 +229,13 @@ component extends="Slatwall.meta.tests.unit.SlatwallUnitTestBase" {
 			"orderID"=otherOrder.getOrderID(),
 			$=request.slatwallScope
 		};
-
+		debug('otherOrderID',otherOrder.getOrderID());
+		debug('otherOrderID',otherOrder.getOrderID());
 		variables.entityController.before(rc=rc);
 		//because we suppress redirect it will pass to other code
-		try{
+		//try{
 			variables.entityController.detailAccount(rc=rc);
-		}catch(any e){}
+		//}catch(any e){}
 		assert(!structKeyExists(rc,'order'));
 		assert(variables.controllerSlatwallFW1Application.redirectCalled);
 	}
