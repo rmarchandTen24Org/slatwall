@@ -135,6 +135,9 @@ component entityname="SlatwallPaymentMethod" table="SwPaymentMethod" persistent=
 			if(!isNull(getPaymentMethodType()) && getPaymentMethodType() eq "creditCard") {
 				arrayAppend(variables.saveOrderPaymentTransactionTypeOptions, {name=rbKey('define.generateToken'), value="generateToken"});
 			}
+			if(!isNull(getPaymentMethodType()) && getPaymentMethodType() eq "external") {
+				arrayAppend(variables.saveOrderPaymentTransactionTypeOptions, {name=rbKey('define.save'), value="save"});
+			}
 		}
 		return variables.saveOrderPaymentTransactionTypeOptions;
 	}
