@@ -57,8 +57,9 @@ Notes:
 <cfoutput>
 	<hb:HibachiEntityDetailForm enctype="application/x-www-form-urlencoded" object="#rc.permissionRecordRestriction#" edit="#rc.edit#">
 		<hb:HibachiEntityActionBar type="detail" object="#rc.permissionRecordRestriction#" edit="#rc.edit#"
-		backAction="entity.detailpermission" backQueryString="permissionID=#rc.permissionRecordRestriction.getPermission().getPermissionID()#"></hb:HibachiEntityActionBar>
-
+			backAction="entity.detailpermission" backQueryString="permissionID=#rc.permissionRecordRestriction.getPermission().getPermissionID()#"
+			deleteQueryString="permissionID=#rc.permissionRecordRestriction.getPermission().getPermissionID()#&sRedirectAction=entity.detailpermission"
+		></hb:HibachiEntityActionBar>
 		<hb:HibachiEntityDetailGroup object="#rc.permissionRecordRestriction#">
 			<hb:HibachiEntityDetailItem view="admin:entity/permissionrecordrestrictiontabs/basic" open="true" text="#$.slatwall.rbKey('admin.define.basic')#" showOnCreateFlag=true />
 			<hb:HibachiEntityDetailItem view="admin:entity/permissionrecordrestrictiontabs/restrictionconfig" open="true"  showOnCreateFlag=true />
