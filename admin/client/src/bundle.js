@@ -30500,7 +30500,8 @@ webpackJsonp([0],[
 	 * 							callback="sure()">
 	 *   </a>
 	 *
-	 *   Note: Because the template is dynamic, the following keywords can not be used anywhere in the text for this modal.
+	 *   Note: Because the template is dynamic, the following keywords can not be used anywhere in the text for this modal as we interpolate
+	 *   those.
 	 *
 	 *   [yes] [no] [confirm] [message] [callback]
 	 *
@@ -30512,6 +30513,7 @@ webpackJsonp([0],[
 	var SWConfirm = (function () {
 	    //@ngInject
 	    function SWConfirm($hibachi, $log, $compile, $modal, partialsPath) {
+	        console.log("swConfirm Called");
 	        var buildConfirmationModal = function (simple, useRbKey, confirmText, messageText, noText, yesText) {
 	            /* Keys */
 	            var confirmKey = "[confirm]";
@@ -49778,6 +49780,8 @@ getOptionFromViewValue:function(e){return t[h(e)]},getViewValueFromOption:functi
 	            currentRecordOrderDetail: undefined,
 	            commentsCollection: undefined,
 	            orderFulfillmentItemsCollection: undefined,
+	            emailCollection: undefined,
+	            printCollection: undefined,
 	            //arrays
 	            accountNames: [],
 	            orderDeliveryAttributes: [],
@@ -49795,13 +49799,11 @@ getOptionFromViewValue:function(e){return t[h(e)]},getViewValueFromOption:functi
 	         * The reducer is responsible for modifying the state of the state object into a new state.
 	         */
 	        this.orderFulfillmentStateReducer = function (state, action) {
-	            console.log(action);
 	            switch (action.type) {
-	                case 'TOGGLE_FULFILLMENT_LISTING':
-	                    //modify the state and return it.
+	                case actions.TOGGLE_FULFILLMENT_LISTING:
 	                    _this.state.showFulfillmentListing = !_this.state.showFulfillmentListing;
 	                    return __assign({}, _this.state, { action: action });
-	                case 'ADD_BATCH':
+	                case actions.ADD_BATCH:
 	                    return __assign({}, state, { action: action });
 	                case actions.SETUP_BATCHDETAIL:
 	                    //Setup the detail
@@ -49854,6 +49856,12 @@ getOptionFromViewValue:function(e){return t[h(e)]},getViewValueFromOption:functi
 	                case actions.DELETE_FULFILLMENTBATCHITEM_REQUESTED:
 	                    _this.deleteFulfillmentBatchItem();
 	                    return __assign({}, _this.state, { action: action });
+	                case actions.PRINT_LIST_REQUESTED:
+	                    _this.getPrintList();
+	                    return __assign({}, _this.state, { action: action });
+	                case actions.EMAIL_LIST_REQUESTED:
+	                    _this.getEmailList();
+	                    return __assign({}, _this.state, { action: action });
 	                case actions.TOGGLE_LOADER:
 	                    _this.state.loading = !_this.state.loading;
 	                    return __assign({}, _this.state, { action: action });
@@ -49870,7 +49878,7 @@ getOptionFromViewValue:function(e){return t[h(e)]},getViewValueFromOption:functi
 	            //Select the initial table row
 	            //get the listingDisplay store and listen for changes to the listing display state.
 	            _this.listingService.listingDisplayStore.store$.subscribe(function (update) {
-	                if (update.action && update.action.type && update.action.type == "CURRENT_PAGE_RECORDS_SELECTED") {
+	                if (update.action && update.action.type && update.action.type == actions.CURRENT_PAGE_RECORDS_SELECTED) {
 	                    /*  Check for the tables we care about fulfillmentBatchItemTable1, fulfillmentBatchItemTable2
 	                        Outer table, will need to toggle and set the floating cards to this data.
 	                        on the first one being selected, go to the shrink view and set the selection on there as well.*/
@@ -49971,8 +49979,8 @@ getOptionFromViewValue:function(e){return t[h(e)]},getViewValueFromOption:functi
 	            }
 	            //Add the payment information
 	            if (_this.state.currentRecordOrderDetail['order_paymentAmountDue'] > 0 && !ignoreCapture) {
-	                //data.captureAuthorizedPaymentsFlag = true;
-	                //data.capturableAmount = this.state.currentRecordOrderDetail['order_paymentAmountDue'];
+	                data.captureAuthorizedPaymentsFlag = true;
+	                data.capturableAmount = _this.state.currentRecordOrderDetail['order_paymentAmountDue'];
 	            }
 	            //If the user input a captuable amount, use that instead.
 	            if (state.capturableAmount != undefined) {
@@ -50019,6 +50027,8 @@ getOptionFromViewValue:function(e){return t[h(e)]},getViewValueFromOption:functi
 	                        .getListing("fulfillmentBatchItemTable2").selectionService
 	                        .addSelection(_this.listingService.getListing("fulfillmentBatchItemTable2").tableID, _this.listingService.getListingPageRecords("fulfillmentBatchItemTable2")[selectedRowIndex][_this.listingService.getListingBaseEntityPrimaryIDPropertyName("fulfillmentBatchItemTable1")]);
 	                }
+	                //Scroll to the quantity div.
+	                //scrollTo(orderItemQuantity_402828ee57e7a75b0157fc89b45b05c4)
 	            });
 	        };
 	        /** Saves a comment. */
@@ -50196,8 +50206,34 @@ getOptionFromViewValue:function(e){return t[h(e)]},getViewValueFromOption:functi
 	            return _this.state.locationCollection.getEntity().then(function (result) { return (result.pageRecords.length) ? result.pageRecords : []; });
 	        };
 	        /**
-	        * Returns  orderFulfillmentItem Collection given an orderFulfillmentID.
-	        */
+	         * Setup the initial print template -> orderFulfillment Collection.
+	         */
+	        this.getPrintList = function () {
+	            _this.state.printCollection = _this.collectionConfigService.newCollectionConfig("PrintTemplate");
+	            _this.state.printCollection.addDisplayProperty("printTemplateID");
+	            _this.state.printCollection.addDisplayProperty("printTemplateName");
+	            _this.state.printCollection.addDisplayProperty("printTemplateObject");
+	            _this.state.printCollection.addFilter("printTemplateObject", 'OrderFulfillment', "=");
+	            _this.state.printCollection.getEntity().then(function (result) {
+	                _this.state.printCollection = result.pageRecords || [];
+	            });
+	        };
+	        /**
+	         * Setup the initial email template -> orderFulfillment Collection.
+	         */
+	        this.getEmailList = function () {
+	            _this.state.emailCollection = _this.collectionConfigService.newCollectionConfig("EmailTemplate");
+	            _this.state.emailCollection.addDisplayProperty("emailTemplateID");
+	            _this.state.emailCollection.addDisplayProperty("emailTemplateName");
+	            _this.state.emailCollection.addDisplayProperty("emailTemplateObject");
+	            _this.state.emailCollection.addFilter("emailTemplateObject", 'OrderFulfillment', "=");
+	            _this.state.emailCollection.getEntity().then(function (result) {
+	                _this.state.emailCollection = result.pageRecords || [];
+	            });
+	        };
+	        /**
+	         * Returns  orderFulfillmentItem Collection given an orderFulfillmentID.
+	         */
 	        this.createOrderFulfillmentItemCollection = function (orderFulfillmentID) {
 	            var collection = _this.collectionConfigService.newCollectionConfig("OrderItem");
 	            collection.addDisplayProperty("orderFulfillment.orderFulfillmentID");
@@ -50298,6 +50334,10 @@ getOptionFromViewValue:function(e){return t[h(e)]},getViewValueFromOption:functi
 	 */
 	exports.TOGGLE_BATCHLISTING = "TOGGLE_BATCHLISTING";
 	/**
+	 * This will toggle the fulfillment listing between fulfillment and order items on the order fulfillments list screen
+	 */
+	exports.TOGGLE_FULFILLMENT_LISTING = "TOGGLE_FULFILLMENT_LISTING";
+	/**
 	 * This sets up all the state data on page start and should only be called once in a constructor.
 	 */
 	exports.SETUP_BATCHDETAIL = "SETUP_BATCHDETAIL";
@@ -50309,6 +50349,14 @@ getOptionFromViewValue:function(e){return t[h(e)]},getViewValueFromOption:functi
 	 * This will refresh all of the batch detail state.
 	 */
 	exports.REFRESH_BATCHDETAIL = "REFRESH_BATCHDETAIL";
+	/**
+	 * This will create a new batch by passing all batch data.
+	 */
+	exports.ADD_BATCH = "ADD_BATCH";
+	/**
+	 * This will fire when the current page records selected on a table are updated.
+	 */
+	exports.CURRENT_PAGE_RECORDS_SELECTED = "CURRENT_PAGE_RECORDS_SELECTED";
 	/**
 	 * This setups the page that displays the order delivery custom attributes and should only be called once.
 	 */
@@ -50361,6 +50409,22 @@ getOptionFromViewValue:function(e){return t[h(e)]},getViewValueFromOption:functi
 	exports.PRINT_PACKINGLIST_SUCCESS = "PRINT_PACKINGLIST_SUCCESS";
 	/** This action coming back from the reducer indicated that the action was a failure. */
 	exports.PRINT_PACKINGLIST_FAILURE = "PRINT_PACKINGLIST_FAILURE";
+	/**
+	 * This will return a list of print templates that are defined for fulfillment batches.
+	 */
+	exports.PRINT_LIST_REQUESTED = "PRINT_LIST_REQUESTED";
+	/** This action coming back from the reducer indicated that the action was a success. */
+	exports.PRINT_LIST_SUCCESS = "PRINT_LIST_SUCCESS";
+	/** This action coming back from the reducer indicated that the action was a failure. */
+	exports.PRINT_LIST_FAILURE = "PRINT_LIST_FAILURE";
+	/**
+	 * This will return a list of emails that are defined for orderFulfillments
+	 */
+	exports.EMAIL_LIST_REQUESTED = "EMAIL_LIST_REQUESTED";
+	/** This action coming back from the reducer indicated that the action was a success. */
+	exports.EMAIL_LIST_SUCCESS = "EMAIL_LIST_SUCCESS";
+	/** This action coming back from the reducer indicated that the action was a failure. */
+	exports.EMAIL_LIST_FAILURE = "EMAIL_LIST_FAILURE";
 
 
 /***/ }),
@@ -50471,7 +50535,8 @@ getOptionFromViewValue:function(e){return t[h(e)]},getViewValueFromOption:functi
 	            _this.orderFulfillmentCollection.addFilter("order.orderNumber", "", "!=");
 	        };
 	        this.createOrderFulfillmentCollectionWithStatus = function (status) {
-	            console.log("Creating ", status);
+	            delete _this.orderFulfillmentCollection;
+	            _this.view = undefined;
 	            _this.orderFulfillmentCollection = _this.collectionConfigService.newCollectionConfig("OrderFulfillment");
 	            _this.orderFulfillmentCollection.addDisplayProperty("orderFulfillmentID", "ID");
 	            _this.orderFulfillmentCollection.addDisplayProperty("order.orderNumber", "Order Number");
@@ -50479,19 +50544,69 @@ getOptionFromViewValue:function(e){return t[h(e)]},getViewValueFromOption:functi
 	            _this.orderFulfillmentCollection.addDisplayProperty("shippingMethod.shippingMethodName", "Shipping Method");
 	            _this.orderFulfillmentCollection.addDisplayProperty("shippingAddress.stateCode", "State");
 	            _this.orderFulfillmentCollection.addDisplayProperty("orderFulfillmentStatusType.typeName", "Status");
+	            _this.orderFulfillmentCollection.addDisplayProperty("orderFulfillmentInvStatType.systemCode", "Availability");
 	            _this.orderFulfillmentCollection.addDisplayProperty("orderFulfillmentItems.stock.location.locationID", "Stock Location");
 	            _this.orderFulfillmentCollection.addFilter("orderFulfillmentStatusType.systemCode", "ofstFulfilled", "!=");
 	            _this.orderFulfillmentCollection.addFilter("order.orderNumber", "", "!=");
 	            if (status) {
-	                _this.orderFulfillmentCollection.addFilter("orderFulfillmentInvStatType.systemCode", status, "=");
+	                _this.orderFulfillmentCollection.addFilter("orderFulfillmentInvStatType.systemCode", status, "=", "OR");
 	            }
-	            _this.collections[0] = _this.orderFulfillmentCollection;
 	            _this.orderFulfillmentCollection.getEntity().then(function (result) {
-	                console.log("Updates collection");
+	                //refreshes the page.
+	                _this.collections[0] = _this.orderFulfillmentCollection;
+	                _this.view = _this.views.Fulfillments;
 	            });
-	            _this.$timeout(function () {
-	                _this.refreshFlag = true;
-	            }, 1);
+	        };
+	        this.createOrderFulfillmentCollectionWithFilterMap = function (filterMap) {
+	            delete _this.orderFulfillmentCollection;
+	            _this.view = undefined;
+	            _this.orderFulfillmentCollection = _this.collectionConfigService.newCollectionConfig("OrderFulfillment");
+	            _this.orderFulfillmentCollection.addDisplayProperty("orderFulfillmentID", "ID");
+	            _this.orderFulfillmentCollection.addDisplayProperty("order.orderNumber", "Order Number");
+	            _this.orderFulfillmentCollection.addDisplayProperty("order.orderOpenDateTime", "Date Started");
+	            _this.orderFulfillmentCollection.addDisplayProperty("shippingMethod.shippingMethodName", "Shipping Method");
+	            _this.orderFulfillmentCollection.addDisplayProperty("shippingAddress.stateCode", "State");
+	            _this.orderFulfillmentCollection.addDisplayProperty("orderFulfillmentStatusType.typeName", "Status");
+	            _this.orderFulfillmentCollection.addDisplayProperty("orderFulfillmentInvStatType.systemCode", "Availability");
+	            _this.orderFulfillmentCollection.addDisplayProperty("orderFulfillmentItems.stock.location.locationID", "Stock Location");
+	            //Build the collection using just the correct filters.
+	            //Check the filters for multiple true
+	            var hasMultipleEnabled = false;
+	            var filterCount = 0;
+	            filterMap.forEach(function (v, k) {
+	                if (filterMap.get(k) === true) {
+	                    filterCount++;
+	                    console.log("Filter count", filterCount);
+	                }
+	            });
+	            if (filterCount > 1) {
+	                hasMultipleEnabled = true;
+	            }
+	            //Add the filters.
+	            filterMap.forEach(function (v, k) {
+	                var systemCode = (k == 'available') ? 'ofisAvailable' : ((k == 'partial') ? 'ofisPartial' : ((k == 'unavailable') ? 'ofisUnAvailable' : ((k == 'location') ? 'location' : '')));
+	                //handle truth   
+	                if (filterMap.get(k) === true) {
+	                    if (systemCode.length) {
+	                        _this.orderFulfillmentCollection.addFilter("orderFulfillmentInvStatType.systemCode", systemCode, "=", (hasMultipleEnabled ? "OR" : "AND"));
+	                        _this.orderFulfillmentCollection.addFilter("orderFulfillmentStatusType.systemCode", "ofstFulfilled", "!=", "AND");
+	                        _this.orderFulfillmentCollection.addFilter("order.orderNumber", "", "!=", "AND");
+	                    }
+	                }
+	                //handle false
+	                if (filterMap.get(k) === false && filterMap.get(k) != undefined) {
+	                    if (systemCode.length) {
+	                        _this.orderFulfillmentCollection.addFilter("orderFulfillmentInvStatType.systemCode", systemCode, "!=", 'AND');
+	                        _this.orderFulfillmentCollection.addFilter("orderFulfillmentStatusType.systemCode", "ofstFulfilled", "!=", "AND");
+	                        _this.orderFulfillmentCollection.addFilter("order.orderNumber", "", "!=", "AND");
+	                    }
+	                }
+	            });
+	            _this.orderFulfillmentCollection.getEntity().then(function (result) {
+	                //refreshes the page.
+	                _this.collections[0] = _this.orderFulfillmentCollection;
+	                _this.view = _this.views.Fulfillments;
+	            });
 	        };
 	        /**
 	         * Setup the initial orderItem Collection.
@@ -50512,7 +50627,12 @@ getOptionFromViewValue:function(e){return t[h(e)]},getViewValueFromOption:functi
 	         */
 	        this.toggleFilter = function (filterName) {
 	            _this.filters[filterName] = !_this.filters[filterName];
-	            _this.addFilter(filterName, _this.filters[filterName]);
+	            console.log(filterName + " now " + _this.filters[filterName]);
+	            if (_this.filters[filterName]) {
+	                _this.addFilter(filterName, true);
+	                return;
+	            }
+	            _this.removeFilter(filterName, false);
 	        };
 	        /**
 	         * Toggle between views. We refresh the collection everytime we set the view.
@@ -50561,7 +50681,6 @@ getOptionFromViewValue:function(e){return t[h(e)]},getViewValueFromOption:functi
 	            _this.$timeout(function () {
 	                _this.refreshFlag = true;
 	            }, 1);
-	            _this.refreshFlag = true;
 	            //Always keep the orderNumber filter.
 	            if (_this.getCollectionByView(_this.getView()) && _this.getCollectionByView(_this.getView()).baseEntityName == "OrderFulfillment") {
 	                //If there is only one filter group add a second. otherwise add to the second.
@@ -50580,15 +50699,38 @@ getOptionFromViewValue:function(e){return t[h(e)]},getViewValueFromOption:functi
 	                    if (key == "location" && value != undefined) {
 	                        filter = _this.getCollectionByView(_this.getView()).createFilter("orderFulfillmentItems.stock.location.locationName", value, "=", "OR", false);
 	                    }
-	                    //add the filter to the group
-	                    //filterGroup.push(filter);
-	                    //add the group
-	                    //this.getCollectionByView(this.getView()).addFilterGroup(filterGroup);
 	                }
 	                if (value = false) {
-	                    console.log("False");
 	                    _this.createOrderFulfillmentCollection();
 	                }
+	            }
+	            else if (_this.getCollectionByView(_this.getView()).baseEntityName == "OrderItem") {
+	                console.log("Adding orderItem Filters", _this.getCollectionByView(_this.getView()));
+	            }
+	            //Calls to auto refresh the collection since a filter was added.
+	            var refreshedCollection = _this.orderFulfillmentCollection;
+	            _this.orderFulfillmentCollection = undefined;
+	            _this.orderFulfillmentCollection = refreshedCollection;
+	            _this.collections[0] = _this.orderFulfillmentCollection;
+	            _this.refreshCollectionTotal(_this.getCollectionByView(_this.getView()));
+	        };
+	        /**
+	         * Adds one of the status type filters into the collectionConfigService
+	         * @param key: FulfillmentsList.CollectionFilterValues {'partial' | 'available' | 'unavailable' | 'location'}
+	         * @param Vvalue: boolean: {true|false}
+	         */
+	        this.removeFilter = function (key, value) {
+	            _this.$timeout(function () {
+	                _this.refreshFlag = true;
+	            }, 1);
+	            //Always keep the orderNumber filter.
+	            if (_this.getCollectionByView(_this.getView()) && _this.getCollectionByView(_this.getView()).baseEntityName == "OrderFulfillment") {
+	                var filterMap = new Map();
+	                filterMap.set("partial", _this.filters['partial']);
+	                filterMap.set("available", _this.filters['available']);
+	                filterMap.set("unavailable", _this.filters['unavailable']);
+	                filterMap.set("location", _this.filters['location']);
+	                _this.createOrderFulfillmentCollectionWithFilterMap(filterMap);
 	            }
 	            else if (_this.getCollectionByView(_this.getView()).baseEntityName == "OrderItem") {
 	                console.log("Adding orderItem Filters", _this.getCollectionByView(_this.getView()));
@@ -50873,24 +51015,18 @@ getOptionFromViewValue:function(e){return t[h(e)]},getViewValueFromOption:functi
 	        //requested | failed | succeded
 	        this.userDeletingComment = function (comment) {
 	            //Only fire the event if the user agrees.
-	            var warning = _this.rbkeyService.getRBKey("entity.comment.delete.confirm");
-	            if (window.confirm(warning + "?")) {
-	                _this.orderFulfillmentService.orderFulfillmentStore.dispatch({
-	                    type: actions.DELETE_COMMENT_REQUESTED,
-	                    payload: { comment: comment }
-	                });
-	            }
+	            _this.orderFulfillmentService.orderFulfillmentStore.dispatch({
+	                type: actions.DELETE_COMMENT_REQUESTED,
+	                payload: { comment: comment }
+	            });
 	        };
 	        //Try to delete the fulfillment batch item.
 	        this.deleteFulfillmentBatchItem = function () {
 	            //Only fire the event if the user agrees.
-	            var warning = _this.rbkeyService.getRBKey("entity.comment.delete.confirm");
-	            if (window.confirm(warning + "?")) {
-	                _this.orderFulfillmentService.orderFulfillmentStore.dispatch({
-	                    type: actions.DELETE_FULFILLMENTBATCHITEM_REQUESTED,
-	                    payload: {}
-	                });
-	            }
+	            _this.orderFulfillmentService.orderFulfillmentStore.dispatch({
+	                type: actions.DELETE_FULFILLMENTBATCHITEM_REQUESTED,
+	                payload: {}
+	            });
 	        };
 	        this.userSavingComment = function (comment, commentText) {
 	            _this.orderFulfillmentService.orderFulfillmentStore.dispatch({
@@ -50923,24 +51059,21 @@ getOptionFromViewValue:function(e){return t[h(e)]},getViewValueFromOption:functi
 	                payload: {}
 	            });
 	        };
-	        this.userEmailCancellation = function () {
+	        /** Returns a list of print templates related to fulfillment batches. */
+	        this.userRequiresPrintList = function () {
 	            _this.orderFulfillmentService.orderFulfillmentStore.dispatch({
-	                type: "SEND_EMAIL_CANCELLATION_ACTION",
+	                type: actions.PRINT_LIST_REQUESTED,
 	                payload: {}
 	            });
 	        };
-	        this.userEmailConfirmation = function () {
+	        /** Returns a list of all emails related to orderfulfillments */
+	        this.userRequiresEmailList = function () {
 	            _this.orderFulfillmentService.orderFulfillmentStore.dispatch({
-	                type: "SEND_EMAIL_CONFIRMATION_ACTION",
+	                type: actions.EMAIL_LIST_REQUESTED,
 	                payload: {}
 	            });
 	        };
-	        this.userEmailOrderStatus = function () {
-	            _this.orderFulfillmentService.orderFulfillmentStore.dispatch({
-	                type: "SEND_EMAIL_ORDER_STATUS_ACTION",
-	                payload: {}
-	            });
-	        };
+	        /** Todo - Thiswill be for the barcode search which is currently commented out. */
 	        this.userBarcodeSearch = function () {
 	            _this.orderFulfillmentService.orderFulfillmentStore.dispatch({
 	                type: "BAR_CODE_SEARCH_ACTION",
@@ -50954,6 +51087,8 @@ getOptionFromViewValue:function(e){return t[h(e)]},getViewValueFromOption:functi
 	                stateChanges.action.type == actions.SAVE_COMMENT_REQUESTED ||
 	                stateChanges.action.type == actions.DELETE_COMMENT_REQUESTED ||
 	                stateChanges.action.type == actions.CREATE_FULFILLMENT_REQUESTED ||
+	                stateChanges.action.type == actions.PRINT_LIST_REQUESTED ||
+	                stateChanges.action.type == actions.EMAIL_LIST_REQUESTED ||
 	                stateChanges.action.type == actions.UPDATE_BATCHDETAIL ||
 	                stateChanges.action.type == actions.SETUP_BATCHDETAIL ||
 	                stateChanges.action.type == actions.SETUP_ORDERDELIVERYATTRIBUTES ||
