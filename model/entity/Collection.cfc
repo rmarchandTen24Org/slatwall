@@ -956,7 +956,7 @@ component displayname="Collection" entityname="SlatwallCollection" table="SwColl
 		if(!joinFound){
 			ArrayAppend(getCollectionConfigStruct().joins,arguments.join);
 		}
-
+		getCollectionConfigStruct().joins = getService('hibachiUtilityService').arrayOfStructsSort(getCollectionConfigStruct().joins,'alias','asc');
 	}
 
 
