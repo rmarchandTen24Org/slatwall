@@ -1794,7 +1794,7 @@ component displayname="Collection" entityname="SlatwallCollection" table="SwColl
 		}
 		
 		return manyToOneProperties;
-	}
+	} 
 	
 	private string function getObjectPermissionList(){
 		var objectPermissionsList = getCollectionObject();
