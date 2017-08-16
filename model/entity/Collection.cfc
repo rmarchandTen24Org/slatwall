@@ -1895,7 +1895,7 @@ component displayname="Collection" entityname="SlatwallCollection" table="SwColl
 		variables.recordsCount = arguments.total;
 	}
 
-	public any function getRecordsCount() {
+	public any function getRecordsCount(boolean refresh=false) {
 		if(arguments.refresh){
 			clearRecordsCache();
 		}
