@@ -1,6 +1,6 @@
 component extends="Slatwall.org.Hibachi.HibachiTransient" output="false" accessors="true"{
 	property name="AccountingDocNumber" type="string";
-	property name="ActionCode" type="string" validateParams="{maxLength=64}";
+	property name="ActionCode" type="string" validateParams="{maxLength=64}" hint="Set by processor";
 	property name="Amount" type="string" validateParams="{maxLength=25}";
 	property name="AuthorizationCode" type="string" hint="Set by processor";
 	property name="AuthorizationDate" type="string" hint="Set by processor";
@@ -14,7 +14,7 @@ component extends="Slatwall.org.Hibachi.HibachiTransient" output="false" accesso
 	property name="BillingDate" type="string";
 	property name="BillingPlanItem" type="string";
 	property name="CaptureDate" type="string";
-	property name="CaptureReferenceCode" type="string";
+	property name="CaptureReferenceCode" type="string" hint="Set by processor";
 	property name="CardCVV2" type="string";
 	property name="CardDataSource" type="string";
 	property name="CardExpirationDate" type="string" hint="Format MM/YY or MM/YYYY";
@@ -35,8 +35,8 @@ component extends="Slatwall.org.Hibachi.HibachiTransient" output="false" accesso
 	property name="CardValidFrom" type="string";
 	property name="ChargeAmount" type="string";
 	property name="CompanyCode" type="string";
-	property name="Client" type="string";
-	property name="CreationDate" type="string";
+	property name="Client" type="string" hint="Set by SAP";
+	property name="CreationDate" type="string" hint="Set by database";
 	property name="CurrencyKey" type="string";
 	property name="CustomerNumber" type="string";
 	property name="CustTXN" type="string";
@@ -59,14 +59,14 @@ component extends="Slatwall.org.Hibachi.HibachiTransient" output="false" accesso
 	property name="ResponseCode" type="string";
 	property name="SalesDocNumber" type="string";
 	property name="SettlementAmount" type="string";
-	property name="SettlementDate" type="string";
-	property name="SettlementReferenceCode" type="string";
-	property name="StatusCode" type="string";
-	property name="StatusTXN" type="string";
+	property name="SettlementDate" type="string" hint="Set by processor";
+	property name="SettlementReferenceCode" type="string" hint="Set by processor";
+	property name="StatusCode" type="string" hint="Set by XiPay";
+	property name="StatusTXN" type="string" hint="Set by XiPay";
 	property name="TaxLevel1" type="string";
 	property name="TaxLevel2" type="string";
 	property name="TerminalID" type="string";
-	property name="TransactionID" type="string";
+	property name="TransactionID" type="string" hint="Set by XiPay";
 	property name="TransactionType" type="string";
 	property name="XIID" type="string";
 	property name="TestStructProp" type="struct";
@@ -115,6 +115,10 @@ component extends="Slatwall.org.Hibachi.HibachiTransient" output="false" accesso
 		arrayAppend(xmlNode.XmlChildren, newElem);
 
 		return xmlNode;
+	}
+
+	public void function populateFromXML(required xmlDoc){
+		
 	}
 
 }

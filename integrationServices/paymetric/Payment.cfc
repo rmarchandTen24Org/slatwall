@@ -70,87 +70,34 @@ component accessors="true" output="false" displayname="Paymetric XiPay" implemen
 	}
 
 	public any function processCreditCard(required any requestBean){
-		var rawResponse = "";
 		var requestData = getRequestData(requestBean);
-		rawResponse = postRequest(requestData);
+		transactionResponse = getTransactionResponse(requestData);
 		return getResponseBean(rawResponse, requestData, requestBean);
 	}
 
 	private struct function getRequestData(required any requestBean){
-		var requestData = {};
-		requestData["x_version"] = "3.1";
-		requestData["x_login"] = setting('loginID');
-		requestData["x_tran_key"] = setting('transKey');
-		var testModeFlag = getTestModeFlag(arguments.requestBean,'testModeFlag');
-		requestData["x_test_request"] = testModeFlag;
-		requestData["x_duplicate_window"] = setting('duplicateWindow');
-		requestData["x_method"] = "CC";
-		requestData["x_type"] = variables.transactionCodes[requestBean.getTransactionType()];
+		var transactionHeader = getTransient('PaymetricITransactionHeader');
 
-		requestData["x_amount"] = requestBean.getTransactionAmount();
-
-		if(!isNull(requestBean.getCreditCardNumber())) {
-			requestData["x_card_num"] = requestBean.getCreditCardNumber();
-		} else {
- 			requestData["x_card_num"] = requestBean.getCreditCardLastFour();
-  		}
-		if(!isNull(requestBean.getSecurityCode())) {
-			requestData["x_card_code"] = requestBean.getSecurityCode();
-		}
-		if(!isNull(requestBean.getExpirationMonth()) && !isNull(requestBean.getExpirationYear())) {
-			requestData["x_exp_date"] = left(requestBean.getExpirationMonth(),2) & "" & right(requestBean.getExpirationYear(),2);
-		}
-		requestData["x_invoice_num"] = requestBean.getOrder().getShortReferenceID( true );
-		requestData["x_description"] = "";
-
-		requestData["x_cust_id"] = requestBean.getAccountID();
-		requestData["x_first_name"] = requestBean.getAccountFirstName();
-		requestData["x_last_name"] = requestBean.getAccountLastName();
-		requestData["x_address"] = isNull(requestBean.getBillingStreetAddress()) ? "":requestBean.getBillingStreetAddress();
-		requestData["x_city"] = isNull(requestBean.getBillingCity()) ? "":requestBean.getBillingCity();
-		requestData["x_state"] = isNull(requestBean.getBillingStateCode()) ? "xx":requestBean.getBillingStateCode();
-		requestData["x_zip"] = isNull(requestBean.getBillingPostalCode()) ? "":requestBean.getBillingPostalCode();
-
-		if(!isNull(requestBean.getAccountPrimaryPhoneNumber())) {
-			requestData["x_phone"] = requestBean.getAccountPrimaryPhoneNumber();
-		} else {
-			requestData["x_phone"] = "";
-		}
-
-		if(!isNull(requestBean.getAccountPrimaryEmailAddress())) {
-			requestData["x_email"] = requestBean.getAccountPrimaryEmailAddress();
-		} else {
-			requestData["x_email"] = "";
-		}
-
-		requestData["x_customer_ip"] = CGI.REMOTE_ADDR;
-		if(!isNull(requestBean.getOriginalProviderTransactionID()) && len(requestBean.getOriginalProviderTransactionID())) {
-			requestData["x_trans_id"] = requestBean.getOriginalProviderTransactionID();
-		}
-		requestData["x_delim_data"] = "TRUE";
-		requestData["x_delim_char"] = variables.responseDelimiter;
-		requestData["x_relay_response"] = "FALSE";
-
-		return requestData;
+		transactionHeader.setAmount(arguments.requestBean.getTransactionAmount());
+		transactionHeader.setCurrencyCode(arguments.requestBean.getTransactionCurrency());
+		transactionHeader.setCardNumber(arguments.requestBean.getCreditCardNumber());
+		transactionHeader.setCardCVV2(arguments.requestBean.getSecurityCode());
+		transactionHeader.setCardExpirationDate('#arguments.requestBean.getExpirationMonth()#/#arguments.requestBean.getExpirationYear()#');
+		transactionHeader.setCardHolderName(arguments.requestBean.getNameOnCreditCard());
+		transactionHeader.setCardHolderAddress1(arguments.requestBean.getBillingStreetAddress());
+		transactionHeader.setCardHolderAddress2(arguments.requestBean.getBillingStreet2Address());
+		transactionHeader.setCardHolderCity(arguments.requestBean.getbillingCity());
+		transactionHeader.setCardHolderDistrict(arguments.requestBean.getbillingLocality())
+		transactionHeader.setCardHolderCountry(arguments.requestBean.getbillingCountryCode());
+		transactionHeader.setCardHolderState(arguments.requestBean.getbillingStateCode());
+		return transactionHeader.getRequestData();
 	}
 
-	private any function postRequest(required struct requestData){
-		var httpRequest = new http();
-		httpRequest.setMethod("POST");
-		if( setting('testModeFlag') ) {
-			httpRequest.setUrl( setting("testGatewayURL") );
-		} else {
-			httpRequest.setUrl( setting("gatewayURL") );
-		}
-		httpRequest.setTimeout(variables.timeout);
-		httpRequest.setResolveurl(false);
-		for(var key in requestData){
-			httpRequest.addParam(type="formfield",name="#key#",value="#requestData[key]#");
-		}
-
-		var response = httpRequest.send().getPrefix();
-
-		return response;
+	private any function getTransactionResponse(required any requestData){
+		var packetsObject = getTransient('PaymetricIPacketsObject');
+		packetsObject.addPacket(arguments.requestData);
+		packetsObject.getResponse();
+		return packetsObject;
 	}
 
 	private any function getResponseBean(required struct rawResponse, required any requestData, required any requestBean){
