@@ -65,7 +65,7 @@ component extends="HibachiService" accessors="true" output="false" {
 	property name="validationService" type="any";
 
 	public string function getHashedAndSaltedPassword(required string password, required string salt) {
-		return hash(arguments.password & arguments.salt, 'SHA-512');
+		return hash(trim(arguments.password) & trim(arguments.salt), 'SHA-512');
 	}
 
 	public string function getPasswordResetID(required any account) {
@@ -1320,6 +1320,7 @@ component extends="HibachiService" accessors="true" output="false" {
 	public any function processPermission_addPermissionRecordRestriction(required any permission, required any processObject){
 		
 		arguments.processObject.getPermissionRecordRestriction().setPermissionRecordRestrictionName(arguments.processObject.getPermissionRecordRestrictionName());
+		arguments.processObject.getPermissionRecordRestriction().setEnforceOnDirectobjectReference(arguments.processObject.getEnforceOnDirectobjectReference());
 		arguments.permission.addPermissionRecordRestriction(arguments.processObject.getPermissionRecordRestriction());
 		arguments.permission = this.savePermission(arguments.permission);
 		
