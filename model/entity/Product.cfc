@@ -392,10 +392,10 @@ component displayname="Product" entityname="SlatwallProduct" table="SwProduct" p
 				thisImage.resizedImagePaths = [];
 				var resizeSizesCount = arrayLen(arguments.resizeSizes);
 				for(var s=1; s<=resizeSizesCount; s++) {
-					
+
 					var resizeImageData = arguments.resizeSizes[s];
 					resizeImageData.imagePath = getService('imageService').getProductImagePathByImageFile(skuData['imageFile']);
-					
+
 					arrayAppend(
 						thisImage.resizedImagePaths, 
 						getService("imageService").getResizedImagePath(argumentCollection=resizeImageData)
@@ -434,7 +434,7 @@ component displayname="Product" entityname="SlatwallProduct" table="SwProduct" p
 		
 				var resizesCount = arrayLen(arguments.resizeSizes);
 				for(var s=1; s<=resizesCount; s++) {
-					
+
 					var resizeImageData = arguments.resizeSizes[s];
 					resizeImageData.alt = imageAltString;
 					resizeImageData.missingImagePath = missingImagePath;
@@ -856,8 +856,10 @@ component displayname="Product" entityname="SlatwallProduct" table="SwProduct" p
 			smartList.addSelect("brandName", "name");
 
 			variables.brandOptions = smartList.getRecords();
-
-			arrayPrepend(variables.brandOptions, {name=rbKey('define.none'),value=""});
+			var noneOption = {};
+			noneOption['name']=rbKey('define.none');
+			noneOption['value']="";
+			arrayPrepend(variables.brandOptions, noneOption);
 
 		}
 
@@ -1189,6 +1191,26 @@ component displayname="Product" entityname="SlatwallProduct" table="SwProduct" p
 	}
 	public void function removeProductReview(required any productReview) {
 		arguments.productReview.removeProduct( this );
+	}
+
+	//  (many-to-many - owner)
+ 	public void function addCategory(required any category) {
+ 		if(isNew() or !hasCategory(arguments.category)) {
+ 			arrayAppend(variables.categories, arguments.category);
+ 		}
+ 		if(arguments.category.isNew() or !arguments.category.hasProduct( this )) {
+ 			arrayAppend(arguments.category.getProducts(), this);
+ 		}
+ 	}
+ 	public void function removeCategory(required any category) {
+ 		var thisIndex = arrayFind(variables.categories, arguments.category);
+ 		if(thisIndex > 0) {
+ 			arrayDeleteAt(variables.categories, thisIndex);
+ 		}
+ 		var thatIndex = arrayFind(arguments.category.getProducts(), this);
+ 		if(thatIndex > 0) {
+ 			arrayDeleteAt(arguments.category.getProducts(), thatIndex);
+ 		}
 	}
 
 	// Promotion Rewards (many-to-many - inverse)

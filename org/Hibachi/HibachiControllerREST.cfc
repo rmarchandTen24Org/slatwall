@@ -103,7 +103,7 @@ component output="false" accessors="true" extends="HibachiController" {
     	var modelCacheKey = "attributeService_getAttributeModel_CacheKey";
     	if(getService('HibachiCacheService').hasCachedValue(modelCacheKey)){
     		data['attributeCacheKey'] = getService('HibachiCacheService').getCachedValue(modelCacheKey);
-    	}else{
+    	}else if (hasService('attributeService')){
     		var attributeMetaData = getService('attributeService').getAttributeModel();
     		data['attributeCacheKey'] = hash(serializeJson(attributeMetaData),'MD5');
     		getService('HibachiCacheService').setCachedValue(modelCacheKey,data['attributeCacheKey']);
@@ -227,13 +227,18 @@ component output="false" accessors="true" extends="HibachiController" {
 
         var service = getHibachiScope().getService("hibachiValidationService");
         var objectName = arguments.rc.object;
+		var entityService = getService("hibachiService").getServiceByEntityName(entityName=objectName); 
         var propertyIdentifier = arguments.rc.propertyIdentifier;
         var value = arguments.rc.value;
-        var entity = getService('hibachiService').invokeMethod('new#objectName#');
-        entity.invokeMethod('set#propertyIdentifier#',{1=value});
-
-
-        var response["uniqueStatus"] = service.validate_unique(entity, propertyIdentifier);
+	
+		if(structKeyExists(arguments.rc, "objectID")){
+			var entity = entityService.invokeMethod('get#objectName#', {1=arguments.rc.objectID});
+		}  
+		if(isNull(entity)){
+			var entity = getService('hibachiService').invokeMethod('new#objectName#');
+		}
+		entity.invokeMethod('set#propertyIdentifier#',{1=value});
+		var response["uniqueStatus"] = service.validate_unique(entity, propertyIdentifier);
         arguments.rc.apiResponse.content = response;
 
     }
@@ -636,8 +641,20 @@ component output="false" accessors="true" extends="HibachiController" {
             handle accessing collections by id
         */
         param name="arguments.rc.propertyIdentifiers" default="";
+		
+		if(structKeyExists(arguments.rc, "p:show")){
+			var globalAPIPageShowLimit = getService("SettingService").getSettingValue("globalAPIPageShowLimit");
+			if(arguments.rc["p:show"] > globalAPIPageShowLimit){
+				arguments.rc["p:show"] = globalAPIPageShowLimit; 
+			}	
+		}
+       
+		if(!structKeyExists(arguments.rc, "dirtyReadFlag")){
+ 			arguments.rc.dirtyReadFlag = getService("SettingService").getSettingValue("globalAPIDirtyRead"); 
+ 		} 
         
-        
+		arguments.rc.restRequestFlag = true;  
+
         //first check if we have an entityName value
         if(!structKeyExists(arguments.rc, "entityName")) {
             arguments.rc.apiResponse.content['account'] = getHibachiScope().invokeMethod("getAccountData");
@@ -646,20 +663,21 @@ component output="false" accessors="true" extends="HibachiController" {
             
             //considering using all url variables to create a transient collectionConfig for api response
             if(!structKeyExists(arguments.rc,'entityID')){
+            	
                 //should be able to add select and where filters here
                 var result = getService('hibachiCollectionService').getAPIResponseForEntityName( arguments.rc.entityName,
 																								 arguments.rc);
-
                 structAppend(arguments.rc.apiResponse.content,result);
             }else{
-
+				
                 var collectionEntity = getService('hibachiCollectionService').getCollectionByCollectionID( arguments.rc.entityID );
+                
                 //figure out if we have a collection or a basic entity
                 if(isNull(collectionEntity)){
                     //should only be able to add selects (&propertyIdentifier=)
-                    var result = getService('hibachiCollectionService').getAPIResponseForBasicEntityWithID( arguments.rc.entityName,
+                    var result = getService('HibachiCollectionService').getAPIResponseForBasicEntityWithID( arguments.rc.entityName,
 																										    arguments.rc.entityID,
-																										    arguments.rc );
+																		 								    arguments.rc );
                     structAppend(arguments.rc.apiResponse.content,result);
                 }else{
                     //should be able to add select and where filters here
@@ -708,7 +726,10 @@ component output="false" accessors="true" extends="HibachiController" {
 	            entity = entityService.invokeMethod("save#arguments.rc.entityName#", {1=entity, 2=structuredData});
 	        // DELETE
 	        } else if (arguments.rc.context eq 'delete') {
-	            var deleteOK = entityService.invokeMethod("delete#arguments.rc.entityName#", {1=entity});
+	            getService('HibachiValidationService').validate(entity, 'delete');
+                if(!entity.hasErrors()){
+                  entityService.invokeMethod("delete#arguments.rc.entityName#", {1=entity});
+                }
 	        // PROCESS
 	        } else {
 	            entity = entityService.invokeMethod("process#arguments.rc.entityName#", {1=entity, 2=structuredData, 3=arguments.rc.context});

@@ -279,10 +279,19 @@ class UtilityService extends BaseService{
           var count = count || 26;
 
           var text = "";
-          var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+          var firstPossibleCharacters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";  
+          var nextPossibleCharacters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+          var currentPossibleCharacters="";
 
-          for( var i=0; i < count; i++ )
-              text += possible.charAt(Math.floor(Math.random() * possible.length));
+          for( var i=0; i < count; i++ ){
+              if(i === 0){
+                  currentPossibleCharacters=firstPossibleCharacters
+              }else{
+                  currentPossibleCharacters=nextPossibleCharacters
+              }
+              text += currentPossibleCharacters.charAt(Math.floor(Math.random() * currentPossibleCharacters.length));
+          }
+              
 
           return text;
     };
@@ -433,6 +442,13 @@ class UtilityService extends BaseService{
 
         public minutesOfDay = (m):number=>{
             return m.getMinutes() + m.getHours() * 60;
+        };
+
+        public removeTimeOffset = (timestampStr) =>{ 
+            var date = new Date(timestampStr);
+            var correctDate = new Date();
+            correctDate.setUTCFullYear(date.getFullYear(),date.getMonth(),date.getDate());
+            return correctDate.setUTCHours(date.getHours(), date.getMinutes(), date.getSeconds(), date.getMilliseconds());
         };
 }
 export {

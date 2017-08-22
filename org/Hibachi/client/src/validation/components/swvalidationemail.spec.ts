@@ -1,8 +1,9 @@
 /// <reference path='../../../typings/hibachiTypescript.d.ts' />
 /// <reference path='../../../typings/tsd.d.ts' />
 
-require("angular-mocks");
-import {validationmodule} from "../validation.module";
+
+import {SWValidationEmail} from "./swvalidationemail";
+
 class test{
     constructor(
 
@@ -41,11 +42,9 @@ class test{
             it('Should be valid if given a valid email',()=>{
                 form.emailInput.$setViewValue('ryan.marchand@ten24web.com');
                 $rootScope.$digest();
-                expect(form.emailInput.$error.swValidationEmail).toBeFalsy();
-
-                form.emailInput.$setViewValue('chucky&cheese.37+testing@eee.corn');
-                $rootScope.$digest();
-                expect(form.emailInput.$error.swValidationEmail).toBeFalsy();
+                console.info('test');
+                angular.mock.dump(element.attr('sw-validation-email-valid'));
+               // expect(element.attr('sw-validation-email-valid')).toContain('sw-validation-email-valid');
             });
 
             it('Should be invalid if given an invalid email', ()=>{

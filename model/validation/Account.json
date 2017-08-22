@@ -1,7 +1,7 @@
 {
 	"conditions":{
-	    "slatwallAuthenticatedAccount":{
-	        "slatwallAuthenticationExistsFlag":{"eq":true}
+	    "nonIntegrationAuthenticatedAccount":{
+	        "nonIntegrationAuthenticationExistsFlag":{"eq":true}
 	    },
 		"isOrganizationAccount":{
 			"organizationFlag":{"eq":true}
@@ -11,8 +11,9 @@
 		}
 	},
 	"properties":{
-		"firstName":							[{"contexts":"save","required":true}],
-		"lastName":								[{"contexts":"save","required":true}],
+		"firstName":							[{"conditions":"isNotOrganizationAccount","contexts":"save","required":true}],
+		"lastName":								[{"conditions":"isNotOrganizationAccount","contexts":"save","required":true}],
+		"company":								[{"conditions":"isOrganizationAccount","contexts":"save","required":true}], 
 		"accountCode":	    [
 			{
 				"conditions":"isOrganizationAccount",
@@ -42,10 +43,10 @@
 		"orders":								[{"contexts":"delete","maxCollection":0}],
 		"productReviews":						[{"contexts":"delete","maxCollection":0}],
 		"cmsAccountID":							[{"contexts":"save","uniqueOrNull":true}],
-		"slatwallAuthenticationExistsFlag":		[
-											    	{"contexts":"createPassword","eq":false},
-											    	{"contexts":"changePassword","eq":true}
-												],
+		"nonIntegrationAuthenticationExistsFlag":		[
+			{"contexts":"createPassword","eq":false},
+			{"contexts":"changePassword","eq":true}
+		],
 		"accountEmailAddressesNotInUseFlag":	[{"contexts":"createPassword","eq":true}],
 		"primaryEmailAddress":					[{"contexts":"save","conditions":"slatwallAuthenticatedAccount","method":"getPrimaryEmailAddressesNotInUseFlag"}],
 		"unenrolledAccountLoyaltyOptions":		[{"contexts":"addAccountLoyalty","minCollection":1}],

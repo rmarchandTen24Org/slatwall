@@ -389,6 +389,7 @@ component output="false" accessors="true" persistent="false" extends="HibachiObj
 				&& structKeyExists(currentProperty, "hb_fileAcceptMIMEType") 
 				&& len(arguments.data[ currentProperty.name ]) 
 				&& structKeyExists(form, currentProperty.name) 
+				&& len(form[currentProperty.name])
 			) {
 				// Wrap in try/catch to add validation error based on fileAcceptMIMEType
 				try {
@@ -505,6 +506,16 @@ component output="false" accessors="true" persistent="false" extends="HibachiObj
 	// =======================  END:  POPULATION & VALIDATION =======================================
 	// ======================= START: PROPERTY INTROSPECTION ========================================
 
+	public any function hasPropertyByPropertyIdentifier(required string propertyIdentifier){
+		var object = getLastObjectByPropertyIdentifier( propertyIdentifier=arguments.propertyIdentifier );
+
+		if(isNull(object) || isSimpleValue(object)) {
+			return false;
+		}
+		var propertyName = listLast(arguments.propertyIdentifier,'.');
+		return object.hasProperty(propertyName);
+	}
+
 	// @hint Public method to retrieve a value based on a propertyIdentifier string format
 	public any function getValueByPropertyIdentifier(required string propertyIdentifier, boolean formatValue=false) {
 		var object = getLastObjectByPropertyIdentifier( propertyIdentifier=arguments.propertyIdentifier );
@@ -527,10 +538,14 @@ component output="false" accessors="true" persistent="false" extends="HibachiObj
 		var entityName = getService('HibachiService').getLastEntityNameInPropertyIdentifier(entityName=this.getClassName(), propertyIdentifier=arguments.propertyIdentifier );
 		var object = getService('HibachiService').getEntityObject(entityName);
 		var propertyName = listLast(arguments.propertyIdentifier,'.');
-		
-		if(!isNull(object) && !isSimpleValue(object)) {
+		if(
+			!isNull(object) 
+			&& !isSimpleValue(object)
+			&& structKeyExists(object.getPropertyMetaData( propertyName ),'ormtype')
+		) {
 			return object.getPropertyMetaData( propertyName ).ormtype;
 		}
+		return "";
 	}
 
 	public any function getLastObjectByPropertyIdentifier(required string propertyIdentifier) {

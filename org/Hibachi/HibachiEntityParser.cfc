@@ -4,7 +4,7 @@ component accessors="true" persistent="false" output="false" extends="HibachiObj
 	property name="componentFilePath" type="string";
 	property name="lineBreak" type="string"; 
 	property name="metaData" type="any";
-	property name="fileContent" type="string" default="";
+	property name="fileContent" type="string";
 	
 	public void function init(){
 		//declared custom strings
@@ -18,7 +18,7 @@ component accessors="true" persistent="false" output="false" extends="HibachiObj
 	
 	public string function getFileContent(){
 		if(!structKeyExists(variables,'fileContent')){
-			variables.fileContent = ReReplace(fileRead(expandPath(getFilePath())),'\r','','All');
+			variables.fileContent =fileRead( "#ExpandPath('/#getDao('hibachiDAO').getApplicationKey()#/')#" & getFilePath());
 		}
 		return variables.fileContent;
 	}
@@ -88,11 +88,11 @@ component accessors="true" persistent="false" output="false" extends="HibachiObj
 	}
 	
 	public numeric function getPrivateFunctionLineStartPos(){
-		return reFindNoCase('\private(?:\s+\w+){0,2}\sfunction',getFileContent());
+		return reFindNoCase('\private(?:\s+\w+){1}\sfunction',getFileContent());
 	}
 	
 	public numeric function getPublicFunctionLineStartPos(){
-		return reFindNoCase('\public(?:\s+\w+){0,2}\sfunction',getFileContent());
+		return reFindNoCase('\public(?:\s+\w+){1}\sfunction',getFileContent());
 	}
 	
 	public numeric function getFunctionLineStartPos(){

@@ -113,6 +113,7 @@ component extends="HibachiService" output="false" accessors="true" {
 	}
 
 	public struct function getAllSettingMetaData() {
+		
 		var allSettingMetaData = {
 
 			// Account
@@ -149,23 +150,26 @@ component extends="HibachiService" output="false" accessors="true" {
 			contentRequirePurchaseFlag = {fieldType="yesno",defaultValue=0},
 			contentRequireSubscriptionFlag = {fieldType="yesno",defaultValue=0},
 			contentIncludeChildContentProductsFlag = {fieldType="yesno",defaultValue=1},
+			contentRenderHibachiActionInTemplate = {fieldType="yesno", defaultValue=0}, 	
 			contentRestrictedContentDisplayTemplate = {fieldType="select"},
 			contentHTMLTitleString = {fieldType="text"},
 			contentMetaDescriptionString = {fieldType="textarea"},
 			contentMetaKeywordsString = {fieldType="textarea"},
 			contentTemplateFile = {fieldType="select",defaultValue="default.cfm"},
-
+			contentTemplateCacheInSeconds = {fieldType="text",defaultValue="0"},
+			contentEnableTrackingFlag = {fieldType="yesno",defaultValue=0},
+			
 			// Email
-			emailFromAddress = {fieldType="text", defaultValue="email@youremaildomain.com"},
-			emailToAddress = {fieldType="text", defaultValue="email@youremaildomain.com"},
+			emailFromAddress = {fieldType="text", defaultValue=""},
+			emailToAddress = {fieldType="text", defaultValue=""},
 			emailCCAddress = {fieldType="text"},
 			emailBCCAddress = {fieldType="text"},
-			emailFailToAddress = {fieldType="text", defaultValue="email@youremaildomain.com"},
+			emailFailToAddress = {fieldType="text", defaultValue=""},
 			emailIMAPServer = {fieldType="text"},
 			emailIMAPServerPort = {fieldType="text"},
 			emailIMAPServerUsername = {fieldType="text"},
 			emailIMAPServerPassword = {fieldType="password"},
-			emailReplyToAddress = {fieldType="text", defaultValue="email@youremaildomain.com"},
+			emailReplyToAddress = {fieldType="text", defaultValue=""},
 			emailSubject = {fieldType="text", defaultValue="Notification From Slatwall"},
 			emailSMTPServer = {fieldType="text", defaultValue=""},
 			emailSMTPPort = {fieldType="text", defaultValue=25},
@@ -189,6 +193,8 @@ component extends="HibachiService" output="false" accessors="true" {
 			globalAllowCustomBranchUpdates={fieldType="yesno",defaultValue=0},
 			globalAdminDomainNames = {fieldtype="text"},
 			globalAllowedOutsideRedirectSites = {fieldtype="text"},
+			globalAPIDirtyRead = {fieldtype="yesno", defaultValue=1},
+			globalAPIPageShowLimit = {fieldtype="text", defaultValue=250},
 			globalAssetsImageFolderPath = {fieldType="text", defaultValue=getApplicationValue('applicationRootMappingPath') & '/custom/assets/images'},
 			globalAssetsFileFolderPath = {fieldType="text", defaultValue=getApplicationValue('applicationRootMappingPath') & '/custom/assets/files'},
 			globalAuditAutoArchiveVersionLimit = {fieldType="text", defaultValue=10, validate={dataType="numeric", minValue=0}},
@@ -305,6 +311,7 @@ component extends="HibachiService" output="false" accessors="true" {
 			skuMinimumPaymentPercentageToWaitlist = {fieldType="text", defaultValue=0},
 			skuOrderMinimumQuantity = {fieldType="text", defaultValue=1},
 			skuOrderMaximumQuantity = {fieldType="text", defaultValue=1000},
+			skuMinimumPercentageAmountRecievedRequiredToPlaceOrder = {fieldType="text", formatType="percentage"},
 			skuQATSIncludesQNROROFlag = {fieldType="yesno", defaultValue=0},
 			skuQATSIncludesQNROVOFlag = {fieldType="yesno", defaultValue=0},
 			skuQATSIncludesQNROSAFlag = {fieldType="yesno", defaultValue=0},
@@ -349,16 +356,22 @@ component extends="HibachiService" output="false" accessors="true" {
 			productMissingImagePath = {fieldType="text", defaultValue="/plugins/Slatwall/assets/images/missingimage.jpg"}
 
 		};
-
+		
 		var integrationSettingMetaData = getIntegrationService().getAllSettingMetaData();
 
 		structAppend(allSettingMetaData, integrationSettingMetaData, false);
 
+		//need to persist globalClientSecret
+		var globalClientSecretSetting = this.getSettingBySettingName('globalClientSecret');
+		if(isNull(globalClientSecretSetting)){
+			getDao('settingDao').insertSetting('globalClientSecret',allSettingMetaData.globalClientSecret.defaultValue);
+		}
+
 		return allSettingMetaData;
 	}
-
+ 
 	private string function extractPackageNameBySettingName (required string settingName){
-		var substringInfo = REFIND('\integration(?!.*\\)(.*?)(?=[A-Z])',arguments.settingName,1,true);
+		var substringInfo = REFIND('\integration(?!.*\\)(.*?)(?=[a-zA-Z])',arguments.settingName,1,true);
 		var substring = Mid(arguments.settingName,substringInfo.pos[1],substringInfo.len[1]);
 		var packageName = Mid(substring,12,len(substring));
 		return packageName;
@@ -630,8 +643,10 @@ component extends="HibachiService" output="false" accessors="true" {
 	}
 
 	public any function getSettingMetaData(required string settingName) {
+		
 		var allSettingMetaData = getHibachiCacheService().getOrCacheFunctionValue("settingService_allSettingMetaData", this, "getAllSettingMetaData");
 
+		
 		if(structKeyExists(allSettingMetaData, arguments.settingName)) {
 			return allSettingMetaData[ arguments.settingName ];
 		}
@@ -866,7 +881,7 @@ component extends="HibachiService" output="false" accessors="true" {
 					}
 					for(var i=1; i<=arrayLen(options); i++) {
 						if(isStruct(options[i])) {
-							if(options[i]['value'] == settingDetails.settingValue) {
+							if(options[i]['value'] == settingDetails.settingValue && structKeyExists(options[i], "name")) {
 								settingDetails.settingValueFormatted = options[i]['name'];
 								break;
 							}
@@ -958,36 +973,20 @@ component extends="HibachiService" output="false" accessors="true" {
 
 		// If there aren't any errors then flush, and clear cache
 		if(!getHibachiScope().getORMHasErrors()) {
-
+ 
 			//wait for thread to finish because admin depends on getting the savedID
 			getHibachiCacheService().resetCachedKeyByPrefix('setting_#arguments.entity.getSettingName()#',true);
-
+			getHibachiCacheService().updateServerInstanceSettingsCache(getHibachiScope().getServerInstanceIPAddress());
 			getHibachiDAO().flushORMSession();
 			
 			// If calculation is needed, then we should do it
 			if(listFindNoCase("skuAllowBackorderFlag,skuAllowPreorderFlag,skuQATSIncludesQNROROFlag,skuQATSIncludesQNROVOFlag,skuQATSIncludesQNROSAFlag,skuTrackInventoryFlag", arguments.entity.getSettingName())) {
 				updateStockCalculated();
 			}
-			//reset cache by site
-			if(
-				listFindNoCase("
-					globalURLKeyBrand,
-					globalURLKeyProduct,
-					globalURLKeyProductType,
-					globalURLKeyAccount,
-					globalURLKeyAddress,
-					productDisplayTemplate,
-					productTypeDisplayTemplate,
-					brandDisplayTemplate,
-					accountDisplayTemplate
-					addressDisplayTemplate", 
-					arguments.entity.getSettingName()
-				) ||
-				left(arguments.entity.getSettingName(),7) == 'content'
-			){
-				for(var site in getSiteService().getSiteSmartList().getRecords()){
-					site.setResetSettingCache(true);
-				}
+
+			for(var serverInstance in this.getServerInstanceSmartList().getRecords()){
+				serverInstance.setServerInstanceExpired(true);
+
 			}
 		}
 

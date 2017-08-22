@@ -48,13 +48,16 @@ Notes:
 */
 component extends="Slatwall.meta.tests.unit.entity.SlatwallEntityTestBase" {
 
-	// @hint put things in here that you want to run befor EACH test
+	// @hint put things in here that you want to run befor EACH test	
 	public void function setUp() {
 		super.setup();
 
 		variables.entity = request.slatwallScope.newEntity( 'OrderItem' );
 	}
-
+	
+	/**
+	* @test
+	*/
 	public void function getProductBundlePrice_fixed_none(){
 		var productData = {
 			productName="productBundleName",
@@ -119,7 +122,10 @@ component extends="Slatwall.meta.tests.unit.entity.SlatwallEntityTestBase" {
 		orderItem.getChildOrderItems()[2].setProductBundleGroup(product.getSkus()[1].getProductBundleGroups()[2]);
 		assertEquals(orderItem.getProductBundlePrice(),9.25);
 	}
-
+	
+	/**
+	* @test
+	*/
 	public void function getProductBundlePrice_increase_decrease_skuPrice(){
 		var productData = {
 			productName="productBundleName",
@@ -199,7 +205,10 @@ component extends="Slatwall.meta.tests.unit.entity.SlatwallEntityTestBase" {
 		//addToDebug(orderItem.getProductBundlePrice());
 
 	}
-
+	
+	/**
+	* @test
+	*/
 	public void function getProductBundlePrice_package_quantity() {
 		var productData = {
 			productName="productBundleName",
@@ -301,7 +310,10 @@ component extends="Slatwall.meta.tests.unit.entity.SlatwallEntityTestBase" {
 		orderItem.setQuantity(4);
 		assertEquals(380, orderItem.getExtendedPrice());
 	}
-	
+		
+	/**
+	* @test
+	*/
 	public void function getExtendedPriceTest(){
 		var productData = {
 			productID="",
@@ -331,7 +343,10 @@ component extends="Slatwall.meta.tests.unit.entity.SlatwallEntityTestBase" {
 		var orderItem = createPersistedTestEntity('OrderItem',orderItemData);
 		assertEquals(orderItem.getExtendedPrice(),199.98);
 	}
-
+	
+	/**
+	* @test
+	*/
 	public void function test_quantity_and_bundleItemQuantity() {
 		var	orderItemData = {
 			orderItemid='',
@@ -377,16 +392,25 @@ component extends="Slatwall.meta.tests.unit.entity.SlatwallEntityTestBase" {
 		assertEquals(10, orderItem.getChildOrderItems()[3].getQuantity());
 	}
 
-
+	
+	/**
+	* @test
+	*/
 	public void function validate_as_save_for_a_new_instance_doesnt_pass() {
 
 	}
 
-
+	
+	/**
+	* @test
+	*/
 	public void function getSimpleRepresentation_exists_and_is_simple() {
 
 	}
-
+	
+	/**
+	* @test
+	*/
 	public void function test_set_and_remove_gift_card() {
 
 		var orderItemData = {
@@ -460,7 +484,10 @@ component extends="Slatwall.meta.tests.unit.entity.SlatwallEntityTestBase" {
 		};
 		return createPersistedTestEntity('Sku', skuData);
 	}
-
+	
+	/**
+	* @test
+	*/
 	public void function hasQuantityWithinMaxOrderQuantityTest_OrderItemType() {
 		var mockSku = createMockSku();
 
@@ -484,7 +511,10 @@ component extends="Slatwall.meta.tests.unit.entity.SlatwallEntityTestBase" {
 		var resultOITReturn = mockOrderItemOITReturn.hasQuantityWithinmaxOrderQuantity();
 		assertTrue(resultOITReturn, 'For orderITem types other than oitSale, should return the TRUE after the if statements');
 	}
-
+	
+	/**
+	* @test
+	*/
 	public void function hasQuantityWithinMaxOrderQuantityTest_QuantityComparision() {
 		var mockSku = createMockSku();
 
@@ -515,7 +545,10 @@ component extends="Slatwall.meta.tests.unit.entity.SlatwallEntityTestBase" {
 		var resultSale2 = mockOrderItemSale2.hasQuantityWithinmaxOrderQuantity();
 		assertFalse(resultSale2, 'The quantity of mockOrder2 should be 1040 in total, which is more than getMaximumOrderQuantity(), should return false');
 	}
-
+	
+	/**
+	* @test
+	*/
 	public void function hasQuantityWithinMaxOrderQuantityTest_getSkuIsNull() {
 		var mockSku = createMockSku();
 
@@ -542,7 +575,10 @@ component extends="Slatwall.meta.tests.unit.entity.SlatwallEntityTestBase" {
 		var resultOrderOneSkuOneNot = mockOrderItemRunFunction2.hasQuantityWithinmaxOrderQuantity();
 		assertTrue(resultOrderOneSkuOneNot, 'quantity should still be 1000, the mockOrderItemNoSku should not be added in quantity formula');
 	}
-
+	
+	/**
+	* @test
+	*/
 	public void function hasQuantityWithinMinOrderQuantityTest_OrderItemType() {
 		var mockSku = createMockSku();
 
@@ -567,7 +603,10 @@ component extends="Slatwall.meta.tests.unit.entity.SlatwallEntityTestBase" {
 		assertTrue(resultOITReturn, 'For orderITem types other than oitSale, should return the TRUE after the if statements');
 
 	}
-
+	
+	/**
+	* @test
+	*/
 	public void function hasQuantityWithinMinOrderQuantityTest_QuantityComparision() {
 		var mockSku = createMockSku();
 
@@ -603,7 +642,10 @@ component extends="Slatwall.meta.tests.unit.entity.SlatwallEntityTestBase" {
 		var resultSale2 = mockOrderItemSale2.hasQuantityWithinMinOrderQuantity();
 		assertFalse(resultSale2, 'The quantity of mockOrder2 should be 0 in total, which is less than min, should return false');
 	}
-
+	
+	/**
+	* @test
+	*/
 	public void function hasQuantityWithinMinOrderQuantityTest_getSkuIsNull() {
 		var mockSku = createMockSku();
 
@@ -629,5 +671,47 @@ component extends="Slatwall.meta.tests.unit.entity.SlatwallEntityTestBase" {
 
 		var resultOrderOneSkuOneNot = mockOrderItemRunFunction2.hasQuantityWithinMinOrderQuantity();
 		assertFalse(resultOrderOneSkuOneNot, 'quantity should still be 0, the mockOrderItemNoSku should not be added in quantity formula');
+	}
+	
+	/**
+	* @test
+	*/
+	public void function quantityHasChangedHasDefaultValueTest() {
+		var mockSku = createMockSku();
+
+		var productData = {
+			productID = '',
+			skus = [{
+				skuID = mockSku.getSkuID(),
+				skuCode = createUUID()
+			}]
+		};
+		var mockProduct = createPersistedTestEntity('Product', productData);
+
+		var mockOrderItemRunFunction1 = createMockOrderItem('444df2e9a6622ad1614ea75cd5b982ce', 0, mockSku.getSkuID());
+		
+		var resultQuantityHasChanged = mockOrderItemRunFunction1.getQuantityHasChanged();
+		assertEquals(resultQuantityHasChanged, 0, 'Quantity Has Changed has a default value of false.');
+	}
+	
+	/**
+	* @test
+	*/
+	public void function quantityHasChangedHasSetter() {
+		var mockSku = createMockSku();
+
+		var productData = {
+			productID = '',
+			skus = [{
+				skuID = mockSku.getSkuID(),
+				skuCode = createUUID()
+			}]
+		};
+		var mockProduct = createPersistedTestEntity('Product', productData);
+
+		var mockOrderItemRunFunction1 = createMockOrderItem('444df2e9a6622ad1614ea75cd5b982cf', 0, mockSku.getSkuID());
+		mockOrderItemRunFunction1.setQuantityHasChanged(true);
+		var resultQuantityHasChanged = mockOrderItemRunFunction1.getQuantityHasChanged();
+		assertEquals(resultQuantityHasChanged, 1, 'Quantity Has Changed has a set value of true.');
 	}
 }

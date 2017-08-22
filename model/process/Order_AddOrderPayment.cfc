@@ -54,8 +54,8 @@ component output="false" accessors="true" extends="HibachiProcess" {
 	// Lazy / Injected Objects
 
 	// New Properties
-	property name="newOrderPayment" cfc="OrderPayment" fieldType="many-to-one" persistent="false" fkcolumn="orderPaymentID";
-
+	property name="newOrderPayment" cfc="OrderPayment" fieldType="many-to-one" fkcolumn="orderPaymentID";
+ 
 	// Data Properties (ID's)
 	property name="copyFromType" ormtype="string" hb_rbKey="entity.copyFromType" hb_formFieldType="select";
 	property name="accountPaymentMethodID" hb_rbKey="entity.accountPaymentMethod" hb_formFieldType="select";
@@ -248,10 +248,10 @@ component output="false" accessors="true" extends="HibachiProcess" {
 			var epmDetails = getService('paymentService').getEligiblePaymentMethodDetailsForOrder( getOrder() );
 			for(var paymentDetail in epmDetails) {
 				arrayAppend(variables.paymentMethodIDOptions, {
-					name = paymentDetail.paymentMethod.getPaymentMethodName(),
-					value = paymentDetail.paymentMethod.getPaymentMethodID(),
-					paymentmethodtype = paymentDetail.paymentMethod.getPaymentMethodType(),
-					allowsaveflag = paymentDetail.paymentMethod.getAllowSaveFlag()
+					name = paymentDetail.getPaymentMethod().getPaymentMethodName(),
+					value = paymentDetail.getPaymentMethod().getPaymentMethodID(),
+					paymentmethodtype = paymentDetail.getPaymentMethod().getPaymentMethodType(),
+					allowsaveflag = paymentDetail.getPaymentMethod().getAllowSaveFlag()
 					});
 			}
 		}
@@ -326,6 +326,18 @@ component output="false" accessors="true" extends="HibachiProcess" {
 		} 
         
         return false; 	
+	}
+
+	public boolean function giftCardNotAlreadyApplied(){
+		if(this.hasGiftCard()){
+			var cardID = this.getGiftCard().getGiftCardID();
+			for(var payment in this.getOrder().getOrderPayments()){
+				if(!isNull(payment.getGiftCard()) && payment.getGiftCard().getGiftCardID() == cardID){
+					return false;
+				}
+			}
+		}
+		return true;
 	}
 
 	public boolean function giftCardCurrencyMatches(){

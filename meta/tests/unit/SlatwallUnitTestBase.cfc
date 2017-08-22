@@ -46,26 +46,25 @@
 Notes:
 
 */
-component extends="mxunit.framework.TestCase" output="false" {
+component displayName="mytestcase" extends="testbox.system.compat.framework.TestCase"{
 
 	variables.debugArray = [];
 	variables.persistentEntities = [];
 	variables.files = [];
 
-	// BEFORE ALL TESTS IN THIS SUITE
+	// BEFORE ALL TESTS IN THIS SUITE	
 	public void function beforeTests(){
-
+		
 		// Setup Components
 		variables.slatwallFW1Application = createObject("component", "Slatwall.Application");
-
-		super.beforeTests();
 	}
 
-	// BEFORE EACH TEST
+	// BEFORE EACH TEST	
 	public void function setUp() {
 		variables.slatwallFW1Application.bootstrap();
 		
 		request.slatwallScope.getAccount().setSuperUserFlag(1);
+		request.slatwallScope.getAccount().setFirstName('BigBoy');
 
 		// Setup a debugging output array
 		variables.debugArray = [];
@@ -73,7 +72,7 @@ component extends="mxunit.framework.TestCase" output="false" {
 		variables.files = [];
 	}
 
-	// AFTER EACH TEST
+	// AFTER EACH TEST	
 	public void function tearDown() {
 		debug(variables.debugArray);
 

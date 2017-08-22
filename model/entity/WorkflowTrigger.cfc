@@ -49,6 +49,8 @@ component entityname="SlatwallWorkflowTrigger" table="SwWorkflowTrigger" persist
 	property name="nextRunDateTime" ormtype="timestamp";
 	property name="startDateTime" ormtype="timestamp";
 	property name="endDateTime" ormtype="timestamp" hb_nullRBKey="define.forever";
+	property name="collectionFetchSize" ormtype="integer";
+	property name="timeout" ormtype="integer" default="90"; 
 	
 	// Calculated Properties
 
@@ -76,6 +78,18 @@ component entityname="SlatwallWorkflowTrigger" table="SwWorkflowTrigger" persist
 	property name="modifiedByAccountID" hb_populateEnabled="false" ormtype="string";
 	
 	// Non-Persistent Properties
+	
+	property name="workflowTriggerException" persistent="false";
+	
+	public void function setWorkflowTriggerException(required any e){
+		variables.workflowTriggerException = arguments.e;
+	}
+	
+	public any function getWorkflowTriggerException(){
+		if(structKeyExists(variables,"workflowTriggerException")){
+			return variables.workflowTriggerException;
+		}
+	}
 	
 	
 	// Workflow (many-to-one)

@@ -19,7 +19,24 @@ component accessors="true" output="false" extends="HibachiService" {
 		
 		return super.init();
 	}
-
+	
+	public any function getServerInstanceByServerInstanceIPAddress(){
+		var serverInstance = super.onMissingGetMethod(missingMethodName='getServerInstanceByServerInstanceIPAddress',missingMethodArguments=arguments);
+		if(isNull(serverInstance) || serverInstance.getNewFlag()){
+			serverInstance = this.newServerInstance();
+			serverInstance.setServerInstanceIPAddress(getHibachiScope().getServerInstanceIPAddress());
+			serverInstance.setServerInstanceExpired(false);
+			serverInstance.setSettingsExpired(false);
+			
+			this.saveServerInstance(serverInstance); 
+		}
+		return serverInstance;
+	}
+	
+	public any function getDatabaseCacheByDatabaseCacheKey(required databaseCacheKey){
+		return getDao('HibachiCacheDAO').getDatabaseCacheByDatabaseCacheKey(arguments.databaseCacheKey);
+	}
+	
 	public any function hasCachedValue( required string key ) {
 		// If using the internal cache, then check there
 		if( getInternalCacheFlag() && structKeyExists(getCache(), arguments.key) && structKeyExists(getCache()[ arguments.key ], "reset") && !getCache()[ arguments.key ].reset ) {
@@ -44,6 +61,24 @@ component accessors="true" output="false" extends="HibachiService" {
 		return false;
 	}
 	
+	public void function updateServerInstanceCache(required string serverInstanceIPAddress){
+		var serverInstance = this.getServerInstanceByServerInstanceIPAddress(arguments.serverInstanceIPAddress);
+		getDao('hibachiCacheDao').updateServerInstanceCache(serverInstance);
+	}
+	
+	public void function updateServerInstanceSettingsCache(required string serverInstanceIPAddress){
+		var serverInstance = this.getServerInstanceByServerInstanceIPAddress(arguments.serverInstanceIPAddress);
+		getDao('hibachiCacheDao').updateServerInstanceSettingsCache(serverInstance);
+	}
+	
+	public boolean function isServerInstanceCacheExpired(required string serverInstanceIPAddress){
+		return getDao('hibachiCacheDao').isServerInstanceCacheExpired(arguments.serverInstanceIPAddress);
+	} 
+	
+	public boolean function isServerInstanceSettingsCacheExpired(required string serverInstanceIPAddress){
+		return getDao('hibachiCacheDao').isServerInstanceSettingsCacheExpired(arguments.serverInstanceIPAddress);
+	} 
+		
 	public any function getCachedValue( required string key ) {
 		// If using the internal cache, then check there
 		if(getInternalCacheFlag() && structKeyExists(getCache(), key) ) {

@@ -20,9 +20,10 @@ export class BaseBootStrapper{
         .resolve(['$http','$q','$timeout', ($http,$q,$timeout)=> {
             this.$http = $http;
             this.$q = $q;
-
-
              var baseURL = hibachiConfig.baseURL;
+             if(!baseURL) {
+                 baseURL = ''
+             }
              if(baseURL.length && baseURL.slice(-1) !== '/'){
                 baseURL += '/';
              }
@@ -34,7 +35,7 @@ export class BaseBootStrapper{
                 var invalidCache = [];
                 try{
                     var hashedData = md5(localStorage.getItem('attributeMetaData'));
-                    console.log(hashedData);
+
                     if(resp.data.data['attributeCacheKey'] === hashedData.toUpperCase()){
                         coremodule.constant('attributeMetaData',JSON.parse(localStorage.getItem('attributeMetaData')));
                     }else{
@@ -43,12 +44,12 @@ export class BaseBootStrapper{
                 }catch(e){
                     invalidCache.push('attributeCacheKey');
                 }
-                
+
                 invalidCache.push('instantiationKey');
 
                return this.getData(invalidCache);
             });
-            
+
         }])
         .loading(function(){
             //angular.element('#loading').show();
@@ -58,6 +59,7 @@ export class BaseBootStrapper{
         })
         .done(function() {
             //angular.element('#loading').hide();
+
         });
 
     }
@@ -129,10 +131,14 @@ export class BaseBootStrapper{
             urlString+='/';
         }
 
-        return this.$http.get(urlString+'custom/config/config.json?instantiationKey='+this.instantiationKey)
+        return this.$http.get(urlString+'/custom/config/config.json?instantiationKey='+this.instantiationKey)
         .then( (resp:any)=> {
+        	var appConfig = resp.data.data;
+            if(hibachiConfig.baseURL.length){
+                appConfig.baseURL=urlString;    
+            }
             coremodule.constant('appConfig',resp.data.data);
-            this.appConfig = resp.data.data;
+            this.appConfig = appConfig;
             return this.getResourceBundles();
 
         },(response:any) => {

@@ -75,6 +75,7 @@ Notes:
 					<input type="hidden" name="shippingMethod.shippingMethodID" value="#rc.processObject.getShippingMethod().getShippingMethodID()#" />
 					<input type="hidden" name="shippingAddress.addressID" value="#rc.processObject.getShippingAddress().getAddressID()#" />
 				</cfif>
+				<hb:HibachiActionCaller action="admin:entity.detailorder" queryString="orderID=#rc.processObject.getOrder().getOrderID()#" text=" #$.slatwall.rbkey('entity.Order.OrderNumber')#: #rc.processObject.getOrder().getOrderNumber()#">
 				
 				<!--- Shipping - Inputs --->
 				<cfif rc.processObject.getOrderFulfillment().getFulfillmentMethod().getFulfillmentMethodType() eq "shipping">
@@ -107,17 +108,7 @@ Notes:
 
 				</cfif>
 
-				<!---Loop through order payments to see if we paid with a credit card--->
-				<cfset orderPayments = #rc.processObject.getOrder().getOrderPayments()# />
-				<cfset foundCredit = false />
-				<cfloop array='#orderPayments#' index="payment">
-					<cfif payment.getPaymentMethodType() eq 'creditCard'>
-						<cfset foundCredit = true />
-						<cfbreak>
-					</cfif>
-				</cfloop>
-
-				<cfif rc.processObject.getCapturableAmount() gt 0 AND foundCredit>
+				<cfif rc.processObject.getCapturableAmount() gt 0 AND rc.processObject.getOrder().hasCreditCardPaymentMethod()>
 					<hb:HibachiPropertyDisplay object="#rc.processObject#" property="captureAuthorizedPaymentsFlag" edit="true" />
 					<hb:HibachiPropertyDisplay object="#rc.processObject#" property="capturableAmount" edit="false" />
 				</cfif>
@@ -140,7 +131,6 @@ Notes:
 							<cfset orderItemIndex++ />
 
 							<cfset orderItem = $.slatwall.getService("orderService").getOrderItem( recordData.orderItem.orderItemID ) />
-
 							<td>#orderItem.getSku().getSkuCode()#</td>
 							<td>#orderItem.getSku().getProduct().getTitle()#</td>
 							<td>#orderItem.getSku().displayOptions()#</td>

@@ -246,13 +246,13 @@ component displayname="Order Fulfillment" entityname="SlatwallOrderFulfillment" 
 	}
 
 	public numeric function getChargeAfterDiscount() {
-		return precisionEvaluate(getFulfillmentCharge() - getDiscountAmount());
+		return getService('HibachiUtilityService').precisionCalculate(getFulfillmentCharge() - getDiscountAmount());
 	}
 
 	public numeric function getDiscountAmount() {
 		discountAmount = 0;
 		for(var i=1; i<=arrayLen(getAppliedPromotions()); i++) {
-			discountAmount = precisionEvaluate(discountAmount + getAppliedPromotions()[i].getDiscountAmount());
+			discountAmount = getService('HibachiUtilityService').precisionCalculate(discountAmount + getAppliedPromotions()[i].getDiscountAmount());
 		}
 		return discountAmount;
 	}
@@ -262,14 +262,14 @@ component displayname="Order Fulfillment" entityname="SlatwallOrderFulfillment" 
 	}
 
     public numeric function getFulfillmentTotal() {
-    	return precisionEvaluate(getSubtotalAfterDiscountsWithTax() + getChargeAfterDiscount());
+    	return getService('HibachiUtilityService').precisionCalculate(getSubtotalAfterDiscountsWithTax() + getChargeAfterDiscount());
     }
 
    	public numeric function getItemDiscountAmountTotal() {
    		if(!structKeyExists(variables, "itemDiscountAmountTotal")) {
    			variables.itemDiscountAmountTotal = 0;
    			for(var i=1; i<=arrayLen(getOrderFulfillmentItems()); i++) {
-				variables.itemDiscountAmountTotal = precisionEvaluate(variables.itemDiscountAmountTotal + getOrderFulfillmentItems()[i].getDiscountAmount());
+				variables.itemDiscountAmountTotal = getService('HibachiUtilityService').precisionCalculate(variables.itemDiscountAmountTotal + getOrderFulfillmentItems()[i].getDiscountAmount());
 			}
    		}
 		return variables.itemDiscountAmountTotal;
@@ -352,51 +352,7 @@ component displayname="Order Fulfillment" entityname="SlatwallOrderFulfillment" 
 
     public any function getShippingMethodOptions() {
     	if( !structKeyExists(variables, "shippingMethodOptions")) {
-
-			//update the shipping method options with the shipping service to insure qualifiers are re-evaluated    		
-			getService("shippingService").updateOrderFulfillmentShippingMethodOptions( this );
-
-    		// At this point they have either been populated just before, or there were already options
-    		var optionsArray = [];
-    		var sortType = getFulfillmentMethod().setting('fulfillmentMethodShippingOptionSortType');
-    		for(var shippingMethodOption in getFulfillmentShippingMethodOptions()) {
-
-    			var thisOption = {};
-    			thisOption['name'] = shippingMethodOption.getSimpleRepresentation();
-    			thisOption['value'] = shippingMethodOption.getShippingMethodRate().getShippingMethod().getShippingMethodID();
-    			thisOption['totalCharge'] = shippingMethodOption.getTotalCharge();
-    			thisOption['totalChargeAfterDiscount'] = shippingMethodOption.getTotalChargeAfterDiscount();
-    			thisOption['shippingMethodSortOrder'] = shippingMethodOption.getShippingMethodRate().getShippingMethod().getSortOrder();
-    			if( !isNull(shippingMethodOption.getShippingMethodRate().getShippingMethod().getShippingMethodCode()) ){
-    				thisOption['shippingMethodCode'] = shippingMethodOption.getShippingMethodRate().getShippingMethod().getShippingMethodCode();
-    			}
-
-    			var inserted = false;
-
-    			for(var i=1; i<=arrayLen(optionsArray); i++) {
-    				var thisExistingOption = optionsArray[i];
-
-    				if( (sortType eq 'price' && thisOption.totalCharge < thisExistingOption.totalCharge)
-    				  	||
-    					(sortType eq 'sortOrder' && thisOption.shippingMethodSortOrder < thisExistingOption.shippingMethodSortOrder) ) {
-
-    					arrayInsertAt(optionsArray, i, thisOption);
-    					inserted = true;
-    					break;
-    				}
-    			}
-
-    			if(!inserted) {
-    				arrayAppend(optionsArray, thisOption);
-    			}
-
-    		}
-
-    		if(!arrayLen(optionsArray)) {
-    			arrayPrepend(optionsArray, {name=rbKey('define.select'), value=''});
-    		}
-
-    		variables.shippingMethodOptions = optionsArray;
+    		variables.shippingMethodOptions = getService("OrderService").getShippingMethodOptions(this);
     	}
     	return variables.shippingMethodOptions;
     }
@@ -450,7 +406,7 @@ component displayname="Order Fulfillment" entityname="SlatwallOrderFulfillment" 
 	    	variables.subtotal = 0;
 	    	for( var i=1; i<=arrayLen(getOrderFulfillmentItems()); i++ ) {
 				if(getOrderFulfillmentItems()[i].isRootOrderItem()){
-				    variables.subtotal = precisionEvaluate(variables.subtotal + getOrderFulfillmentItems()[i].getExtendedPrice());	    	
+				    variables.subtotal = getService('HibachiUtilityService').precisionCalculate(variables.subtotal + getOrderFulfillmentItems()[i].getExtendedPrice());	    	
 	    		}
 	    	}
   		}
@@ -458,18 +414,18 @@ component displayname="Order Fulfillment" entityname="SlatwallOrderFulfillment" 
     }
 
     public numeric function getSubtotalAfterDiscounts() {
-    	return precisionEvaluate(getSubtotal() - getItemDiscountAmountTotal());
+    	return getService('HibachiUtilityService').precisionCalculate(getSubtotal() - getItemDiscountAmountTotal());
     }
 
     public numeric function getSubtotalAfterDiscountsWithTax() {
-    	return precisionEvaluate(getSubtotal() - getItemDiscountAmountTotal() + getTaxAmount());
+    	return getService('HibachiUtilityService').precisionCalculate(getSubtotal() - getItemDiscountAmountTotal() + getTaxAmount());
     }
 
     public numeric function getTaxAmount() {
     	if( !structkeyExists(variables, "taxAmount") ) {
     		variables.taxAmount = 0;
 	    	for( var i=1; i<=arrayLen(getOrderFulfillmentItems()); i++ ) {
-	    		variables.taxAmount = precisionEvaluate(variables.taxAmount + getOrderFulfillmentItems()[i].getTaxAmount());
+	    		variables.taxAmount = getService('HibachiUtilityService').precisionCalculate(variables.taxAmount + getOrderFulfillmentItems()[i].getTaxAmount());
 	    	}
     	}
     	return variables.taxAmount;
@@ -479,8 +435,11 @@ component displayname="Order Fulfillment" entityname="SlatwallOrderFulfillment" 
     	var totalShippingWeight = 0;
 
     	for( var orderItem in getOrderFulfillmentItems()) {
-    		var convertedWeight = getService("measurementService").convertWeightToGlobalWeightUnit(orderItem.getSku().setting('skuShippingWeight'), orderItem.getSku().setting('skuShippingWeightUnitCode'));
-    		totalShippingWeight = precisionEvaluate(totalShippingWeight + (convertedWeight * orderItem.getQuantity()));
+    		//Only calculate the weight for top level items so that product bundles don't cause weight doubling.
+    		if (isNull(orderItem.getParentOrderItem())){	
+    			var convertedWeight = getService("measurementService").convertWeightToGlobalWeightUnit(orderItem.getSku().setting('skuShippingWeight'), orderItem.getSku().setting('skuShippingWeightUnitCode'));
+    			totalShippingWeight = getService('HibachiUtilityService').precisionCalculate(totalShippingWeight + (convertedWeight * orderItem.getQuantity()));
+    		}
     	}
 
     	return totalShippingWeight;
@@ -493,7 +452,7 @@ component displayname="Order Fulfillment" entityname="SlatwallOrderFulfillment" 
     				  		|| (
 		    				  	!isNull(this.getFulfillmentMethod())
 		    				  	&& this.getFulfillmentMethod().setting('fulfillmentMethodAutoMinReceivedPercentage')
-		    						<= precisionEvaluate( this.getOrder().getPaymentAmountReceivedTotal() * 100 / this.getOrder().getTotal() )
+		    						<= getService('HibachiUtilityService').precisionCalculate( this.getOrder().getPaymentAmountReceivedTotal() * 100 / this.getOrder().getTotal() )
 		    				)
     				  )
     			);
@@ -669,7 +628,12 @@ component displayname="Order Fulfillment" entityname="SlatwallOrderFulfillment" 
 				setShippingAddress( arguments.accountAddress.getAddress().copyAddress( true ) );
 
 			// Else if there was no accountAddress before, or the accountAddress has changed
-			} else if (!structKeyExists(variables, "accountAddress") || (structKeyExists(variables, "accountAddress") && variables.accountAddress.getAccountAddressID() != arguments.accountAddress.getAccountAddressID()) ) {
+			} else if (
+				!structKeyExists(variables, "accountAddress") 
+				|| (
+					structKeyExists(variables, "accountAddress") 
+					&& variables.accountAddress.getAccountAddressID() != arguments.accountAddress.getAccountAddressID()) 
+			) {
 				getShippingAddress().populateFromAddressValueCopy( arguments.accountAddress.getAddress() );
 
 			}
@@ -762,7 +726,7 @@ component displayname="Order Fulfillment" entityname="SlatwallOrderFulfillment" 
     }
 
 	public numeric function getDiscountTotal() {
-		return precisionEvaluate(getDiscountAmount() + getItemDiscountAmountTotal());
+		return getService('HibachiUtilityService').precisionCalculate(getDiscountAmount() + getItemDiscountAmountTotal());
 	}
 
 	public numeric function getShippingCharge() {

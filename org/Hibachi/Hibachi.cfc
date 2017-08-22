@@ -35,13 +35,13 @@ component extends="FW1.framework" {
 	variables.framework.subsystemDelimiter = ':';
 	variables.framework.siteWideLayoutSubsystem = 'common';
 	variables.framework.home = 'admin:main.default';
-  variables.framework.error = 'admin:error.default';
-  variables.framework.reload = 'reload';
-  variables.framework.password = 'true';
-  variables.framework.reloadApplicationOnEveryRequest = false;
-  variables.framework.generateSES = false;
-  variables.framework.SESOmitIndex = false;
-  variables.framework.suppressImplicitService = true;
+	variables.framework.error = 'admin:error.default';
+	variables.framework.reload = 'reload';
+	variables.framework.password = 'true';
+	variables.framework.reloadApplicationOnEveryRequest = false;
+	variables.framework.generateSES = false;
+	variables.framework.SESOmitIndex = false;
+	variables.framework.suppressImplicitService = true;
 	variables.framework.unhandledExtensions = 'cfc';
 	variables.framework.unhandledPaths = '/flex2gateway';
 	variables.framework.unhandledErrorCaught = false;
@@ -49,6 +49,7 @@ component extends="FW1.framework" {
 	variables.framework.maxNumContextsPreserved = 10;
 	variables.framework.cacheFileExists = false;
 	variables.framework.trace = false;
+	variables.framework.isAwsInstance=false;
 
 	/* TODO: add solution to api routing for Rest api*/
 	variables.framework.routes = [
@@ -82,6 +83,7 @@ component extends="FW1.framework" {
 	variables.framework.hibachi.errorNotifyEmailAddresses = '';
 	variables.framework.hibachi.fullUpdateKey = "update";
 	variables.framework.hibachi.fullUpdatePassword = "true";
+	variables.framework.hibachi.runDbDataKey = 'runDbData';
 	variables.framework.hibachi.loginSubsystems = "admin,public";
 	variables.framework.hibachi.loginDefaultSubsystem = 'admin';
 	variables.framework.hibachi.loginDefaultSection = 'main';
@@ -92,14 +94,25 @@ component extends="FW1.framework" {
 	variables.framework.hibachi.noaccessDefaultSection = 'main';
 	variables.framework.hibachi.noaccessDefaultItem = 'noaccess';
 	variables.framework.hibachi.sessionCookieDomain = "";
+	variables.framework.hibachi.sessionCookieSecure = "";
 	variables.framework.hibachi.lineBreakStyle = SERVER.OS.NAME;
 	variables.framework.hibachi.disableFullUpdateOnServerStartup = false;
+	variables.framework.hibachi.skipDbData = false;
+	
 
 	// Allow For Application Config
 	try{include "../../config/configFramework.cfm";}catch(any e){}
 	// Allow For Instance Config
 	try{include "../../custom/config/configFramework.cfm";}catch(any e){}
+	// Allow For Dev Ops Config for Stand Alone
+	try{include "../../../../config/configFramework.cfm";}catch(any e){}
+	// Allow For Dev Ops Config for Mura
+	try{include "../../../../../config/configFramework.cfm";}catch(any e){}
 
+
+	if(structKeyExists(url, variables.framework.hibachi.runDbDataKey)){
+		variables.framework.hibachi.skipDbData = false;
+	}
 
 	// =============== configMappings
 
@@ -146,7 +159,14 @@ component extends="FW1.framework" {
 	try{include "../../custom/config/configORM.cfm";}catch(any e){}
 
 	// ==================== START: PRE UPDATE SCRIPTS ======================
-	if(!fileExists("#this.mappings[ '/#variables.framework.applicationKey#' ]#/custom/config/lastFullUpdate.txt.cfm") || !fileExists("#this.mappings[ '/#variables.framework.applicationKey#' ]#/custom/config/preUpdatesRun.txt.cfm") || (structKeyExists(url, variables.framework.hibachi.fullUpdateKey) && url[ variables.framework.hibachi.fullUpdateKey ] == variables.framework.hibachi.fullUpdatePassword)){
+	if(
+		!variables.framework.hibachi.skipDbData
+		&&(
+			!fileExists("#this.mappings[ '/#variables.framework.applicationKey#' ]#/custom/config/lastFullUpdate.txt.cfm") 
+			|| !fileExists("#this.mappings[ '/#variables.framework.applicationKey#' ]#/custom/config/preUpdatesRun.txt.cfm") 
+			|| (structKeyExists(url, variables.framework.hibachi.fullUpdateKey) && url[ variables.framework.hibachi.fullUpdateKey ] == variables.framework.hibachi.fullUpdatePassword)
+		)
+	){
 
 		this.ormSettings.secondaryCacheEnabled = false;
 
@@ -206,9 +226,21 @@ component extends="FW1.framework" {
             } else {
                 request["#variables.framework.applicationKey#Scope"] = createObject("component", "#variables.framework.applicationKey#.model.transient.HibachiScope").init();
             }
-
+			getHibachiScope().setIsAwsInstance(variables.framework.isAwsInstance);
 			// Verify that the application is setup
 			verifyApplicationSetup();
+			
+			if(getHibachiScope().getService('hibachiCacheService').isServerInstanceCacheExpired(getHibachiScope().getServerInstanceIPAddress())){
+				verifyApplicationSetup(reloadByServerInstance=true);
+			}else{
+				//RELOAD JUST THE SETTINGS
+				if(getHibachiScope().getService('hibachiCacheService').isServerInstanceSettingsCacheExpired(getHibachiScope().getServerInstanceIPAddress())){
+					getBeanFactory().getBean('hibachiCacheService').resetCachedKeyByPrefix('setting');
+					var serverInstance = getBeanFactory().getBean('hibachiCacheService').getServerInstanceByServerInstanceIPAddress(getHibachiScope().getServerInstanceIPAddress(),true);
+					serverInstance.setSettingsExpired(false);
+				}	
+			}
+			
 			// Verify that the session is setup
 			getHibachiScope().getService("hibachiSessionService").setProperSession();
 
@@ -236,7 +268,7 @@ component extends="FW1.framework" {
 					getHibachiScope().getSession().setAccount( accessKeyAccount );
 					AuthToken = 'Bearer '& getHibachiScope().getService('HibachiJWTService').createToken();
 				}
-			}
+			} 
 
 			//check if we have the authorization header
 			if(len(AuthToken)){
@@ -414,6 +446,7 @@ component extends="FW1.framework" {
 		// Setup a $ in the request context, and the hibachiScope shortcut
 		request.context.fw = getHibachiScope().getApplicationValue("application");
 		request.context.$ = {};
+		request.context.$.Hibachi = getHibachiScope();	
 		request.context.$[ variables.framework.applicationKey ] = getHibachiScope();
 		request.context.pagetitle = request.context.$[ variables.framework.applicationKey ].rbKey( request.context[ getAction() ] );
 		request.context.edit = false;
@@ -443,9 +476,19 @@ component extends="FW1.framework" {
 		// Announce the applicatoinRequestStart event
 		getHibachiScope().getService("hibachiEventService").announceEvent(eventName="onApplicationRequestStart");
 	}
-
-	public void function verifyApplicationSetup() {
-		if(structKeyExists(url, variables.framework.reload) && url[variables.framework.reload] == variables.framework.password) {
+	
+	public boolean function hasReloadKey(){
+		return structKeyExists(url, variables.framework.reload) 
+		&& url[variables.framework.reload] == variables.framework.password;
+	}
+	
+	public void function verifyApplicationSetup(reloadByServerInstance=false) {
+		
+		if(
+			(
+				hasReloadKey()
+			) || reloadByServerInstance
+		) {
 			getHibachiScope().setApplicationValue("initialized", false);
 		}
 
@@ -455,7 +498,7 @@ component extends="FW1.framework" {
 			lock scope="Application" timeout="600"  {
 				
 				// Set the request timeout to 600
-				createObject("Slatwall.org.Hibachi.HibachiTagService").cfsetting(requesttimeout=600);
+				createObject("#variables.framework.applicationKey#.org.Hibachi.HibachiTagService").cfsetting(requesttimeout=600);
 
 				// Check again so that the qued requests don't back up
 				if(!getHibachiScope().hasApplicationValue("initialized") || !getHibachiScope().getApplicationValue("initialized")) {
@@ -480,6 +523,7 @@ component extends="FW1.framework" {
 					applicationInitData["action"] = 					variables.framework.action;
 					applicationInitData["hibachiConfig"] =				variables.framework.hibachi;
 					applicationInitData["lineBreakStyle"] =				variables.framework.hibachi.lineBreakStyle;
+					applicationInitData["skipDbData"] = 				variables.framework.hibachi.skipDbData;
 					// Log the setup start with values
 					writeLog(file="#variables.framework.applicationKey#", text="General Log - Application setup started.");
 					for(var key in applicationInitData) {
@@ -586,10 +630,10 @@ component extends="FW1.framework" {
 						coreBF.declareBean("hibachiJWT", "#variables.framework.applicationKey#.org.Hibachi.HibachiJWT",false);
 					}
 					if(!coreBF.containsBean("hibachiEntityParser")){
-						coreBF.declareBean("hibachiEntityParser", "#variables.framework.applicationKey#.org.Hibachi.hibachiEntityParser",false);
+						coreBF.declareBean("hibachiEntityParser", "#variables.framework.applicationKey#.org.Hibachi.HibachiEntityParser",false);
 					}
 					if(!coreBF.containsBean("hibachiRecaptcha")){
-						coreBF.declareBean("hibachiRecaptcha", "#variables.framework.applicationKey#.org.Hibachi.hibachiRecaptcha",false);
+						coreBF.declareBean("hibachiRecaptcha", "#variables.framework.applicationKey#.org.Hibachi.HibachiRecaptcha",false);
 					}
 
 					// Setup the custom bean factory
@@ -690,7 +734,20 @@ component extends="FW1.framework" {
 					getBeanFactory().getBean('hibachiJsonService').createJson();
 
 					//===================== END: JSON BUILD SETUP =========================
-
+					
+					//==================== START: UPDATE SERVER INSTANCE CACHE STATUS ========================
+					
+					//only run the update if it wasn't initiated by serverside cache being expired
+					if(!arguments.reloadByServerInstance){
+						getBeanFactory().getBean('hibachiCacheService').updateServerInstanceCache(getHibachiScope().getServerInstanceIPAddress());
+					}else{
+						
+						var serverInstance = getBeanFactory().getBean('hibachiCacheService').getServerInstanceByServerInstanceIPAddress(getHibachiScope().getServerInstanceIPAddress(),true);
+						serverInstance.setServerInstanceExpired(false);
+					}
+					
+					//==================== END: UPDATE SERVER INSTANCE CACHE STATUS ========================
+					
 					// Application Setup Ended
 					getHibachiScope().setApplicationValue("initialized", true);
 					writeLog(file="#variables.framework.applicationKey#", text="General Log - Application Setup Complete");
@@ -717,6 +774,7 @@ component extends="FW1.framework" {
 			}
 		}
 	}
+	
 
 	public void function renderApiResponse(){
 
@@ -772,6 +830,7 @@ component extends="FW1.framework" {
 		if(request.context.apiRequest) {
 			renderApiResponse();
 		}
+
 		// Check for an Ajax Response
 		if(request.context.ajaxRequest && !structKeyExists(request, "exception")) {
 			populateAPIHeaders();
@@ -830,6 +889,7 @@ component extends="FW1.framework" {
 
 	// This handels all of the ORM persistece.
 	public void function endHibachiLifecycle() {
+		
 		if(getHibachiScope().getPersistSessionFlag()) {
 			getHibachiScope().getService("hibachiSessionService").persistSession();
 		}
@@ -865,7 +925,7 @@ component extends="FW1.framework" {
 			if ( getPageContext().getRequest().GetRequestUrl().toString() == LEFT(arguments.redirectLocation, len(getPageContext().getRequest().GetRequestUrl().toString())) || redirectDomainApprovedFlag == true ){
 				location(arguments.redirectLocation, arguments.addToken);
 			}else{
-				location(getPageContext().getRequest().GetRequestUrl().toString(), arguments.addToken)
+				location(getPageContext().getRequest().GetRequestUrl().toString(), arguments.addToken);
 			}
 		}
 	}
@@ -999,6 +1059,9 @@ component extends="FW1.framework" {
 		//if something fails for any reason then we want to set the response status so our javascript can handle rest errors
 		var context = getPageContext();
 		var response = context.getResponse();
+		if(variables.framework.hibachi.errorDisplayFlag && structKeyExists(request,'context') && structKeyExists(request.context,'apiRequest') && request.context.apiRequest){
+			writeDump(exception); abort;
+		}
 		response.setStatus(500);
 		super.onError(arguments.exception,arguments.event);
 	}

@@ -115,10 +115,18 @@ Notes:
 						<input type="hidden" name="newOrderPayment.order.orderID" value="#rc.order.getOrderID()#" />
 
 						<!--- Display the amount that is going to be used --->
-						<cfset amountToChargeDisplay = $.slatwall.formatValue(rc.order.getAddPaymentRequirementDetails().amount, 'currency', {currencyCode=rc.order.getCurrencyCode()}) />
+						<cfset amountToChargeDisplay = $.slatwall.formatValue(rc.order.getOrderPaymentChargeAmountNeeded(), 'currency', {currencyCode=rc.order.getCurrencyCode()}) />
 						<cfif rc.placeOrderNeedsFulfillmentCharge>
 							<cfset amountToChargeDisplay &= " + #$.slatwall.rbKey('entity.orderFulfillment.fulfillmentCharge')#" />
 						</cfif>
+						
+						<!--- Display the deposit amount instead of the full amount. --->
+						<cfif rc.order.hasDepositItemsOnOrder()>
+ 							<br>
+ 							<b>Deposit</b>&nbsp;
+ 							<cfset amountToChargeDisplay = $.slatwall.formatValue(rc.order.getTotalDepositAmount(), 'currency', {currencyCode=rc.order.getCurrencyCode()}) />
+ 						</cfif>
+ 						
 						<hb:HibachiPropertyDisplay object="#rc.addOrderPaymentProcessObject.getNewOrderPayment()#" property="amount" value="#amountToChargeDisplay#" edit="false">
 
 						<!--- Add hidden value for payment type, and display what it is going to be --->

@@ -1108,7 +1108,7 @@ component extends="HibachiService" accessors="true" {
 
 		// if this type has a parent, inherit all products that were assigned to that parent
 		if(!arguments.productType.hasErrors() && !isNull(arguments.productType.getParentProductType()) and arrayLen(arguments.productType.getParentProductType().getProducts())) {
-			getProductDAO.flushOrmSession();
+			getProductDAO().flushOrmSession();
 			getProductDAO().updateProductProductType( arguments.productType.getParentProductType().getProductTypeID(), arguments.productType.getProductTypeID() );
 		}
 
@@ -1147,8 +1147,7 @@ component extends="HibachiService" accessors="true" {
 		return delete( arguments.product );
 	}
 
-	public boolean function deleteProductListingPage(required any productListingPage){ 
-		
+	public boolean function deleteProductListingPage(required any productListingPage){  
 		arguments.productListingPage.removeContent(); 
 		arguments.productListingPage.removeProduct(); 
 		return delete( arguments.productListingPage ); 

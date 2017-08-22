@@ -104,6 +104,7 @@ class CollectionConfig {
         private pageShow:number = 10,
         private keywords:string = '',
         private allRecords:boolean = false,
+        private dirtyRead:boolean = false,
         private isDistinct:boolean = false
 
     ){
@@ -129,7 +130,8 @@ class CollectionConfig {
 
     public loadJson= (jsonCollection):any =>{
         //if json then make a javascript object else use the javascript object
-        if(angular.isString(jsonCollection)){
+        //if coldfusion has double encoded the json keep calling fromJson until it becomes an object
+        while(angular.isString(jsonCollection)){
             jsonCollection = angular.fromJson(jsonCollection);
         }
 
@@ -146,6 +148,9 @@ class CollectionConfig {
         this.groupBys = jsonCollection.groupBys;
         this.pageShow = jsonCollection.pageShow;
         this.allRecords = jsonCollection.allRecords;
+        if(jsonCollection.dirtyRead){
+            this.dirtyRead = jsonCollection.dirtyRead;
+        }
         this.isDistinct = jsonCollection.isDistinct;
         this.currentPage = jsonCollection.currentPage || 1;
         this.pageShow = jsonCollection.pageShow || 10;
@@ -182,6 +187,7 @@ class CollectionConfig {
             keywords: this.keywords,
             defaultColumns: (!this.columns || !this.columns.length),
             allRecords: this.allRecords,
+            dirtyRead: this.dirtyRead,
             isDistinct: this.isDistinct,
             orderBy:this.orderBy
         };
@@ -194,7 +200,7 @@ class CollectionConfig {
     public getOptions= (): Object =>{
         this.validateFilter(this.filterGroups);
         if(this.keywords && this.keywords.length && this.keywordColumns.length > 0){
-            console.log("using Keyword Columns", this.keywordColumns);
+
             var columns = this.keywordColumns;
         } else {
             var columns = this.columns;
@@ -215,6 +221,7 @@ class CollectionConfig {
             keywords: this.keywords,
             defaultColumns: (!this.columns || !this.columns.length),
             allRecords: this.allRecords,
+            dirtyRead: this.dirtyRead,
             isDistinct: this.isDistinct
         };
         if(angular.isDefined(this.id)){
@@ -246,12 +253,13 @@ class CollectionConfig {
         var _propertyIdentifier = '',
             propertyIdentifierParts = propertyIdentifier.split('.'),
             current_collection = this.collection;
-
+            
         for (var i = 0; i < propertyIdentifierParts.length; i++) {
 
             if (angular.isDefined(current_collection.metaData[propertyIdentifierParts[i]]) && ('cfc' in current_collection.metaData[propertyIdentifierParts[i]])) {
                 current_collection = this.$hibachi.getEntityExample(current_collection.metaData[propertyIdentifierParts[i]].cfc);
                 _propertyIdentifier += '_' + propertyIdentifierParts[i];
+                
                 this.addJoin(new Join(
                     _propertyIdentifier.replace(/_([^_]+)$/,'.$1').substring(1),
                     this.baseEntityAlias + _propertyIdentifier
@@ -260,6 +268,7 @@ class CollectionConfig {
                 _propertyIdentifier += '.' + propertyIdentifierParts[i];
             }
         }
+        
         return _propertyIdentifier;
     };
 
@@ -291,7 +300,7 @@ class CollectionConfig {
     };
 
     public addColumn= (column: string, title: string = '', options:any = {}):CollectionConfig =>{
-        if(!this.columns || this.utilityService.ArrayFindByPropertyValue(this.columns,'propertyIdentifier',column) === -1){
+        if(!this.columns || options.aggregate != null || this.utilityService.ArrayFindByPropertyValue(this.columns,'propertyIdentifier',column) === -1){
             var isVisible = true,
                 isDeletable = true,
                 isSearchable = true,
@@ -369,7 +378,7 @@ class CollectionConfig {
                     columnObject[key] = options[key];
                 }
             }
-            console.log("looking to add", columnObject, isOnlyKeywordColumn, isKeywordColumn);
+
             if(!isOnlyKeywordColumn){
                 this.columns.push(columnObject);
             }
@@ -416,6 +425,7 @@ class CollectionConfig {
     public addDisplayProperty= (propertyIdentifier: string, title: string = '', options:any = {}):CollectionConfig =>{
         var _DividedColumns = propertyIdentifier.trim().split(',');
         var _DividedTitles = title.trim().split(',');
+        var join = propertyIdentifier.split('.').length > 1;
         _DividedColumns.forEach((column:string, index)  => {
             column = column.trim();
             if(angular.isDefined(_DividedTitles[index]) && _DividedTitles[index].trim() != '') {
@@ -423,7 +433,7 @@ class CollectionConfig {
             }else {
                 title = this.rbkeyService.getRBKey("entity."+this.$hibachi.getLastEntityNameInPropertyIdentifier(this.baseEntityName,column)+"."+this.utilityService.listLast(column, "."));
             }
-            this.addColumn(this.formatPropertyIdentifier(column),title, options);
+            this.addColumn(this.formatPropertyIdentifier(column, join),title, options);
         });
         return this;
     };
@@ -431,6 +441,10 @@ class CollectionConfig {
     public addFilter= (propertyIdentifier: string, value: any, comparisonOperator: string = '=', logicalOperator?: string, hidden:boolean=false, isKeywordFilter=true, isOnlyKeywordFilter=false):CollectionConfig =>{
         if(!this.filterGroups[0].filterGroup.length){
             logicalOperator = undefined;
+        }
+
+        if(propertyIdentifier.split('.').length > 1){
+            this.processJoin(propertyIdentifier);
         }
 
 		//create filter
@@ -584,6 +598,10 @@ class CollectionConfig {
         return this;
     };
 
+    public clearOrderBy=() =>{
+        this.orderBy = [];
+    }
+
     public addOrderBy = (orderByString, formatPropertyIdentifier:boolean = true):void=>{
         if(!this.orderBy){
             this.orderBy = [];
@@ -671,6 +689,11 @@ class CollectionConfig {
         this.isDistinct =  flag;
         return this;
     };
+
+    public setDirtyRead = (flag:boolean=false)=>{
+        this.dirtyRead = flag;
+        return this;
+    }
 
     public setKeywords= (keyword) =>{
         this.keywords = keyword;

@@ -42,7 +42,7 @@ class SWImageDetailModalLauncherController{
             }
         ).finally(
             ()=>{
-                console.log("using image path", this.imagePathToUse);
+
                 var skuData = {
                     skuID:this.skuId,
                     skuCode:this.skuCode,
@@ -99,8 +99,8 @@ class SWImageDetailModalLauncherController{
         data.append('slatAction', "admin:entity.processProduct");
         data.append('processContext',"uploadDefaultImage");
         data.append('sRedirectAction',"admin:entity.detailProduct");
-        data.append('preprocessDisplayedFlag',1);
-        data.append('ajaxRequest', 1);
+        data.append('preprocessDisplayedFlag',"1");
+        data.append('ajaxRequest', "1");
 
         data.append('productID', this.sku.data.product_productID);
 

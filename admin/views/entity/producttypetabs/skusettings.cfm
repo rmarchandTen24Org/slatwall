@@ -56,6 +56,7 @@ Notes:
 		<swa:SlatwallSetting settingName="skuAllowBackorderFlag" settingObject="#rc.productType#" />
 		<swa:SlatwallSetting settingName="skuAllowPreorderFlag" settingObject="#rc.productType#" />
 		<swa:SlatwallSetting settingName="skuAllowWaitlistingFlag" settingObject="#rc.productType#" />
+		<swa:SlatwallSetting settingName="skuRegistrationApprovalRequiredFlag" settingObject="#rc.productType#" />
 		<swa:SlatwallSetting settingName="skuCurrency" settingObject="#rc.productType#" />
 		<swa:SlatwallSetting settingName="skuEligibleCurrencies" settingObject="#rc.productType#" />
 		<swa:SlatwallSetting settingName="skuEligibleFulfillmentMethods" settingObject="#rc.productType#" />
@@ -64,6 +65,7 @@ Notes:
 		<swa:SlatwallSetting settingName="skuHoldBackQuantity" settingObject="#rc.productType#" />
 		<swa:SlatwallSetting settingName="skuOrderMinimumQuantity" settingObject="#rc.productType#" />
 		<swa:SlatwallSetting settingName="skuOrderMaximumQuantity" settingObject="#rc.productType#" />
+        <swa:SlatwallSetting settingName="skuMinimumPercentageAmountRecievedRequiredToPlaceOrder" settingObject="#rc.productType#" />
 		<swa:SlatwallSetting settingName="skuShippingWeight" settingObject="#rc.productType#" />
 		<swa:SlatwallSetting settingName="skuShippingWeightUnitCode" settingObject="#rc.productType#" />
 		<swa:SlatwallSetting settingName="skuTrackInventoryFlag" settingObject="#rc.productType#" />

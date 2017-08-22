@@ -61,7 +61,7 @@ Notes:
 	<cffunction name="getAccountIDByPrimaryEmailAddress">
 		<cfargument name="emailAddress" required="true" type="string" />
 
-		<cfquery name="getAccountIDByPrimaryEmailAddress" maxrows="1">
+		<cfquery name="local.getAccountIDByPrimaryEmailAddress" maxrows="1">
 			SELECT a.accountID FROM SwAccount AS a LEFT JOIN SwAccountEmailAddress AS aea ON aea.accountID=a.accountID
 			WHERE emailAddress = <cfqueryparam cfsqltype="cf_sql_varchar" value="#arguments.emailAddress#" />
 		</cfquery>
@@ -193,14 +193,33 @@ Notes:
 
 	<cffunction name="getActivePasswordByEmailAddress" returntype="any" access="public">
 		<cfargument name="emailAddress" required="true" type="string" />
-
-		<cfreturn ormExecuteQuery("SELECT aa FROM #getApplicationKey()#AccountAuthentication aa INNER JOIN FETCH aa.account a INNER JOIN a.primaryEmailAddress pea WHERE aa.password is not null AND aa.integration.integrationID is null AND lower(pea.emailAddress)=:emailAddress AND aa.activeFlag = true ORDER BY aa.createdDateTime DESC", {emailAddress=lcase(arguments.emailAddress)}, true, {maxResults=1}) />
+		<cfset var hql = "SELECT aa FROM #getApplicationKey()#AccountAuthentication aa 
+			INNER JOIN FETCH aa.account a INNER JOIN a.primaryEmailAddress pea 
+			WHERE aa.password is not null 
+			AND lower(pea.emailAddress)=:emailAddress 
+			AND aa.activeFlag = true "
+		/>
+		<cfif getService('HibachiService').getHasPropertyByEntityNameAndPropertyIdentifier('AccountAuthentication','integration.integrationID')>
+			<cfset hql &= " AND aa.integration.integrationID is null "/> 
+		</cfif>
+		<cfset hql &= " ORDER BY aa.createdDateTime DESC"/>
+		<cfreturn ormExecuteQuery(hql, {emailAddress=lcase(arguments.emailAddress)}, true, {maxResults=1}) />
 	</cffunction>
 
 	<cffunction name="getActivePasswordByAccountID" returntype="any" access="public">
 		<cfargument name="accountID" required="true" type="string" />
-
-		<cfreturn ormExecuteQuery("SELECT aa FROM #getApplicationKey()#AccountAuthentication aa INNER JOIN FETCH aa.account a WHERE aa.password is not null AND aa.integration.integrationID is null AND a.accountID=:accountid AND aa.activeFlag = true", {accountid=arguments.accountID}, true) />
+		<cfset var hql="
+			SELECT aa 
+			FROM #getApplicationKey()#AccountAuthentication aa 
+			INNER JOIN FETCH aa.account a 
+			WHERE aa.password is not null 
+			AND a.accountID=:accountid 
+			AND aa.activeFlag = true"/>
+		<cfif getService('HibachiService').getHasPropertyByEntityNameAndPropertyIdentifier('AccountAuthentication','integration.integrationID')>
+			<cfset hql &= " AND aa.integration.integrationID is null"/>
+		</cfif>
+		<cfreturn ormExecuteQuery(hql, 
+			{accountid=arguments.accountID}, true) />
 	</cffunction>
 
 	<cffunction name="getAccountAuthenticationExists" returntype="any" access="public">
@@ -224,15 +243,20 @@ Notes:
 
 	<cffunction name="getPasswordResetAccountAuthentication">
 		<cfargument name="accountID" type="string" required="true" />
-
-		<cfset var accountAuthentication = ormExecuteQuery("
+		<cfset var hql = "
 			SELECT aa FROM #getApplicationKey()#AccountAuthentication 
-			aa LEFT JOIN aa.integration i WHERE aa.account.accountID = :accountID 
+			
+			"/>
+		<cfif getService('HibachiService').getHasPropertyByEntityNameAndPropertyIdentifier('AccountAuthentication','integration')>
+			<cfset hql &= " aa LEFT JOIN aa.integration i "/>
+		</cfif>
+		<cfset hql &= " WHERE aa.account.accountID = :accountID 
 										and aa.expirationDateTime >= :now 
 										and aa.password is null 
-										and i.integrationID is null 
-			ORDER BY aa.expirationDateTime desc
-			", {accountID=arguments.accountID, now=now()}, true, {maxresults=1}) />
+			ORDER BY aa.expirationDateTime desc"/>
+		
+		
+		<cfset var accountAuthentication = ormExecuteQuery(hql, {accountID=arguments.accountID, now=now()}, true, {maxresults=1}) />
 
 		<cfif !isNull(accountAuthentication)>
 			<cfreturn accountAuthentication />

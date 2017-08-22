@@ -61,6 +61,11 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 
 	public any function getCMSTemplateOptions(required any content){
 		var templateDirectory = arguments.content.getSite().getTemplatesPath();
+		
+		//if the directory doesn't exist but the data does, then create the data
+		if(!directoryExists(templateDirectory)){
+			getService('siteService').deploySite(arguments.content.getSite(),false);
+		}
 		if(directoryExists(templateDirectory)) {
 			var directoryList = directoryList(templateDirectory,false,"query","*.cfm|*.html");
 			var templates = [];
@@ -71,8 +76,6 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 				arrayAppend(templates,template);
 			}
 			return templates;
-		}else{
-			throw('site directory does not exist for ' & arguments.content.getSite().getSiteName());
 		}
 	}
 
@@ -297,9 +300,7 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 
 		// Check delete validation
 		if(arguments.category.isDeletable()) {
-
-			getContentDAO().removeCategoryFromContentAssociation( categoryID=arguments.category.getCategoryID() );
-
+			getContentDAO().removeCategoryFromAssociation( categoryIDPath=arguments.category.getCategoryIDPath() );
 			return delete(arguments.category);
 		}
 

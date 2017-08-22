@@ -1,4 +1,4 @@
-/*
+<!---
 
     Slatwall - An Open Source eCommerce Platform
     Copyright (C) ten24, LLC
@@ -45,8 +45,9 @@
 
 Notes:
 
-*/
-component extends="Slatwall.org.Hibachi.Hibachi"{
+--->
+<cfcomponent output="false" extends="Slatwall.org.Hibachi.Hibachi">
+	<cfscript>
 
 	// Allow For Application Config
 	try{include "../../config/configApplication.cfm";}catch(any e){}
@@ -58,7 +59,7 @@ component extends="Slatwall.org.Hibachi.Hibachi"{
 	this.mappings[ "/Slatwall" ] = replace(replace(getDirectoryFromPath(getCurrentTemplatePath()),"\","/","all"), "/meta/sample/", "");
 
 	this.ormEnabled = true;
-	this.ormSettings.cfclocation = ["/Slatwall/model/entity","/Slatwall/integrationServices"];
+	this.ormSettings.cfclocation = ["/Slatwall/model/entity"];
 	this.ormSettings.dbcreate = "update";
 	this.ormSettings.flushAtRequestEnd = false;
 	this.ormsettings.eventhandling = true;
@@ -72,7 +73,7 @@ component extends="Slatwall.org.Hibachi.Hibachi"{
 		if(structKeyExists(form, "slatAction")) {
 			request.context['doNotRender'] = true;
 			for(var action in listToArray(form.slatAction)) {
-				arguments.slatwallScope.doAction( action, request.context);
+				arguments.actionResult = arguments.slatwallScope.doAction( action, request.context);
 				if(arguments.slatwallScope.hasFailureAction(action)) {
 					break;
 				}
@@ -80,7 +81,7 @@ component extends="Slatwall.org.Hibachi.Hibachi"{
 		} else if (structKeyExists(url, "slatAction")) {
 			request.context['doNotRender'] = true;
 			for(var action in listToArray(url.slatAction)) {
-				var actionResult = arguments.slatwallScope.doAction( action, request.context);
+				arguments.actionResult = arguments.slatwallScope.doAction( action, request.context);
 				if(arguments.slatwallScope.hasFailureAction(action)) {
 					break;
 				}
@@ -100,7 +101,7 @@ component extends="Slatwall.org.Hibachi.Hibachi"{
 
 
 	function generateRenderedContent() {
-
+		
 		var site = arguments.slatwallScope.getSite();
 		var templatePath = site.getApp().getAppRootPath() & '/' & site.getSiteCode() & '/templates/';
 		var contentPath = '';
@@ -193,7 +194,7 @@ component extends="Slatwall.org.Hibachi.Hibachi"{
 				if(!isNull(contentTemplateFile)){
 
 					contentPath = templatePath & contentTemplateFile;
-
+					
 
 					arguments.slatwallScope.setContent(entityTemplateContent);
 				}else{
@@ -223,15 +224,51 @@ component extends="Slatwall.org.Hibachi.Hibachi"{
 			contentPath = templatePath & contentTemplateFile;
 			arguments.slatwallScope.setContent(content);
 		}
-		var $ = getApplicationScope(argumentCollection=arguments);
-		request.context.fw = arguments.slatwallScope.getApplicationValue("application");
-		savecontent variable="local.templateData"{
-			include "#contentPath#";
-		}
+		
+		arguments.contentPath = contentPath;
+
+		arguments.renderActionInTemplate = arguments.slatwallScope.getContent().setting('contentRenderHibachiActionInTemplate');	
+ 		
+		
+		var templateData = buildRenderedContent(argumentCollection=arguments);
+		if(arguments.renderActionInTemplate && structKeyExists(arguments, "actionResult")){
+ 			var hibachiView = {}; 
+ 			hibachiView['contentBody'] = arguments.actionResult;
+ 			templateBody = arguments.slatwallScope.getService('hibachiUtilityService').replaceStringTemplate(templateData,hibachiView);
+ 		} 
 		templateBody = arguments.slatwallScope.getService('hibachiUtilityService').replaceStringTemplate(templateData,arguments.slatwallScope.getContent());
 		templateBody = arguments.slatwallScope.getService('hibachiUtilityService').replaceStringEvaluateTemplate(template=templateBody,object=this);
+		
 		writeOutput(templateBody);
 		abort;
+	}
+	
+	</cfscript>
+	
+	<cffunction name="buildRenderedContent">
+		<cfset request.context.fw = arguments.slatwallScope.getApplicationValue("application")/>
+		<cfset var $ = getApplicationScope(argumentCollection=arguments)/>
+		
+		<cfsavecontent variable="local.templateData" >
+			<cfoutput>
+				<cfinclude template="templates/basetemplate.cfm"/>
+			</cfoutput>
+		</cfsavecontent>
+		<cfreturn local.templateData/>
+	</cffunction>
+	
+	<cfscript>
+	   	
+	   
+	
+	function getHibachiTagPathByContentPath(required string contentPath){
+		var directoryDepth = listLen(arguments.contentPath,'/');
+		var hibachiTagPath = "org/Hibachi/HibachiTags";
+		var depthString = "";
+		for(var i=1; i < directoryDepth;i++){
+			depthString &= "../";
+		}
+		return depthString & hibachiTagPath;
 	}
 
 	function checkForRewrite(required any slatwallScope, required any site){
@@ -437,7 +474,7 @@ component extends="Slatwall.org.Hibachi.Hibachi"{
 			arguments.content
 		);
 
-		link='<a href="/#href#"#iif(len(arguments.target) and arguments.target neq '_self',de(' target="#arguments.target#"'),de(""))##iif(len(theClass),de(' class="#theClass#"'),de(""))##iif(len(arguments.navId),de(' id="#arguments.navId#"'),de(""))##iif(arguments.showCurrent,de(' #replace(arguments.aActiveAttributes,"##","####","all")#'),de(""))##iif(arguments.content.hasChildContent() and len(arguments.aKidsAttributes),de(' #replace(arguments.aKidsAttributes,"##","####","all")#'),de(""))#>#HTMLEditFormat(arguments.title)#</a>';
+		link='<a href="/#href#"#getHibachiScope().getService('hibachiUtilityService').hibachiTernary(len(arguments.target) and arguments.target neq '_self',' target="#arguments.target#"',"")##getHibachiScope().getService('hibachiUtilityService').hibachiTernary(len(theClass),' class="#theClass#"',"")##getHibachiScope().getService('hibachiUtilityService').hibachiTernary(len(arguments.navId),' id="#arguments.navId#"',"")##getHibachiScope().getService('hibachiUtilityService').hibachiTernary(arguments.showCurrent,' #replace(arguments.aActiveAttributes,"##","####","all")#',"")##getHibachiScope().getService('hibachiUtilityService').hibachiTernary(arguments.content.hasChildContent() and len(arguments.aKidsAttributes),' #replace(arguments.aKidsAttributes,"##","####","all")#',"")#>#HTMLEditFormat(arguments.title)#</a>';
 		return link;
 	}
 
@@ -448,4 +485,5 @@ component extends="Slatwall.org.Hibachi.Hibachi"{
 	}
 
 
-}
+</cfscript>
+</cfcomponent>
