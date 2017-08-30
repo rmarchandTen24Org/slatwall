@@ -72,7 +72,7 @@
 	<div ng-switch-when="radiogroup" name="{{swFormField.name}}">
 		<div ng-repeat="option in swFormField.optionValues" class="{{swFormField.class}}">
 			<label ng-bind="option.name" ng-if="option.name" class="control-label"></label>
-			<input type="radio" id="{{option.name}}_{{option.value}}" name="{{'selected'+ swFormField.object.metaData.className + swFormField.propertyIdentifier+swFormField.selectedRadioFormName}}" value={{option.value}}
+			<input type="radio" id="{{option.name}}_{{option.value}}" name="{{'selected' + swFormField.propertyIdentifier}}" ng-value="option.value"
 				 ng-model="swFormField.object.data['selected'+swFormField.propertyIdentifier]"
 				 ng-click="swFormField.formFieldChanged(option)"
 				 class="radio"/>

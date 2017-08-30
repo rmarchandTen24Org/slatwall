@@ -122,6 +122,10 @@ class SWFormFieldController {
 			this.selectStrategy();
 		}
 
+		if(this.fieldType === 'radiogroup'){
+			this.radiogroupStrategy();
+		}
+
 		if(this.eventListeners){
             for(var key in this.eventListeners){
                 this.observerService.attach(this.eventListeners[key], key)
@@ -258,6 +262,16 @@ class SWFormFieldController {
 		this.$timeout(()=>{
 			this.form[this.propertyIdentifier].$dirty = this.isDirty;
 		});
+	}
+
+	public radiogroupStrategy = ()=>{
+		let value = this.object.data[this.propertyIdentifier] || this.object[this.propertyIdentifier];
+		for(var i in this.optionValues){
+			if(this.optionValues[i].value === value){
+				this.object.data['selected'+this.propertyIdentifier] = this.optionValues[i].value;
+				this.object.data[this.propertyIdentifier] = value;
+			}
+		}
 	}
 }
 
