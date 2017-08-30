@@ -70,10 +70,17 @@
 	</select>
 
 	<div ng-switch-when="radiogroup" name="{{swFormField.name}}">
-		<div ng-repeat="option in optionValues" class="{{swFormField.class}}">
+		<div ng-repeat="option in swFormField.optionValues" class="{{swFormField.class}}">
 			<label ng-bind="option.name" ng-if="option.name" class="control-label"></label>
-			<input type="radio" id="{{option.name}}_{{option.value}}" name="{{swFormField.name}}" class="radio"/>
+			<input type="radio" id="{{option.name}}_{{option.value}}" name="{{'selected'+ swFormField.object.metaData.className + swFormField.propertyIdentifier+swFormField.selectedRadioFormName}}" value={{option.value}}
+				 ng-model="swFormField.object.data['selected'+swFormField.propertyIdentifier]"
+				 ng-click="swFormField.formFieldChanged(option)"
+				 class="radio"/>
 		</div>
+		<input style="display:none"	type="text"
+				ng-model="swFormField.object.data[swFormField.propertyIdentifier]"
+				name="{{swFormField.propertyIdentifier}}"
+		/>
 	</div>
 
 	<div ng-switch-when="checkboxgroup" name="{{swFormField.name}}">

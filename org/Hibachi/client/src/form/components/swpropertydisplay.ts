@@ -29,7 +29,7 @@ class SWPropertyDisplayController {
     public rawFileTarget;
     public showLabel;
     public form;
-	public saved:boolean=false;
+    public saved:boolean=false;
     public onChangeEvent:string;
     public swInputOnChangeEvent:string;
     public hasOnChangeCallback:boolean;
@@ -48,29 +48,29 @@ class SWPropertyDisplayController {
     public showSave:boolean;
 
     //swfproperty display properties
-	public class;
+    public class;
     public hideErrors;
-	public fieldAttributes;
-	public valueObject;
-	public label;
-	public name;
+    public fieldAttributes;
+    public valueObject;
+    public label;
+    public name;
     public errorName;
-	public options;
-	public valueObjectProperty;
+    public options;
+    public valueObjectProperty;
     public valueOptions;
-	public processObject;
-	public optionValues:Array<string> = [];
-	public propertyDisplay;
+    public processObject;
+    public optionValues:Array<any>;
+    public propertyDisplay;
     public edit:boolean;
 
-	public value;
-	public submit;
-	public labelText;
-	public labelClass;
-	public errorText;
-	public errorClass;
-	public propertyIdentifier; //dominant
-	public loader;
+    public value;
+    public submit;
+    public labelText;
+    public labelClass;
+    public errorText;
+    public errorClass;
+    public propertyIdentifier; //dominant
+    public loader;
 
     public swForm;
     public selected;
@@ -85,18 +85,18 @@ class SWPropertyDisplayController {
         public listingService?
     ){
 
-	}
+    }
 
     public $onInit=()=>{
         var bindToControllerProps = this.$injector.get('swPropertyDisplayDirective')[0].bindToController;
         for(var i in bindToControllerProps){
 
-			if(!this[i] && this.swForm && this.swForm[i]){
-				this[i] = this.swForm[i];
-			}
-		}
+            if(!this[i] && this.swForm && this.swForm[i]){
+                this[i] = this.swForm[i];
+            }
+        }
 
-
+        this.optionValues = this.optionValues || [];
         this.errors = {};
         this.edited = false;
 
@@ -170,7 +170,7 @@ class SWPropertyDisplayController {
             this.fieldType = this.metadataService.getPropertyFieldType(this.object,this.propertyIdentifier);
         }
 
-		if(angular.isUndefined(this.title) && this.object && this.object.metaData){
+        if(angular.isUndefined(this.title) && this.object && this.object.metaData){
 
             this.labelText = this.metadataService.getPropertyTitle(this.object,this.propertyIdentifier);
 
@@ -179,43 +179,43 @@ class SWPropertyDisplayController {
         this.labelText = this.labelText || this.title;
         this.title = this.title || this.labelText;
 
-		this.fieldType                	= this.fieldType || "text" ;
-		this.class			   	= this.class|| "form-control";
-		this.fieldAttributes     	= this.fieldAttributes || "";
-		this.label			    = this.label || "true";
-		this.labelText			= this.labelText || "";
-		this.labelClass			= this.labelClass || "";
-		this.name			    	= this.name || "unnamed";
+        this.fieldType                    = this.fieldType || "text" ;
+        this.class                   = this.class|| "form-control";
+        this.fieldAttributes         = this.fieldAttributes || "";
+        this.label                = this.label || "true";
+        this.labelText            = this.labelText || "";
+        this.labelClass            = this.labelClass || "";
+        this.name                    = this.name || "unnamed";
         this.value              = this.value || this.initialValue;
 
 
-		this.object				= this.object || this.swForm.object; //this is the process object
+        this.object                = this.object || this.swForm.object; //this is the process object
 
-		/** handle options */
-		if (this.options && angular.isString(this.options)){
-			let optionsArray = [];
-			optionsArray = this.options.toString().split(",");
+        /** handle options */
+        if (this.options && angular.isString(this.options)){
+            let optionsArray = [];
+            optionsArray = this.options.toString().split(",");
 
-			angular.forEach(optionsArray, (o)=>{
-				let newOption:any = {
-					name:"",
-					value:""
-				};
+            angular.forEach(optionsArray, (o)=>{
+                let newOption:any = {
+                    name:"",
+                    value:""
+                };
 
                 newOption.name = o;
-				newOption.value= o;
+                newOption.value= o;
 
-				this.optionValues.push(newOption);
-			});
-		}
+                this.optionValues.push(newOption);
+            });
+        }
 
         /** handle turning the options into an array of objects */
-		/** handle setting the default value for the yes / no element  */
-		if (this.fieldType=="yesno" && (this.value && angular.isString(this.value))){
-			this.selected == this.value;
-		}
+        /** handle setting the default value for the yes / no element  */
+        if (this.fieldType=="yesno" && (this.value && angular.isString(this.value))){
+            this.selected == this.value;
+        }
 
-		if(angular.isUndefined(this.hint) && this.object && this.object.metaData){
+        if(angular.isUndefined(this.hint) && this.object && this.object.metaData){
             this.hint = this.metadataService.getPropertyHintByObjectAndPropertyIdentifier(this.object,this.propertyIdentifier);
         }
 
@@ -226,7 +226,7 @@ class SWPropertyDisplayController {
             this.observerService.attach(this.onChange, this.swInputOnChangeEvent);
         }
 
-	}
+    }
 
     public onChange = (result?) =>{
         this.edited = true;
@@ -242,12 +242,12 @@ class SWPropertyDisplayController {
                                             this.propertyDisplayID,
                                             this.save
                                           );
-		}
+        }
 
         if(angular.isDefined(this.onChangeEvent)){
             this.observerService.notify(this.onChangeEvent,result);
         }
-	}
+    }
 
     public clear = () =>{
         if(this.reverted){
@@ -367,10 +367,10 @@ class SWPropertyDisplay implements ng.IDirective{
 
     public templateUrlPath = "propertydisplay.html";
 
-	//@ngInject
+    //@ngInject
     constructor(
         public $compile,
-		public scopeService,
+        public scopeService,
         public coreFormPartialsPath,
         public hibachiPathBuilder,
         public swpropertyPartialPath
@@ -388,8 +388,8 @@ class SWPropertyDisplay implements ng.IDirective{
             hibachiPathBuilder
         )=>new swpropertyClass(
             $compile,
-			scopeService,
-			coreFormPartialsPath,
+            scopeService,
+            coreFormPartialsPath,
             hibachiPathBuilder,
             //not an inejctable don't add to $inject. This is in the form.module Factory implementation
             swpropertyPartialPath

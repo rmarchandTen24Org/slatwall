@@ -89,7 +89,9 @@ class SWFormFieldController {
 			this.object.data[this.propertyIdentifier] = option.value;
 
 			this.form[this.propertyIdentifier].$dirty = true;
-			this.form['selected'+this.object.metaData.className+this.propertyIdentifier+this.selectedRadioFormName].$dirty = false;
+			if(this.form['selected'+this.object.metaData.className+this.propertyIdentifier+this.selectedRadioFormName]){
+				this.form['selected'+this.object.metaData.className+this.propertyIdentifier+this.selectedRadioFormName].$dirty = false;
+			}
 		}
 
 	};
