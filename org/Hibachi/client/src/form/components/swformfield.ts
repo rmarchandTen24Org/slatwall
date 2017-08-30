@@ -265,11 +265,13 @@ class SWFormFieldController {
 	}
 
 	public radiogroupStrategy = ()=>{
-		let value = this.object.data[this.propertyIdentifier] || this.object[this.propertyIdentifier];
-		for(var i in this.optionValues){
-			if(this.optionValues[i].value === value){
-				this.object.data['selected'+this.propertyIdentifier] = this.optionValues[i].value;
-				this.object.data[this.propertyIdentifier] = value;
+		if(angular.isDefined(this.object.data[this.propertyIdentifier]) || angular.isDefined(this.object[this.propertyIdentifier])){
+			let value = this.object.data[this.propertyIdentifier] || this.object[this.propertyIdentifier];
+			for(var i in this.optionValues){
+				if(this.optionValues[i].value === value){
+					this.object.data['selected'+this.propertyIdentifier] = this.optionValues[i].value;
+					this.object.data[this.propertyIdentifier] = value;
+				}
 			}
 		}
 	}
