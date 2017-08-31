@@ -46,7 +46,7 @@ component extends="Slatwall.org.Hibachi.HibachiController" output="false" access
 		    }
 		    
 		    //Pagesize
-		    if (isDefined("arguments.pageSize")){
+		    if (isDefined("arguments.pageSize") && arguments.pageSize != "all"){
 		    	queryData.setPageRecordsShow(arguments.pageSize);
 		    }else{
 		    	arguments.pageSize = 15;
