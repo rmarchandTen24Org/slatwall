@@ -1,3 +1,4 @@
+//This resource is accessed using something like: http://localhost:8500/rest/resource/collection/sku.json??page=1&pageSize=50
 component extends="Slatwall.org.Hibachi.HibachiController" output="false" accessors="true" rest="true" restpath="/collection"   {
 	import "Slatwall.model.entity.CollectionConfig";
 	
