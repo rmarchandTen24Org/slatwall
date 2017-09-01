@@ -22,12 +22,13 @@ component extends="Slatwall.org.Hibachi.HibachiController" output="false" access
 	* @entityName.restargsource "Path"
 	* @page.restargsource "Query"
 	* @pagesize.restargsource "Query"
+	* @fields.restargsource "Query"
 	* @returnType struct
 	* @access remote
 	* @produces application/json,application/xml
 	* @authenticated Requires Basic Authentication using your access-key and access-key-secret as the username and password.
 	*/
-	function list(required string entityName, string page, string pageSize ) {
+	function list(required string entityName, string page, string pageSize, string fields ) {
 		//Check that the user is authenticated through one of the authentication processes.
 		if (!isAuthenticated()){
 			pc = getPageContext().getResponse();
@@ -38,6 +39,9 @@ component extends="Slatwall.org.Hibachi.HibachiController" output="false" access
 		try{
 			var queryData = getHibachiScope().getService("#arguments.entityName#Service").invokeMethod("get#arguments.entityName#CollectionList");
 		    
+		    //Extra Fields
+		    queryData.setDisplayProperties(fields);
+		    
 		    //Page
 		    if (isDefined("arguments.page")){
 		    	queryData.setPageRecordsStart(arguments.page);
@@ -45,17 +49,10 @@ component extends="Slatwall.org.Hibachi.HibachiController" output="false" access
 		    	arguments.page = 1;
 		    	queryData.setPageRecordsStart(arguments.page);
 		    }
-		    
-		    //Pagesize
-		    if (isDefined("arguments.pageSize") && arguments.pageSize != "all"){
-		    	queryData.setPageRecordsShow(arguments.pageSize);
-		    }else{
-		    	arguments.pageSize = 15;
-		    	queryData.setPageRecordsShow(arguments.pageSize);
-		    }
+		    queryData.setPageRecordsShow(arguments.pageSize);
 		    
 		    //All records
-		    if (lcase(arguments.pageSize) == "all"){
+		    if (!isNull(arguments.pageSize) && lcase(arguments.pageSize) == "all"){
 		    	var collection_ = queryData.getRecords();
 		    }else{
 		    	var collection_ = queryData.getPageRecords();
