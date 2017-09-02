@@ -1,4 +1,4 @@
-//This resource is accessed using something like: http://localhost:8500/rest/resource/collection/sku.json??page=1&pageSize=50
+//This resource is accessed using something like: http://localhost:8500/rest/resource/collection/sku.json??page=1&pageSize=50 - application/x-collection+json
 component extends="Slatwall.org.Hibachi.HibachiController" output="false" accessors="true" rest="true" restpath="/collection"   {
 	import "Slatwall.model.entity.CollectionConfig";
 	
@@ -40,7 +40,10 @@ component extends="Slatwall.org.Hibachi.HibachiController" output="false" access
 			var queryData = getHibachiScope().getService("#arguments.entityName#Service").invokeMethod("get#arguments.entityName#CollectionList");
 		    
 		    //Extra Fields
-		    queryData.setDisplayProperties(fields);
+		    if (isDefined("arguments.fields")){
+		    	queryData.setDisplayProperties(fields);
+		    }
+		    
 		    
 		    //Page
 		    if (isDefined("arguments.page")){
@@ -49,7 +52,10 @@ component extends="Slatwall.org.Hibachi.HibachiController" output="false" access
 		    	arguments.page = 1;
 		    	queryData.setPageRecordsStart(arguments.page);
 		    }
-		    queryData.setPageRecordsShow(arguments.pageSize);
+		    
+		    if (isDefined("arguments.pageSize")){
+		    	queryData.setPageRecordsShow(arguments.pageSize);
+		    }
 		    
 		    //All records
 		    if (!isNull(arguments.pageSize) && lcase(arguments.pageSize) == "all"){
@@ -76,7 +82,7 @@ component extends="Slatwall.org.Hibachi.HibachiController" output="false" access
 				response['links'] = addLink(response['links'], "previous_page", "#CGI.SERVER_NAME##CGI.PATH_INFO#?page=#queryData.getPageRecordsStart() - 1#");
 			}
 			//Current page
-			response['links'] = addLink(response['links'], "self", "#CGI.SERVER_NAME##CGI.PATH_INFO#?page=#arguments.page#&pageSize=#arguments.pageSize#");
+			response['links'] = addLink(response['links'], "self", "#CGI.SERVER_NAME##CGI.PATH_INFO#?page=#arguments.page#&pageSize=#!isNull(arguments.pageSize)?arguments.pageSize:10#");
 			
 			//Set the next page
 			if (queryData.getPageRecordsStart() < queryData.getTotalPages()){
@@ -99,13 +105,15 @@ component extends="Slatwall.org.Hibachi.HibachiController" output="false" access
 		    //Filters and sorting
 		    response['links'] = addLink(response['links'], "additional_fields", "#CGI.SERVER_NAME##CGI.PATH_INFO#?fields={fieldName1},{fieldName2},{fieldName3}");
 		    response['links'] = addLink(response['links'], "order_by", "#CGI.SERVER_NAME##CGI.PATH_INFO#?orderby={fieldName}|{ASC|DESC}");
-		    response['links'] = addLink(response['links'], "field_filter", "#CGI.SERVER_NAME##CGI.PATH_INFO#filter/?f:{fieldName}:{EQ|NEQ|LT|GT|LTE|GTE|LIKE}={filterValue}");
-		    response['links'] = addLink(response['links'], "range_filter", "#CGI.SERVER_NAME##CGI.PATH_INFO#filter/?r:{fieldName}={LOW_VALUE^HIGH_VALUE}");
+		    response['links'] = addLink(response['links'], "field_filter", "#CGI.SERVER_NAME##CGI.PATH_INFO#/filter/?f:{fieldName}:{EQ|NEQ|LT|GT|LTE|GTE|LIKE}={filterValue}");
+		    response['links'] = addLink(response['links'], "range_filter", "#CGI.SERVER_NAME#/rest/resource/collection/#entityName#/filter/?r:{fieldName}={LOW_VALUE^HIGH_VALUE}");
 		    
 		    
 		    //Add related entity links. This uses meta to attach links to the data in the list instead of just the id. Using ?expand={fieldName} will
 		    //cause that data to be added to the response in addition to including the link.
-		    response['links'] = addLink(response['links'], "#arguments.entityName#_meta", "#CGI.SERVER_NAME##CGI.PATH_INFO#meta/");
+		    response['links'] = addLink(response['links'], "#arguments.entityName#_meta", "#CGI.SERVER_NAME#/rest/resource/collection/#entityName#/meta{.json|.xml}");
+		    response['links'] = addLink(response['links'], "#arguments.entityName#_validation", "#CGI.SERVER_NAME#/rest/resource/collection/#entityName#/validation{.json|.xml}");
+	    
 	    }catch(any restError){
 	    	response['error'] = restError;
 	    }
@@ -216,6 +224,7 @@ component extends="Slatwall.org.Hibachi.HibachiController" output="false" access
 		    
 		    response.detail = queryData.getRecords();
 		    
+		    //Example using the collection wrapper.
 		    /*queryData.addDisplayProperty("primaryEmailAddress.accountEmailAddressID");
 		    queryData.addDisplayProperty("primaryEmailAddress.emailAddress");
 		    
@@ -339,7 +348,7 @@ component extends="Slatwall.org.Hibachi.HibachiController" output="false" access
 	}
 	
 	/**
-	* @hint Returns an location that contains the created entity. Expects a form variable called entity with json a string of json data.
+	* @hint Returns an location that contains the created entity. Expects a form variable called entity with a string of json data.
 	* @restpath {entityName}
 	* @httpmethod POST
 	* @entityName.restargsource "Path"
@@ -350,7 +359,7 @@ component extends="Slatwall.org.Hibachi.HibachiController" output="false" access
 	* @example POST https://your-slatwall-instance/rest/resources/collection/account/
 	* @authenticated Requires Basic Authentication using your access-key and access-key-secret as the username and password.
 	*/
-	function createEntity( required string entityName, required string entity ) {
+	function create( required string entityName, required string entity ) {
 		//Check that the user is authenticated through one of the authentication processes.
 		if (!isAuthenticated()){
 			var pc = getPageContext().getResponse();
@@ -368,7 +377,6 @@ component extends="Slatwall.org.Hibachi.HibachiController" output="false" access
 		
 		if (!isNull(entity)){
 			restData = deserializeJson(entity);
-			restData['createAuthenticationFlag'] = true;
 		}
 		
 		var entityObj = getHibachiScope().getService("#arguments.entityName#Service").invokeMethod("new#arguments.entityName#");
@@ -376,41 +384,19 @@ component extends="Slatwall.org.Hibachi.HibachiController" output="false" access
 		if (isNull(entityObj)){
 			response.errors = listAppend(response.errors, "Entity not recognized!");
 		}
-		/**
-		* Which rest resources map to processes? What is actually being created in the database?
-		* Action: CreateAccount => Entity: Account (create)
-		* Action: Login			=> Entity: Session (create/update)
-		* Action: AddOrderItem  => Entity: OrderItem (create) => Order (update)
-		* Action: PlaceOrder	=> Entity: OrderFulfillment (create)
-		*/
+		
 	    try{
-	    	//try to use a process for this creation if a process exists.
-	    	var process = getHibachiScope().getService("#arguments.entityName#Service").invokeMethod("process#arguments.entityName#", {1=entityObj, 2=restData, 3="create"});
-	    	//check errors
-	    	if (entityObj.hasErrors()){
-	    		for (var errorName in entityObj.getErrors()){
-	    			var errorByErrorName = errorName;
-	    		}
-	    		//now its just 'create';
-	    		var en = entityObj.getErrors()[errorByErrorName][1];
-	    		var erroringObj = entityObj.getProcessObjects()[en];//should
-	    		
-	    		for (var errorObjError in erroringObj.getErrors()){
-	    			response.errors = listAppend(response.errors, "#errorObjError#:'#erroringObj.getErrors()[errorObjError][1]#'");
-	    		}
-	    		
-	    		response.status = "500";
-	    	}else{
-	    		//save it and return the location.
-	    		var savedEntity = getHibachiScope().getService("#arguments.entityName#Service").invokeMethod("save#arguments.entityName#", {1=entityObj});
-	    		
-	    		//success!
-	    		pc = getPageContext().getResponse();
-	    		var id = entityObj.invokeMethod('get#arguments.entityName#ID');
-				pc.addHeader("location", "/collection/#arguments.entityName#/#id#");
-				response.location = "/collection/#arguments.entityName#/#id#";
-				pc.setStatus(201);
-	    	}
+	    	
+    		//save it and return the location.
+    		var savedEntity = getHibachiScope().getService("#arguments.entityName#Service").invokeMethod("save#arguments.entityName#", {1=entityObj, 2=restData});
+    		
+    		//success!
+    		pc = getPageContext().getResponse();
+    		var id = entityObj.invokeMethod('get#arguments.entityName#ID');
+			pc.addHeader("location", "/collection/#arguments.entityName#/#id#");
+			response.location = "/collection/#arguments.entityName#/#id#";
+			pc.setStatus(201);
+	    	
 	    }catch(any e){
 	    	//If there is no process, then populate manually
 	    	response.errors = listAppend(response.errors, "The server could not complete this request.");
@@ -419,6 +405,72 @@ component extends="Slatwall.org.Hibachi.HibachiController" output="false" access
 	    return response;
 	}
 	
+   /**
+	* @hint Returns an location that contains the created entity. Expects a form variable called entity with a string of json data.
+	* @restpath {entityName}
+	* @httpmethod PUT
+	* @entityName.restargsource "Path"
+	* @entity.restargsource "Form"
+	* @returnType struct
+	* @access remote
+	* @produces application/json,application/xml
+	* @example POST https://your-slatwall-instance/rest/resources/collection/account/
+	* @authenticated Requires Basic Authentication using your access-key and access-key-secret as the username and password.
+	*/
+	function update( required string entityName, required string entity ) {
+		//Check that the user is authenticated through one of the authentication processes.
+		if (!isAuthenticated()){
+			var pc = getPageContext().getResponse();
+			pc.addHeader("WWW-Authenticate", "Use basic Authentication against this endpoint where the username is your access-key and password is access-key-secret.");
+			pc.sendError(401, "Not Authorized.");
+		}
+		
+		var response = {
+	        'status' : 201,
+	        "location": "",
+	        'errors' : ""
+	    };
+	    
+		var restData = {};
+		
+		if (!isNull(entity)){
+			restData = deserializeJson(entity);
+		}
+		
+		//The PUT method requests that the enclosed entity be stored under the supplied Request-URI . 
+		//If the Request-URI refers to an already existing resource, the enclosed entity 
+		//SHOULD be considered as a modified version of the one residing on the origin. 
+		
+	    try{
+			//If there is no ID provided, we are creating with this put.
+			if (isNull(restData['#arguments.entityName#ID'])){
+				var entityObj = getHibachiScope().getService("#arguments.entityName#Service").invokeMethod("new#arguments.entityName#");
+			}
+			
+			//If there is an ID, we are updating
+			if (!isNull(restData['#arguments.entityName#ID'])){
+				var entityObj = getHibachiScope().getService("#arguments.entityName#Service").invokeMethod("get#arguments.entityName#By#arguments.entityName#ID", {1=restData['#entityName#ID']});
+			}
+		
+    		//save it and return the location.
+    		var savedEntity = getHibachiScope().getService("#arguments.entityName#Service").invokeMethod("save#arguments.entityName#", {1=entityObj, 2=restData});
+    		
+    		//success!
+    		pc = getPageContext().getResponse();
+    		var id = entityObj.invokeMethod('get#arguments.entityName#ID');
+			pc.addHeader("location", "/collection/#arguments.entityName#/#id#");
+			response.location = "/collection/#arguments.entityName#/#id#";
+			pc.setStatus(201);
+	    	
+	    }catch(any e){
+	    	//If there is no process, then populate manually
+	    	response.errors = listAppend(response.errors, "The server could not complete this request.");
+	    }
+	    
+	    return response;
+	}
+	
+	/*--------------------------------------------------------------------------*/
 	/** PRIVATE helper function */
 	private array function addLink(array links, string rel, string href){
 		var link = {"rel": rel, "href": href};
