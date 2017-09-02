@@ -1,13 +1,20 @@
-//This resource is accessed using something like: http://localhost:8500/rest/resource/collection/sku.json??page=1&pageSize=50 - application/x-collection+json
+/* @description This resource is accessed using something like: http://localhost:8500/rest/resource/collection/sku.json?page=1&pageSize=50 - application/x-collection+json 
+ * This URL assumes that the admin has created a REST mapping called /resource ether in the application or CF/Lucee Admin. The
+ * mapping should map to the /microservice directory. Any method annotated using @authenticated required a Authorization header is
+ * passed in to the request with a Basic Authentication value. For example Authorization: Basic MUEzQzc2MUZEQURFQ0RGNkQxNkYzQTU0MjFEODBCMDQ5NDM0MTA1RjpOemt4T0RBMk1EVkVOVEF4T0VaRlJqQTRNVGM1TVRaQk5VTkZOekJFUWpFd1FURkNRekkwTVE9PQ==
+ * would authenticate the user that has the access-key:access-key-secret given by the hash: MUEzQzc2MUZEQURFQ0RGNkQxNkYzQTU0MjFEODBCMDQ5NDM0MTA1RjpOemt4T0RBMk1EVkVOVEF4T0VaRlJqQTRNVGM1TVRaQk5VTkZOekJFUWpFd1FURkNRekkwTVE9PQ==
+ * The access key and secret can be generated from a non-admin account detail (in the actions dropdown) in the Slatwall Admin. By using
+ * a non-admin account, this forces the user to be assigned a permission-group which limits the API user to only the required data / actions.
+ */
 component extends="Slatwall.org.Hibachi.HibachiController" output="false" accessors="true" rest="true" restpath="/collection"   {
-	import "Slatwall.model.entity.CollectionConfig";
 	
 	this.publicMethods="";
 	this.publicMethods = listAppend(this.publicMethods, "list");
 	this.publicMethods = listAppend(this.publicMethods, "detail");
 	this.publicMethods = listAppend(this.publicMethods, "filter");
 	this.publicMethods = listAppend(this.publicMethods, "meta");
-	this.publicMethods = listAppend(this.publicMethods, "search");
+	this.publicMethods = listAppend(this.publicMethods, "findBy");
+	this.publicMethods = listAppend(this.publicMethods, "validations");
 	this.secureMethods="";
 	
 	// ======================== Admin Integration Methods
@@ -16,7 +23,7 @@ component extends="Slatwall.org.Hibachi.HibachiController" output="false" access
 	}
 	
 	/**
-	* @hint Returns an collection listing of data given an {entityName}
+	* @hint Returns an collection of entities given an {entityName}
 	* @restpath {entityName}
 	* @httpmethod GET
 	* @entityName.restargsource "Path"
@@ -29,12 +36,9 @@ component extends="Slatwall.org.Hibachi.HibachiController" output="false" access
 	* @authenticated Requires Basic Authentication using your access-key and access-key-secret as the username and password.
 	*/
 	function list(required string entityName, string page, string pageSize, string fields ) {
-		//Check that the user is authenticated through one of the authentication processes.
-		if (!isAuthenticated()){
-			pc = getPageContext().getResponse();
-			pc.addHeader("WWW-Authenticate", "Use basic Authentication against this endpoint where the username is your access-key and password is access-key-secret.");
-			pc.sendError(401, "Not Authorized.");
-		}
+		
+		authenticate();
+	
 		//Get the list
 		try{
 			var queryData = getHibachiScope().getService("#arguments.entityName#Service").invokeMethod("get#arguments.entityName#CollectionList");
@@ -44,28 +48,34 @@ component extends="Slatwall.org.Hibachi.HibachiController" output="false" access
 		    	queryData.setDisplayProperties(fields);
 		    }
 		    
+		    //Pagesize
+		    if (isDefined("arguments.pageSize")){
+		    	queryData.setPageRecordsShow(arguments.pageSize);
+		    }else{
+		    	arguments.pageSize = 10;
+		    }
 		    
 		    //Page
 		    if (isDefined("arguments.page")){
-		    	queryData.setPageRecordsStart(arguments.page);
+		    	queryData.setPageRecordsStart(arguments.page);	
+		    	queryData.setCurrentPageDeclaration(arguments.page);
 		    }else{
 		    	arguments.page = 1;
 		    	queryData.setPageRecordsStart(arguments.page);
 		    }
 		    
-		    if (isDefined("arguments.pageSize")){
-		    	queryData.setPageRecordsShow(arguments.pageSize);
-		    }
+		    var collection_ = queryData.getPageRecords();
 		    
-		    //All records
-		    if (!isNull(arguments.pageSize) && lcase(arguments.pageSize) == "all"){
-		    	var collection_ = queryData.getRecords();
-		    }else{
-		    	var collection_ = queryData.getPageRecords();
-		    }
+		    var lastPage = int(queryData.getRecordsCount() / arguments.pageSize);
 		    
+		    //Make sure we have not passed the last page.
+		    if (arguments.page > lastPage){
+		    	pc = getPageContext().getResponse();
+		    	pc.sendError(404, "Not Found");
+		    }
 		    var response = {
 		        "list": collection_,
+		        "recordCount": arrayLen(collection_),
 		        'headers' : {}
 		    };
 		    
@@ -99,7 +109,7 @@ component extends="Slatwall.org.Hibachi.HibachiController" output="false" access
 			response['links'] = addLink(response['links'], "show_25", "#CGI.SERVER_NAME##CGI.PATH_INFO#?page=#queryData.getPageRecordsStart()#&pageSize=25");
 			response['links'] = addLink(response['links'], "show_50", "#CGI.SERVER_NAME##CGI.PATH_INFO#?page=#queryData.getPageRecordsStart()#&pageSize=50");
 		    response['links'] = addLink(response['links'], "show_100", "#CGI.SERVER_NAME##CGI.PATH_INFO#?page=#queryData.getPageRecordsStart()#&pageSize=100");
-		    response['links'] = addLink(response['links'], "last", "#CGI.SERVER_NAME##CGI.PATH_INFO#?page=#queryData.getRecordsCount()#");
+		    response['links'] = addLink(response['links'], "last", "#CGI.SERVER_NAME##CGI.PATH_INFO#?page=#lastPage#");
 		    response['links'] = addLink(response['links'], "show_all", "#CGI.SERVER_NAME##CGI.PATH_INFO#?page=#queryData.getPageRecordsStart()#&pageSize=all");
 		    
 		    //Filters and sorting
@@ -121,7 +131,7 @@ component extends="Slatwall.org.Hibachi.HibachiController" output="false" access
 	}
 	
    /**
-	* @hint Returns entity meta of data given an {entityName}
+	* @hint Returns entity meta data given an {entityName}
 	* @restpath {entityName}/meta
 	* @httpmethod GET
 	* @entityName.restargsource "Path"
@@ -132,12 +142,8 @@ component extends="Slatwall.org.Hibachi.HibachiController" output="false" access
 	* @authenticated Requires Basic Authentication using your access-key and access-key-secret as the username and password.
 	*/
 	function meta(required string entityName) {
-		//Check that the user is authenticated through one of the authentication processes.
-		if (!isAuthenticated()){
-			pc = getPageContext().getResponse();
-			pc.addHeader("WWW-Authenticate", "Use basic Authentication against this endpoint where the username is your access-key and password is access-key-secret.");
-			pc.sendError(401, "Not Authorized.");
-		}
+		authenticate();
+	
 		var response = {
 	    	"fieldNames" = "",
 	        "meta" = {}
@@ -164,7 +170,7 @@ component extends="Slatwall.org.Hibachi.HibachiController" output="false" access
 	
 	
 	/**
-	* @hint Returns entity validation rules of data given an {entityName}
+	* @hint Returns entity validation rules given an {entityName}
 	* @restpath {entityName}/validations
 	* @httpmethod GET
 	* @entityName.restargsource "Path"
@@ -175,12 +181,9 @@ component extends="Slatwall.org.Hibachi.HibachiController" output="false" access
 	* @authenticated Requires Basic Authentication using your access-key and access-key-secret as the username and password.
 	*/
 	function validations(required string entityName) {
-		//Check that the user is authenticated through one of the authentication processes.
-		if (!isAuthenticated()){
-			pc = getPageContext().getResponse();
-			pc.addHeader("WWW-Authenticate", "Use basic Authentication against this endpoint where the username is your access-key and password is access-key-secret.");
-			pc.sendError(401, "Not Authorized.");
-		}
+		
+		authenticate();
+	
 		var response = {
 	        "validation" = {}
 	    };
@@ -206,12 +209,8 @@ component extends="Slatwall.org.Hibachi.HibachiController" output="false" access
 	* @authenticated Requires Basic Authentication using your access-key and access-key-secret as the username and password.
 	*/
 	function findBy(required string entityName, required string entityID) {
-		//Check that the user is authenticated through one of the authentication processes.
-		if (!isAuthenticated()){
-			pc = getPageContext().getResponse();
-			pc.addHeader("WWW-Authenticate", "Use basic Authentication against this endpoint where the username is your access-key and password is access-key-secret.");
-			pc.sendError(401, "Not Authorized.");
-		}
+		
+		authenticate();
 		
 	    var response = {
 	        'detail' = {}
@@ -260,12 +259,8 @@ component extends="Slatwall.org.Hibachi.HibachiController" output="false" access
 	* @authenticated Requires Basic Authentication using your access-key and access-key-secret as the username and password.
 	*/
 	function filter(required string entityName, string page, string pageSize ) {
-		//Check that the user is authenticated through one of the authentication processes.
-		if (!isAuthenticated()){
-			pc = getPageContext().getResponse();
-			pc.addHeader("WWW-Authenticate", "Use basic Authentication against this endpoint where the username is your access-key and password is access-key-secret.");
-			pc.sendError(401, "Not Authorized.");
-		}
+		
+		authenticate();
 		
 		var queryData = getHibachiScope().getService("#arguments.entityName#Service").invokeMethod("get#arguments.entityName#CollectionList");
 	    
@@ -360,13 +355,9 @@ component extends="Slatwall.org.Hibachi.HibachiController" output="false" access
 	* @authenticated Requires Basic Authentication using your access-key and access-key-secret as the username and password.
 	*/
 	function create( required string entityName, required string entity ) {
-		//Check that the user is authenticated through one of the authentication processes.
-		if (!isAuthenticated()){
-			var pc = getPageContext().getResponse();
-			pc.addHeader("WWW-Authenticate", "Use basic Authentication against this endpoint where the username is your access-key and password is access-key-secret.");
-			pc.sendError(401, "Not Authorized.");
-		}
 		
+		authenticate();
+	
 		var response = {
 	        'status' : 201,
 	        "location": "",
@@ -406,7 +397,7 @@ component extends="Slatwall.org.Hibachi.HibachiController" output="false" access
 	}
 	
    /**
-	* @hint Returns an location that contains the created entity. Expects a form variable called entity with a string of json data.
+	* @hint Returns an URI of the created entity. Expects a form variable called entity with a string of json data. Creates or REPLACES the existing resource.
 	* @restpath {entityName}
 	* @httpmethod PUT
 	* @entityName.restargsource "Path"
@@ -418,13 +409,9 @@ component extends="Slatwall.org.Hibachi.HibachiController" output="false" access
 	* @authenticated Requires Basic Authentication using your access-key and access-key-secret as the username and password.
 	*/
 	function update( required string entityName, required string entity ) {
-		//Check that the user is authenticated through one of the authentication processes.
-		if (!isAuthenticated()){
-			var pc = getPageContext().getResponse();
-			pc.addHeader("WWW-Authenticate", "Use basic Authentication against this endpoint where the username is your access-key and password is access-key-secret.");
-			pc.sendError(401, "Not Authorized.");
-		}
 		
+		authenticate();
+	
 		var response = {
 	        'status' : 201,
 	        "location": "",
@@ -476,6 +463,15 @@ component extends="Slatwall.org.Hibachi.HibachiController" output="false" access
 		var link = {"rel": rel, "href": href};
 		arrayAppend(links, link);
 		return links;
+	}
+	
+	/** Given a page context, authenticates a user. */
+	public void function authenticate( ){
+		if (!isAuthenticated()){
+			var pc = getPageContext().getResponse();
+			pc.addHeader("WWW-Authenticate", "Use basic Authentication against this endpoint where the username is your access-key and password is access-key-secret.");
+			pc.sendError(401, "Not Authorized.");
+		}
 	}
 	
    /** 

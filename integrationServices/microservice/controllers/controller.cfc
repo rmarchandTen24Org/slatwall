@@ -16,14 +16,13 @@ component extends="Slatwall.org.Hibachi.HibachiController" output="false" access
 	* @httpmethod GET
 	* @controllerName.restargsource "Path"
 	* @action.restargsource "Path"
-	* @rc.restargsource "Form"
 	* @returnType struct
 	* @access remote
 	* @produces application/json,application/xml
 	* @hint Returns an controller definition for the action.
 	* @authenticated Requires Basic Authentication using your access-key and access-key-secret as the username and password.
 	*/
-	function doAction(required string controllerName, required string action, string rc) {
+	function doAction(required string controllerName, required string action) {
 		//Check that the user is authenticated through one of the authentication processes.
 		if (!isAuthenticated()){
 			pc = getPageContext().getResponse();
