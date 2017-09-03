@@ -56,7 +56,7 @@ component extends="Slatwall.org.Hibachi.HibachiController" output="false" access
 		    }
 		    
 		    //Page
-		    if (isDefined("arguments.page")){
+		    if (isDefined("arguments.page") && arguments.page >= 1){
 		    	queryData.setPageRecordsStart(arguments.page);	
 		    	queryData.setCurrentPageDeclaration(arguments.page);
 		    }else{
@@ -64,15 +64,18 @@ component extends="Slatwall.org.Hibachi.HibachiController" output="false" access
 		    	queryData.setPageRecordsStart(arguments.page);
 		    }
 		    
+		    //Get the records.
 		    var collection_ = queryData.getPageRecords();
-		    
 		    var lastPage = int(queryData.getRecordsCount() / arguments.pageSize);
+		    
 		    
 		    //Make sure we have not passed the last page.
 		    if (arguments.page > lastPage){
 		    	pc = getPageContext().getResponse();
 		    	pc.sendError(404, "Not Found");
 		    }
+		    
+		    //Setup the response.
 		    var response = {
 		        "list": collection_,
 		        "recordCount": arrayLen(collection_),
