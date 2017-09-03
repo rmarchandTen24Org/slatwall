@@ -357,7 +357,7 @@ component extends="Slatwall.org.Hibachi.HibachiController" output="false" access
 	* @example POST https://your-slatwall-instance/rest/resources/collection/account/
 	* @authenticated Requires Basic Authentication using your access-key and access-key-secret as the username and password.
 	*/
-	function create( required string entityName, required string entity ) {
+	function create( required string entityName, string entity ) {
 		
 		authenticate();
 	
@@ -366,7 +366,6 @@ component extends="Slatwall.org.Hibachi.HibachiController" output="false" access
 	        "location": "",
 	        'errors' : ""
 	    };
-	    
 		var restData = {};
 		
 		if (!isNull(entity)){
@@ -377,13 +376,16 @@ component extends="Slatwall.org.Hibachi.HibachiController" output="false" access
 		
 		if (isNull(entityObj)){
 			response.errors = listAppend(response.errors, "Entity not recognized!");
+			pc = getPageContext().getResponse();
+			pc.setStatus(404);
+			return response;
 		}
 		
 	    try{
 	    	
     		//save it and return the location.
     		var savedEntity = getHibachiScope().getService("#arguments.entityName#Service").invokeMethod("save#arguments.entityName#", {1=entityObj, 2=restData});
-    		
+    		ormFlush();
     		//success!
     		pc = getPageContext().getResponse();
     		var id = entityObj.invokeMethod('get#arguments.entityName#ID');
@@ -400,7 +402,8 @@ component extends="Slatwall.org.Hibachi.HibachiController" output="false" access
 	}
 	
    /**
-	* @hint Returns an URI of the created entity. Expects a form variable called entity with a string of json data. Creates or REPLACES the existing resource.
+	* @hint Returns an URI of the created entity. Expects a form variable called entity with a string of json data. 
+	* Creates or REPLACES the existing resource.
 	* @restpath {entityName}
 	* @httpmethod PUT
 	* @entityName.restargsource "Path"
@@ -408,16 +411,15 @@ component extends="Slatwall.org.Hibachi.HibachiController" output="false" access
 	* @returnType struct
 	* @access remote
 	* @produces application/json,application/xml
-	* @example POST https://your-slatwall-instance/rest/resources/collection/account/
+	* @example PUT https://your-slatwall-instance/rest/resources/collection/account/
 	* @authenticated Requires Basic Authentication using your access-key and access-key-secret as the username and password.
 	*/
-	function update( required string entityName, required string entity ) {
+	function update( required string entityName, string entity ) {
 		
 		authenticate();
 	
 		var response = {
-	        'status' : 201,
-	        "location": "",
+	        'status' : 200,
 	        'errors' : ""
 	    };
 	    
@@ -426,12 +428,26 @@ component extends="Slatwall.org.Hibachi.HibachiController" output="false" access
 		if (!isNull(entity)){
 			restData = deserializeJson(entity);
 		}
-		
+		//Now that we have the data, use map mode to save using the struct.
+		response['data'] = restData;
+ 		try{
+ 			var em = createObject("java", "org.hibernate.EntityMode");
+	 		var dynamicSession = ORMGetSession().getSession(em.MAP);
+	 		var name = arguments.entityName;
+	 		dynamicSession.save(name, arguments.entity);
+	 		dynamicSession.flush();
+			//success!
+    		
+ 		}catch(any e){
+	    	//If there is no process, then populate manually
+	    	response.errors = listAppend(response.errors, e);
+	    	
+	    }
 		//The PUT method requests that the enclosed entity be stored under the supplied Request-URI . 
 		//If the Request-URI refers to an already existing resource, the enclosed entity 
 		//SHOULD be considered as a modified version of the one residing on the origin. 
 		
-	    try{
+	    /*try{
 			//If there is no ID provided, we are creating with this put.
 			if (isNull(restData['#arguments.entityName#ID'])){
 				var entityObj = getHibachiScope().getService("#arguments.entityName#Service").invokeMethod("new#arguments.entityName#");
@@ -455,10 +471,11 @@ component extends="Slatwall.org.Hibachi.HibachiController" output="false" access
 	    }catch(any e){
 	    	//If there is no process, then populate manually
 	    	response.errors = listAppend(response.errors, "The server could not complete this request.");
-	    }
+	    }*/
 	    
 	    return response;
 	}
+	
 	
 	/*--------------------------------------------------------------------------*/
 	/** PRIVATE helper function */

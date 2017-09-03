@@ -801,49 +801,11 @@ component accessors="true" persistent="false" output="false" extends="HibachiObj
 	
 	// Paging Methods
 	public array function getPageRecords(boolean refresh=false) {
-		//if( !structKeyExists(variables, "pageRecords") || arguments.refresh == true) {
+		if( !structKeyExists(variables, "pageRecords") || arguments.refresh == true) {
 			saveState();
-			
-			//variables.pageRecords = ormExecuteQuery(getHQL(), getHQLParams(), false, {offset=getPageRecordsStart()-1, maxresults=getPageRecordsShow(), ignoreCase="true", cacheable=getCacheable(), cachename="pageRecords-#getCacheName()#"});
-			
-			//Setup the session to use map mode so all data is maps.
-			var em = createObject("java", "org.hibernate.EntityMode");
-			//writeDump(var=em);getSession(em.MAP).createQuery
-			var q = ORMGetSession().createQuery(getHQL());
-			
-			//Add the HQL parameters as needed.
-			//writeDump(var=getHQL()); writeDump(serializeJson(getHQLParams()));
-			if (listLen(structKeyList(getHQLParams()))){
-			for (var p in getHQLParams()){
-			if(isArray(getHqlParams()[p])){
-				q.setParameter(
-				"#p#"
-				, arrayToList(getHqlParams()[p]));
-				}
-			else if
-			 (isBoolean(getHqlParams()[p])){
-				q.setBoolean(
-				"#p#"
-				, getHqlParams()[p]);
-			}
-			else
-			{
-				q.setParameter(
-				"#p#"
-				, getHqlParams()[p]);
-			}
-			}
-			}
-			//Get the results.
-			//Can set a transformer for hashmap?
-			var transformers = createObject("java", "org.hibernate.transform.Transformers");//r = q.setResultTransformer(transformers.ALIAS_TO_ENTITY_MAP).list();
-			if (getPageRecordsShow() >= 50){
-				q.setFetchSize(1000).setReadOnly(true).setCacheable(false).setFirstResult(getPageRecordsStart()-1).setMaxResults(getPageRecordsShow()); //1000
-			}
-			r = q.list();
-			
-		//}
-		return r;
+			variables.pageRecords = ormExecuteQuery(getHQL(), getHQLParams(), false, {offset=getPageRecordsStart()-1, maxresults=getPageRecordsShow(), ignoreCase="true", cacheable=getCacheable(), cachename="pageRecords-#getCacheName()#"});
+		}
+		return variables.pageRecords;
 	}
 	
 	public any function getFirstRecord(boolean refresh=false) {
