@@ -11,7 +11,7 @@
 			
 		</cfif>
 		<cfif attributes.timespan eq 0>
-			<cfcache action="flush" id="#attributes.cacheKey#" >
+			<cfexit>
 		</cfif>
 		
 		<!--- used to clear template cache --->
@@ -35,7 +35,7 @@
 	<cfsavecontent variable="hibachiTagContent" >
 		<cfoutput>#thisTag.generatedContent#</cfoutput>
 	</cfsavecontent>
-	<cfif !structKeyExists(server,'lucee') && !structKeyExists(server,'railo')>
+	<cfif !structKeyExists(server,'lucee') && !structKeyExists(server,'railo') && attributes.timespan neq 0>
 		<cfcache value="#hibachiTagContent#" action="put" id="#attributes.cacheKey#" timespan="#attributes.timespan#">
 	</cfif>
 	<cfset thisTag.generatedContent = hibachiTagContent/>
