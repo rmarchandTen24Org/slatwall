@@ -276,7 +276,7 @@ component entityname="SlatwallSku" table="SwSku" persistent=true accessors=true 
 
 	public string function getFormattedRedemptionAmount(){
 
-		if(this.isGiftCardSku() && structKeyExists(variables, "redemptionAmountType")){
+		if(!isNull(this.isGiftCardSku()) && this.isGiftCardSku() && structKeyExists(variables, "redemptionAmountType")){
 			switch(variables.redemptionAmountType){
 				case "percentage":
 					return getService("HibachiUtilityService").formatValue_percentage(this.getRedemptionAmount());
@@ -557,7 +557,7 @@ component entityname="SlatwallSku" table="SwSku" persistent=true accessors=true 
 	// START: Gift Card Logical Methods
 
 	public boolean function isGiftCardSku() {
-		if(this.getProduct().getBaseProductType() == "gift-card"){
+		if( !isNull(this.getProduct()) && !isNull(this.getProduct().getBaseProductType()) && this.getProduct().getBaseProductType() == "gift-card"){
 			return true;
 		}
 		return false;
