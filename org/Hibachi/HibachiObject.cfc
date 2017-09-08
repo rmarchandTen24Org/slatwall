@@ -1,6 +1,7 @@
 component accessors="true" output="false" persistent="false" {
 
 	property name="hibachiInstanceApplicationScopeKey" type="string" persistent="false";
+	property name="underScoreService" type="any" persistent="false";
 
 	// Constructor Metod
 	public any function init( ) {

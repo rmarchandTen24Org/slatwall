@@ -600,6 +600,10 @@ component extends="framework.one" {
 					});
 
 					// If the default singleton beans were not found in the model, add a reference to the core one in hibachi
+					if(!coreBF.containsBean("underScoreService")){
+						coreBF.declareBean("underScoreService", '#variables.framework.applicationKey#.org.Hibachi.underscore.Underscore',true);
+					}
+					
 					if(!coreBF.containsBean("hibachiDAO")) {
 						coreBF.declareBean("hibachiDAO", "#variables.framework.applicationKey#.org.Hibachi.HibachiDAO", true);
 					}
