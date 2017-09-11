@@ -60,8 +60,8 @@ component output="false" accessors="true" extends="HibachiService" {
 		}else if(getService('HibachiUtilityService').legacyEncyptionKeyExists()){
 			setEncryptionKeyFilePathMethod('getLegacyEncryptionKeyFilePath');
 		}else{
-			createEncryptionKey();	
 			setEncryptionKeyFilePathMethod('getEncryptionKeyFilePath');
+			createEncryptionKey();	
 		}
 		
 		
