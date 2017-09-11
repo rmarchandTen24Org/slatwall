@@ -109,12 +109,15 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
     	}
     	
     	var customrbpath = expandPath('/#getDAO("hibachiDAO").getApplicationKey()#') & "/custom/config/resourceBundles";
-    	
-    	var destinationpath = expandPath('/#getDAO("hibachiDAO").getApplicationKey()#') & "/custom/assets/system/resourceBundles"; 
-    	
     	if(!directoryExists(customrbpath)){
         	directoryCreate(customrbpath);
         }
+        
+    	var destinationpath = expandPath('/#getDAO("hibachiDAO").getApplicationKey()#') & "/custom/assets/system/resourceBundles"; 
+        if(!directoryExists(destinationpath)){
+        	directoryCreate(destinationpath);
+        }
+        
     	if(DirectoryExists(customrbpath)){
     		var customDirectoryListing = directorylist(customrbpath,false,"name","*.properties");
     		for(var item in customDirectoryListing){
