@@ -89,7 +89,7 @@ Notes:
 
 				return keyLocation & '/';
 			}
-			return expandPath('/#getApplicationValue('applicationKey')#/custom/config/');
+			return expandPath('/#getApplicationValue('applicationKey')#/custom/assets/system/');
 		}
 
 		public string function getLegacyEncryptionAlgorithm() {

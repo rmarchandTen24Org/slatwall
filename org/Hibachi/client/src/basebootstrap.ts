@@ -131,7 +131,7 @@ export class BaseBootStrapper{
             urlString+='/';
         }
 
-        return this.$http.get(urlString+'/custom/config/config.json?instantiationKey='+this.instantiationKey)
+        return this.$http.get(urlString+'/custom/assets/config.json?instantiationKey='+this.instantiationKey)
         .then( (resp:any)=> {
         	var appConfig = resp.data.data;
             if(hibachiConfig.baseURL.length){
@@ -155,7 +155,7 @@ export class BaseBootStrapper{
             return this._resourceBundle[locale];
         }
 
-        var urlString = this.appConfig.baseURL+'/custom/config/resourceBundles/'+locale+'.json?instantiationKey='+this.appConfig.instantiationKey;
+        var urlString = this.appConfig.baseURL+'/custom/assets/resourceBundles/'+locale+'.json?instantiationKey='+this.appConfig.instantiationKey;
 
         this.$http(
             {

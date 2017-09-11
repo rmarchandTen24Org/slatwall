@@ -55,7 +55,7 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 		config[ 'modelConfig' ] = getModel();
 		json['data'] = config;
 		json = serializeJson(json);
-		var configDirectoryPath = expandPath('/#getDao("HibachiDao").getApplicationKey()#') & '/custom/config/';
+		var configDirectoryPath = expandPath('/#getDao("HibachiDao").getApplicationKey()#') & '/custom/assets/system/';
 		if(!directoryExists(configDirectoryPath)){
 			directoryCreate(configDirectoryPath);
 		}
@@ -109,6 +109,9 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
     	}
     	
     	var customrbpath = expandPath('/#getDAO("hibachiDAO").getApplicationKey()#') & "/custom/config/resourceBundles";
+    	
+    	var destinationpath = expandPath('/#getDAO("hibachiDAO").getApplicationKey()#') & "/custom/assets/system/resourceBundles"; 
+    	
     	if(!directoryExists(customrbpath)){
         	directoryCreate(customrbpath);
         }
@@ -132,7 +135,7 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 	            data[lcase(key)] = resourceBundle[key];
 	        }
 	        var json = serializeJson(data);
-			var filePath = customrbpath & '/#locale#.json';
+			var filePath = destinationpath & '/#locale#.json';
 	        fileWrite(filePath,json);
     	}
         

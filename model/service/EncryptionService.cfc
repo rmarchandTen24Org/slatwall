@@ -88,7 +88,7 @@ component output="false" accessors="true" extends="HibachiService" {
 	}
 	
 	private string function getEncryptionKeyLocation() {
-		return getSettingService().getSettingValue("globalEncryptionKeyLocation") NEQ "" ? getSettingService().getSettingValue("globalEncryptionKeyLocation") : expandPath('/Slatwall/custom/config/');
+		return getSettingService().getSettingValue("globalEncryptionKeyLocation") NEQ "" ? getSettingService().getSettingValue("globalEncryptionKeyLocation") : expandPath('/Slatwall/custom/assets/system/');
 	}
 	
 	private string function getEncryptionKeyFileName() {
