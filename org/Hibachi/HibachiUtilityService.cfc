@@ -790,6 +790,15 @@
 		}
 
 		private string function getEncryptionKeyLocation() {
+			var keyLocation = getSettingService().getSettingValue("globalEncryptionKeyLocation");
+			if(len(keyLocation)) {
+				if(right(keyLocation, 1) eq '/' or right(keyLocation, 1) eq '\') {
+					return keyLocation;
+				}
+
+				return keyLocation & '/';
+			}
+			
 			return expandPath('/#getApplicationValue('applicationKey')#/custom/assets/system/');
 		}
 

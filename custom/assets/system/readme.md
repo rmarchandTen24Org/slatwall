@@ -1,0 +1,1 @@
+The assets/system directory is where system generated files for you Slatwall instance is stored by default.

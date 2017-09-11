@@ -84,19 +84,19 @@ component output="false" accessors="true" extends="HibachiService" {
 	}
 	
 	private string function getEncryptionKeyFilePath() {
-		return getEncryptionKeyLocation() & getEncryptionKeyFileName();
+		return getService('HibachiUtilityService').getEncryptionKeyFilePath();
 	}
 	
 	private string function getEncryptionKeyLocation() {
-		return getSettingService().getSettingValue("globalEncryptionKeyLocation") NEQ "" ? getSettingService().getSettingValue("globalEncryptionKeyLocation") : expandPath('/Slatwall/custom/assets/system/');
+		return getService('HibachiUtilityService').getEncryptionKeyLocation();
 	}
 	
 	private string function getEncryptionKeyFileName() {
-		return "key.xml.cfm";
+		return getService('HibachiUtilityService').getEncrypionKeyFileName();
 	}
 	
 	private boolean function encryptionKeyExists() {
-		return fileExists(getEncryptionKeyFilePath());
+		return getService('HibachiUtilityService').encryptionKeyExists();
 	}
 	
 	private void function storeEncryptionKey(required string key) {
