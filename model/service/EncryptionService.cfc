@@ -55,9 +55,9 @@ component output="false" accessors="true" extends="HibachiService" {
 	public any function init(any settingService=getService('settingService')) {
 		setSettingService(settingService);
 		
-		if(encyptionKeyExists()){
+		if(getService('HibachiUtilityService').encyptionKeyExists()){
 			setEncryptionKeyFilePathMethod('getEncryptionKeyFilePath');
-		}else if(legacyEncyptionKeyExists()){
+		}else if(getService('HibachiUtilityService').legacyEncyptionKeyExists()){
 			setEncryptionKeyFilePathMethod('getLegacyEncryptionKeyFilePath');
 		}else{
 			createEncryptionKey();	
