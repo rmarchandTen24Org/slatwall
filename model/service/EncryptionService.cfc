@@ -61,6 +61,7 @@ component output="false" accessors="true" extends="HibachiService" {
 			setEncryptionKeyFilePathMethod('getLegacyEncryptionKeyFilePath');
 		}else{
 			createEncryptionKey();	
+			setEncryptionKeyFilePathMethod('getEncryptionKeyFilePath');
 		}
 		
 		
