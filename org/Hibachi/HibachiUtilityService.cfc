@@ -838,15 +838,15 @@
 		}
 
 		public string function getLegacyEncryptionAlgorithm() {
-			return "AES";
+			return getSettingService().getSettingValue("globalEncryptionAlgorithm");
 		}
 
 		public string function getLegacyEncryptionEncoding() {
-			return "Base64";
+			return getSettingService().getSettingValue("globalEncryptionEncoding");
 		}
 
 		public string function getLegacyEncryptionKeySize() {
-			return "128";
+			return getSettingService().getSettingValue("globalEncryptionKeySize");
 		}
 
 		public void function removeLegacyEncryptionKeyFile(string method) {
