@@ -809,6 +809,16 @@
 		public boolean function encryptionKeyExists() {
 			return fileExists(getEncryptionKeyFilePath());
 		}
+		
+		public boolean function legacyEncyptionKeyExists(){
+			return fileExists(getLegacyEncyptionKeyFilePath());
+		}
+		
+		
+		public string function getLegacyEncyptionKeyFilePath(){
+			return expandPath('/#getDao("HibachiDao").getApplicationKey()#') & '/custom/config/#getEncryptionKeyFileName()#';
+			
+		}
 
 		private string function getEncryptionPasswordFilePath() {
 			return getEncryptionKeyLocation() & getEncryptionPasswordFileName();

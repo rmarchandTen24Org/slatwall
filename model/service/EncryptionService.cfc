@@ -49,12 +49,21 @@ Notes:
 component output="false" accessors="true" extends="HibachiService" {
 	
 	property name="settingService" type="any";
+	property name="encryptionKeyFilePathMethod" type="string";
+	
 	
 	public any function init(any settingService=getService('settingService')) {
 		setSettingService(settingService);
-		if(!encryptionKeyExists()){
-			createEncryptionKey();
+		
+		if(encyptionKeyExists()){
+			setEncryptionKeyFilePathMethod('getEncryptionKeyFilePath');
+		}else if(legacyEncyptionKeyExists()){
+			setEncryptionKeyFilePathMethod('getLegacyEncryptionKeyFilePath');
+		}else{
+			createEncryptionKey();	
 		}
+		
+		
 		return super.init();
 	}
 	
@@ -84,7 +93,7 @@ component output="false" accessors="true" extends="HibachiService" {
 	}
 	
 	private string function getEncryptionKeyFilePath() {
-		return getService('HibachiUtilityService').getEncryptionKeyFilePath();
+		return getService('HibachiUtilityService').invokeMethod(getEncryptionKeyFilePathMethod());
 	}
 	
 	private string function getEncryptionKeyLocation() {
