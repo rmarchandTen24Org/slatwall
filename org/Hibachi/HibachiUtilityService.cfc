@@ -799,7 +799,7 @@
 				return keyLocation & '/';
 			}
 			
-			return expandPath('/#getApplicationValue('applicationKey')#/custom/assets/system/');
+			return expandPath('/#getDao("HibachiDao").getApplicationKey()#') & '/custom/assets/system/';
 		}
 
 		public string function getEncryptionKeyFileName() {
