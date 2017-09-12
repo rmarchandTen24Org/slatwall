@@ -785,11 +785,11 @@
 			return passwords;
 		}
 
-		private string function getEncryptionKeyFilePath() {
+		public string function getEncryptionKeyFilePath() {
 			return getEncryptionKeyLocation() & getEncryptionKeyFileName();
 		}
 
-		private string function getEncryptionKeyLocation() {
+		public string function getEncryptionKeyLocation() {
 			var keyLocation = getSettingService().getSettingValue("globalEncryptionKeyLocation");
 			if(len(keyLocation)) {
 				if(right(keyLocation, 1) eq '/' or right(keyLocation, 1) eq '\') {
@@ -802,7 +802,7 @@
 			return expandPath('/#getApplicationValue('applicationKey')#/custom/assets/system/');
 		}
 
-		private string function getEncryptionKeyFileName() {
+		public string function getEncryptionKeyFileName() {
 			return "key.xml.cfm";
 		}
 

@@ -49,20 +49,22 @@ Notes:
 component output="false" accessors="true" extends="HibachiService" {
 	
 	property name="settingService" type="any";
-	property name="encryptionKeyFilePathMethod" type="string";
+	property name="hibachiUtilityService" type="any";
 	
-	
-	public any function init(any settingService=getService('settingService')) {
-		setSettingService(settingService);
+	public any function init(any settingService=getService('settingService'), any hibachiUtilityService=getService('hibachiUtilityService')) {
+		setSettingService(arguments.settingService);
+		setHibachiUtilityService(arguments.hibachiUtilityService);
 		
-		if(getService('HibachiUtilityService').encryptionKeyExists()){
-			setEncryptionKeyFilePathMethod('getEncryptionKeyFilePath');
-		}else if(getService('HibachiUtilityService').legacyEncyptionKeyExists()){
-			setEncryptionKeyFilePathMethod('getLegacyEncryptionKeyFilePath');
+		if(getHibachiUtilityService().encryptionKeyExists()){
+			variables.encryptionKeyFilePathMethod = 'getEncryptionKeyFilePath';
+		}else if(getHibachiUtilityService().legacyEncyptionKeyExists()){
+			variables.encryptionKeyFilePathMethod = 'getLegacyEncryptionKeyFilePath';
 		}else{
-			setEncryptionKeyFilePathMethod('getEncryptionKeyFilePath');
+			variables.encryptionKeyFilePathMethod = 'getEncryptionKeyFilePath';
+			
 			createEncryptionKey();	
 		}
+		
 		
 		
 		return super.init();
@@ -94,7 +96,7 @@ component output="false" accessors="true" extends="HibachiService" {
 	}
 	
 	private string function getEncryptionKeyFilePath() {
-		return getService('HibachiUtilityService').invokeMethod(getEncryptionKeyFilePathMethod());
+		return getHibachiUtilityService().invokeMethod(variables.encryptionKeyFilePathMethod);
 	}
 	
 	private string function getEncryptionKeyLocation() {
@@ -111,7 +113,8 @@ component output="false" accessors="true" extends="HibachiService" {
 	
 	private void function storeEncryptionKey(required string key) {
 		var theKey = "<crypt><key>#arguments.key#</key></crypt>";
-		fileWrite(getEncryptionKeyFilePath(),theKey);
+		var encryptionKeyFilePath = getEncryptionKeyFilePath();
+		fileWrite(encryptionKeyFilePath,theKey);
 	}
 	
 	// ===================== START: Logical Methods ===========================
