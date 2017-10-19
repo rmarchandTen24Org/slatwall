@@ -316,5 +316,15 @@ Notes:
 		}
 	</cfscript>
 
+	<cffunction name="getOrderCurrentStatus">
+		<cfargument name="orderID" type="string" required="true" />
+
+		<cfset var hql = "  FROM SlatwallOrderStatus ss
+							WHERE ss.order.orderID = :orderID
+							AND ss.effectiveDateTime <= :now
+							ORDER BY ss.effectiveDateTime DESC " />
+		<cfreturn ormExecuteQuery(hql, {orderID=arguments.orderID, now=now()}, true, {maxresults=1}) />
+	</cffunction>
+
 </cfcomponent>
 

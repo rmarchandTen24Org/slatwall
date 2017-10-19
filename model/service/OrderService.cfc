@@ -185,6 +185,10 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 		return getOrderDAO().getOrderItemDBQuantity(argumentcollection=arguments);
 	}
 
+	public any function getOrderCurrentStatus(required string orderID ){
+		return getOrderDAO().getOrderCurrentStatus( argumentCollection=arguments );
+	}
+
 	// ===================== START: DAO Passthrough ===========================
 
 	// ===================== START: Process Methods ===========================
@@ -3192,6 +3196,19 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 		}
 		
 		return propertyList;
+	}
+
+
+	public void function setOrderStatus(required any order, required string orderStatusTypeCode, any effectiveDateTime = now(), any orderStatusChangeReasonTypeCode) {
+		var orderStatus = this.newOrderStatus();
+		orderStatus.setOrderStatusType(getTypeService().getTypeBySystemCode(arguments.orderStatusTypeCode));
+		if(structKeyExists(arguments, "orderStatusChangeReasonTypeCode") && arguments.orderStatusChangeReasonTypeCode != "") {
+			orderStatus.setOrderStatusChangeReasonType(getTypeService().getTypeBySystemCode(arguments.orderStatusChangeReasonTypeCode));
+		}
+		orderStatus.setEffectiveDateTime(arguments.effectiveDateTime);
+		orderStatus.setChangeDateTime(now());
+		arguments.order.addOrderStatus(orderStatus);
+		this.saveOrder(arguments.order);
 	}
 	// ================== START: Private Helper Functions =====================
 
