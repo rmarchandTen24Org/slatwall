@@ -61,7 +61,6 @@ component displayname="Order" entityname="SlatwallOrder" table="SwOrder" persist
 	property name="testOrderFlag" ormtype="boolean";
 	// Calculated Properties
 	property name="calculatedTotal" ormtype="big_decimal";
-	property name="calculatedCurrentStatus" cfc="OrderStatus" fieldtype="many-to-one" fkcolumn="currentOrderStatusID";
 
 	// Related Object Properties (many-to-one)
 	property name="account" cfc="Account" fieldtype="many-to-one" fkcolumn="accountID";
@@ -1284,6 +1283,14 @@ totalPaymentsReceived = getService('HibachiUtilityService').precisionCalculate(t
 		arguments.appliedPromotion.removeOrder( this );
 	}
 
+// Subscription Status (one-to-many)
+	public void function addOrderStatus(required any orderStatus) {
+		arguments.orderStatus.setOrder( this );
+	}
+	public void function removeOrderStatus(required any orderStatus) {
+		arguments.orderStatus.removeOrder( this );
+	}
+
 	// =============  END:  Bidirectional Helper Methods ===================
 
 	// ============== START: Overridden Implicet Getters ===================
@@ -1308,9 +1315,16 @@ totalPaymentsReceived = getService('HibachiUtilityService').precisionCalculate(t
 		return getService("addressService").newAddress();
 	}
 
+	public any function setOrderStatusType(required any orderStatusType) {
+		getService("orderService").setOrderStatus(this, arguments.orderStatusType);
+		variables.orderStatusType = arguments.orderStatusType;
+		return this;
+	}
+
 	public any function getOrderStatusType() {
 		if(!structKeyExists(variables, "orderStatusType")) {
 			variables.orderStatusType = getService("typeService").getTypeBySystemCode('ostNotPlaced');
+			getService("orderService").setOrderStatus(this, variables.orderStatusType);
 		}
 		return variables.orderStatusType;
 	}

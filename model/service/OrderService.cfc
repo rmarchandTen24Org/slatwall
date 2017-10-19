@@ -3199,16 +3199,19 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 	}
 
 
-	public void function setOrderStatus(required any order, required string orderStatusTypeCode, any effectiveDateTime = now(), any orderStatusChangeReasonTypeCode) {
+	public void function setOrderStatus(required any order, required any orderStatusType, any effectiveDateTime = now(), string orderStatusChangeReasonTypeCode) {
+		if(isSimpleValue(orderStatusType)){
+			arguments.orderStatusType = getTypeService().getTypeBySystemCode(arguments.orderStatusType);
+		}
 		var orderStatus = this.newOrderStatus();
-		orderStatus.setOrderStatusType(getTypeService().getTypeBySystemCode(arguments.orderStatusTypeCode));
+		orderStatus.setOrderStatusType(arguments.orderStatusType);
 		if(structKeyExists(arguments, "orderStatusChangeReasonTypeCode") && arguments.orderStatusChangeReasonTypeCode != "") {
 			orderStatus.setOrderStatusChangeReasonType(getTypeService().getTypeBySystemCode(arguments.orderStatusChangeReasonTypeCode));
 		}
 		orderStatus.setEffectiveDateTime(arguments.effectiveDateTime);
 		orderStatus.setChangeDateTime(now());
 		arguments.order.addOrderStatus(orderStatus);
-		this.saveOrder(arguments.order);
+		arguments.order = this.saveOrder(arguments.order);
 	}
 	// ================== START: Private Helper Functions =====================
 
