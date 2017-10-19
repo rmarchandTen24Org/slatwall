@@ -61,6 +61,7 @@ component displayname="Order" entityname="SlatwallOrder" table="SwOrder" persist
 	property name="testOrderFlag" ormtype="boolean";
 	// Calculated Properties
 	property name="calculatedTotal" ormtype="big_decimal";
+	property name="calculatedCurrentStatus" cfc="OrderStatus" fieldtype="many-to-one" fkcolumn="currentOrderStatusID";
 
 	// Related Object Properties (many-to-one)
 	property name="account" cfc="Account" fieldtype="many-to-one" fkcolumn="accountID";
@@ -88,6 +89,8 @@ component displayname="Order" entityname="SlatwallOrder" table="SwOrder" persist
 	property name="stockReceivers" singularname="stockReceiver" cfc="StockReceiver" type="array" fieldtype="one-to-many" fkcolumn="orderID" cascade="all-delete-orphan" inverse="true";
 	property name="referencingOrders" singularname="referencingOrder" cfc="Order" fieldtype="one-to-many" fkcolumn="referencedOrderID" cascade="all-delete-orphan" inverse="true";
 	property name="accountLoyaltyTransactions" singularname="accountLoyaltyTransaction" cfc="AccountLoyaltyTransaction" type="array" fieldtype="one-to-many" fkcolumn="orderID" cascade="all" inverse="true";
+	property name="orderStatus" singularname="orderStatus"  cfc="OrderStatus" type="array" fieldtype="one-to-many" fkcolumn="orderID" cascade="all-delete-orphan" inverse="true";
+
 
 	// Related Object Properties (many-To-many - owner)
 	property name="promotionCodes" singularname="promotionCode" cfc="PromotionCode" fieldtype="many-to-many" linktable="SwOrderPromotionCode" fkcolumn="orderID" inversejoincolumn="promotionCodeID";
@@ -160,6 +163,9 @@ component displayname="Order" entityname="SlatwallOrder" table="SwOrder" persist
 	property name="totalSaleQuantity" persistent="false";
 	property name="totalReturnQuantity" persistent="false";
 	property name="totalDepositAmount" persistent="false" hb_formatType="currency";
+	property name="currentStatus" persistent="false";
+	property name="currentStatusCode" persistent="false";
+	property name="currentStatusName" persistent="false";
 	
     //======= Mocking Injection for Unit Test ======	
 	property name="orderService" persistent="false" type="any";
@@ -1130,6 +1136,26 @@ totalPaymentsReceived = getService('HibachiUtilityService').precisionCalculate(t
 
 	public numeric function getTotalItems() {
 		return arrayLen(getOrderItems());
+	}
+
+	public any function getCurrentStatus() {
+		return getService("orderService").getOrderCurrentStatus( variables.orderID );
+	}
+
+	public string function getCurrentStatusCode() {
+		var currentStatus = getCurrentStatus();
+		if(!isNull( currentStatus )) {
+			return currentStatus.getOrderStatusType().getSystemCode();
+		}
+		return "";
+	}
+
+	public string function getCurrentStatusName() {
+		var currentStatus = getCurrentStatus();
+		if(!isNull( currentStatus )) {
+			return currentStatus.getSubscriptionStatusType().getTypeName();
+		}
+		return "";
 	}
 
 	// ============  END:  Non-Persistent Property Methods =================

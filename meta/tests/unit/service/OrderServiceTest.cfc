@@ -1443,4 +1443,272 @@ component extends="Slatwall.meta.tests.unit.SlatwallUnitTestBase" {
 
 
 	}
+
+
+
+
+
+
+
+	/**
+	* @test
+	*/
+	public void function reopenOrder(){
+
+		//adding a test shippingMethod
+		var shippingMethodData ={
+			shippingMethodID="",
+			fulfillementMethod={
+				//shipping
+				fulfillmentMethodID='444df2fb93d5fa960ba2966ba2017953'
+			},
+			activeFlag=1,
+			shippingMethodName="testShippingMethod"&createUUID(),
+			shippingMethodCode="testShippingMethod"&createUUID()
+		};
+		var shippingMethod = createPersistedTestEntity('ShippingMethod',shippingMethodData);
+
+		var shippingMethodRateData={
+			shippingMethodRateID="",
+			shippingMethod={
+				shippingMethodID=shippingMethod.getShippingMethodID()
+			},
+			activeFlag=1
+		};
+		var shippingMethodRate = createPersistedTestEntity('ShippingMethodRate',shippingMethodRateData);
+
+		var accountData={
+			accountID="",
+			firstName="test",
+			lastName="test",
+			emailAddress="test@test.com",
+			testAccountFlag=1
+		};
+		var account = createPersistedTestEntity('account',accountData);
+
+
+		//create Term Payment Method
+		var termPaymentMethodData={
+			paymentMethodID="",
+			activeFlag=1,
+			paymentMethodName="testTermPaymentMethod"&createUUID(),
+			allowSaveFlag=1,
+			placeOrderChargeTransactionType="",
+			placeOrderCreditTransactionType="",
+			subscriptionRenewalTransactionType=""
+		};
+		var termPaymentMethod = createPersistedTestEntity('PaymentMethod',termPaymentMethodData);
+
+		var accountPaymentMethodData={
+			accountPaymentMethodID="",
+			activeFlag=1,
+			account={
+				accountID=account.getAccountID()
+			},
+			paymentMethod={
+				paymentMethodID=termPaymentMethod.getPaymentMethodID()
+			}
+
+		};
+		var accountPaymentMethod = createPersistedTestEntity('AccountPaymentMethod',accountPaymentMethodData);
+
+		//set up an orderable product
+		var productData = {
+			productID="",
+			productCode="testProduct"&createUUID(),
+			productName="testProduct"&createUUID(),
+			productType={
+				//merchandise
+				productTypeID='444df2f7ea9c87e60051f3cd87b435a1'
+			},
+			activeFlag=1
+		};
+		var product = createPersistedTestEntity('Product',productData);
+
+		var skuData={
+			skuID="",
+			skuCode="testSku"&createUUID(),
+			product={
+				productID=product.getProductID()
+			},
+			activeFlag=1
+		};
+		var sku = createPersistedTestEntity('sku',skuData);
+
+		//SET UP SKU SETTINGS
+		//set up eligible sku payment methods
+		var settingData={
+			settingID="",
+			settingName="skuEligiblePaymentMethods",
+			settingValue=termPaymentMethod.getPaymentMethodID(),
+			sku={
+				skuID=sku.getSkuID()
+			}
+		};
+		var settingEntity = createPersistedTestEntity('Setting',settingData);
+
+		var settingData2={
+			settingID="",
+			settingName="skuOrderMaximumQuantity",
+			settingValue=1000,
+			sku={
+				skuID=sku.getSkuID()
+			}
+		};
+		var settingEntity2 = createPersistedTestEntity('Setting',settingData2);
+
+		var settingData3={
+			settingID="",
+			settingName="skuTrackInventoryFlag",
+			settingValue=0,
+			sku={
+				skuID=sku.getSkuID()
+			}
+		};
+		var settingEntity3 = createPersistedTestEntity('Setting',settingData3);
+
+
+		//CREATE ORDER
+		var orderData = {
+			orderID="",
+			accountID=account.getAccountID(),
+			currencyCode='USD',
+			testOrderFlag=1,
+			orderType={
+				//sales order
+				typeID='444df2df9f923d6c6fd0942a466e84cc'
+			},
+			newAccountFlag=0
+
+		};
+		var order = createTestEntity('order',{});
+		order = variables.service.process(order,orderData,'create');
+
+			request.slatwallScope.getDao('hibachiDao').flushOrmSession();
+
+		var shippingAddressData={
+			addressID="",
+			firstName="test",
+			lastName="test",
+			streetAddress="test st",
+			company="",
+			city="test",
+			stateCode="MA",
+			countryCode="US",
+			postalCode="01757"
+		};
+		var shippingAddress = createPersistedTestEntity('Address',shippingAddressData);
+
+		var accountAddressData = {
+			accountAddressID="",
+			address={
+				addressID=shippingAddress.getAddressID()
+			},
+			account={
+				accountID=account.getAccountID()
+			}
+		};
+		var accountAddress = createPersistedTestEntity('AccountAddress',accountAddressData);
+
+		//ADD ORDERITEM
+		var addOrderItemData={
+			skuID=sku.getSkuID(),
+			orderItemTypeSystemCode="oitSale",
+			quantity=1,
+			price=1.00,
+			orderFulfillmentID="new",
+			//shipping
+			fulfillmentMethodID='444df2fb93d5fa960ba2966ba2017953',
+			//default location
+			pickupLocationID='88e6d435d3ac2e5947c81ab3da60eba2',
+
+			shippingAccountAddressID=accountAddress.getAccountAddressID(),
+			shippingAddress.countryCode='US',
+			saveShippingAccountAddressFlag=1,
+			preProcessDisplayedFlag=1
+		};
+		order = variables.service.process(order,addOrderItemData,'addOrderItem');
+
+			request.slatwallScope.getDao('hibachiDao').flushOrmSession();
+		assert(arraylen(order.getOrderFulfillments()));
+
+		var placeOrderData={
+			orderID=order.getOrderID(),
+			preProcessDisplayedFlag=1,
+			orderFulfillments={
+				orderFulfillmentID=order.getOrderFulfillments()[1].getOrderFulfillmentID(),
+				shippingMethod={
+					shippingMethodID=shippingMethod.getShippingMethodID()
+				}
+			},
+			newOrderPayment={
+				orderPaymentID="",
+				order={
+					orderID=order.getOrderID()
+				},
+				orderPaymentType={
+//charge
+					typeID="444df2f0fed139ff94191de8fcd1f61b"
+				},
+				paymentMethod={
+					paymentMethodID=termPaymentMethod.getPaymentMethodID()
+				},
+				creditCardNumber="4111111111111111",
+				nameOnCreditCard="Ryan Marchand",
+				expirationMonth="01",
+				expirationYear="19",
+				securityCode="111",
+				companyPaymentMethodFlag="0"
+			},
+			copyFromType="",
+			saveGiftCardToAccountFlag=0,
+			accountAddressID=accountAddress.getAccountAddressID(),
+			saveAccountPaymentMethodFlag=0
+		};
+
+		order = variables.service.process(order,placeOrderData,'placeOrder');
+			request.slatwallScope.getDao('hibachiDao').flushOrmSession();
+
+		var orderDeliveryData={
+			orderDeliveryID="",
+			preProcessDisplayedFlag=1,
+			order={
+				orderID=order.getOrderID()
+			},
+			orderFulfillment={
+				orderFulfillmentID=order.getOrderFulfillments()[1].getOrderFulfillmentID()
+			},
+			location={
+				locationID='88e6d435d3ac2e5947c81ab3da60eba2'
+			},
+			shippingMethod={
+				shippingMethodID=shippingMethod.getShippingMethodID()
+			},
+			shippingAddress={
+				addressID=shippingAddress.getAddressID()
+			},
+			orderDeliveryItems=[
+			{
+				orderDeliveryID="",
+				quantity=1,
+				orderItem={
+					orderItemID=order.getOrderITems()[1].getOrderItemID()
+				}
+			}
+				]
+		};
+		var orderDelivery = createTestEntity('OrderDelivery',{});
+		orderDelivery = variables.service.process(orderDelivery,orderDeliveryData,'create');
+			request.slatwallScope.getDao('hibachiDao').flushOrmSession();
+
+		assert(arrayLen(orderDelivery.getOrderDeliveryItems()));
+
+		assertEquals(orderDelivery.getOrderDeliveryItems()[1].getQuantity(),1);
+	}
+
+
+
+
+
+
 }
