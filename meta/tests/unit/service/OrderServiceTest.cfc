@@ -1488,16 +1488,16 @@ component extends="Slatwall.meta.tests.unit.SlatwallUnitTestBase" {
 
 
 		//create Term Payment Method
-		var termPaymentMethodData={
+		var cashPaymentMethodData={
 			paymentMethodID="",
 			activeFlag=1,
-			paymentMethodName="testTermPaymentMethod"&createUUID(),
-			allowSaveFlag=1,
-			placeOrderChargeTransactionType="",
-			placeOrderCreditTransactionType="",
-			subscriptionRenewalTransactionType=""
+			paymentMethodName="Test Cash Payment - "&createUUID(),
+			paymentMethodType="cash",
+			allowSaveFlag=0,
+			placeOrderChargeTransactionType="receive",
+			placeOrderCreditTransactionType="credit"
 		};
-		var termPaymentMethod = createPersistedTestEntity('PaymentMethod',termPaymentMethodData);
+		var cashPaymentMethod = createPersistedTestEntity('PaymentMethod',cashPaymentMethodData);
 
 		var accountPaymentMethodData={
 			accountPaymentMethodID="",
@@ -1506,7 +1506,7 @@ component extends="Slatwall.meta.tests.unit.SlatwallUnitTestBase" {
 				accountID=account.getAccountID()
 			},
 			paymentMethod={
-				paymentMethodID=termPaymentMethod.getPaymentMethodID()
+				paymentMethodID=cashPaymentMethod.getPaymentMethodID()
 			}
 
 		};
@@ -1540,7 +1540,7 @@ component extends="Slatwall.meta.tests.unit.SlatwallUnitTestBase" {
 		var settingData={
 			settingID="",
 			settingName="skuEligiblePaymentMethods",
-			settingValue=termPaymentMethod.getPaymentMethodID(),
+			settingValue=cashPaymentMethod.getPaymentMethodID(),
 			sku={
 				skuID=sku.getSkuID()
 			}
@@ -1584,7 +1584,11 @@ component extends="Slatwall.meta.tests.unit.SlatwallUnitTestBase" {
 		var order = createTestEntity('order',{});
 		order = variables.service.process(order,orderData,'create');
 
-			request.slatwallScope.getDao('hibachiDao').flushOrmSession();
+		request.slatwallScope.getDao('hibachiDao').flushOrmSession();
+
+		assert(order.getOrderStatusType().getSystemCode() == 'ostNotPlaced');
+		assert(order.getCurrentStatusCode() == 'ostNotPlaced');
+		assert(arraylen(order.getOrderStatus()) == 1);
 
 		var shippingAddressData={
 			addressID="",
@@ -1629,7 +1633,7 @@ component extends="Slatwall.meta.tests.unit.SlatwallUnitTestBase" {
 		};
 		order = variables.service.process(order,addOrderItemData,'addOrderItem');
 
-			request.slatwallScope.getDao('hibachiDao').flushOrmSession();
+		request.slatwallScope.getDao('hibachiDao').flushOrmSession();
 		assert(arraylen(order.getOrderFulfillments()));
 
 		var placeOrderData={
@@ -1647,11 +1651,11 @@ component extends="Slatwall.meta.tests.unit.SlatwallUnitTestBase" {
 					orderID=order.getOrderID()
 				},
 				orderPaymentType={
-//charge
+					//charge
 					typeID="444df2f0fed139ff94191de8fcd1f61b"
 				},
 				paymentMethod={
-					paymentMethodID=termPaymentMethod.getPaymentMethodID()
+					paymentMethodID=cashPaymentMethod.getPaymentMethodID()
 				},
 				creditCardNumber="4111111111111111",
 				nameOnCreditCard="Ryan Marchand",
@@ -1667,7 +1671,11 @@ component extends="Slatwall.meta.tests.unit.SlatwallUnitTestBase" {
 		};
 
 		order = variables.service.process(order,placeOrderData,'placeOrder');
-			request.slatwallScope.getDao('hibachiDao').flushOrmSession();
+		request.slatwallScope.getDao('hibachiDao').flushOrmSession();
+
+		assert(order.getOrderStatusType().getSystemCode() == 'ostNew');
+		assert(order.getCurrentStatusCode() == 'ostNew');
+		assert(arraylen(order.getOrderStatus()) == 2);
 
 		var orderDeliveryData={
 			orderDeliveryID="",
@@ -1699,11 +1707,16 @@ component extends="Slatwall.meta.tests.unit.SlatwallUnitTestBase" {
 		};
 		var orderDelivery = createTestEntity('OrderDelivery',{});
 		orderDelivery = variables.service.process(orderDelivery,orderDeliveryData,'create');
-			request.slatwallScope.getDao('hibachiDao').flushOrmSession();
+		request.slatwallScope.getDao('hibachiDao').flushOrmSession();
 
 		assert(arrayLen(orderDelivery.getOrderDeliveryItems()));
-
 		assertEquals(orderDelivery.getOrderDeliveryItems()[1].getQuantity(),1);
+
+		assert(order.getOrderStatusType().getSystemCode() == 'ostClosed');
+		assert(order.getCurrentStatusCode() == 'ostClosed');
+		assert(arraylen(order.getOrderStatus()) == 3);
+
+
 	}
 
 
