@@ -1656,13 +1656,7 @@ component extends="Slatwall.meta.tests.unit.SlatwallUnitTestBase" {
 				},
 				paymentMethod={
 					paymentMethodID=cashPaymentMethod.getPaymentMethodID()
-				},
-				creditCardNumber="4111111111111111",
-				nameOnCreditCard="Ryan Marchand",
-				expirationMonth="01",
-				expirationYear="19",
-				securityCode="111",
-				companyPaymentMethodFlag="0"
+				}
 			},
 			copyFromType="",
 			saveGiftCardToAccountFlag=0,

@@ -86,6 +86,10 @@ Notes:
 			<hb:HibachiProcessCaller action="admin:entity.preProcessOrder" entity="#rc.order#" processContext="cancelOrder" type="list" modal="true" />
 			<hb:HibachiProcessCaller action="admin:entity.processOrder" entity="#rc.order#" processContext="updateStatus" type="list" />
 
+			<cfif rc.order.getOrderStatusType().getSystemCode() eq "ostClosed">
+				<hb:HibachiProcessCaller action="admin:entity.processOrder" entity="#rc.order#" processContext="reopenOrder" type="list" />
+			</cfif>
+
 			<!--- Create Return --->
 			<hb:HibachiProcessCaller action="admin:entity.preProcessOrder" entity="#rc.order#" processContext="createReturn" type="list" modal="true" />
 

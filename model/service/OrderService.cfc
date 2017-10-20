@@ -1723,6 +1723,15 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 		return arguments.order;
 	}
 
+
+	public any function processOrder_reopenOrder(required any order, struct data) {
+
+		if(arguments.order.getOrderStatusType().getSystemCode() == 'ostClosed'){
+			arguments.order.setOrderStatusType(  getTypeService().getTypeBySystemCode("ostProcessing") );
+		}
+		return arguments.order;
+	}
+
 	public any function processOrder_updateOrderFulfillment(required any order, required any processObject) {
 		var orderFulfillment = processObject.getOrderFulfillment();
 
