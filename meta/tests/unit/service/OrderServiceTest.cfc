@@ -87,11 +87,8 @@ component extends="Slatwall.meta.tests.unit.SlatwallUnitTestBase" {
 	
 	//test account will create test orders
 	public void function processOrder_createTest_testAccountCreatesTestOrder(){
-		var accountData = {
-			accountID="",
-			testAccountFlag=1
-		};
-		var account = createPersistedTestEntity('account',accountData);
+
+		var account = createAccount();
 		
 		var orderData = {
 			orderID=""
@@ -126,7 +123,7 @@ component extends="Slatwall.meta.tests.unit.SlatwallUnitTestBase" {
 					skuid="",
 					price=1,
 					activeflag=1,
-					skuCode = 'productBundle-1ABCDDdd' & RandRange(1, 1000),
+					skuCode = 'productBundle-' & createUUID(),
 					productBundleGroups=[
 						{
 							productBundleGroupid:""
@@ -156,7 +153,7 @@ component extends="Slatwall.meta.tests.unit.SlatwallUnitTestBase" {
 					skuid="",
 					price=1,
 					activeflag=1,
-					skuCode = 'childsku-11' & RandRange(1, 1000)
+					skuCode = 'childsku-' & createUUID()
 				}
 			],
 			//product Bundle type from SlatwallProductType.xml
@@ -325,10 +322,7 @@ component extends="Slatwall.meta.tests.unit.SlatwallUnitTestBase" {
 			activeflag=1,
 			currencycode="USD"
 		};
-		accountData={
-			accountID=""
-		};
-		var account = createPersistedTestEntity('Account', accountData);
+		var account = createAccount();
 		var order = createPersistedTestEntity('Order',orderData);
 		addToDebug(order.getHibachiErrors());
 
@@ -376,10 +370,7 @@ component extends="Slatwall.meta.tests.unit.SlatwallUnitTestBase" {
 			activeflag=1,
 			currencycode="USD"
 		};
-		accountData={
-			accountID=""
-		};
-		var account = createPersistedTestEntity('Account', accountData);
+		var account = createAccount();
 		var order = createPersistedTestEntity('Order', orderData);
 		order.setAccount(account);
 		var skudata = {
@@ -442,35 +433,10 @@ component extends="Slatwall.meta.tests.unit.SlatwallUnitTestBase" {
 	* @test
 	*/
 	public void function processOrder_placeOrder_TermPayment(){
-		//adding a test shippingMethod
-		var shippingMethodData ={
-			shippingMethodID="",
-			fulfillementMethod={
-				//shipping
-				fulfillmentMethodID='444df2fb93d5fa960ba2966ba2017953'
-			},
-			activeFlag=1,
-			shippingMethodName="testShippingMethod"&createUUID(),
-			shippingMethodCode="testShippingMethod"&createUUID()
-		};
-		var shippingMethod = createPersistedTestEntity('ShippingMethod',shippingMethodData);
 
-		var shippingMethodRateData={
-			shippingMethodRateID="",
-			shippingMethod={
-				shippingMethodID=shippingMethod.getShippingMethodID()
-			},
-			activeFlag=1
-		};
-		var shippingMethodRate = createPersistedTestEntity('ShippingMethodRate',shippingMethodRateData);
+		var shippingMethod = createShippingMethodAndRate();
 
-		var accountData={
-			accountID="",
-			firstName="test",
-			lastName="test",
-			emailAddress="test@test.com"
-		};
-		var account = createPersistedTestEntity('account',accountData);
+		var account = createAccount();
 
 
 		//create Term Payment Method
@@ -499,16 +465,7 @@ component extends="Slatwall.meta.tests.unit.SlatwallUnitTestBase" {
 		var accountPaymentMethod = createPersistedTestEntity('AccountPaymentMethod',accountPaymentMethodData);
 
 		//set up an orderable product
-		var productData = {
-			productID="",
-			productCode="testProduct"&createUUID(),
-			productType={
-				//merchandise
-				productTypeID='444df2f7ea9c87e60051f3cd87b435a1'
-			},
-			activeFlag=1
-		};
-		var product = createPersistedTestEntity('Product',productData);
+		var product = createTestProduct();
 
 		var skuData={
 			skuID="",
@@ -570,18 +527,7 @@ component extends="Slatwall.meta.tests.unit.SlatwallUnitTestBase" {
 
 		request.slatwallScope.getDao('hibachiDao').flushOrmSession();
 
-		var shippingAddressData={
-			addressID="",
-			firstName="test",
-			lastName="test",
-			streetAddress="test st",
-			company="",
-			city="test",
-			stateCode="MA",
-			countryCode="US",
-			postalCode="01757"
-		};
-		var shippingAddress = createPersistedTestEntity('Address',shippingAddressData);
+		var shippingAddress = createAddress();
 
 		var accountAddressData = {
 			accountAddressID="",
@@ -605,15 +551,16 @@ component extends="Slatwall.meta.tests.unit.SlatwallUnitTestBase" {
 			fulfillmentMethodID='444df2fb93d5fa960ba2966ba2017953',
 			//default location
 			pickupLocationID='88e6d435d3ac2e5947c81ab3da60eba2',
-
 			shippingAccountAddressID=accountAddress.getAccountAddressID(),
 			shippingAddress.countryCode='US',
 			saveShippingAccountAddressFlag=1,
 			preProcessDisplayedFlag=1
 		};
+
 		order = variables.service.process(order,addOrderItemData,'addOrderItem');
 		
 		request.slatwallScope.getDao('hibachiDao').flushOrmSession();
+
 		assert(arraylen(order.getOrderFulfillments()));
 
 		var placeOrderData={
@@ -695,34 +642,9 @@ component extends="Slatwall.meta.tests.unit.SlatwallUnitTestBase" {
 	*/
 	public void function processOrder_placeOrder_TermPayment_QNDOOupdates(){
 		//adding a test shippingMethod
-		var shippingMethodData ={
-			shippingMethodID="",
-			fulfillementMethod={
-				//shipping
-				fulfillmentMethodID='444df2fb93d5fa960ba2966ba2017953'
-			},
-			activeFlag=1,
-			shippingMethodName="testShippingMethod"&createUUID(),
-			shippingMethodCode="testShippingMethod"&createUUID()
-		};
-		var shippingMethod = createPersistedTestEntity('ShippingMethod',shippingMethodData);
+		var shippingMethod = createShippingMethodAndRate();
 
-		var shippingMethodRateData={
-			shippingMethodRateID="",
-			shippingMethod={
-				shippingMethodID=shippingMethod.getShippingMethodID()
-			},
-			activeFlag=1
-		};
-		var shippingMethodRate = createPersistedTestEntity('ShippingMethodRate',shippingMethodRateData);
-
-		var accountData={
-			accountID="",
-			firstName="test",
-			lastName="test",
-			emailAddress="test@test.com"
-		};
-		var account = createPersistedTestEntity('account',accountData);
+		var account = createAccount();
 
 
 		//create Term Payment Method
@@ -759,15 +681,7 @@ component extends="Slatwall.meta.tests.unit.SlatwallUnitTestBase" {
 		var settingEntity = createPersistedTestEntity('Setting',settingData);
 
 		//set up an orderable product
-		var productData = {
-			productID="",
-			productCode="testProduct"&createUUID(),
-			productType={
-				//merchandise
-				productTypeID='444df2f7ea9c87e60051f3cd87b435a1'
-			}
-		};
-		var product = createPersistedTestEntity('Product',productData);
+		var product = createTestProduct();
 
 		var skuData={
 			skuID="",
@@ -842,18 +756,7 @@ component extends="Slatwall.meta.tests.unit.SlatwallUnitTestBase" {
 
 		variables.service.getDao('hibachiDao').flushOrmSession();
 
-		var shippingAddressData={
-			addressID="",
-			firstName="test",
-			lastName="test",
-			streetAddress="test st",
-			company="",
-			city="test",
-			stateCode="MA",
-			countryCode="US",
-			postalCode="01757"
-		};
-		var shippingAddress = createPersistedTestEntity('Address',shippingAddressData);
+		var shippingAddress = createAddress();
 
 		var accountAddressData = {
 			accountAddressID="",
@@ -977,34 +880,9 @@ component extends="Slatwall.meta.tests.unit.SlatwallUnitTestBase" {
 	*/
 	public void function processOrder_placeOrder_QATS_salesOrder_test(){
 		//adding a test shippingMethod
-		var shippingMethodData ={
-			shippingMethodID="",
-			fulfillementMethod={
-				//shipping
-				fulfillmentMethodID='444df2fb93d5fa960ba2966ba2017953'
-			},
-			activeFlag=1,
-			shippingMethodName="testShippingMethod"&createUUID(),
-			shippingMethodCode="testShippingMethod"&createUUID()
-		};
-		var shippingMethod = createPersistedTestEntity('ShippingMethod',shippingMethodData);
+		var shippingMethod = createShippingMethodAndRate();
 
-		var shippingMethodRateData={
-			shippingMethodRateID="",
-			shippingMethod={
-				shippingMethodID=shippingMethod.getShippingMethodID()
-			},
-			activeFlag=1
-		};
-		var shippingMethodRate = createPersistedTestEntity('ShippingMethodRate',shippingMethodRateData);
-
-		var accountData={
-			accountID="",
-			firstName="test",
-			lastName="test",
-			emailAddress="test@test.com"
-		};
-		var account = createPersistedTestEntity('account',accountData);
+		var account = createAccount();
 
 
 		//create Payment Method
@@ -1041,16 +919,7 @@ component extends="Slatwall.meta.tests.unit.SlatwallUnitTestBase" {
 		var settingEntity = createPersistedTestEntity('Setting',settingData);
 
 		//set up an orderable product
-		var productData = {
-			productID="",
-			activeFlag=1,
-			productCode="testProduct"&createUUID(),
-			productType={
-				//merchandise
-				productTypeID='444df2f7ea9c87e60051f3cd87b435a1'
-			}
-		};
-		var product = createPersistedTestEntity('Product',productData);
+		var product = createTestProduct();
 
 		var skuData={
 			skuID="",
@@ -1104,18 +973,7 @@ component extends="Slatwall.meta.tests.unit.SlatwallUnitTestBase" {
 
 		variables.service.getDao('hibachiDao').flushOrmSession();
 
-		var shippingAddressData={
-			addressID="",
-			firstName="test",
-			lastName="test",
-			streetAddress="test st",
-			company="",
-			city="test",
-			stateCode="MA",
-			countryCode="US",
-			postalCode="01757"
-		};
-		var shippingAddress = createPersistedTestEntity('Address',shippingAddressData);
+		var shippingAddress = createAddress();
 
 		var accountAddressData = {
 			accountAddressID="",
@@ -1200,46 +1058,13 @@ component extends="Slatwall.meta.tests.unit.SlatwallUnitTestBase" {
 	*/
 	public void function processOrder_addOrderItem_ReturnExchangeTest(){
 		//adding a test shippingMethod
-		var shippingMethodData ={
-			shippingMethodID="",
-			fulfillementMethod={
-				//shipping
-				fulfillmentMethodID='444df2fb93d5fa960ba2966ba2017953'
-			},
-			activeFlag=1,
-			shippingMethodName="testShippingMethod"&createUUID(),
-			shippingMethodCode="testShippingMethod"&createUUID()
-		};
-		var shippingMethod = createPersistedTestEntity('ShippingMethod',shippingMethodData);
+		var shippingMethod = createShippingMethodAndRate();
 
-		var shippingMethodRateData={
-			shippingMethodRateID="",
-			shippingMethod={
-				shippingMethodID=shippingMethod.getShippingMethodID()
-			},
-			activeFlag=1
-		};
-		var shippingMethodRate = createPersistedTestEntity('ShippingMethodRate',shippingMethodRateData);
-
-		var accountData={
-			accountID="",
-			firstName="test",
-			lastName="test",
-			emailAddress="test@test.com"
-		};
-		var account = createPersistedTestEntity('account',accountData);
+		var account = createAccount();
 
 
 		//set up an orderable product
-		var productData = {
-			productID="",
-			productCode="testProduct"&createUUID(),
-			productType={
-				//merchandise
-				productTypeID='444df2f7ea9c87e60051f3cd87b435a1'
-			}
-		};
-		var product = createPersistedTestEntity('Product',productData);
+		var product = createTestProduct();
 
 		var skuData={
 			skuID="",
@@ -1278,18 +1103,7 @@ component extends="Slatwall.meta.tests.unit.SlatwallUnitTestBase" {
 
 		variables.service.getDao('hibachiDao').flushOrmSession();
 
-		var shippingAddressData={
-			addressID="",
-			firstName="test",
-			lastName="test",
-			streetAddress="test st",
-			company="",
-			city="test",
-			stateCode="MA",
-			countryCode="US",
-			postalCode="01757"
-		};
-		var shippingAddress = createPersistedTestEntity('Address',shippingAddressData);
+		var shippingAddress = createAddress();
 
 		var accountAddressData = {
 			accountAddressID="",
@@ -1327,10 +1141,8 @@ component extends="Slatwall.meta.tests.unit.SlatwallUnitTestBase" {
 	* @test
 	*/
 	public void function getOrderRequirementsListTest_failsOrderfulfillment(){
-		var accountData = {
-			accountID=""
-		};
-		var account = createPersistedTestEntity('account',accountData);
+
+		var account = createAccount();
 		var orderData = {
 			orderID="",
 			account={
@@ -1362,10 +1174,8 @@ component extends="Slatwall.meta.tests.unit.SlatwallUnitTestBase" {
 	* @test
 	*/
 	public void function getOrderRequirementsListTest_failsOrderReturn(){
-		var accountData = {
-			accountID=""
-		};
-		var account = createPersistedTestEntity('account',accountData);
+
+		var account = createAccount();
 		var orderData = {
 			orderID="",
 			account={
@@ -1392,10 +1202,8 @@ component extends="Slatwall.meta.tests.unit.SlatwallUnitTestBase" {
 	* @test
 	*/
 	public void function getOrderRequirementsListTest_failsPayment(){
-		var accountData = {
-			accountID=""
-		};
-		var account = createPersistedTestEntity('account',accountData);
+
+		var account = createAccount();
 
 		var orderPaymentData1 = {
 			orderPaymentID = '',
@@ -1455,75 +1263,16 @@ component extends="Slatwall.meta.tests.unit.SlatwallUnitTestBase" {
 	*/
 	public void function reopenOrder(){
 
-		//adding a test shippingMethod
-		var shippingMethodData ={
-			shippingMethodID="",
-			fulfillementMethod={
-				//shipping
-				fulfillmentMethodID='444df2fb93d5fa960ba2966ba2017953'
-			},
-			activeFlag=1,
-			shippingMethodName="testShippingMethod"&createUUID(),
-			shippingMethodCode="testShippingMethod"&createUUID()
-		};
-		var shippingMethod = createPersistedTestEntity('ShippingMethod',shippingMethodData);
+		var shippingMethod = createShippingMethodAndRate();
 
-		var shippingMethodRateData={
-			shippingMethodRateID="",
-			shippingMethod={
-				shippingMethodID=shippingMethod.getShippingMethodID()
-			},
-			activeFlag=1
-		};
-		var shippingMethodRate = createPersistedTestEntity('ShippingMethodRate',shippingMethodRateData);
-
-		var accountData={
-			accountID="",
-			firstName="test",
-			lastName="test",
-			emailAddress="test@test.com",
-			testAccountFlag=1
-		};
-		var account = createPersistedTestEntity('account',accountData);
+		var account = createAccount();
 
 
 		//create Term Payment Method
-		var cashPaymentMethodData={
-			paymentMethodID="",
-			activeFlag=1,
-			paymentMethodName="Test Cash Payment - "&createUUID(),
-			paymentMethodType="cash",
-			allowSaveFlag=0,
-			placeOrderChargeTransactionType="receive",
-			placeOrderCreditTransactionType="credit"
-		};
-		var cashPaymentMethod = createPersistedTestEntity('PaymentMethod',cashPaymentMethodData);
-
-		var accountPaymentMethodData={
-			accountPaymentMethodID="",
-			activeFlag=1,
-			account={
-				accountID=account.getAccountID()
-			},
-			paymentMethod={
-				paymentMethodID=cashPaymentMethod.getPaymentMethodID()
-			}
-
-		};
-		var accountPaymentMethod = createPersistedTestEntity('AccountPaymentMethod',accountPaymentMethodData);
+		var cashPaymentMethod = createPaymentMethodAndAddToAccount('cash', account);
 
 		//set up an orderable product
-		var productData = {
-			productID="",
-			productCode="testProduct"&createUUID(),
-			productName="testProduct"&createUUID(),
-			productType={
-				//merchandise
-				productTypeID='444df2f7ea9c87e60051f3cd87b435a1'
-			},
-			activeFlag=1
-		};
-		var product = createPersistedTestEntity('Product',productData);
+		var product = createTestProduct();
 
 		var skuData={
 			skuID="",
@@ -1536,37 +1285,7 @@ component extends="Slatwall.meta.tests.unit.SlatwallUnitTestBase" {
 		var sku = createPersistedTestEntity('sku',skuData);
 
 		//SET UP SKU SETTINGS
-		//set up eligible sku payment methods
-		var settingData={
-			settingID="",
-			settingName="skuEligiblePaymentMethods",
-			settingValue=cashPaymentMethod.getPaymentMethodID(),
-			sku={
-				skuID=sku.getSkuID()
-			}
-		};
-		var settingEntity = createPersistedTestEntity('Setting',settingData);
-
-		var settingData2={
-			settingID="",
-			settingName="skuOrderMaximumQuantity",
-			settingValue=1000,
-			sku={
-				skuID=sku.getSkuID()
-			}
-		};
-		var settingEntity2 = createPersistedTestEntity('Setting',settingData2);
-
-		var settingData3={
-			settingID="",
-			settingName="skuTrackInventoryFlag",
-			settingValue=0,
-			sku={
-				skuID=sku.getSkuID()
-			}
-		};
-		var settingEntity3 = createPersistedTestEntity('Setting',settingData3);
-
+		setupSkuSettings(sku.getSkuID(), cashPaymentMethod.getPaymentMethodID());
 
 		//CREATE ORDER
 		var orderData = {
@@ -1590,18 +1309,8 @@ component extends="Slatwall.meta.tests.unit.SlatwallUnitTestBase" {
 		assert(order.getCurrentStatusCode() == 'ostNotPlaced');
 		assert(arraylen(order.getOrderStatus()) == 1);
 
-		var shippingAddressData={
-			addressID="",
-			firstName="test",
-			lastName="test",
-			streetAddress="test st",
-			company="",
-			city="test",
-			stateCode="MA",
-			countryCode="US",
-			postalCode="01757"
-		};
-		var shippingAddress = createPersistedTestEntity('Address',shippingAddressData);
+
+		var shippingAddress = createAddress();
 
 		var accountAddressData = {
 			accountAddressID="",
@@ -1689,15 +1398,13 @@ component extends="Slatwall.meta.tests.unit.SlatwallUnitTestBase" {
 			shippingAddress={
 				addressID=shippingAddress.getAddressID()
 			},
-			orderDeliveryItems=[
-			{
+			orderDeliveryItems=[{
 				orderDeliveryID="",
 				quantity=1,
 				orderItem={
 					orderItemID=order.getOrderITems()[1].getOrderItemID()
 				}
-			}
-				]
+			}]
 		};
 		var orderDelivery = createTestEntity('OrderDelivery',{});
 		orderDelivery = variables.service.process(orderDelivery,orderDeliveryData,'create');
@@ -1711,10 +1418,237 @@ component extends="Slatwall.meta.tests.unit.SlatwallUnitTestBase" {
 		assert(arraylen(order.getOrderStatus()) == 3);
 
 
+		//Re open the order!
+		Sleep(1000);
+
+		order = variables.service.process(order,{},'reopenOrder');
+		request.slatwallScope.getDao('hibachiDao').flushOrmSession();
+
+		writeDump(order.getOrderStatusCollectionList().getRecords());
+		assert(order.getOrderStatusType().getSystemCode() == 'ostProcessing');
+		assert(order.getCurrentStatusCode() == 'ostProcessing',order.getCurrentStatusCode());
+		assert(arraylen(order.getOrderStatus()) == 4);
+
+
+
+		//ADD ORDERITEM
+		var addOrderItemData={
+			skuID=sku.getSkuID(),
+			orderItemTypeSystemCode="oitSale",
+			quantity=1,
+			price=1.00,
+			orderFulfillmentID="new",
+			//shipping
+			fulfillmentMethodID='444df2fb93d5fa960ba2966ba2017953',
+			//default location
+			pickupLocationID='88e6d435d3ac2e5947c81ab3da60eba2',
+
+			shippingAccountAddressID=accountAddress.getAccountAddressID(),
+			shippingAddress.countryCode='US',
+			saveShippingAccountAddressFlag=1,
+			preProcessDisplayedFlag=1
+		};
+		order = variables.service.process(order,addOrderItemData,'addOrderItem');
+
+		request.slatwallScope.getDao('hibachiDao').flushOrmSession();
+
+		assert(arrayLen(order.getOrderItems()) == 2);
+		assert(order.calculatedTotal == '7');
+
+
+		addOrderPayment(order, 1);
+
+
+		var orderDeliveryData={
+			orderDeliveryID="",
+			preProcessDisplayedFlag=1,
+			order={
+				orderID=order.getOrderID()
+			},
+			orderFulfillment={
+				orderFulfillmentID=order.getOrderFulfillments()[1].getOrderFulfillmentID()
+			},
+			location={
+				locationID='88e6d435d3ac2e5947c81ab3da60eba2'
+			},
+			shippingMethod={
+				shippingMethodID=shippingMethod.getShippingMethodID()
+			},
+			shippingAddress={
+				addressID=shippingAddress.getAddressID()
+			},
+			orderDeliveryItems=[{
+				orderDeliveryID="",
+				quantity=1,
+				orderItem={
+					orderItemID=order.getOrderITems()[2].getOrderItemID()
+				}
+			}]
+		};
+		var orderDelivery = createTestEntity('OrderDelivery',{});
+		orderDelivery = variables.service.process(orderDelivery,orderDeliveryData,'create');
+		request.slatwallScope.getDao('hibachiDao').flushOrmSession();
+
+		assert(arrayLen(orderDelivery.getOrderDeliveryItems()));
+		assertEquals(orderDelivery.getOrderDeliveryItems()[1].getQuantity(),1);
+
+		assert(order.getOrderStatusType().getSystemCode() == 'ostClosed');
+		assert(order.getCurrentStatusCode() == 'ostClosed');
+		assert(arraylen(order.getOrderStatus()) == 5);
+
+
+	}
+
+
+	/**********************
+		HELPER METHODS
+	**********************/
+
+
+
+	private any function createShippingMethodAndRate(){
+		//adding a test shippingMethod
+		var shippingMethodData ={
+			shippingMethodID="",
+			fulfillementMethod={
+				//shipping
+				fulfillmentMethodID='444df2fb93d5fa960ba2966ba2017953'
+			},
+			activeFlag=1,
+			shippingMethodName="testShippingMethod"&createUUID(),
+			shippingMethodCode="testShippingMethod"&createUUID()
+		};
+		var shippingMethod = createPersistedTestEntity('ShippingMethod',shippingMethodData);
+
+		var shippingMethodRateData={
+			shippingMethodRateID="",
+			shippingMethod={
+				shippingMethodID=shippingMethod.getShippingMethodID()
+			},
+			activeFlag=1
+		};
+		createPersistedTestEntity('ShippingMethodRate',shippingMethodRateData);
+
+		return shippingMethod;
+	}
+
+
+	private any function createAccount(){
+		var accountData={
+			accountID="",
+			firstName="test",
+			lastName="test",
+			emailAddress="test@test.com",
+			testAccountFlag=1
+		};
+		return createPersistedTestEntity('account',accountData);
+	}
+
+	private any function createPaymentMethodAndAddToAccount(required paymentMethodType = 'cash', required any account){
+		var cashPaymentMethodData={
+			paymentMethodID="",
+			activeFlag=1,
+			paymentMethodName="Test #arguments.paymentMethodType# payment - #createUUID()#",
+			paymentMethodType=paymentMethodType,
+			allowSaveFlag=0,
+			placeOrderChargeTransactionType="receive",
+			placeOrderCreditTransactionType="credit"
+		};
+		var cashPaymentMethod = createPersistedTestEntity('PaymentMethod',cashPaymentMethodData);
+
+		var accountPaymentMethodData={
+			accountPaymentMethodID="",
+			activeFlag=1,
+			account={
+				accountID=arguments.account.getAccountID()
+			},
+			paymentMethod={
+				paymentMethodID=cashPaymentMethod.getPaymentMethodID()
+			}
+
+		};
+		createPersistedTestEntity('AccountPaymentMethod',accountPaymentMethodData);
+
+		return cashPaymentMethod;
 	}
 
 
 
+	private any function createAddress(){
+		var shippingAddressData={
+			addressID="",
+			firstName="test",
+			lastName="test",
+			streetAddress="test st",
+			company="",
+			city="test",
+			stateCode="MA",
+			countryCode="US",
+			postalCode="01757"
+		};
+		return createPersistedTestEntity('Address',shippingAddressData);
+	}
+
+	private any function createTestProduct(){
+		var productData = {
+			productID="",
+			productCode="testProduct - #createUUID()#",
+			productName="testProduct-#createUUID()#",
+			productType={
+				//merchandise
+				productTypeID='444df2f7ea9c87e60051f3cd87b435a1'
+			},
+			activeFlag=1
+		};
+		return createPersistedTestEntity('Product',productData);
+	}
+
+	private any function setupSkuSettings(required string skuID, required string paymentMethodID){
+		//set up eligible sku payment methods
+		var settingData={
+			settingID="",
+			settingName="skuEligiblePaymentMethods",
+			settingValue=arguments.paymentMethodID,
+			sku={
+				skuID=arguments.skuID
+			}
+		};
+		createPersistedTestEntity('Setting',settingData);
+
+		var settingData2={
+			settingID="",
+			settingName="skuOrderMaximumQuantity",
+			settingValue=1000,
+			sku={
+				skuID=arguments.skuID
+			}
+		};
+		createPersistedTestEntity('Setting',settingData2);
+
+		var settingData3={
+			settingID="",
+			settingName="skuTrackInventoryFlag",
+			settingValue=0,
+			sku={
+				skuID=arguments.skuID
+			}
+		};
+		createPersistedTestEntity('Setting',settingData3);
+	}
+
+	private void function addOrderPayment(required any order, numeric amount =1){
+		var orderPaymentData = {
+			orderPaymentID = '',
+			orderPaymentType = {
+				typeID = '444df2f0fed139ff94191de8fcd1f61b'//optCharge
+			},
+			amount = arguments.amount
+		};
+		var orderPayment = createPersistedTestEntity('OrderPayment', orderPaymentData);
+
+		orderPayment.setOrder(arguments.order);
+		arguments.order.addOrderPayment(orderPayment);
+	}
 
 
 
