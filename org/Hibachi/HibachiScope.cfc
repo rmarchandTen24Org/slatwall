@@ -98,6 +98,9 @@ component output="false" accessors="true" extends="HibachiTransient" {
 		if( structKeyExists(session, getHibachiInstanceApplicationScopeKey()) && structKeyExists(session[ getHibachiInstanceApplicationScopeKey() ], arguments.key)) {
 			return session[ getHibachiInstanceApplicationScopeKey() ][ arguments.key ];
 		}
+		if(arguments.key == 'currentSession'){
+			return;
+		}
 		
 		throw("You have requested a value for '#arguments.key#' from the core application that is not setup.  This may be because the verifyApplicationSetup() method has not been called yet")
 	}

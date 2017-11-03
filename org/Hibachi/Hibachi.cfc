@@ -255,7 +255,7 @@ component extends="FW1.framework" {
 			
 			// Verify that the session is setup
 			getHibachiScope().getService("hibachiSessionService").setProperSession();
-
+			
 			var AuthToken = "";
 			if(structKeyExists(GetHttpRequestData().Headers,'Auth-Token')){
 				AuthToken = GetHttpRequestData().Headers['Auth-Token'];

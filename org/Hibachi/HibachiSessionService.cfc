@@ -39,7 +39,13 @@ component output="false" accessors="true" extends="HibachiService"  {
 		
 		// Check for non-persistent cookie.
 		if( len(getHibachiScope().getSessionValue('sessionID')) ) {
-			var sessionEntity = this.getSession( getHibachiScope().getSessionValue('sessionID'), true);
+			if(!isNull(getHibachiScope().getSessionValue('currentSession'))){
+				var sessionEntity = getHibachiScope().getSessionValue('currentSession');
+				sessionEntity = entityMerge(sessionEntity);
+			}else{
+				var sessionEntity = this.getSession( getHibachiScope().getSessionValue('sessionID'), true);	
+			}
+			
 		} else if( (StructKeyExists(request,'context') && StructKeyExists(request.context, "jsonRequest") && request.context.jsonRequest && StructKeyExists(request.context.deserializedJsonData, "request_token") ) || StructKeyExists(requestHeaders.headers, "request_token") ){
 				//If the API 'cookie' and deviceID were passed directly to the API, we can use that for setting the session if the request token matches
 				//the token we already have.
@@ -204,6 +210,8 @@ component output="false" accessors="true" extends="HibachiService"  {
 		getHibachiScope().getSession().setLastRequestDateTime( now() );
 		getHibachiScope().getSession().setLastRequestIPAddress( getRemoteAddress() );
 		
+		getHibachiScope().setSessionValue('currentSession',getHibachiScope().getSession());
+		
 	}
 	
 	public void function persistSession(boolean updateLoginCookies=false) {
@@ -213,7 +221,7 @@ component output="false" accessors="true" extends="HibachiService"  {
 		
 		// Save session ID in the session Scope & cookie scope for next request
 		getHibachiScope().setSessionValue('sessionID', getHibachiScope().getSession().getSessionID());
-		
+		getHibachiScope().setSessionValue('currentSession',getHibachiScope().getSession());
 		if (arguments.updateLoginCookies == true){
 			
 			//Generate new session cookies for every time the session is persisted (on every login);
