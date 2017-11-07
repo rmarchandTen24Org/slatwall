@@ -50,7 +50,7 @@
                     <div class="col-sm-6">
                         <div class="form-group">
                             <swf-property-display
-                                ng-init="slatwall.creditCardPayment.data['selectednewOrderPayment.expirationMonth']=slatwall.months[0]"
+                                ng-init="slatwall.orderPaymentObject.data['selectednewOrderPayment.expirationMonth']=slatwall.months[0]"
                                 data-class="form-control"
                                 data-name="expirationMonth"
                                 data-field-type="select"
@@ -64,7 +64,7 @@
                     <div class="col-sm-6">
                         <div class="form-group">
                             <swf-property-display
-                                ng-init="slatwall.creditCardPayment.data['selectednewOrderPayment.expirationYear']=slatwall.years[0]"
+                                ng-init="slatwall.orderPaymentObject.data['selectednewOrderPayment.expirationYear']=slatwall.years[0]"
                                 data-class="form-control"
                                 data-name="expirationYear"
                                 data-field-type="select"
@@ -87,7 +87,7 @@
                         data-label-text="Save this card for future orders">
                     </swf-property-display>
                     <swf-property-display
-                        ng-if="slatwall.creditCardPayment.data.saveAccountPaymentMethodFlag"
+                        ng-if="slatwall.orderPaymentObject.data.saveAccountPaymentMethodFlag"
                         data-class="form-control"
                         data-name="saveAccountPaymentMethodName"
                         data-field-type="text"
