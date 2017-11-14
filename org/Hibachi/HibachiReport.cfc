@@ -131,7 +131,7 @@
 					#getReportDateTimeDefinition(getReportDateTime())['dataColumn']# as reportDateTime,
 					YEAR( #getReportDateTimeDefinition(getReportDateTime())['dataColumn']# ) as reportDateTimeYear,
 					MONTH( #getReportDateTimeDefinition(getReportDateTime())['dataColumn']# ) as reportDateTimeMonth,
-					WEEK( #getReportDateTimeDefinition(getReportDateTime())['dataColumn']# ) + 1 as reportDateTimeWeek,
+					WEEK( #getReportDateTimeDefinition(getReportDateTime())['dataColumn']# ) as reportDateTimeWeek,
 					DAY( #getReportDateTimeDefinition(getReportDateTime())['dataColumn']# ) as reportDateTimeDay,
 					HOUR( #getReportDateTimeDefinition(getReportDateTime())['dataColumn']# ) as reportDateTimeHour
 				<cfelseif getApplicationValue('databaseType') eq "Oracle10g">
@@ -659,8 +659,10 @@
 					<cfset variables.chartData["series"][dataSeriesID]["color"] = getMetricColorDetails()[m]['color'] />
 					<cfset variables.chartData["series"][dataSeriesID]["type"] = getReportType() />
 
+					<!--- Create data points over the requested interval --->
 					<hb:HibachiDateLoop index="thisDate" from="#getReportStartDateTime()#" to="#chartReportEndDateTime#" datepart="#loopdatepart#">
 						<cfset var thisData = [] />
+						<!--- Create x-axis datetime coordinate in milliseconds --->
 						<cfset arrayAppend(thisData, dateDiff("s", createdatetime( '1970','01','01','00','00','00' ), dateAdd("h", 1, thisDate))*1000) />
 	 					<cfif addChartSeriesDataCheck(thisDate, getReportDateTimeGroupBy(), chartDataQuery, chartRow)>
 							<cfset arrayAppend(thisData, chartDataQuery[ metricDefinition.alias ][ chartRow ]) />
