@@ -52,6 +52,8 @@ component entityname="SlatwallOrderItem" table="SwOrderItem" persistent="true" a
 	property name="bundleItemQuantity" hb_populateEnabled="public" ormtype="integer";
 	property name="estimatedDeliveryDateTime" ormtype="timestamp";
 	property name="estimatedFulfillmentDateTime" ormtype="timestamp";
+	property name="sellOnBackOrderFlag" default="0" ormtype="boolean";
+	
 	// Calculated Properties
 	property name="calculatedExtendedPrice" ormtype="big_decimal";
 	property name="calculatedExtendedUnitPrice" ormtype="big_decimal";

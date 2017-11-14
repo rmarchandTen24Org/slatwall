@@ -372,6 +372,10 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 				newOrderItem.setStock(arguments.processObject.getStock());	
 			}
 			
+			if (processObject.getSellOnBackOrderFlag() == true){
+ 				newOrderItem.setSellOnBackOrderFlag(true); //used at the line item level to show it was sold out of stock.
+ 			}
+ 			
 			// Set Header Info
 			newOrderItem.setOrder( arguments.order );
 			newOrderItem.setPublicRemoteID( arguments.processObject.getPublicRemoteID() );
