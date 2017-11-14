@@ -107,9 +107,16 @@ component output="false" accessors="true" extends="Slatwall.org.Hibachi.HibachiC
 		if(arguments.rc.ajaxRequest && structKeyExists(arguments.rc, "reportName")) {
 			
 			arguments.rc.ajaxResponse["report"] = {};		
+			arguments.rc.ajaxResponse["report"]["error"] = false;
 			
 			if(arguments.rc.report.getReportType() NEQ "none"){
-				arguments.rc.ajaxResponse["report"]["chartData"] = arguments.rc.report.getChartData();
+				var chartData = arguments.rc.report.getChartData();
+				
+				if (structKeyExists(chartData, "error")) {
+					structDelete(chartData, "error");
+					arguments.rc.ajaxResponse["report"]["error"] = true;
+				}
+				arguments.rc.ajaxResponse["report"]["chartData"] = chartData;
 			} else { 
 				arguments.rc.ajaxResponse["report"]["hideChart"] = true; 
 			}

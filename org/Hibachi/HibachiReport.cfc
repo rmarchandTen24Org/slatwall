@@ -388,6 +388,14 @@
 							<cfif d GT "1">,</cfif>
 							#dimensionDefinition.alias#, count(#dimensionDefinition.alias#) AS #dimensionDefinition.alias#Total
 						</cfloop>
+						<cfloop from="1" to="#listLen(getMetrics())#" step="1" index="local.m">
+							<cfset var metricDefinition = getMetricDefinition( listGetAt(getMetrics(), m) ) />
+							<cfif structKeyExists(metricDefinition, "calculation")>
+								,#metricDefinition.calculation# as #metricDefinition.alias#
+							<cfelse>
+								,#metricDefinition.function#(#metricDefinition.alias#) as #metricDefinition.alias#
+							</cfif>
+						</cfloop>
 					FROM data
 					WHERE
 						reportDateTime >= <cfqueryparam cfsqltype="cf_sql_timestamp" value="#getReportStartDateTime()#" />
@@ -709,18 +717,22 @@
 				<cfset variables.chartData["series"][1]["data"] = [] />
 				<cfset xAxisData["opposite"] = true />
 				<cfset xAxisData["type"] = "category">
+
+				<!--- Keep cumulative total for metric, if pie chart with no data, need to indicate error --->
+				<cfset var metricTotal = 0 />
 				<cfloop query="chartDataQuery">
 					<cfset var data = [] />
 					<cfset arrayAppend(data, evaluate("chartDataQuery.#dimensionDefinition.alias#"))>
-					<cfset arrayAppend(data, evaluate("chartDataQuery.#dimensionDefinition.alias#Total"))>
-					<cfset arrayAppend(variables.chartData["series"][1]["data"], data)/>
+					<cfset arrayAppend(data, evaluate("chartDataQuery.#metricDefinition.alias#"))>
+					<cfset arrayAppend(variables.chartData["series"][1]["data"], data) />
+					<cfset metricTotal += data[2] />
 				</cfloop>
+
 				<cfset arrayAppend(variables.chartData["xAxis"], xAxisData) />
 
-			</cfif>
-
-			<cfif getReportCompareFlag()>
-				<cfset arrayAppend(variables.chartData["xAxis"], xAxisCompareData) />
+				<cfif getReportType() EQ "pie" AND metricTotal EQ 0>
+					<cfset variables.chartData["error"] = true />
+				</cfif>
 			</cfif>
 		</cfif>
 

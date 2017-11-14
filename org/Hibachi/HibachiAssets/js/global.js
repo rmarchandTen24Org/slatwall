@@ -1791,27 +1791,31 @@ if(typeof jQuery !== "undefined" && typeof document !== "undefined"){
 				removeLoadingDiv( 'hibachi-report' );
 			},
 			success: function( r ) {
-				if(r.report.hideChart !== undefined){ 
-					jQuery("#hibachi-report-chart").remove();
-					jQuery("#hibachi-report-chart-wrapper").hide();
-				} else { 
-					if(r.report.chartData.series !== undefined){
-						var html = "<div id='hibachi-report-chart'></div>";
-						jQuery("#hibachi-report-chart-wrapper").html(html);
-						var chart = new Highcharts.Chart(r.report.chartData);	
+				if(r.report.error === undefined || !r.report.error) {
+					if(r.report.hideChart !== undefined){ 
+						jQuery("#hibachi-report-chart").remove();
+						jQuery("#hibachi-report-chart-wrapper").hide();
+					} else { 
+						if(r.report.chartData.series !== undefined){
+							var html = "<div id='hibachi-report-chart'></div>";
+							jQuery("#hibachi-report-chart-wrapper").html(html);
+							var chart = new Highcharts.Chart(r.report.chartData);	
+						}
+						jQuery("#hibachi-report-chart-wrapper").show();
 					}
-					jQuery("#hibachi-report-chart-wrapper").show();
-				}
-				
-				if(r.report.hideReport !== undefined){
-					jQuery("#reportDataTable").remove();
-				} else { 
-					jQuery('#hibachi-report-table').html(r.report.dataTable);
-					jQuery("#hibachi-report-table").show();
-				}
 					
-				jQuery('#hibachi-report-configure-bar').html(r.report.configureBar);		
-				initUIElements('#hibachi-report');
+					if(r.report.hideReport !== undefined){
+						jQuery("#reportDataTable").remove();
+					} else { 
+						jQuery('#hibachi-report-table').html(r.report.dataTable);
+						jQuery("#hibachi-report-table").show();
+					}
+						
+					jQuery('#hibachi-report-configure-bar').html(r.report.configureBar);		
+					initUIElements('#hibachi-report');
+				} else {
+					displayError("No data to display on the chart.");
+				}
 				removeLoadingDiv( 'hibachi-report' );
 			}
 		});
