@@ -116,23 +116,21 @@ Notes:
 	}
 
 
-		public numeric function getCurrentMargin(required string stockID){
-			return ORMExecuteQuery("
-				SELECT COALESCE((COALESCE(sku.price,0) - COALESCE(stock.calculatedAverageCost,0)) / COALESCE(sku.price,0),0)
-				FROM SlatwallStock stock
-				LEFT JOIN stock.sku sku
-				WHERE stock.stockID=:stockID
-			",{stockID=arguments.stockID},true);
+	public numeric function getCurrentMargin(required string stockID){
+		var averagePriceSold = getAveragePriceSold(argumentCollection=arguments);
+		if(averagePriceSold == 0){
+			return 0;
 		}
-		
-		public numeric function getCurrentLandedMargin(required string stockID){
-			return ORMExecuteQuery("
-				SELECT COALESCE((COALESCE(sku.price,0) - COALESCE(stock.calculatedLandedAverageCost,0)) / COALESCE(sku.price,0),0)
-				FROM SlatwallStock stock
-				LEFT JOIN stock.sku sku
-				WHERE stock.stockID=:stockID
-			",{stockID=arguments.stockID},true);
+		return getService('hibachiUtilityService').precisionCalculate((getAverageProfit(argumentCollection=arguments) / averagePriceSold) * 100);
+	}
+	
+	public numeric function getCurrentLandedMargin(required string stockID){
+		var averagePriceSold = getAveragePriceSold(argumentCollection=arguments);
+		if(averagePriceSold == 0){
+			return 0;
 		}
+		return getService('hibachiUtilityService').precisionCalculate((getAverageLandedProfit(argumentCollection=arguments) / averagePriceSold) * 100);
+	}
 		
 		
 		
@@ -163,11 +161,11 @@ Notes:
 		}
 		
 		public any function getAverageProfit(required string stockID){
-			return getAveragePriceSold(argumentCollection=arguments) - getAverageCost(argumentCollection=arguments);
+			return getService('hibachiUtilityService').precisionCalculate(getAveragePriceSold(argumentCollection=arguments) - getAverageCost(argumentCollection=arguments));
 		}
 		
 		public any function getAverageLandedProfit(required string stockID){
-			return getAveragePriceSold(argumentCollection=arguments) - getAverageLandedCost(argumentCollection=arguments);
+			return getService('hibachiUtilityService').precisionCalculate(getAveragePriceSold(argumentCollection=arguments) - getAverageLandedCost(argumentCollection=arguments));
 		}
 		
 		public any function getAverageMarkup(required string stockID){
@@ -177,7 +175,7 @@ Notes:
 				return 0;
 			}
 			
-			return ((averagePriceSold-averageCost)/averageCost)*100;
+			return getService('hibachiUtilityService').precisionCalculate(((averagePriceSold-averageCost)/averageCost)*100);
 		}
 		
 		public any function getAverageLandedMarkup(required string stockID){
@@ -186,7 +184,7 @@ Notes:
 			if(averageLandedCost == 0){
 				return 0;
 			}
-			return ((averagePriceSold-averageLandedCost)/averageLandedCost)*100;
+			return getService('hibachiUtilityService').precisionCalculate(((averagePriceSold-averageLandedCost)/averageLandedCost)*100);
 		}
 		
 		public any function getStockBySkuAndLocation(required any sku, required any location) {

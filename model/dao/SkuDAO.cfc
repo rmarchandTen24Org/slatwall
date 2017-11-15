@@ -240,11 +240,11 @@ Notes:
 	}
 	
 	public any function getAverageProfit(required string skuID){
-		return getAveragePriceSold(argumentCollection=arguments) - getAverageCost(argumentCollection=arguments);
+		return getService('hibachiUtilityService').precisionCalculate(getAveragePriceSold(argumentCollection=arguments) - getAverageCost(argumentCollection=arguments));
 	}
 	
 	public any function getAverageLandedProfit(required string skuID){
-		return getAveragePriceSold(argumentCollection=arguments) - getAverageLandedCost(argumentCollection=arguments);
+		return getService('hibachiUtilityService').precisionCalculate(getAveragePriceSold(argumentCollection=arguments) - getAverageLandedCost(argumentCollection=arguments));
 	}
 	
 	public any function getAverageMarkup(required string skuID){
@@ -254,7 +254,7 @@ Notes:
 			return 0;
 		}
 		
-		return ((averagePriceSold-averageCost)/averageCost)*100;
+		return getService('hibachiUtilityService').precisionCalculate(((averagePriceSold-averageCost)/averageCost)*100);
 	}
 	
 	public any function getAverageLandedMarkup(required string skuID){
@@ -263,7 +263,7 @@ Notes:
 		if(averageLandedCost == 0){
 			return 0;
 		}
-		return ((averagePriceSold-averageLandedCost)/averageLandedCost)*100;
+		return getService('hibachiUtilityService').precisionCalculate(((averagePriceSold-averageLandedCost)/averageLandedCost)*100);
 	}
 	
 	public numeric function getCurrentMargin(required string skuID){
@@ -271,7 +271,7 @@ Notes:
 		if(averagePriceSold == 0){
 			return 0;
 		}
-		return (getAverageProfit(argumentCollection=arguments) / averagePriceSold) * 100;
+		return getService('hibachiUtilityService').precisionCalculate((getAverageProfit(argumentCollection=arguments) / averagePriceSold) * 100);
 	}
 	
 	public numeric function getCurrentLandedMargin(required string skuID){
@@ -279,7 +279,7 @@ Notes:
 		if(averagePriceSold == 0){
 			return 0;
 		}
-		return (getAverageLandedProfit(argumentCollection=arguments) / averagePriceSold) * 100;
+		return getService('hibachiUtilityService').precisionCalculate((getAverageLandedProfit(argumentCollection=arguments) / averagePriceSold) * 100);
 	}
 	
 	public numeric function getAveragePriceSold(required string skuID){
