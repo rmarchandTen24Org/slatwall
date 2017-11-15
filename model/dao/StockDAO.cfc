@@ -137,7 +137,7 @@ Notes:
 		public numeric function getAverageCost(required string stockID){
 			
 			return ORMExecuteQuery(
-				'SELECT COALESCE(AVG(i.cost/i.quantityIn),0)
+				'SELECT SUM(i.cost*i.quantityIn)/SUM(i.quantityIn)
 				FROM SlatwallInventory i 
 				LEFT JOIN i.stock s
 				WHERE s.stockID=:stockID
@@ -150,7 +150,7 @@ Notes:
 		public numeric function getAverageLandedCost(required string stockID){
 			
 			return ORMExecuteQuery(
-				'SELECT COALESCE(AVG(i.landedCost/i.quantityIn),0)
+				'SELECT SUM(i.landedCost*i.quantityIn)/SUM(i.quantityIn)
 				FROM SlatwallInventory i 
 				LEFT JOIN i.stock s
 				WHERE s.stockID=:stockID

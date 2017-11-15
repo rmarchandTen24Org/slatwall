@@ -1238,7 +1238,7 @@ component entityname="SlatwallSku" table="SwSku" persistent=true accessors=true 
 	public any function getAverageCost(any location){
 		var params.skuID = this.getSkuID();
 		if(!isNull(arguments.location)){
-			params.location=arguments.location;
+			params.locationID=arguments.location.getLocationID();
 		}
 		
 		return getDao('skuDao').getAverageCost(argumentCollection=params);
@@ -1247,7 +1247,7 @@ component entityname="SlatwallSku" table="SwSku" persistent=true accessors=true 
 	public any function getAverageLandedCost(any location){
 		var params.skuID = this.getSkuID();
 		if(!isNull(arguments.location)){
-			params.location=arguments.location;
+			params.locationID=arguments.location.getLocationID();
 		}
 		
 		return getDao('skuDao').getAverageLandedCost(argumentCollection=params);

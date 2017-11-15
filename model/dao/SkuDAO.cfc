@@ -186,25 +186,26 @@ Notes:
 		return skus;
 	}
 	
-	public any function getAverageCost(required string skuID, any location){
+	public any function getAverageCost(required string skuID, string locationID=""){
 		var params = {skuID=arguments.skuID};
 		
-		var hql = 'SELECT COALESCE(AVG(i.cost/i.quantityIn),0)
+		var hql = 'SELECT COALESCE(SUM(i.cost*i.quantityIn)/SUM(i.quantityIn),0)
 			FROM SlatwallInventory i 
 			LEFT JOIN i.stock stock
 			LEFT JOIN stock.sku sku
 		';
 		
-		if(!isNull(arguments.location)){
+		if(len(arguments.locationID)){
 			hql &= ' LEFT JOIN stock.location location ';
 		}
 		
-		hql &= ' WHERE sku.skuID=:skuID';
+		hql &= ' WHERE sku.skuID=:skuID AND i.cost IS NOT NULL ';
 		
-		if(!isNull(arguments.location)){
-			hql&= ' AND location.locationID = :location';	
-			params.location = arguments.location;
+		if(len(arguments.locationID)){
+			hql&= ' AND location.locationID = :locationID';	
+			params.locationID = arguments.locationID;
 		}
+		
 		
 		return ORMExecuteQuery(
 			hql,
@@ -213,22 +214,22 @@ Notes:
 		);
 	}
 	
-	public any function getAverageLandedCost(required string skuID, any location){
+	public any function getAverageLandedCost(required string skuID, string locationID=""){
 		var params = {skuID=arguments.skuID};
 		
-		var hql = 'SELECT COALESCE(AVG(i.landedCost/i.quantityIn),0)
+		var hql = 'SELECT COALESCE(SUM(i.landedCost*i.quantityIn)/SUM(i.quantityIn),0)
 			FROM SlatwallInventory i 
 			LEFT JOIN i.stock stock
 			LEFT JOIN stock.sku sku';
 			
-		if(!isNull(arguments.location)){
+		if(len(arguments.locationID)){
 			hql &= ' LEFT JOIN stock.location location ';
 		}
-		hql &= ' WHERE sku.skuID = :skuID ';
+		hql &= ' WHERE sku.skuID = :skuID AND i.landedCost IS NOT NULL ';
 		
-		if(!isNull(arguments.location)){
-			hql &= ' AND location.locationID=:location ';	
-			params.location=arguments.location;
+		if(len(arguments.locationID)){
+			hql &= ' AND location.locationID=:locationID ';	
+			params.locationID=arguments.locationID;
 		}
 		
 		return ORMExecuteQuery(
