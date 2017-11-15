@@ -85,6 +85,7 @@ component displayname="Stock" entityname="SlatwallStock" table="SwStock" persist
 	property name="currentMargin" persistent="false" hb_formatType="percentage";
 	property name="currentLandedMargin" persistent="false" hb_formatType="percentage";
 	property name="currentAssetValue" persistent="false" hb_formatType="currency";
+	property name="currentRevenueTotal" persistent="false" hb_formatType="currency";
 	property name="averagePriceSold" persistent="false" hb_formatType="currency";
 	property name="averageMarkup" persistent="false" hb_formatType="percentage";
 	property name="averageLandedMarkup" persistent="false" hb_formatType="percentage";
@@ -148,6 +149,10 @@ component displayname="Stock" entityname="SlatwallStock" table="SwStock" persist
 
 	public numeric function getCurrentAssetValue(){
 		return getQOH() * getAverageCost();
+	}
+	
+	public numeric function getCurrentRevenueTotal(){
+		return getQDOO() * getAveragePriceSold();
 	}
 
 	public any function getQATS() {

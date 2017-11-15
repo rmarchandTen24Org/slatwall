@@ -150,6 +150,7 @@ component entityname="SlatwallSku" table="SwSku" persistent=true accessors=true 
 	property name="currentMargin" persistent="false" hb_formatType="percentage";
 	property name="currentLandedMargin" persistent="false" hb_formatType="percentage";
 	property name="currentAssetValue" persistent="false" hb_formatType="currency";
+	property name="currentRevenueTotal" persistent="false" hb_formatType="currency";
 	property name="averagePriceSold" persistent="false" hb_formatType="currency";
 	property name="averageMarkup" persistent="false" hb_formatType="percentage";
 	property name="averageLandedMarkup" persistent="false" hb_formatType="percentage";
@@ -218,6 +219,10 @@ component entityname="SlatwallSku" table="SwSku" persistent=true accessors=true 
 
 	public numeric function getCurrentAssetValue(){
 		return getQOH() * getAverageCost();
+	}
+	
+	public numeric function getCurrentRevenueTotal(){
+		return getQDOO() * getAveragePriceSold();
 	}
 	
 	public numeric function getCurrentMargin(){
