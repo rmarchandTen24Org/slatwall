@@ -85,7 +85,7 @@ component displayname="Stock" entityname="SlatwallStock" table="SwStock" persist
 	property name="currentMargin" persistent="false" hb_formatType="percentage";
 	property name="currentLandedMargin" persistent="false" hb_formatType="percentage";
 	property name="currentAssetValue" persistent="false" hb_formatType="currency";
-	property name="currentRevenueTotal" persistent="false" hb_formatType="currency";
+	//property name="currentRevenueTotal" persistent="false" hb_formatType="currency";
 	property name="averagePriceSold" persistent="false" hb_formatType="currency";
 	property name="averageMarkup" persistent="false" hb_formatType="percentage";
 	property name="averageLandedMarkup" persistent="false" hb_formatType="percentage";
@@ -102,7 +102,7 @@ component displayname="Stock" entityname="SlatwallStock" table="SwStock" persist
 	// Quantity
 	public numeric function getQuantity(required string quantityType) {
 		if( !structKeyExists(variables, arguments.quantityType) ) {
-			if(listFindNoCase("QOH,QOSH,QNDOO,QNDORVO,QNDOSA,QNRORO,QNROVO,QNROSA", arguments.quantityType)) {
+			if(listFindNoCase("QOH,QOSH,QNDOO,QNDORVO,QNDOSA,QNRORO,QNROVO,QNROSA,QDOO", arguments.quantityType)) {
 				return getSku().getQuantity(quantityType=arguments.quantityType, stockID=this.getStockID());
 			} else if(listFindNoCase("MQATSBOM,QC,QE,QNC,QATS,QIATS", arguments.quantityType)) {
 				variables[ arguments.quantityType ] = getService("inventoryService").invokeMethod("get#arguments.quantityType#", {entity=this});
@@ -151,9 +151,9 @@ component displayname="Stock" entityname="SlatwallStock" table="SwStock" persist
 		return getQOH() * getAverageCost();
 	}
 	
-	public numeric function getCurrentRevenueTotal(){
-		return getQDOO() * getAveragePriceSold();
-	}
+//	public numeric function getCurrentRevenueTotal(){
+//		return getQuantity('QDOO') * getAveragePriceSold();
+//	}
 
 	public any function getQATS() {
 		return getQuantity("QATS");

@@ -19,7 +19,6 @@
 			<hb:HibachiPropertyDisplay object="#rc.stock#" property="currentMargin" edit="false">
 			<hb:HibachiPropertyDisplay object="#rc.stock#" property="currentLandedMargin" edit="false">
 			<hb:HibachiPropertyDisplay object="#rc.stock#" property="currentAssetValue" edit="false">
-			<hb:HibachiPropertyDisplay object="#rc.stock#" property="currentRevenueTotal" edit="false">
 			<hb:HibachiPropertyDisplay object="#rc.stock#" property="averagePriceSold" edit="false">
 			<hb:HibachiPropertyDisplay object="#rc.stock#" property="averageProfit" edit="false">
 			<hb:HibachiPropertyDisplay object="#rc.stock#" property="averageLandedProfit" edit="false">

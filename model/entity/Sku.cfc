@@ -150,7 +150,7 @@ component entityname="SlatwallSku" table="SwSku" persistent=true accessors=true 
 	property name="currentMargin" persistent="false" hb_formatType="percentage";
 	property name="currentLandedMargin" persistent="false" hb_formatType="percentage";
 	property name="currentAssetValue" persistent="false" hb_formatType="currency";
-	property name="currentRevenueTotal" persistent="false" hb_formatType="currency";
+	//property name="currentRevenueTotal" persistent="false" hb_formatType="currency";
 	property name="averagePriceSold" persistent="false" hb_formatType="currency";
 	property name="averageMarkup" persistent="false" hb_formatType="percentage";
 	property name="averageLandedMarkup" persistent="false" hb_formatType="percentage";
@@ -221,9 +221,10 @@ component entityname="SlatwallSku" table="SwSku" persistent=true accessors=true 
 		return getQOH() * getAverageCost();
 	}
 	
-	public numeric function getCurrentRevenueTotal(){
-		return getQDOO() * getAveragePriceSold();
-	}
+//	public numeric function getCurrentRevenueTotal(){
+//		
+//		return getQuantity('QDOO') * getAveragePriceSold();
+//	}
 	
 	public numeric function getCurrentMargin(){
 		return getDao('skuDao').getCurrentMargin(this.getSkuID());
@@ -640,7 +641,7 @@ component entityname="SlatwallSku" table="SwSku" persistent=true accessors=true 
 
 		// Standard Logic
 		if( !structKeyExists(variables, arguments.quantityType) ) {
-			if(listFindNoCase("QOH,QOSH,QNDOO,QNDORVO,QNDOSA,QNRORO,QNROVO,QNROSA", arguments.quantityType)) {
+			if(listFindNoCase("QOH,QOSH,QNDOO,QNDORVO,QNDOSA,QNRORO,QNROVO,QNROSA,QDOO", arguments.quantityType)) {
 				arguments.skuID = this.getSkuID();
 				return getProduct().getQuantity(argumentCollection=arguments);
 			} else if(listFindNoCase("MQATSBOM,QC,QE,QNC,QATS,QIATS", arguments.quantityType)) {
