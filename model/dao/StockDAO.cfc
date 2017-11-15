@@ -131,34 +131,89 @@ Notes:
 		}
 		return getService('hibachiUtilityService').precisionCalculate((getAverageLandedProfit(argumentCollection=arguments) / averagePriceSold) * 100);
 	}
+	
+	public numeric function getAveragePriceSold(required string stockID){
+		 
+		var hql = "SELECT NEW MAP(
+							COALESCE( sum(orderDeliveryItem.quantity), 0 ) as QDOO, 
+							COALESCE( sum(orderDeliveryItem.quantity*orderDeliveryItem.orderItem.price),0) as totalEarned 
+						) 
+						FROM
+							SlatwallOrderDeliveryItem orderDeliveryItem
+						LEFT JOIN
+					  		orderDeliveryItem.orderItem orderItem
+					  	LEFT JOIN
+					  		orderItem.sku sku
+					  	LEFT JOIN
+					  		sku.stocks stocks
+					  		
+						WHERE
+							orderDeliveryItem.orderItem.order.orderStatusType.systemCode NOT IN ('ostNotPlaced','ostCanceled')
+						  AND
+						  	orderDeliveryItem.orderItem.orderItemType.systemCode = 'oitSale'
+						  AND 
+							stocks.stockID = :stockID
+						GROUP BY stocks.stockID
+						";
+		var QDOODetails = ormExecuteQuery(hql, {stockID=arguments.stockID},true);	
+		if(QDOODetails['QDOO']==0){
+			return 0;
+		}
+		var averagePriceSold = getService('hibachiUtilityService').precisionCalculate(QDOODetails['totalEarned']/QDOODetails['QDOO']);
+		return averagePriceSold;
+	}
 		
+	public any function getAverageCost(required string stockID, string locationID=""){
+		var params = {stockID=arguments.stockID};
 		
+		var hql = 'SELECT COALESCE(SUM(i.cost*i.quantityIn)/SUM(i.quantityIn),0)
+			FROM SlatwallInventory i 
+			LEFT JOIN i.stock stock
+		';
 		
-		public numeric function getAverageCost(required string stockID){
-			
-			return ORMExecuteQuery(
-				'SELECT SUM(i.cost*i.quantityIn)/SUM(i.quantityIn)
-				FROM SlatwallInventory i 
-				LEFT JOIN i.stock s
-				WHERE s.stockID=:stockID
-				',
-				{stockID=arguments.stockID},
-				true
-			);
+		if(len(arguments.locationID)){
+			hql &= ' LEFT JOIN stock.location location ';
 		}
 		
-		public numeric function getAverageLandedCost(required string stockID){
-			
-			return ORMExecuteQuery(
-				'SELECT SUM(i.landedCost*i.quantityIn)/SUM(i.quantityIn)
-				FROM SlatwallInventory i 
-				LEFT JOIN i.stock s
-				WHERE s.stockID=:stockID
-				',
-				{stockID=arguments.stockID},
-				true
-			);
+		hql &= ' WHERE stock.stockID=:stockID AND i.cost IS NOT NULL ';
+		
+		if(len(arguments.locationID)){
+			hql&= ' AND location.locationID = :locationID';	
+			params.locationID = arguments.locationID;
 		}
+		
+		
+		return ORMExecuteQuery(
+			hql,
+			params,
+			true
+		);
+	}
+	
+	public any function getAverageLandedCost(required string stockID, string locationID=""){
+		var params = {stockID=arguments.stockID};
+		
+		var hql = 'SELECT COALESCE(SUM(i.landedCost*i.quantityIn)/SUM(i.quantityIn),0)
+			FROM SlatwallInventory i 
+			LEFT JOIN i.stock stock
+		';
+			
+		if(len(arguments.locationID)){
+			hql &= ' LEFT JOIN stock.location location ';
+		}
+		hql &= ' WHERE stock.stockID = :stockID AND i.landedCost IS NOT NULL ';
+		
+		if(len(arguments.locationID)){
+			hql &= ' AND location.locationID=:locationID ';	
+			params.locationID=arguments.locationID;
+		}
+		
+		return ORMExecuteQuery(
+			hql,
+			params,
+			true
+		);
+	}
 		
 		public any function getAverageProfit(required string stockID){
 			return getService('hibachiUtilityService').precisionCalculate(getAveragePriceSold(argumentCollection=arguments) - getAverageCost(argumentCollection=arguments));

@@ -155,6 +155,10 @@ component displayname="Stock" entityname="SlatwallStock" table="SwStock" persist
 //		return getQuantity('QDOO') * getAveragePriceSold();
 //	}
 
+	public numeric function getAveragePriceSold(){
+		return getDao('stockDao').getAveragePriceSold(stockID=this.getStockID());
+	}
+
 	public any function getQATS() {
 		return getQuantity("QATS");
 	}
