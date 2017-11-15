@@ -134,6 +134,8 @@ Notes:
 			",{stockID=arguments.stockID},true);
 		}
 		
+		
+		
 		public numeric function getAverageCost(required string stockID){
 			
 			return ORMExecuteQuery(
@@ -158,6 +160,33 @@ Notes:
 				{stockID=arguments.stockID},
 				true
 			);
+		}
+		
+		public any function getAverageProfit(required string stockID){
+			return getAveragePriceSold(argumentCollection=arguments) - getAverageCost(argumentCollection=arguments);
+		}
+		
+		public any function getAverageLandedProfit(required string stockID){
+			return getAveragePriceSold(argumentCollection=arguments) - getAverageLandedCost(argumentCollection=arguments);
+		}
+		
+		public any function getAverageMarkup(required string stockID){
+			var averagePriceSold = getAveragePriceSold(argumentCollection=arguments);
+			var averageCost = getAverageCost(argumentCollection=arguments);
+			if(averageCost == 0){
+				return 0;
+			}
+			
+			return ((averagePriceSold-averageCost)/averageCost)*100;
+		}
+		
+		public any function getAverageLandedMarkup(required string stockID){
+			var averagePriceSold = getAveragePriceSold(argumentCollection=arguments);
+			var averageLandedCost = getAverageLandedCost(argumentCollection=arguments);
+			if(averageLandedCost == 0){
+				return 0;
+			}
+			return ((averagePriceSold-averageLandedCost)/averageLandedCost)*100;
 		}
 		
 		public any function getStockBySkuAndLocation(required any sku, required any location) {

@@ -48,7 +48,28 @@ Notes:
 --->
 <cfimport prefix="swa" taglib="../../../tags" />
 <cfimport prefix="hb" taglib="../../../org/Hibachi/HibachiTags" />
-
+<!---<cfscript>
+	var params = {skuID='2c9280825fac365b015fac6af2b0000e',locationID="88e6d435d3ac2e5947c81ab3da60eba2"};
+		
+		var hql = 'SELECT COALESCE(SUM(i.landedCost*i.quantityIn)/SUM(i.quantityIn),0)
+			FROM SlatwallInventory i 
+			LEFT JOIN i.stock stock
+			LEFT JOIN stock.sku sku
+			LEFT JOIN stock.location location
+		';
+		
+		
+		hql &= ' WHERE sku.skuID=:skuID AND i.landedCost IS NOT NULL 
+		AND location.locationID =:locationID';
+		
+		
+		var result = ORMExecuteQuery(
+			hql,
+			params,
+			true
+		);
+		writedump(result);abort;
+</cfscript>--->
 
 <cfparam name="rc.sku" type="any">
 <cfparam name="rc.product" type="any" default="#rc.sku.getProduct()#">

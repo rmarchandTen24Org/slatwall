@@ -239,20 +239,47 @@ Notes:
 		);
 	}
 	
+	public any function getAverageProfit(required string skuID){
+		return getAveragePriceSold(argumentCollection=arguments) - getAverageCost(argumentCollection=arguments);
+	}
+	
+	public any function getAverageLandedProfit(required string skuID){
+		return getAveragePriceSold(argumentCollection=arguments) - getAverageLandedCost(argumentCollection=arguments);
+	}
+	
+	public any function getAverageMarkup(required string skuID){
+		var averagePriceSold = getAveragePriceSold(argumentCollection=arguments);
+		var averageCost = getAverageCost(argumentCollection=arguments);
+		if(averageCost == 0){
+			return 0;
+		}
+		
+		return ((averagePriceSold-averageCost)/averageCost)*100;
+	}
+	
+	public any function getAverageLandedMarkup(required string skuID){
+		var averagePriceSold = getAveragePriceSold(argumentCollection=arguments);
+		var averageLandedCost = getAverageLandedCost(argumentCollection=arguments);
+		if(averageLandedCost == 0){
+			return 0;
+		}
+		return ((averagePriceSold-averageLandedCost)/averageLandedCost)*100;
+	}
+	
 	public numeric function getCurrentMargin(required string skuID){
-		return ORMExecuteQuery("
-			SELECT COALESCE((COALESCE(sku.price,0) - COALESCE(sku.calculatedAverageCost,0)) / COALESCE(sku.price,0),0)
-			FROM SlatwallSku sku
-			WHERE sku.skuID=:skuID
-		",{skuID=arguments.skuID},true);
+		var averagePriceSold = getAveragePriceSold(argumentCollection=arguments);
+		if(averagePriceSold == 0){
+			return 0;
+		}
+		return (getAverageProfit(argumentCollection=arguments) / averagePriceSold) * 100;
 	}
 	
 	public numeric function getCurrentLandedMargin(required string skuID){
-		return ORMExecuteQuery("
-			SELECT COALESCE((COALESCE(sku.price,0) - COALESCE(sku.calculatedAverageLandedCost,0)) / COALESCE(sku.price,0),0)
-			FROM SlatwallSku sku
-			WHERE sku.skuID=:skuID
-		",{skuID=arguments.skuID},true);
+		var averagePriceSold = getAveragePriceSold(argumentCollection=arguments);
+		if(averagePriceSold == 0){
+			return 0;
+		}
+		return (getAverageLandedProfit(argumentCollection=arguments) / averagePriceSold) * 100;
 	}
 	
 	public numeric function getAveragePriceSold(required string skuID){

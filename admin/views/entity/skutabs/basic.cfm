@@ -29,6 +29,10 @@
 			<hb:HibachiPropertyDisplay object="#rc.sku#" property="currentLandedMargin" edit="false">
 			<hb:HibachiPropertyDisplay object="#rc.sku#" property="currentAssetValue" edit="false">
 			<hb:HibachiPropertyDisplay object="#rc.sku#" property="averagePriceSold" edit="false">
+			<hb:HibachiPropertyDisplay object="#rc.sku#" property="averageProfit" edit="false">
+			<hb:HibachiPropertyDisplay object="#rc.sku#" property="averageLandedProfit" edit="false">
+			<hb:HibachiPropertyDisplay object="#rc.sku#" property="averageMarkup" edit="false">
+			<hb:HibachiPropertyDisplay object="#rc.sku#" property="averageLandedMarkup" edit="false">
 
 			<cfset measurementUnitList = $.slatwall.getService('measurementService').getMeasurementUnitCollectionList() />
 			<cfset measurementUnitList.setDisplayProperties('unitCode,unitName') />

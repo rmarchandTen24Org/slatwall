@@ -147,10 +147,14 @@ component entityname="SlatwallSku" table="SwSku" persistent=true accessors=true 
 	property name="availableSeatCount" persistent="false";
 	property name="averageCost" persistent="false" hb_formatType="currency";
 	property name="averageLandedCost" persistent="false" hb_formatType="currency";
-	property name="currentMargin" persistent="false" hb_formatType="currency";
-	property name="currentLandedMargin" persistent="false" hb_formatType="currency";
+	property name="currentMargin" persistent="false" hb_formatType="percentage";
+	property name="currentLandedMargin" persistent="false" hb_formatType="percentage";
 	property name="currentAssetValue" persistent="false" hb_formatType="currency";
 	property name="averagePriceSold" persistent="false" hb_formatType="currency";
+	property name="averageMarkup" persistent="false" hb_formatType="percentage";
+	property name="averageLandedMarkup" persistent="false" hb_formatType="percentage";
+	property name="averageProfit" persistent="false" hb_formatType="currency";
+	property name="averageLandedProfit" persistent="false" hb_formatType="currency";
 	property name="baseProductType" persistent="false";
 	property name="currentAccountPrice" type="numeric" hb_formatType="currency" persistent="false";
 	property name="currencyDetails" type="struct" persistent="false";
@@ -222,6 +226,22 @@ component entityname="SlatwallSku" table="SwSku" persistent=true accessors=true 
 	
 	public numeric function getCurrentLandedMargin(){
 		return getDao('skuDao').getCurrentLandedMargin(this.getSkuID());
+	}
+	
+	public numeric function getAverageProfit(){
+		return getDao('skuDao').getAverageProfit(this.getSkuID());
+	}
+	
+	public numeric function getAverageLandedProfit(){
+		return getDao('skuDao').getAverageLandedProfit(this.getSkuID());
+	}
+	
+	public numeric function getAverageMarkup(){
+		return getDao('skuDao').getAverageMarkup(this.getSkuID());
+	}
+	
+	public numeric function getAverageLandedMarkup(){
+		return getDao('skuDao').getAverageLandedMarkup(this.getSkuID());
 	}
 
 	public array function getGiftCardExpirationTermOptions(){
