@@ -113,7 +113,7 @@ component extends="Slatwall.meta.tests.unit.entity.SlatwallEntityTestBase" {
 		stock.addInventory(inventory);
 		
 		assertEquals(stock.getQOH(),5);		
-		assertEquals(stock.getAverageCost(),5);
+		assertEquals(stock.getAverageCost(),25);
 		assertEquals(stock.getCurrentAssetValue(),25);
 	}
 	
