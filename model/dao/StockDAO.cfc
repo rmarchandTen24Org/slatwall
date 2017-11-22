@@ -157,7 +157,7 @@ Notes:
 						";
 		var QDOODetails = ormExecuteQuery(hql, {stockID=arguments.stockID},true);	
 		
-		if(QDOODetails['QDOO']==0){
+		if(isNull(QDOODetails) || QDOODetails['QDOO']==0){
 			return 0;
 		}
 		var averagePriceSold = getService('hibachiUtilityService').precisionCalculate(QDOODetails['totalEarned']/QDOODetails['QDOO']);
