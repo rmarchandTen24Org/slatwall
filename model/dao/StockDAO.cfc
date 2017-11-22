@@ -156,6 +156,7 @@ Notes:
 						GROUP BY stocks.stockID
 						";
 		var QDOODetails = ormExecuteQuery(hql, {stockID=arguments.stockID},true);	
+		
 		if(QDOODetails['QDOO']==0){
 			return 0;
 		}
