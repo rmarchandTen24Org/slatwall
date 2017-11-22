@@ -74,7 +74,7 @@ component extends="Slatwall.meta.tests.unit.entity.SlatwallEntityTestBase" {
 			}
 		};
 		var inventory = createPersistedTestEntity('inventory',inventoryData);	
-		assertEquals(stock.getAverageCost(),5);
+		assertEquals(stock.getAverageCost(),25);
 		
 	}
 	
@@ -114,7 +114,7 @@ component extends="Slatwall.meta.tests.unit.entity.SlatwallEntityTestBase" {
 		
 		assertEquals(stock.getQOH(),5);		
 		assertEquals(stock.getAverageCost(),25);
-		assertEquals(stock.getCurrentAssetValue(),25);
+		assertEquals(stock.getCurrentAssetValue(),125);
 	}
 	
 }
