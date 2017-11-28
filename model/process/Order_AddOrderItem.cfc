@@ -686,6 +686,9 @@ component output="false" accessors="true" extends="HibachiProcess" {
 		// Call the super populate to do all the standard logic
 		super.populate(argumentcollection=arguments);
 
+		//populate stock if exists
+		getStock();
+		
 		//loop through possible attributes and check if it exists in the submitted data, if so then populate the processObject
 		for(attributeSet in getAssignedOrderItemAttributeSets()){
 			for(attribute in attributeSet.getAttributes()){
