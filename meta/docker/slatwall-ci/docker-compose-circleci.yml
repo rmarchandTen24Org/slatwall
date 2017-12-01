@@ -13,7 +13,7 @@ slatwallweb:
    MYSQL_PORT : 3306
    MYSQL_DATABASE : Slatwall
    LUCEE_PASSWORD: CiPassword
-   LUCEE_JAVA_OPTS: -Xms1024m -Xmx1024m
+   LUCEE_JAVA_OPTS: -Xms2048m -Xmx2048m
 slatwalldb:
   image: mysql
   environment:
