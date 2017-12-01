@@ -46,7 +46,7 @@
 Notes:
 
 */
-component displayName="mytestcase" extends="testbox.system.compat.framework.TestCase"{
+component displayName="mytestcase" extends="testbox.system.compat.framework.TestCase" asyncAll=true{
 
 	variables.debugArray = [];
 	variables.persistentEntities = [];

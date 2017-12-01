@@ -46,7 +46,7 @@
 Notes:
 
 */
-component extends="Slatwall.meta.tests.unit.SlatwallUnitTestBase"  {
+component extends="Slatwall.meta.tests.unit.SlatwallUnitTestBase" asyncAll=false {
 	
 	public void function setUp() {
 		super.setup();
