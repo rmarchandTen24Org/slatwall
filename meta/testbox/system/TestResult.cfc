@@ -47,6 +47,8 @@ component accessors="true"{
 
 		// internal id
 		variables.resultsID 	= createUUID();
+		// TestBox version
+		variables.version 		= "@build.version@+@build.number@";
 		// Global test durations
 		variables.startTime 	= getTickCount();	
 		variables.endTime 		= 0;
@@ -346,7 +348,6 @@ component accessors="true"{
 		required string type,
 		required struct stats
 	){
-
 		lock name="tb-results-#variables.resultsID#" type="exclusive" timeout="10"{
 			// increment suite stat
 			variables.suiteReverseLookup[ arguments.stats.suiteID ][ "total#arguments.type#" ]++;
@@ -360,22 +361,46 @@ component accessors="true"{
 	}
 	
 	/**
-	* Get a flat representation of this result
+	* Get a flat representation of this result.
+	*
+	* @includeDebugBuffer Include the debug buffer or not, by default we strip it out
 	*/
-	struct function getMemento(){
-		var pList = listToArray( "labels,startTime,endTime,totalDuration,totalBundles,totalSuites,totalSpecs,totalPass,totalFail,totalError,totalSkipped,bundleStats" );
-		var result = {};
+	struct function getMemento( boolean includeDebugBuffer=false ){
+		var pList 	= [ 
+			"resultID",
+			"version",
+			"labels",
+			"startTime",
+			"endTime",
+			"totalDuration",
+			"totalBundles",
+			"totalSuites",
+			"totalSpecs",
+			"totalPass",
+			"totalFail",
+			"totalError",
+			"totalSkipped",
+			"bundleStats"
+		];
+		var result 	= {};
 		
 		// Do simple properties only
-		for(var x=1; x lte arrayLen( pList ); x++ ){
-			if( structKeyExists( variables, pList[ x ] ) ){
-				result[ pList[ x ] ] = variables[ pList[ x ] ];
-			}
-			else{
-				result[ pList[ x ] ] = "";
+		for( var thisProp in pList ){
+			if( structKeyExists( variables, thisProp ) ){
+				
+				// Do we need to strip out the buffer?
+				if( thisProp == "bundleStats" && !arguments.includeDebugBuffer ){
+					for( var thisKey in variables[ thisProp ] ){
+						structDelete( thisKey, "debugBuffer" );
+					}
+				}
+				
+				result[ thisProp ] = variables[ thisProp ];
+			} else {
+				result[ thisProp ] = "";
 			}
 		}
-		
+
 		return result;		
 	}
 }
