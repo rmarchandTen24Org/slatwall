@@ -165,11 +165,11 @@ PLEASE NOTE THAT YOU MUST ALTER THE RUNNER'S URL ACCORDING TO YOUR ENVIRONMENT.
           <get dest="${slatwall.test.output.xml}/index${slatwall.outputfile}.xml"
                 src="http://${slatwall.test.server}:${slatwall.test.serverport}"
                 verbose="true"/>
-          <sleep seconds="10" />
+          <sleep seconds="20" />
           <get dest="${slatwall.test.output.xml}/index2${slatwall.outputfile}.xml"
-                src="http://${slatwall.test.server}:${slatwall.test.serverport}"
+                src="http://${slatwall.test.server}:${slatwall.test.serverport}?reload=true"
                 verbose="true"/>
-          <sleep seconds="5" />
+          <sleep seconds="20" />
           <get dest="${slatwall.test.output.xml}/unit/core${slatwall.outputfile}.xml"
                 src="http://${url.runner}?&amp;opt_run=true&amp;target=${test.directory}.core&amp;recurse=${test.recurse}&amp;reporter=antjunit&amp;labels=${test.labels}"
                 verbose="true"/>
