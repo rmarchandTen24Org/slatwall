@@ -15,6 +15,7 @@ Execute the 'run-junit' target
 ant -f test.xml run-junit
 
 PLEASE NOTE THAT YOU MUST ALTER THE RUNNER'S URL ACCORDING TO YOUR ENVIRONMENT.
+
 -->
 <project name="Slatwall" basedir="." default="run-junit">
 
