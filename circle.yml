@@ -57,8 +57,8 @@ test:
     - sudo chmod -R 777 meta/tests/testresults
 
     # Connect ot SauceLabs for Integration Testing
-    - if [[ ! -z $SAUCE_USERNAME ]] ; then cd sc-*-linux && ./bin/sc --user $SAUCE_USERNAME --api-key $SAUCE_ACCESS_KEY --pidfile sc.pid --readyfile ~/sauce_is_ready --tunnel-identifier $CIRCLE_BUILD_NUM; fi:
-        background: true
+   # - if [[ ! -z $SAUCE_USERNAME ]] ; then cd sc-*-linux && ./bin/sc --user $SAUCE_USERNAME --api-key $SAUCE_ACCESS_KEY --pidfile sc.pid --readyfile ~/sauce_is_ready --tunnel-identifier $CIRCLE_BUILD_NUM; fi:
+   #     background: true
 
     # Wait for Saucelabs connection
     #- if [[ ! -z $SAUCE_USERNAME ]] ; then while [ ! -e ~/sauce_is_ready ]; do sleep 1; done; fi
@@ -76,7 +76,7 @@ test:
     # Run Unit Tests
 
     - sudo lxc-attach -n "$(docker inspect --format '{{.Id}}' slatwallci_slatwallweb_1)" -- ant -f /var/www/meta/tests/build.xml run-junit -Dslatwall.outputfile "results" -Dtest.directory "meta.tests.unit";:
-        timeout: 1800
+        timeout: 18000
 
   post:
     # Kill the Sauce Labs tunnel
