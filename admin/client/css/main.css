@@ -1559,6 +1559,9 @@ select.error {
 .table > tfoot > tr > td {
   border-color: #e6e6e6;
 }
+.table > tbody > tr > td.currency{
+  text-align: right;
+}
 .s-order-item-table tbody .s-total td {
   border-bottom: 1px solid #e6e6e6;
 }
