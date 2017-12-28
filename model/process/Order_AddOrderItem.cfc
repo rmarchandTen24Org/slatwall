@@ -55,7 +55,6 @@ component output="false" accessors="true" extends="HibachiProcess" {
 	property name="stock" hb_rbKey="entity.stock";
 	property name="sku" hb_rbKey="entity.sku";
 	property name="product" hb_rbKey="entity.product";
-	property name="fulfillmentLocation" hb_rbKey="entity.location";
 	property name="fulfillmentMethod" hb_rbKey="entity.fulfillmentMethod";
 	property name="location" hb_rbKey="entity.location";
 	property name="orderFulfillment" hb_rbKey="entity.orderFulfillment";
@@ -69,7 +68,6 @@ component output="false" accessors="true" extends="HibachiProcess" {
 	property name="skuID";
 	property name="skuCode";
 	property name="productID";
-	property name="fulfillmentLocationID" hb_formFieldType="select";
 	property name="locationID" hb_formFieldType="select" hb_rbKey="entity.location";
 	property name="returnLocationID" hb_formFieldType="select" hb_rbKey="entity.orderReturn.returnLocation";
 	property name="selectedOptionIDList";
@@ -102,7 +100,6 @@ component output="false" accessors="true" extends="HibachiProcess" {
 
 	// Option Properties
 	property name="fulfillmentMethodIDOptions";
-	property name="fulfillmentLocationIDOptions";
 	property name="locationIDOptions";
 	property name="orderFulfillmentIDOptions";
 	property name="orderReturnIDOptions";
@@ -372,11 +369,6 @@ component output="false" accessors="true" extends="HibachiProcess" {
 
 	}
 
-	public void function getFulfillmentLocation(any location) {
-		logHibachi("Add Order Item Process Object - Getting Fulfillment Location");
-		variables.fulfillmentLocation = arguments.location;
-	}
-
 	public any function getLocation() {
 		logHibachi("Add Order Item Process Object - Getting Basic Location");
 
@@ -386,11 +378,6 @@ component output="false" accessors="true" extends="HibachiProcess" {
 			if(!isNull(stock)) {
 				variables.location = stock.getLocation();
 			}
-		}
-
-		// now we look for a fulfillmentLocationID
-		if(!structKeyExists(variables, "location") && !isNull(getFulfillmentLocationID())) {
-			variables.location = getService("locationService").getLocation(getFulfillmentLocationID());
 		}
 
 		// now we look for a locationID
@@ -450,20 +437,13 @@ component output="false" accessors="true" extends="HibachiProcess" {
 
 	public array function getLocationIDOptions() {
 		if(!structKeyExists(variables, "locationIDOptions")) {
-			variables.locationIDOptions = getService("locationService").getLocationOptions();
+			if (isNull(getOrder().getDefaultStockLocation())) {
+				variables.locationIDOptions = getService("locationService").getLocationOptions();
+			} else {
+				variables.locationIDOptions = getService("locationService").getLocationOptions(locationID=getOrder().getDefaultStockLocation().getLocationID(), nameProperty="locationName", includeTopLevelLocation=true)
+			}
 		}
 		return variables.locationIDOptions;
-	}
-
-	public array function getFulfillmentLocationIDOptions() {
-		if(!structKeyExists(variables, "fulfillmentLocationIDOptions")) {
-			if (isNull(getOrder().getDefaultStockLocation())) {
-				return [];
-			}
-			
-			variables.fulfillmentLocationIDOptions = getService("locationService").getLocationOptions(locationID=getOrder().getDefaultStockLocation().getLocationID(), nameProperty="locationName", includeTopLevelLocation=true);
-		}
-		return variables.fulfillmentLocationIDOptions;
 	}
 
 	public array function getPickupLocationIDOptions() {
