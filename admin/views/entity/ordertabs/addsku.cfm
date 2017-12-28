@@ -54,13 +54,68 @@ Notes:
 <cfparam name="rc.addSkuAddStockType" type="string" default="oitSale"/>
 <cfset local.addOrderItemSkuOptionsSmartList = rc.order.getAddOrderItemSkuOptionsSmartList() />
 
+<script type="text/javascript">
+
+	// Updates QATS based on selected fulfillment location
+	jQuery("table.addSku").ready(function() {
+		jQuery("table.addSku tbody tr").each(function(index, element) {
+			var skuID = element.id;
+
+			// reference calculateQATS table data cell
+			var elementQATS = jQuery(element).find("td.calculatedQATS")[0];
+
+			// Setup 'change' handler for fulfillmentLocationID and put skuID reference in event data
+			jQuery(element).find("select[name='fulfillmentLocationID']").on('change', {skuID: skuID, elementQATS: elementQATS}, function(e) {
+				var elementFulfillmentLocation = this;
+				var elementQATS = e.data.elementQATS;
+				var fulfillmentLocationID = jQuery(elementFulfillmentLocation).val();
+				var skuID = e.data.skuID;
+
+				// Create filterGroupsConfig for collection
+				var filterGroupsConfig = [{
+					filterGroup: [{
+						propertyIdentifier: "_stock.sku.skuID",
+						comparisonOperator: "=",
+						value: skuID
+					}, {
+						propertyIdentifier: "_stock.location.locationID",
+						comparisonOperator: "=",
+						value: fulfillmentLocationID,
+						logicalOperator: "AND"
+					}]
+				}];
+
+				// Make AJAX call to update stock
+				jQuery.ajax({
+					method: "GET",
+					url: "/api/stock/?ng",
+					dataType: 'json',
+					data: {filterGroupsConfig: JSON.stringify(filterGroupsConfig)},
+					beforeSend: function (xhr) { jQuery(elementQATS).html("Waiting"); xhr.setRequestHeader('X-Hibachi-AJAX', true) },
+					error: function(r) {
+						console.log("Error");
+						console.log(r);
+					},
+					success: function( r ) {
+						if (r.pageRecordsCount > 0) {
+							var qats = jQuery.isNumeric(r.pageRecords[0].calculatedQATS) ? r.pageRecords[0].calculatedQATS : 0;
+							jQuery(elementQATS).html(qats);
+						}
+					}
+				});
+			});
+		});
+	});
+</script>
+
 <cfoutput>
 	<hb:HibachiListingDisplay smartList="#local.addOrderItemSkuOptionsSmartList#"
 							  recordProcessAction="admin:entity.processOrder"
 							  recordProcessQueryString="orderItemTypeSystemCode=#rc.addSkuAddStockType#"
 							  recordProcessContext="addOrderItem"
 							  recordProcessEntity="#rc.order#"
-							  recordProcessUpdateTableID="LD#replace(rc.order.getSaleItemSmartList().getSavedStateID(),'-','','all')#">
+							  recordProcessUpdateTableID="LD#replace(rc.order.getSaleItemSmartList().getSavedStateID(),'-','','all')#"
+							  tableClass="addSku">
 		<hb:HibachiListingColumn propertyIdentifier="publishedFlag" />
 		<hb:HibachiListingColumn propertyIdentifier="skuCode" />
 		<hb:HibachiListingColumn propertyIdentifier="product.productCode" />
@@ -69,9 +124,12 @@ Notes:
 		<hb:HibachiListingColumn propertyIdentifier="product.productType.productTypeName" />
 		<hb:HibachiListingColumn propertyIdentifier="calculatedSkuDefinition" />
 		<cfif NOT isNull(rc.order.getDefaultStockLocation()) >
-			<hb:HibachiListingColumn propertyIdentifier="calculatedQATS" methodIdentifier='{"METHODNAME":"getQuantity","METHODARGUMENTS":{"QUANTITYTYPE":"QATS","LOCATIONID":"#rc.order.getDefaultStockLocation().getLocationID()#"}}' />
+			<hb:HibachiListingColumn propertyIdentifier="calculatedQATS" tdClass="calculatedQATS" methodIdentifier='{"METHODNAME":"getQuantity","METHODARGUMENTS":{"QUANTITYTYPE":"QATS","LOCATIONID":"#rc.order.getDefaultStockLocation().getLocationID()#"}}' />
 		<cfelse>
-			<hb:HibachiListingColumn propertyIdentifier="calculatedQATS" />
+			<hb:HibachiListingColumn propertyIdentifier="calculatedQATS" tdClass="calculatedQATS" />
+		</cfif>
+		<cfif NOT isNull(rc.order.getDefaultStockLocation()) AND rc.order.getDefaultStockLocation().hasChildren()>
+			<hb:HibachiListingColumn processObjectProperty="fulfillmentLocationID" title="#$.slatwall.rbKey('entity.sku.fulfillmentLocation')#" fieldClass="span2" />
 		</cfif>
 		<hb:HibachiListingColumn processObjectProperty="orderFulfillmentID" title="#$.slatwall.rbKey('entity.orderFulfillment')#" fieldClass="span2" />
 		<hb:HibachiListingColumn processObjectProperty="price" title="#$.slatwall.rbKey('define.price')#" fieldClass="span1" />
