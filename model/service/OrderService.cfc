@@ -313,14 +313,13 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 			}
 			
 			// Set Stock reference, check the fullfillment for a pickup location or fulfillment location.
-			if (!isNull(orderFulfillment.getPickupLocation()) || !isNull(arguments.processObject.getFulfillmentLocation()) ){
+			if (!isNull(orderFulfillment.getPickupLocation())){
 				// The item being added to the cart should have its stockID added based on that location
-				var location = !isNull(orderFulfillment.getPickupLocation()) ? orderFulfillment.getPickupLocation(): arguments.processObject.getFulfillmentLocation();
+				var location = orderFulfillment.getPickupLocation();
 				var stock = getService("StockService").getStockBySkuAndLocation(sku=arguments.processObject.getSku(), location=location);
 				
 				//If we found a stock for that location, then set the stock to the process.
 				if (!isNull(stock)){
-					logHibachi("Add Order Item - Stock Found - Location Name: '#location.getLocationName()#', stockID: '#stock.getStockID()#', skuID: '#processObject.getSku().getSkuID()#'");
 					arguments.processObject.setStock(stock);
 				}
 			}

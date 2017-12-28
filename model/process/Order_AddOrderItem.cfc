@@ -266,22 +266,18 @@ component output="false" accessors="true" extends="HibachiProcess" {
 	// =================== START: Lazy Object Helpers ======================
 
 	public any function getStock() {
-		logHibachi("Add Order Item Process Object - Getting Stock");
 		// First we look for a stockID
 		if(!structKeyExists(variables, "stock") && !isNull(getStockID())) {
-			logHibachi("Add Order Item Process Object - Stock Found - Used stockID: '#getStockID()#'");
 			variables.stock = getService("stockService").getStock( getStockID() );
 		}
 
 		// Then we look for a sku & location
 		if(!structKeyExists(variables, "stock") && !isNull(getSku()) && !isNull(getLocation()) ) {
-			logHibachi("Add Order Item Process Object - Stock Found - Used sku: '#getSku().getSkuID()#' and location: '#getLocation().getLocationName()#'");
 			variables.stock = getService("stockService").getStockBySkuAndLocation(sku=getSku(), location=getLocation());
 		}
 
 		// Only if a stock was setup can we return one
 		if (structKeyExists(variables, "stock")) {
-			logHibachi("Add Order Item Process Object - Stock Found - Already Setup");
 			return variables.stock;
 		}
 
@@ -370,8 +366,6 @@ component output="false" accessors="true" extends="HibachiProcess" {
 	}
 
 	public any function getLocation() {
-		logHibachi("Add Order Item Process Object - Getting Basic Location");
-
 		// First we check for a stockID
 		if(!structKeyExists(variables, "location") && !isNull(getStockID()) ) {
 			var stock = getService("stockService").getStock( getStockID() );
