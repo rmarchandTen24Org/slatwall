@@ -71,6 +71,12 @@ Notes:
 							<cfif not isNull(rc.processObject.getSkuID())>
 								<input type="hidden" name="skuID" value="#rc.processObject.getSkuID()#" />
 							</cfif>
+							<cfif not isNull(rc.processObject.getFulfillmentLocationID())>
+								<input type="hidden" name="fulfillmentLocationID" value="#rc.processObject.getFulfillmentLocationID()#" />
+							</cfif>
+							<cfif not isNull(rc.processObject.getLocationID())>
+								<input type="hidden" name="locationID" value="#rc.processObject.getLocationID()#" />
+							</cfif>
 							<input type="hidden" name="orderItemTypeSystemCode" value="#rc.processObject.getOrderItemTypeSystemCode()#" />
 							<h5>#$.slatwall.rbKey('admin.entity.preprocessorder_addorderitem.itemDetails')#</h5>
 							<!--- Sku Properties --->

@@ -55,11 +55,12 @@ component output="false" accessors="true" extends="HibachiProcess" {
 	property name="stock" hb_rbKey="entity.stock";
 	property name="sku" hb_rbKey="entity.sku";
 	property name="product" hb_rbKey="entity.product";
+	property name="fulfillmentLocation" hb_rbKey="entity.location";
+	property name="fulfillmentMethod" hb_rbKey="entity.fulfillmentMethod";
 	property name="location" hb_rbKey="entity.location";
 	property name="orderFulfillment" hb_rbKey="entity.orderFulfillment";
 	property name="orderReturn" hb_rbKey="entity.orderReturn";
 	property name="returnLocation" hb_rbKey="entity.location";
-	property name="fulfillmentMethod" hb_rbKey="entity.fulfillmentMethod";
 
 	// New Properties
 
@@ -68,6 +69,7 @@ component output="false" accessors="true" extends="HibachiProcess" {
 	property name="skuID";
 	property name="skuCode";
 	property name="productID";
+	property name="fulfillmentLocationID" hb_formFieldType="select";
 	property name="locationID" hb_formFieldType="select" hb_rbKey="entity.location";
 	property name="returnLocationID" hb_formFieldType="select" hb_rbKey="entity.orderReturn.returnLocation";
 	property name="selectedOptionIDList";
@@ -76,7 +78,6 @@ component output="false" accessors="true" extends="HibachiProcess" {
 	property name="fulfillmentMethodID" hb_formFieldType="select";
 	property name="shippingAccountAddressID" hb_formFieldType="select";
 	property name="pickupLocationID" hb_formFieldType="select" hb_rbKey="entity.orderFulfillment.pickupLocation";
-	property name="fulfillmentLocationID" hb_formFieldType="select";
 
 	// Data Properties (Inputs)
 	property name="price" hb_formatType="currency";
@@ -268,19 +269,22 @@ component output="false" accessors="true" extends="HibachiProcess" {
 	// =================== START: Lazy Object Helpers ======================
 
 	public any function getStock() {
-
+		logHibachi("Add Order Item Process Object - Getting Stock");
 		// First we look for a stockID
 		if(!structKeyExists(variables, "stock") && !isNull(getStockID())) {
+			logHibachi("Add Order Item Process Object - Stock Found - Used stockID: '#getStockID()#'");
 			variables.stock = getService("stockService").getStock( getStockID() );
 		}
 
 		// Then we look for a sku & location
 		if(!structKeyExists(variables, "stock") && !isNull(getSku()) && !isNull(getLocation()) ) {
+			logHibachi("Add Order Item Process Object - Stock Found - Used sku: '#getSku().getSkuID()#' and location: '#getLocation().getLocationName()#'");
 			variables.stock = getService("stockService").getStockBySkuAndLocation(sku=getSku(), location=getLocation());
 		}
 
 		// Only if a stock was setup can we return one
 		if (structKeyExists(variables, "stock")) {
+			logHibachi("Add Order Item Process Object - Stock Found - Already Setup");
 			return variables.stock;
 		}
 
@@ -368,7 +372,13 @@ component output="false" accessors="true" extends="HibachiProcess" {
 
 	}
 
+	public void function getFulfillmentLocation(any location) {
+		logHibachi("Add Order Item Process Object - Getting Fulfillment Location");
+		variables.fulfillmentLocation = arguments.location;
+	}
+
 	public any function getLocation() {
+		logHibachi("Add Order Item Process Object - Getting Basic Location");
 
 		// First we check for a stockID
 		if(!structKeyExists(variables, "location") && !isNull(getStockID()) ) {
@@ -376,6 +386,11 @@ component output="false" accessors="true" extends="HibachiProcess" {
 			if(!isNull(stock)) {
 				variables.location = stock.getLocation();
 			}
+		}
+
+		// now we look for a fulfillmentLocationID
+		if(!structKeyExists(variables, "location") && !isNull(getFulfillmentLocationID())) {
+			variables.location = getService("locationService").getLocation(getFulfillmentLocationID());
 		}
 
 		// now we look for a locationID
