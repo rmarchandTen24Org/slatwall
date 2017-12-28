@@ -76,6 +76,7 @@ component output="false" accessors="true" extends="HibachiProcess" {
 	property name="fulfillmentMethodID" hb_formFieldType="select";
 	property name="shippingAccountAddressID" hb_formFieldType="select";
 	property name="pickupLocationID" hb_formFieldType="select" hb_rbKey="entity.orderFulfillment.pickupLocation";
+	property name="fulfillmentLocationID" hb_formFieldType="select";
 
 	// Data Properties (Inputs)
 	property name="price" hb_formatType="currency";
@@ -100,6 +101,7 @@ component output="false" accessors="true" extends="HibachiProcess" {
 
 	// Option Properties
 	property name="fulfillmentMethodIDOptions";
+	property name="fulfillmentLocationIDOptions";
 	property name="locationIDOptions";
 	property name="orderFulfillmentIDOptions";
 	property name="orderReturnIDOptions";
@@ -436,6 +438,17 @@ component output="false" accessors="true" extends="HibachiProcess" {
 			variables.locationIDOptions = getService("locationService").getLocationOptions();
 		}
 		return variables.locationIDOptions;
+	}
+
+	public array function getFulfillmentLocationIDOptions() {
+		if(!structKeyExists(variables, "fulfillmentLocationIDOptions")) {
+			if (isNull(getOrder().getDefaultStockLocation())) {
+				return [];
+			}
+			
+			variables.fulfillmentLocationIDOptions = getService("locationService").getLocationOptions(locationID=getOrder().getDefaultStockLocation().getLocationID(), nameProperty="locationName", includeTopLevelLocation=true);
+		}
+		return variables.fulfillmentLocationIDOptions;
 	}
 
 	public array function getPickupLocationIDOptions() {
