@@ -93,13 +93,16 @@ Notes:
 					data: {filterGroupsConfig: JSON.stringify(filterGroupsConfig)},
 					beforeSend: function (xhr) { jQuery(elementQATS).html("Waiting"); xhr.setRequestHeader('X-Hibachi-AJAX', true) },
 					error: function(r) {
-						console.log("Error");
-						console.log(r);
+						console.log("Error trying to update stock using skuID: '" + skuID + "' and fulfillmentLocationID: '" + fulfillmentLocationID + "'");
 					},
 					success: function( r ) {
 						if (r.pageRecordsCount > 0) {
 							var qats = jQuery.isNumeric(r.pageRecords[0].calculatedQATS) ? r.pageRecords[0].calculatedQATS : 0;
 							jQuery(elementQATS).html(qats);
+						} else if (r.pageRecordsCount == 0) {
+							jQuery(elementQATS).html(0);
+						} else {
+							jQuery(elementQATS).html("Error");
 						}
 					}
 				});
