@@ -312,7 +312,7 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 
 			}
 			
-			// Set Stock reference, check the fullfillment for a pickup location or fulfillment location.
+			// Set Stock reference, check the fullfillment for a pickup location
 			if (!isNull(orderFulfillment.getPickupLocation())){
 				// The item being added to the cart should have its stockID added based on that location
 				var location = orderFulfillment.getPickupLocation();
