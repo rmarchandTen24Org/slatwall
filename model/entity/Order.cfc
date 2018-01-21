@@ -60,7 +60,7 @@ component displayname="Order" entityname="SlatwallOrder" table="SwOrder" persist
 	property name="estimatedFulfillmentDateTime" ormtype="timestamp";
 	property name="testOrderFlag" ormtype="boolean";
 	// Calculated Properties
-	property name="calculatedTotal" ormtype="big_decimal";
+	property name="calculatedTotal" ormtype="big_decimal" hb_formatType="currency";
 
 	// Related Object Properties (many-to-one)
 	property name="account" cfc="Account" fieldtype="many-to-one" fkcolumn="accountID";
@@ -165,6 +165,22 @@ component displayname="Order" entityname="SlatwallOrder" table="SwOrder" persist
 	property name="orderService" persistent="false" type="any";
 	property name='orderDAO' persistent="false" type="any";
 
+	
+	//CUSTOM PROPERTIES BEGIN
+property name="saleDesc" ormtype="string";
+	property name="documentDesc" ormtype="string";
+	property name="calculatedTotalItemQuantity" ormtype="integer"; 
+	property name="calculatedPaymentAmountReceivedTotal" ormtype="big_decimal" hb_formatType="currency";
+	property name="totalItemQuantity" persistent="false"; 
+	property name="savedOrder" ormtype="string";
+	property name="notes" ormtype="string";  
+
+
+
+property name="emailReceiptFlag" ormtype="boolean" default="0";
+	property name="receipt" cfc="Receipt" fieldtype="many-to-one" fkcolumn="receiptID";
+	
+//CUSTOM PROPERTIES END
 	public void function init(){
 		setOrderService(getService('orderService'));
 		setOrderDao(getDAO('OrderDAO'));
@@ -1492,4 +1508,21 @@ totalPaymentsReceived = getService('HibachiUtilityService').precisionCalculate(t
 	}
 
 	// ===================  END:  ORM Event Hooks  =========================
+
+	//CUSTOM FUNCTIONS BEGIN
+
+public numeric function getTotalItemQuantity(){
+		var orderItems = this.getOrderItems();
+		var totalItemQuantity = 0; 
+		for(var orderItem in orderItems){
+			if (isNull(orderItem.getParentOrderItem())){
+				totalItemQuantity += orderItem.getQuantity();
+			} 
+		}
+		return totalItemQuantity; 
+	}	
+	
+public void function removeReceipt(){
+		structDelete(variables, "receipt");
+	}//CUSTOM FUNCTIONS END
 }

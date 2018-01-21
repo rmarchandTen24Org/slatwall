@@ -126,7 +126,7 @@ component extends="HibachiService"  accessors="true" output="false"
      */
     
     public any function login( required struct data ){
-        var accountProcess = getAccountService().processAccount( getHibachiScope().getAccount(), arguments.data, 'login' );
+        var accountProcess = getService("AccountService").processAccount( getHibachiScope().getAccount(), arguments.data, 'login' );
         getHibachiScope().addActionResult( "public:account.login", accountProcess.hasErrors() );
         if (accountProcess.hasErrors()){
             if (getHibachiScope().getAccount().hasErrors()){
@@ -197,7 +197,7 @@ component extends="HibachiService"  accessors="true" output="false"
      */
     public any function logout( required struct data ){ 
         
-        var account = getAccountService().processAccount( getHibachiScope().getAccount(), arguments.data, 'logout' );
+        var account = getService("AccountService").processAccount( getHibachiScope().getAccount(), arguments.data, 'logout' );
         getHibachiScope().addActionResult( "public:account.logout", account.hasErrors() );
         if(account.hasErrors()){
             addErrors(data, getHibachiScope().getAccount().getProcessObject("logout").getErrors());
@@ -225,7 +225,7 @@ component extends="HibachiService"  accessors="true" output="false"
     public any function createAccount( required struct data ) {
         param name="arguments.data.createAuthenticationFlag" default="1";
         
-        var account = getAccountService().processAccount( getHibachiScope().getAccount(), arguments.data, 'create');
+        var account = getService("AccountService").processAccount( getHibachiScope().getAccount(), arguments.data, 'create');
 
         if(account.hasErrors()){
             addErrors(arguments.data, getHibachiScope().getAccount().getProcessObject("create").getErrors());
@@ -262,7 +262,7 @@ component extends="HibachiService"  accessors="true" output="false"
       * @ProcessMethod Account_ForgotPassword
       **/
     public any function forgotPassword( required struct data ) {
-        var account = getAccountService().processAccount( getHibachiScope().getAccount(), arguments.data, 'forgotPassword');
+        var account = getService("AccountService").processAccount( getHibachiScope().getAccount(), arguments.data, 'forgotPassword');
         getHibachiScope().addActionResult( "public:account.forgotPassword", account.hasErrors() );
         return account;
     }
@@ -281,7 +281,7 @@ component extends="HibachiService"  accessors="true" output="false"
         param name="data.accountID" default="";
         var account = getAccountService().getAccount( data.accountID );
         if(!isNull(account)) {
-            var account = getAccountService().processAccount(account, data, "resetPassword");
+            var account = getService("AccountService").processAccount(account, data, "resetPassword");
             getHibachiScope().addActionResult( "public:account.resetPassword", account.hasErrors() );
             // As long as there were no errors resetting the password, then we can set the email address in the form scope so that a chained login action will work
             if(!account.hasErrors() && !structKeyExists(form, "emailAddress") && !structKeyExists(url, "emailAddress")) {
@@ -306,7 +306,7 @@ component extends="HibachiService"  accessors="true" output="false"
       **/
     public any function changePassword( required struct data ) {
         
-        var account = getAccountService().processAccount( getHibachiScope().getAccount(), arguments.data, 'changePassword');
+        var account = getService("AccountService").processAccount( getHibachiScope().getAccount(), arguments.data, 'changePassword');
         getHibachiScope().addActionResult( "public:account.changePassword", account.hasErrors() );
         return account;
     }
@@ -439,25 +439,25 @@ component extends="HibachiService"  accessors="true" output="false"
       * Adds a new account address.
       */
      public void function addNewAccountAddress(required data){
-     	param name="data.countrycode" default="US";
-     	
-     	var accountAddress = getService("AccountService").newAccountAddress();
-     	if (structKeyExists(data, "accountAddressName")){
-     		accountAddress.setAccountAddressName(data.accountAddressName);
-     	}
-     	var newAddress = getService("AddressService").newAddress();
-     	newAddress = getService("AddressService").saveAddress(newAddress, data, "full");
-      	
-      	if (!newAddress.hasErrors()){
-      		accountAddress.setAddress(newAddress);
-      		accountAddress.setAccount(getHibachiScope().getAccount());	
-      		var savedAccountAddress = getService("AccountService").saveAccountAddress(accountAddress);
+      param name="data.countrycode" default="US";
+      
+      var accountAddress = getService("AccountService").newAccountAddress();
+      if (structKeyExists(data, "accountAddressName")){
+        accountAddress.setAccountAddressName(data.accountAddressName);
+      }
+      var newAddress = getService("AddressService").newAddress();
+      newAddress = getService("AddressService").saveAddress(newAddress, data, "full");
+        
+        if (!newAddress.hasErrors()){
+          accountAddress.setAddress(newAddress);
+          accountAddress.setAccount(getHibachiScope().getAccount());  
+          var savedAccountAddress = getService("AccountService").saveAccountAddress(accountAddress);
           getHibachiScope().addActionResult("public:account.addNewAccountAddress", savedAccountAddress.hasErrors());
-   	     	if (!savedAccountAddress.hasErrors()){
-   	     		getDao('hibachiDao').flushOrmSession();
+          if (!savedAccountAddress.hasErrors()){
+            getDao('hibachiDao').flushOrmSession();
             data.accountAddressID = savedAccountAddress.getAccountAddressID();
-   	     	}
-      	}else{
+          }
+        }else{
           this.addErrors(data, newAddress.getErrors());
           getHibachiScope().addActionResult("public:account.addNewAccountAddress", newAddress.hasErrors());
         }
@@ -467,21 +467,21 @@ component extends="HibachiService"  accessors="true" output="false"
       * Updates an address.
       */
     public void function updateAddress(required data){
-     	param name="data.countrycode" default="US";
-     	param name="data.addressID" default="";
-     	param name="data.phoneNumber" default="";
-     	
-     	var newAddress = getService("AddressService").getAddress(data.addressID, true);
-     	if (!isNull(newAddress) && !newAddress.hasErrors()){
-     	    newAddress = getService("AddressService").saveAddress(newAddress, data, "full");
-      		//save the order.
+      param name="data.countrycode" default="US";
+      param name="data.addressID" default="";
+      param name="data.phoneNumber" default="";
+      
+      var newAddress = getService("AddressService").getAddress(data.addressID, true);
+      if (!isNull(newAddress) && !newAddress.hasErrors()){
+          newAddress = getService("AddressService").saveAddress(newAddress, data, "full");
+          //save the order.
           if(!newAddress.hasErrors()){
-  	     	   getService("OrderService").saveOrder(getHibachiScope().getCart());
+             getService("OrderService").saveOrder(getHibachiScope().getCart());
            }else{
             this.addErrors(data, newAddress.getErrors());
            }
-  	     	getHibachiScope().addActionResult( "public:cart.updateAddress", newAddress.hasErrors() ); 
-    	}else{
+          getHibachiScope().addActionResult( "public:cart.updateAddress", newAddress.hasErrors() ); 
+      }else{
         getHibachiScope().addActionResult( "public:cart.updateAddress", true );
       }
      }
@@ -534,17 +534,17 @@ component extends="HibachiService"  accessors="true" output="false"
                 
                 if (structKeyExists(data, "saveAsAccountAddressFlag") && data.saveAsAccountAddressFlag){
                    
-                 	var accountAddress = getService("AccountService").newAccountAddress();
-                 	accountAddress.setAddress(shippingAddress);
-                 	accountAddress.setAccount(getHibachiScope().getAccount());
-                 	var savedAccountAddress = getService("AccountService").saveAccountAddress(accountAddress);
-                 	if (!savedAddress.hasErrors()){
-                 		getDao('hibachiDao').flushOrmSession();
-                 	}
+                  var accountAddress = getService("AccountService").newAccountAddress();
+                  accountAddress.setAddress(shippingAddress);
+                  accountAddress.setAccount(getHibachiScope().getAccount());
+                  var savedAccountAddress = getService("AccountService").saveAccountAddress(accountAddress);
+                  if (!savedAddress.hasErrors()){
+                    getDao('hibachiDao').flushOrmSession();
+                  }
                   
                 }
                 
-                getOrderService().saveOrder(order);
+                getService("OrderService").saveOrder(order);
                 getHibachiScope().addActionResult( "public:cart.addShippingAddress", order.hasErrors());
                 
             }else{
@@ -581,7 +581,7 @@ component extends="HibachiService"  accessors="true" output="false"
               orderFulfillment.setShippingAddress(accountAddress.getAddress());
               orderFulfillment.setAccountAddress(accountAddress);
             }
-            getOrderService().saveOrder(order);
+            getService("OrderService").saveOrder(order);
             getHibachiScope().addActionResult( "public:cart.addShippingAddressUsingAccountAddress", order.hasErrors());
         }else{
             if(!isNull(accountAddress)){
@@ -608,7 +608,7 @@ component extends="HibachiService"  accessors="true" output="false"
         orderFulfillment.validate("save");
         if(!orderFulfillment.hasErrors()){
 
-          getOrderService().saveOrder(order);
+          getService("OrderService").saveOrder(order);
           getDao('hibachiDao').flushOrmSession();
           getHibachiScope().addActionResult('public:cart.addEmailFulfillmentAddress', order.hasErrors());
 
@@ -638,7 +638,7 @@ component extends="HibachiService"  accessors="true" output="false"
 
       if(!isNull(orderFulfillment) && !orderFulfillment.hasErrors()){
         orderFulfillment.setPickupLocation(getService('LocationService').getLocation(locationID));
-        getOrderService().saveOrder(order);
+        getService("OrderService").saveOrder(order);
         getDao('hibachiDao').flushOrmSession();
         getHibachiScope().addActionResult('public:cart.addPickupFulfillmentLocation', order.hasErrors());
       }else{
@@ -672,10 +672,10 @@ component extends="HibachiService"  accessors="true" output="false"
                 }
               }
             }else{
-            	var orderFulfillment = order.getOrderFulfillments()[orderFulfillmentWithShippingMethodOptions];
+              var orderFulfillment = order.getOrderFulfillments()[orderFulfillmentWithShippingMethodOptions];
             }
             orderFulfillment.setShippingMethod(shippingMethod);
-            getOrderService().saveOrder(order); 
+            getService("OrderService").saveOrder(order); 
             getDao('hibachiDao').flushOrmSession();;           
             getHibachiScope().addActionResult( "public:cart.addShippingMethodUsingShippingMethodID", shippingMethod.hasErrors());          
         }else{
@@ -701,11 +701,11 @@ component extends="HibachiService"  accessors="true" output="false"
                 var order = getHibachiScope().cart();
                 order.setBillingAddress(savedAddress);
                 
-                getOrderService().saveOrder(order);
+                getService("OrderService").saveOrder(order);
             }
             if(savedAddress.hasErrors()){
                   this.addErrors(arguments.data, savedAddress.getErrors()); //add the basic errors
-            	    getHibachiScope().addActionResult( "public:cart.addBillingAddress", true);
+                  getHibachiScope().addActionResult( "public:cart.addBillingAddress", true);
             }
             return savedAddress;
     }
@@ -719,25 +719,25 @@ component extends="HibachiService"  accessors="true" output="false"
     public void function addAccountPaymentMethod(required any data) {
         
         if (!isNull(data) && !structKeyExists(data, 'accountPaymentMethod') && structKeyExists(data, "selectedPaymentMethod")){
-        	data['accountPaymentMethod'] = {};
-        	data['accountPaymentMethod']['accountPaymentMethodID']  = data.selectedPaymentMethod;
+          data['accountPaymentMethod'] = {};
+          data['accountPaymentMethod']['accountPaymentMethodID']  = data.selectedPaymentMethod;
         }
         if (!isNull(data) && !structKeyExists(data, 'paymentMethod')){
-         	data['paymentMethod'] = {};
-         	data['paymentMethod'].paymentMethodID = '444df303dedc6dab69dd7ebcc9b8036a';
+          data['paymentMethod'] = {};
+          data['paymentMethod'].paymentMethodID = '444df303dedc6dab69dd7ebcc9b8036a';
         }
         if (!isNull(data) && !structKeyExists(data, 'billingAddress')){
-         	data['newOrderPayment'] = data;
-         	data['newOrderPayment']['billingAddress'] = data;
-        }	
+          data['newOrderPayment'] = data;
+          data['newOrderPayment']['billingAddress'] = data;
+        } 
         
         if(getHibachiScope().getLoggedInFlag()) {
             
             // Fodatae the payment method to be added to the current account
            if (structKeyExists(data, "selectedPaymentMethod")){
-             	var accountPaymentMethod = getHibachiScope().getService("AccountService").getAccountPaymentMethod( data.selectedPaymentMethod );
+              var accountPaymentMethod = getHibachiScope().getService("AccountService").getAccountPaymentMethod( data.selectedPaymentMethod );
            }else{
-             	var accountPaymentMethod = getHibachiScope().getService("AccountService").newAccountPaymentMethod(  );	
+              var accountPaymentMethod = getHibachiScope().getService("AccountService").newAccountPaymentMethod(  );  
             accountPaymentMethod.setAccount( getHibachiScope().getAccount() );
            }
             
@@ -768,7 +768,7 @@ component extends="HibachiService"  accessors="true" output="false"
         
         if( !account.hasErrors() ) {
             if( !isNull(getHibachiScope().getCart().getAccount())) {
-                var newCart = getOrderService().duplicateOrderWithNewAccount( getHibachiScope().getCart(), account );
+                var newCart = getService("OrderService").duplicateOrderWithNewAccount( getHibachiScope().getCart(), account );
                 getHibachiScope().getSession().setOrder( newCart );
             } else {
                 getHibachiScope().getCart().setAccount( account );    
@@ -790,7 +790,7 @@ component extends="HibachiService"  accessors="true" output="false"
         param name="arguments.data.orderID" default="";
         param name="arguments.data.accountID" default="";
 
-        var order = getOrderService().getOrder( arguments.data.orderID );
+        var order = getService("OrderService").getOrder( arguments.data.orderID );
         
         // verify that the orderID passed in was in fact the lastPlacedOrderID from the session, that the order & account match up, and that the account is in fact a guest account right now
         if(!isNull(order) && arguments.data.orderID == getHibachiScope().getSession().getLastPlacedOrderID() && order.getAccount().getAccountID() == arguments.data.accountID && order.getAccount().getGuestAccountFlag()) {
@@ -864,7 +864,7 @@ component extends="HibachiService"  accessors="true" output="false"
         param name="arguments.data.orderID" default="";
         param name="arguments.data.setAsCartFlag" default="0";
         
-        var order = getOrderService().getOrder( arguments.data.orderID );
+        var order = getService("OrderService").getOrder( arguments.data.orderID );
         if(!isNull(order) && order.getAccount().getAccountID() == getHibachiScope().getAccount().getAccountID()) {
             
             var data = {
@@ -872,7 +872,7 @@ component extends="HibachiService"  accessors="true" output="false"
                 copyPersonalDataFlag=true
             };
             
-            var duplicateOrder = getOrderService().processOrder(order,data,"duplicateOrder" );
+            var duplicateOrder = getService("OrderService").processOrder(order,data,"duplicateOrder" );
             
             if(isBoolean(arguments.data.setAsCartFlag) && arguments.data.setAsCartFlag) {
                 getHibachiScope().getSession().setOrder( duplicateOrder );
@@ -891,11 +891,11 @@ component extends="HibachiService"  accessors="true" output="false"
      */
     public void function updateOrder( required struct data ) {
 
-        var cart = getOrderService().saveOrder( getHibachiScope().cart(), arguments.data );
+        var cart = getService("OrderService").saveOrder( getHibachiScope().cart(), arguments.data );
         
         // Insure that all items in the cart are within their max constraint
         if(!cart.hasItemsQuantityWithinMaxOrderQuantity()) {
-            cart = getOrderService().processOrder(cart, 'forceItemQuantityUpdate');
+            cart = getService("OrderService").processOrder(cart, 'forceItemQuantityUpdate');
         }
         
         getHibachiScope().addActionResult( "public:cart.update", cart.hasErrors() );
@@ -908,7 +908,7 @@ component extends="HibachiService"  accessors="true" output="false"
      @ProcessMethod Order_Clear
      */
     public void function clearOrder( required struct data ) {
-        var cart = getOrderService().processOrder( getHibachiScope().cart(), arguments.data, 'clear');
+        var cart = getService("OrderService").processOrder( getHibachiScope().cart(), arguments.data, 'clear');
         
         getHibachiScope().addActionResult( "public:cart.clear", cart.hasErrors() );
     }
@@ -921,7 +921,7 @@ component extends="HibachiService"  accessors="true" output="false"
     public void function changeOrder( required struct data ){
         param name="arguments.data.orderID" default="";
         
-        var order = getOrderService().getOrder( arguments.data.orderID );
+        var order = getService("OrderService").getOrder( arguments.data.orderID );
         if(!isNull(order) && order.getAccount().getAccountID() == getHibachiScope().getAccount().getAccountID()) {
             getHibachiScope().getSession().setOrder( order );
             getHibachiScope().addActionResult( "public:cart.change", false );
@@ -939,9 +939,9 @@ component extends="HibachiService"  accessors="true" output="false"
     public void function deleteOrder( required struct data ) {
         param name="arguments.data.orderID" default="";
         
-        var order = getOrderService().getOrder( arguments.data.orderID );
+        var order = getService("OrderService").getOrder( arguments.data.orderID );
         if(!isNull(order) && order.getAccount().getAccountID() == getHibachiScope().getAccount().getAccountID()) {
-            var deleteOk = getOrderService().deleteOrder(order);
+            var deleteOk = getService("OrderService").deleteOrder(order);
             getHibachiScope().addActionResult( "public:cart.delete", !deleteOK );
         } else {
             getHibachiScope().addActionResult( "public:cart.delete", true );
@@ -952,60 +952,60 @@ component extends="HibachiService"  accessors="true" output="false"
      * Will add multiple orderItems at once given a list of skuIDs or skuCodes.
      */
     public void function addOrderItems(required any data){
-    	param name="data.skuIds" default="";
-    	param name="data.skuCodes" default="";
-    	param name="data.quantities" default="";
-    	
-    	//add skuids
-		var index = 1;
-		var hasSkuCodes = false;
-		
-		//get the quantities being added
-		if (structKeyExists(data, "quantities") && len(data.quantities)){
-			var quantities = listToArray(data.quantities);
-		}
-		
-		//get the skus being added
-		if (structKeyExists(data, "skuIds") && len(data.skuIds)){
-			var skus = listToArray(data.skuIds);
-		}
-		
-		//get the skuCodes if they exist.
-		if (structKeyExists(data, "skuCodes") && len(data.skuCodes)){
-			var skus = listToArray(data.skuCodes);
-			hasSkuCodes = true;
-		}
-		
-		//if we have both skus and quantities, add them.
-		if (!isNull(skus) && !isNull(quantities) && arrayLen(skus) && arrayLen(quantities)){
-			if (arrayLen(skus) == arrayLen(quantities)){
-				//we have a quantity fo each sku.
-				for (var sku in skus){
-					//send that sku and that quantity.
-					if (hasSkuCodes == true){
-						data["skuCode"]=sku; 
-					}else{
-						data["skuID"]=sku; 	
-					}
-	    			
-	    			data["quantity"]=quantities[index];
-	    			addOrderItem(data=data);
-	    			index++;
-	    		}
-			}
-		
-		//If they did not pass in quantities, but we have skus, assume 1 for each quantity.
-		}else if(!isNull(skus)){
-    		for (var sku in skus){
-    			if (hasSkuCodes == true){
-					data["skuCode"]=sku; 
-				}else{
-					data["skuID"]=sku; 	
-				}
-    			data["quantity"]=1;
-    			addOrderItem(data=data);
-    		}
-		}
+      param name="data.skuIds" default="";
+      param name="data.skuCodes" default="";
+      param name="data.quantities" default="";
+      
+      //add skuids
+    var index = 1;
+    var hasSkuCodes = false;
+    
+    //get the quantities being added
+    if (structKeyExists(data, "quantities") && len(data.quantities)){
+      var quantities = listToArray(data.quantities);
+    }
+    
+    //get the skus being added
+    if (structKeyExists(data, "skuIds") && len(data.skuIds)){
+      var skus = listToArray(data.skuIds);
+    }
+    
+    //get the skuCodes if they exist.
+    if (structKeyExists(data, "skuCodes") && len(data.skuCodes)){
+      var skus = listToArray(data.skuCodes);
+      hasSkuCodes = true;
+    }
+    
+    //if we have both skus and quantities, add them.
+    if (!isNull(skus) && !isNull(quantities) && arrayLen(skus) && arrayLen(quantities)){
+      if (arrayLen(skus) == arrayLen(quantities)){
+        //we have a quantity fo each sku.
+        for (var sku in skus){
+          //send that sku and that quantity.
+          if (hasSkuCodes == true){
+            data["skuCode"]=sku; 
+          }else{
+            data["skuID"]=sku;  
+          }
+            
+            data["quantity"]=quantities[index];
+            addOrderItem(data=data);
+            index++;
+          }
+      }
+    
+    //If they did not pass in quantities, but we have skus, assume 1 for each quantity.
+    }else if(!isNull(skus)){
+        for (var sku in skus){
+          if (hasSkuCodes == true){
+          data["skuCode"]=sku; 
+        }else{
+          data["skuID"]=sku;  
+        }
+          data["quantity"]=1;
+          addOrderItem(data=data);
+        }
+    }
     }
     
     /** 
@@ -1026,7 +1026,7 @@ component extends="HibachiService"  accessors="true" output="false"
             cart.setAccount( getHibachiScope().getAccount() );
         }
         
-        cart = getOrderService().processOrder( cart, arguments.data, 'addOrderItem');
+        cart = getService("OrderService").processOrder( cart, arguments.data, 'addOrderItem');
         
         getHibachiScope().addActionResult( "public:cart.addOrderItem", cart.hasErrors() );
         
@@ -1066,7 +1066,7 @@ component extends="HibachiService"  accessors="true" output="false"
                     orderItem.setQuantity(data.orderItem.quantity);
                 }
             }
-		}else if (structKeyExists(data, "orderItem") && structKeyExists(data.orderItem, "sku") && structKeyExists(data.orderItem.sku, "skuID") && structKeyExists(data.orderItem, "qty") ){
+    }else if (structKeyExists(data, "orderItem") && structKeyExists(data.orderItem, "sku") && structKeyExists(data.orderItem.sku, "skuID") && structKeyExists(data.orderItem, "qty") ){
             for (var orderItem in cart.getOrderItems()){
                 if (orderItem.getSku().getSkuID() == data.orderItem.sku.skuID){
                     orderItem.setQuantity(data.orderItem.qty);
@@ -1076,15 +1076,15 @@ component extends="HibachiService"  accessors="true" output="false"
         
         if(!cart.hasErrors()) {
             //Persist the quantity change
-            getOrderService().saveOrder(cart);
+            getService("OrderService").saveOrder(cart);
             
             // Insure that all items in the cart are within their max constraint
-     	    	if(!cart.hasItemsQuantityWithinMaxOrderQuantity()) {
-    	 	        cart = getOrderService().processOrder(cart, 'forceItemQuantityUpdate');
-    	 	    }
-    	 	    
-    	 	    if(!cart.hasErrors()) {
-              getOrderService().saveOrder(cart);
+            if(!cart.hasItemsQuantityWithinMaxOrderQuantity()) {
+                cart = getService("OrderService").processOrder(cart, 'forceItemQuantityUpdate');
+            }
+            
+            if(!cart.hasErrors()) {
+              getService("OrderService").saveOrder(cart);
             }
             // Also make sure that this cart gets set in the session as the order
             getHibachiScope().getSession().setOrder( cart );
@@ -1095,7 +1095,7 @@ component extends="HibachiService"  accessors="true" output="false"
         }else{
             addErrors(data, getHibachiScope().getCart().getErrors());
         }
-		  getHibachiScope().addActionResult( "public:cart.updateOrderItem", cart.hasErrors() );
+      getHibachiScope().addActionResult( "public:cart.updateOrderItem", cart.hasErrors() );
     }
     /** 
      * @http-context removeOrderItem
@@ -1104,7 +1104,7 @@ component extends="HibachiService"  accessors="true" output="false"
      @ProcessMethod Order_RemoveOrderItem
      */
     public void function removeOrderItem(required any data) {
-        var cart = getOrderService().processOrder( getHibachiScope().cart(), arguments.data, 'removeOrderItem');
+        var cart = getService("OrderService").processOrder( getHibachiScope().cart(), arguments.data, 'removeOrderItem');
         
         getHibachiScope().addActionResult( "public:cart.removeOrderItem", cart.hasErrors() );
     }
@@ -1116,12 +1116,12 @@ component extends="HibachiService"  accessors="true" output="false"
       @ProcessMethod Order_UpdateOrderFulfillment
      */
     public void function updateOrderFulfillment(required any data) {
-        var cart = getOrderService().processOrder( getHibachiScope().cart(), arguments.data, 'updateOrderFulfillment');
+        var cart = getService("OrderService").processOrder( getHibachiScope().cart(), arguments.data, 'updateOrderFulfillment');
         
         getHibachiScope().addActionResult( "public:cart.updateOrderFulfillment", cart.hasErrors() );
     }
-    
-     /** 
+
+    /** 
      * @http-context updateOrderFulfillmentAddressZone
      * @description Update Order Fulfillment Address Zone
      * @http-return <b>(200)</b> Successfully Updated or <b>(400)</b> Bad or Missing Input Data
@@ -1147,7 +1147,7 @@ component extends="HibachiService"  accessors="true" output="false"
             getService("ShippingService").updateOrderFulfillmentShippingMethodOptions(orderFulfillment);
             getHibachiScope().addActionResult( "public:cart.updateOrderFulfillmentAddressZone", false);
         } else {  
-			getHibachiScope().addActionResult( "public:cart.updateOrderFulfillmentAddressZone", true);
+      getHibachiScope().addActionResult( "public:cart.updateOrderFulfillmentAddressZone", true);
         }
     }
 
@@ -1176,7 +1176,7 @@ component extends="HibachiService"  accessors="true" output="false"
      @ProcessMethod Order_addPromotionCode
      */
     public void function addPromotionCode(required any data) {
-        var cart = getOrderService().processOrder( getHibachiScope().cart(), arguments.data, 'addPromotionCode');
+        var cart = getService("OrderService").processOrder( getHibachiScope().cart(), arguments.data, 'addPromotionCode');
         
         getHibachiScope().addActionResult( "public:cart.addPromotionCode", cart.hasErrors() );
         
@@ -1193,7 +1193,7 @@ component extends="HibachiService"  accessors="true" output="false"
      @ProcessMethod Order_RemovePromotionCode
      */
     public void function removePromotionCode(required any data) {
-        var cart = getOrderService().processOrder( getHibachiScope().cart(), arguments.data, 'removePromotionCode');
+        var cart = getService("OrderService").processOrder( getHibachiScope().cart(), arguments.data, 'removePromotionCode');
         
         getHibachiScope().addActionResult( "public:cart.removePromotionCode", cart.hasErrors() );
     }
@@ -1229,9 +1229,12 @@ component extends="HibachiService"  accessors="true" output="false"
         param name="data.accountPaymentMethodID" default="";
         param name="data.newOrderPayment.paymentMethod.paymentMethodID" default="444df303dedc6dab69dd7ebcc9b8036a";
        
+        if(structKeyExists(data.newOrderPayment, 'billingAddress') && structKeyExists(data.newOrderPayment.billingAddress, 'accountAddressID')){
+            data.accountAddressID = data.newOrderPayment.billingAddress.accountAddressID;
+        }
         // Make sure that someone isn't trying to pass in another users orderPaymentID
         if(len(data.newOrderPayment.orderPaymentID)) {
-            var orderPayment = getOrderService().getOrderPayment(data.newOrderPayment.orderPaymentID);
+            var orderPayment = getService("OrderService").getOrderPayment(data.newOrderPayment.orderPaymentID);
             if(orderPayment.getOrder().getOrderID() != getHibachiScope().cart().getOrderID()) {
                 data.newOrderPayment.orderPaymentID = "";
             }
@@ -1277,7 +1280,7 @@ component extends="HibachiService"  accessors="true" output="false"
     }
 
 
-	/**
+  /**
      Adds an order payment and then calls place order.
     */
     public void function addOrderPaymentAndPlaceOrder(required any data) {
@@ -1294,7 +1297,7 @@ component extends="HibachiService"  accessors="true" output="false"
      */
     public void function removeOrderPayment(required any data) {
         var cart = getHibachiScope().getCart();
-        cart = getOrderService().processOrder( cart, arguments.data, 'removeOrderPayment');
+        cart = getService("OrderService").processOrder( cart, arguments.data, 'removeOrderPayment');
         
         getHibachiScope().addActionResult( "public:cart.removeOrderPayment", cart.hasErrors() );
     }
@@ -1308,7 +1311,7 @@ component extends="HibachiService"  accessors="true" output="false"
 
         // Insure that all items in the cart are within their max constraint
         if(!getHibachiScope().cart().hasItemsQuantityWithinMaxOrderQuantity()) {
-            getOrderService().processOrder(getHibachiScope().cart(), 'forceItemQuantityUpdate');
+            getService("OrderService").processOrder(getHibachiScope().cart(), 'forceItemQuantityUpdate');
             getHibachiScope().addActionResult( "public:cart.placeOrder", true );
         } else {
             // Setup newOrderPayment requirements
@@ -1319,7 +1322,7 @@ component extends="HibachiService"  accessors="true" output="false"
 
                 // Make sure that someone isn't trying to pass in another users orderPaymentID
                 if(len(data.newOrderPayment.orderPaymentID)) {
-                    var orderPayment = getOrderService().getOrderPayment(data.newOrderPayment.orderPaymentID);
+                    var orderPayment = getService("OrderService").getOrderPayment(data.newOrderPayment.orderPaymentID);
                     if(orderPayment.getOrder().getOrderID() != getHibachiScope().cart().getOrderID()) {
                         data.newOrderPayment.orderPaymentID = "";
                     }
@@ -1329,7 +1332,7 @@ component extends="HibachiService"  accessors="true" output="false"
                 data.newOrderPayment.orderPaymentType.typeID = '444df2f0fed139ff94191de8fcd1f61b';
             }
             
-            var order = getOrderService().processOrder( getHibachiScope().cart(), arguments.data, 'placeOrder');
+            var order = getService("OrderService").processOrder( getHibachiScope().cart(), arguments.data, 'placeOrder');
 
             getHibachiScope().addActionResult( "public:cart.placeOrder", order.hasErrors() );
             
@@ -1386,11 +1389,11 @@ component extends="HibachiService"  accessors="true" output="false"
         var cacheKey = "PublicService.getStateCodeOptionsByCountryCode#arguments.data.countryCode#";
         var stateCodeOptions = [];
         if(getHibachiCacheService().hasCachedValue(cacheKey)){
-        	stateCodeOptions = getHibachiCacheService().getCachedValue(cacheKey);
+          stateCodeOptions = getHibachiCacheService().getCachedValue(cacheKey);
         }else{
-        	var country = getAddressService().getCountry(data.countryCode);
-        	stateCodeOptions = country.getStateCodeOptions();
-        	getHibachiCacheService().setCachedValue(cacheKey,stateCodeOptions);
+          var country = getAddressService().getCountry(data.countryCode);
+          stateCodeOptions = country.getStateCodeOptions();
+          getHibachiCacheService().setCachedValue(cacheKey,stateCodeOptions);
         }
         
          arguments.data.ajaxResponse["stateCodeOptions"] = stateCodeOptions;
@@ -1468,45 +1471,47 @@ component extends="HibachiService"  accessors="true" output="false"
     
     /** Given a skuCode, returns the estimated shipping rates for that sku. */
     public any function getEstimatedShippingCostBySkuCode(any data){
-    	if (!isNull(data.skuCode)){
-    		
-    		//data setup.
-    		var orderFulfillment = getService("OrderService").newOrderFulfillment();
-    		var orderItem = getService("OrderService").newOrderItem();
-    		var sku = getService("SkuService").getSkuBySkuCode(data.skuCode);
-    		
-    		//set the sku so we have data for the rates.
-    		orderItem.setSku(sku);
-    		var shippingMethodOptions = [];
-    		
-    		//set the order so it doesn't stall when updating options.
-    		orderFulfillment.setOrder(getHibachiScope().getCart());
-    		
-    		var eligibleFulfillmentMethods = listToArray(sku.setting("skuEligibleFulfillmentMethods"));
-    		
-    		var options = {};
-    		
-    		//iterate through getting the options.
-    		for (var eligibleFulfillmentMethod in eligibleFulfillmentMethods){
-    			//get the fulfillment methods for this item.
-    			var fulfillmentMethod = getService("FulfillmentService").getFulfillmentMethod(eligibleFulfillmentMethod);
-    			if (!isNull(fulfillmentMethod) &&!isNull(fulfillmentMethod.getFulfillmentMethodType()) &&  fulfillmentMethod.getFulfillmentMethodType() == "shipping"){
-    				
-    				//set the method so we can update with the options.
-    				orderFulfillment.setFulfillmentMethod(fulfillmentMethod);
-    				getService("ShippingService").updateOrderFulfillmentShippingMethodOptions(orderFulfillment);
-    				if (!isNull(orderFulfillment.getShippingMethodOptions())){
-    					for (var rate in orderFulfillment.getShippingMethodOptions()){
-    						options['#rate.shippingMethodCode#'] = rate;
-    					}
-    				}
-    			}
-    		}
-    		
-    		//remove the orderfulfillment that we used to get the rates because it will disrupt other entities saving.
-    		getService("OrderService").deleteOrderFulfillment(orderFulfillment);
-    		data['ajaxResponse']['estimatedShippingRates'] = options;
-    	}
+      if (!isNull(data.skuCode)){
+        
+        //data setup.
+        var orderFulfillment = getService("OrderService").newOrderFulfillment();
+        var orderItem = getService("OrderService").newOrderItem();
+        var sku = getService("SkuService").getSkuBySkuCode(data.skuCode);
+        
+        //set the sku so we have data for the rates.
+        orderItem.setSku(sku);
+        var shippingMethodOptions = [];
+        
+        //set the order so it doesn't stall when updating options.
+        orderFulfillment.setOrder(getHibachiScope().getCart());
+        
+        var eligibleFulfillmentMethods = listToArray(sku.setting("skuEligibleFulfillmentMethods"));
+        
+        var options = {};
+        
+        //iterate through getting the options.
+        for (var eligibleFulfillmentMethod in eligibleFulfillmentMethods){
+          //get the fulfillment methods for this item.
+          var fulfillmentMethod = getService("FulfillmentService").getFulfillmentMethod(eligibleFulfillmentMethod);
+          if (!isNull(fulfillmentMethod) &&!isNull(fulfillmentMethod.getFulfillmentMethodType()) &&  fulfillmentMethod.getFulfillmentMethodType() == "shipping"){
+            
+            //set the method so we can update with the options.
+            orderFulfillment.setFulfillmentMethod(fulfillmentMethod);
+            getService("ShippingService").updateOrderFulfillmentShippingMethodOptions(orderFulfillment);
+            if (!isNull(orderFulfillment.getShippingMethodOptions())){
+              for (var rate in orderFulfillment.getShippingMethodOptions()){
+                options['#rate.shippingMethodCode#'] = rate;
+              }
+            }
+          }
+        }
+        
+        //remove the orderfulfillment that we used to get the rates because it will disrupt other entities saving.
+        getService("OrderService").deleteOrderFulfillment(orderFulfillment);
+        data['ajaxResponse']['estimatedShippingRates'] = options;
+      }
     }
     
+    
 }
+
