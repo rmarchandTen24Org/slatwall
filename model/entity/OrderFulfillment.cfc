@@ -50,7 +50,7 @@ component displayname="Order Fulfillment" entityname="SlatwallOrderFulfillment" 
 
 	// Persistent Properties
 	property name="orderFulfillmentID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
-	property name="fulfillmentCharge" ormtype="big_decimal";
+	property name="fulfillmentCharge" ormtype="big_decimal" hb_formatType="currency";
 	property name="currencyCode" ormtype="string" length="3";
 	property name="emailAddress" hb_populateEnabled="public" ormtype="string";
 	property name="manualFulfillmentChargeFlag" ormtype="boolean" hb_populateEnabled="false";
@@ -68,6 +68,7 @@ component displayname="Order Fulfillment" entityname="SlatwallOrderFulfillment" 
 	property name="shippingMethod" hb_populateEnabled="public" cfc="ShippingMethod" fieldtype="many-to-one" fkcolumn="shippingMethodID";
 	property name="orderFulfillmentStatusType" cfc="Type" fieldtype="many-to-one" fkcolumn="orderFulfillmentStatusTypeID" hb_optionsSmartListData="f:parentType.systemCode=orderFulfillmentStatusType";
 	property name="orderFulfillmentInvStatType" cfc="Type" fieldtype="many-to-one" fkcolumn="orderFulfillmentInvStatTypeID" hb_optionsSmartListData="f:parentType.systemCode=orderFulfillmentInvStatType";
+	property name="addressZone" hb_populateEnabled="public" cfc="AddressZone" fieldtype="many-to-one" fkcolumn="addressZoneID";
 
 	// Related Object Properties (one-to-many)
 	property name="orderFulfillmentItems" hb_populateEnabled="public" singularname="orderFulfillmentItem" cfc="OrderItem" fieldtype="one-to-many" fkcolumn="orderFulfillmentID" cascade="all" inverse="true";
@@ -287,7 +288,7 @@ component displayname="Order Fulfillment" entityname="SlatwallOrderFulfillment" 
 					arrayAppend(variables.accountAddressOptions, {name=r[i].getSimpleRepresentation(), value=r[i].getAccountAddressID()});
 				}
 			}
-			arrayPrepend(variables.accountAddressOptions, {name=rbKey("define.none"), value=""});
+			arrayPrepend(variables.accountAddressOptions, {name=rbKey("define.new"), value=""});
 		}
 		return variables.accountAddressOptions;
 	}

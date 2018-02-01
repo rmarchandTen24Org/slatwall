@@ -52,6 +52,9 @@ component entityname="SlatwallVendorOrderItem" table="SwVendorOrderItem" persist
 	property name="vendorOrderItemID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
 	property name="quantity" ormtype="float" default=0;
 	property name="cost" ormtype="big_decimal" hb_formatType="currency";
+	property name="price" ormtype="big_decimal" hb_formatType="currency";
+	property name="skuPrice" ormtype="big_decimal" hb_formatType="currency" hint="Stores the price of the sku at time of order based on currency code.";
+
 	property name="shippingWeight" ormtype="big_decimal";
 	property name="currencyCode" ormtype="string" length="3";
 	property name="estimatedReceivalDateTime" ormtype="timestamp";
@@ -78,11 +81,36 @@ component entityname="SlatwallVendorOrderItem" table="SwVendorOrderItem" persist
 
 	// Non-persistent properties
 	property name="extendedCost" persistent="false" hb_formatType="currency";
+	property name="grossProfitMargin" persistent="false" hb_formatType="percentage";
 	property name="extendedWeight" persistent="false";
 	property name="quantityReceived" persistent="false";
 	property name="quantityUnreceived" persistent="false";
 	property name="quantityDelivered" persistent="false";
 	property name="quantityUnDelivered" persistent="false";
+
+	// ============ START: Non-Persistent Property Methods =================
+	
+	public numeric function getPrice(){
+		if( !structKeyExists(variables,"price") ){
+			if(getCurrencyCode() == getSku().getCurrencyCode()){
+				variables.price = !isNull(getSku().getPrice()) ? getSku().getPrice() : 0; 
+			}else{
+				var skuPrice = getSku().getLivePriceByCurrencyCode(getCurrencyCode());
+				variables.price = !isNull(skuPrice) ? skuPrice : 0; 
+			}
+		}
+		
+		return variables.price;
+	}
+	
+	public numeric function getGrossProfitMargin(){
+		if(!isNull(getPrice()) && !isNull(getCost()) && getPrice() > 0){
+			return NumberFormat( ( (val(getPrice()) - val(getCost())) / val(getPrice()) ) * 100,'9.99');
+		}
+		
+		return 0;
+	}
+	
 
 	// ============ START: Non-Persistent Property Methods =================
 	

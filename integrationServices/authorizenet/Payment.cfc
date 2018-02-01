@@ -311,7 +311,7 @@ component accessors="true" output="false" displayname="Authorize.net" implements
 		response.setData(data);
 
 		// Set the response Code
-		response.setStatusCode(responseData.messages.message[1].code);;
+		response.setStatusCode(responseData.messages.message[1].code);
 
 		// Check to see if it was successful
 		if(right(response.getStatusCode(),1) != 1) {

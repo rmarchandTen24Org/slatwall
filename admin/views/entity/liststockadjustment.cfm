@@ -89,11 +89,12 @@ Notes:
 	    data-has-action-bar="false"
 	>
 		<sw-listing-column data-property-identifier="stockAdjustmentID" data-is-visible="false" data-is-deletable="false" ></sw-listing-column>
+		<sw-listing-column data-property-identifier="referenceNumber" filter="true" title="#$.slatwall.rbKey('entity.stockAdjustment.referenceNumber')#"></sw-listing-column>
 	    <sw-listing-column data-property-identifier="stockAdjustmentType.typeName" filter="true" title="#$.slatwall.rbKey('entity.stockAdjustment.stockAdjustmentType')#" tdclass="primary" ></sw-listing-column>
 	    <sw-listing-column data-property-identifier="stockAdjustmentStatusType.typeName" title="#$.slatwall.rbKey('entity.stockAdjustment.stockAdjustmentStatusType')#" ></sw-listing-column>
 	    <sw-listing-column data-property-identifier="fromLocation.locationName" title="#$.slatwall.rbKey('entity.stockAdjustment.fromLocation')#" ></sw-listing-column>
 	    <sw-listing-column data-property-identifier="toLocation.locationName" title="#$.slatwall.rbKey('entity.stockAdjustment.toLocation')#" ></sw-listing-column>
 	    <sw-listing-column data-property-identifier="createdDateTime" ></sw-listing-column>
-	</sw-listing-display data-using-personal-collection="true">
+	</sw-listing-display>
 
 </cfoutput>

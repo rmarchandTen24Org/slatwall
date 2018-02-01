@@ -109,8 +109,8 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 				// Get this sku's taxCategory
 				var taxCategory = this.getTaxCategory(orderItem.getSku().setting('skuTaxCategory'));
 
-				// Make sure the taxCategory isn't null
-				if(!isNull(taxCategory)) {
+				// Make sure the taxCategory isn't null and is active
+				if(!isNull(taxCategory) && taxCategory.getActiveFlag()) {
 
 					// Setup the orderItem level taxShippingAddress
 					structDelete(taxAddresses, "taxShippingAddress");
@@ -129,6 +129,11 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 
 							// If this rate has an integration, then try to pull the data from the response bean for that integration
 							if(!isNull(taxCategoryRate.getTaxIntegration())) {
+
+								// if account is tax exempt return after removing any tax previously applied to order
+								if(!isNull(arguments.order.getAccount()) && !isNull(arguments.order.getAccount().getTaxExemptFlag()) && arguments.order.getAccount().getTaxExemptFlag()) {
+									continue;
+								}
 
 								// Look for all of the rates responses for this interation, on this orderItem
 								if(structKeyExists(ratesResponseBeans, taxCategoryRate.getTaxIntegration().getIntegrationID())){
@@ -231,7 +236,8 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 						newAppliedTax.setTaxCategoryRate( originalAppliedTax.getTaxCategoryRate() );
 						newAppliedTax.setOrderItem( orderItem );
 						newAppliedTax.setCurrencyCode( orderItem.getCurrencyCode() );
-						newAppliedTax.setTaxLiabilityAmount( round(orderItem.getExtendedPriceAfterDiscount() * originalAppliedTax.getTaxRate()) / 100 );
+						var taxAmount = (originalAppliedTax.getTaxAmount()/orderItem.getReferencedOrderItem().getQuantity())*orderitem.getQuantity();
+						newAppliedTax.setTaxLiabilityAmount( taxamount );
 
 						newAppliedTax.setTaxImpositionID( originalAppliedTax.getTaxImpositionID() );
 						newAppliedTax.setTaxImpositionName( originalAppliedTax.getTaxImpositionName() );
@@ -258,8 +264,8 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 					// Get this sku's taxCategory
 					var taxCategory = this.getTaxCategory(orderItem.getSku().setting('skuTaxCategory'));
 	
-					// Make sure the taxCategory isn't null
-					if(!isNull(taxCategory)) {
+					// Make sure the taxCategory isn't null and is active
+					if(!isNull(taxCategory) && taxCategory.getActiveFlag()) {
 	
 						// Setup the orderItem level taxShippingAddress
 						structDelete(taxAddresses, "taxShippingAddress");

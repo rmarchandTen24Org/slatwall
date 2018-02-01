@@ -60,7 +60,6 @@ class SWTypeaheadSearchController {
                 private $http,
                 private requestService
      ){
-        
         this.dropdownOpen = false;
         
            this.requestService = requestService;
@@ -217,6 +216,10 @@ class SWTypeaheadSearchController {
     
 
 	public search = (search:string)=>{
+	    if(!search.length){
+	        this.closeThis();
+	        return;
+	    }
         this.rSearch(search);
 
         if(this._timeoutPromise){
@@ -328,7 +331,7 @@ class SWTypeaheadSearchController {
         this.viewFunction()();
     };
 
-    public closeThis = (clickOutsideArgs) =>{
+    public closeThis = (clickOutsideArgs?) =>{
 
         this.hideSearch = true;
 
@@ -439,7 +442,7 @@ class SWTypeaheadSearch implements ng.IDirective{
 
                 if(angular.isDefined($scope.swTypeaheadSearch.allResultsEndpoint)){
                     var searchAllListItemTemplate = `
-                        <li class="dropdown-item" ng-if="swTypeaheadSearch.results.length == swTypeaheadSearch.maxRecords"><a href="{{swTypeaheadSearch.allResultsEndpoint}}?keywords={{swTypeaheadSearch.searchText}}">See All Results</a></li>
+                        <li class="dropdown-item see-all-results" ng-if="swTypeaheadSearch.results.length == swTypeaheadSearch.maxRecords"><a href="{{swTypeaheadSearch.allResultsEndpoint}}?keywords={{swTypeaheadSearch.searchText}}">See All Results</a></li>
                     `
                 }
 

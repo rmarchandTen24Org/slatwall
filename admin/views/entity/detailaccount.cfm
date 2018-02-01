@@ -73,6 +73,12 @@ Notes:
 			<cfif getHibachiScope().getAccount().getSuperUserFlag() || getHibachiScope().getAccount().getAccountID() eq rc.account.getAccountID()>
 				<hb:HibachiProcessCaller entity="#rc.account#" action="admin:entity.preprocessaccount" processContext="generateAPIAccessKey"  type="list" modal="true" />
 			</cfif>
+			<cfif !isNull(getHibachiScope().getService("integrationService").getIntegrationByIntegrationPackage("slatwallpos")) AND 
+				  getHibachiScope().getService("integrationService").getIntegrationByIntegrationPackage("slatwallpos").getActiveFlag() >
+				
+				<hb:HibachiProcessCaller entity="#rc.account#" action="admin:entity.preprocessaccount" processContext="changePosPin"  type="list" modal="true" />
+			
+			</cfif>
 			<li class="divider"></li>
 			<hb:HibachiActionCaller action="admin:entity.createaccountaddress" queryString="accountID=#rc.account.getAccountID()#&sRedirectAction=admin:entity.detailAccount" type="list" modal=true />
 			<hb:HibachiActionCaller action="admin:entity.createaccountemailaddress" queryString="accountID=#rc.account.getAccountID()#&sRedirectAction=admin:entity.detailAccount" type="list" modal=true />

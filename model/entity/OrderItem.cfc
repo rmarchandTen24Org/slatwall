@@ -45,21 +45,21 @@ component entityname="SlatwallOrderItem" table="SwOrderItem" persistent="true" a
 
 	// Persistent Properties
 	property name="orderItemID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
-	property name="price" ormtype="big_decimal";
-	property name="skuPrice" ormtype="big_decimal";
+	property name="price" ormtype="big_decimal" hb_formatType="currency";
+	property name="skuPrice" ormtype="big_decimal" hb_formatType="currency";
 	property name="currencyCode" ormtype="string" length="3";
 	property name="quantity" hb_populateEnabled="public" ormtype="integer";
 	property name="bundleItemQuantity" hb_populateEnabled="public" ormtype="integer";
 	property name="estimatedDeliveryDateTime" ormtype="timestamp";
 	property name="estimatedFulfillmentDateTime" ormtype="timestamp";
 	// Calculated Properties
-	property name="calculatedExtendedPrice" ormtype="big_decimal";
-	property name="calculatedExtendedUnitPrice" ormtype="big_decimal";
-	property name="calculatedExtendedPriceAfterDiscount" column="calcExtendedPriceAfterDiscount" ormtype="big_decimal";
-	property name="calculatedExtendedUnitPriceAfterDiscount" column="calcExtdUnitPriceAfterDiscount" ormtype="big_decimal";
-	property name="calculatedTaxAmount" ormtype="big_decimal";
-	property name="calculatedItemTotal" ormtype="big_decimal";
-	property name="calculatedDiscountAmount" ormtype="big_decimal";
+	property name="calculatedExtendedPrice" ormtype="big_decimal" hb_formatType="currency";
+	property name="calculatedExtendedUnitPrice" ormtype="big_decimal" hb_formatType="currency";
+	property name="calculatedExtendedPriceAfterDiscount" column="calcExtendedPriceAfterDiscount" ormtype="big_decimal" hb_formatType="currency";
+	property name="calculatedExtendedUnitPriceAfterDiscount" column="calcExtdUnitPriceAfterDiscount" ormtype="big_decimal" hb_formatType="currency";
+	property name="calculatedTaxAmount" ormtype="big_decimal" hb_formatType="currency";
+	property name="calculatedItemTotal" ormtype="big_decimal" hb_formatType="currency";
+	property name="calculatedDiscountAmount" ormtype="big_decimal" hb_formatType="currency";
 
 	// Related Object Properties (many-to-one)
 	property name="appliedPriceGroup" cfc="PriceGroup" fieldtype="many-to-one" fkcolumn="appliedPriceGroupID";
@@ -353,16 +353,30 @@ component entityname="SlatwallOrderItem" table="SwOrderItem" persistent="true" a
 
 	// ============ START: Non-Persistent Property Methods =================
 
-	public numeric function getDiscountAmount() {
+	public numeric function getDiscountAmount(boolean forceCalculationFlag = false) {
 		var discountAmount = 0;
-
-		for(var i=1; i<=arrayLen(getAppliedPromotions()); i++) {
-			discountAmount = getService('HibachiUtilityService').precisionCalculate(discountAmount + getAppliedPromotions()[i].getDiscountAmount());
-		}
-
-		if(!isNull(getSku()) && getSku().getProduct().getProductType().getSystemCode() == 'productBundle'){
-			for(var childOrderItem in this.getChildOrderItems()){
-				discountAmount = getService('HibachiUtilityService').precisionCalculate(discountAmount + childOrderItem.getDiscountAmount());
+		
+		if(getNewFlag() || arguments.forceCalculationFlag){
+			for(var i=1; i<=arrayLen(getAppliedPromotions()); i++) {
+				discountAmount = getService('HibachiUtilityService').precisionCalculate(discountAmount + getAppliedPromotions()[i].getDiscountAmount());
+			}
+			
+			if(!isNull(getSku()) && getSku().getProduct().getProductType().getSystemCode() == 'productBundle'){
+				for(var childOrderItem in this.getChildOrderItems()){
+					discountAmount = getService('HibachiUtilityService').precisionCalculate(discountAmount + childOrderItem.getDiscountAmount());
+				}
+			}
+		}else{
+			var promotionAppliedCollectionList = getService('promotionService').getPromotionAppliedCollectionList();
+			promotionAppliedCollectionList.addFilter('orderItem.orderItemID',getOrderItemID());
+			promotionAppliedCollectionList.addDisplayAggregate('discountAmount','SUM','discountAmountSUM');
+			var promotionAppliedSum = promotionAppliedCollectionList.getRecords();
+			
+			if(arrayLen(promotionAppliedSum)){
+				
+				discountAmount = promotionAppliedSum[1]['discountAmountSUM'];
+			}else{
+				discountamount = 0;
 			}
 		}
 
@@ -462,8 +476,8 @@ component entityname="SlatwallOrderItem" table="SwOrderItem" persistent="true" a
 		return getService('HibachiUtilityService').precisionCalculate(getSkuPrice() * getQuantity());
 	}
 
-	public numeric function getExtendedPriceAfterDiscount() {
-		return getService('HibachiUtilityService').precisionCalculate(getExtendedPrice() - getDiscountAmount());
+	public numeric function getExtendedPriceAfterDiscount(boolean forceCalculationFlag = false) {
+		return getService('HibachiUtilityService').precisionCalculate(getExtendedPrice() - getDiscountAmount(argumentCollection=arguments));
 	}
 
 	public numeric function getExtendedUnitPrice() {
@@ -538,11 +552,9 @@ component entityname="SlatwallOrderItem" table="SwOrderItem" persistent="true" a
 
 	public numeric function getQuantityDelivered() {
 		var quantityDelivered = 0;
-
-		for( var i=1; i<=arrayLen(getOrderDeliveryItems()); i++){
-			if(!getOrderDeliveryItems()[i].getNewFlag()) {
-				quantityDelivered += getOrderDeliveryItems()[i].getQuantity();
-			}
+		
+		if(!getNewFlag()){
+			var quantityDelivered = getDAO("OrderDAO").getDeliveredQuantitySum(orderItemID);
 		}
 
 		return quantityDelivered;
@@ -550,6 +562,17 @@ component entityname="SlatwallOrderItem" table="SwOrderItem" persistent="true" a
 
 	public numeric function getQuantityReceived() {
 		var quantityReceived = 0;
+		
+		if(!getNewFlag()){
+			
+			var stockReceiverItemsCollectionList = getService('stockService').getStockReceiverItemCollectionList();
+			stockReceiverItemsCollectionList.addFilter('orderItem.orderItemID',getOrderItemID());
+			stockReceiverItemsCollectionList.addDisplayAggregate('quantity','SUM','quantitySUM');
+			var stockReceiverItemsSum = stockReceiverItemsCollectionList.getRecords();
+			if(arraylen(stockReceiverItemsSum)){
+				quantityReceived = stockReceiverItemsSum[1]['quantitySUM'];
+			}
+		}
 
 		for( var i=1; i<=arrayLen(getStockReceiverItems()); i++){
 			if(!getStockReceiverItems()[i].getNewFlag()) {

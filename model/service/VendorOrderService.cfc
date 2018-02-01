@@ -49,6 +49,7 @@ Notes:
 component extends="HibachiService" persistent="false" accessors="true" output="false" {
 	
 	property name="venderOrderDAO" type="any";
+	property name="skuPriceDAO" type="any";
 	
 	property name="addressService" type="any";
 	property name="locationService" type="any";
@@ -73,7 +74,6 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 		
 		smartList.joinRelatedProperty("SlatwallVendorOrder","vendor");
 			
-		smartList.addKeywordProperty(propertyIdentifier="vendorOrderNumber", weight=9);
 		smartList.addKeywordProperty(propertyIdentifier="vendor.vendorName", weight=4);	
 		
 		return smartList;
@@ -82,6 +82,7 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 	public any function getStockReceiverSmartList(string vendorOrderID) {
 		var smartList = getStockService().getStockReceiverSmartlist();	
 		smartList.addFilter("stockReceiverItems.vendorOrderItem.vendorOrder.vendorOrderID", arguments.vendorOrderID);
+		smartList.setSelectDistinctFlag(true);
 		return smartList;
 	}
 	
@@ -193,7 +194,8 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 			newVendorOrderItem.setStock( deliverToLocation );
 		}
 		newVendorOrderItem.setSku( arguments.processObject.getSku() );
-		
+		newVendorOrderItem.setSkuPrice( arguments.processObject.getSku().getLivePriceByCurrencyCode( arguments.vendorOrder.getCurrencyCode() ) );
+		newVendorOrderItem.setPrice( arguments.processObject.getPrice());
 		newVendorOrderItem.setCost( arguments.processObject.getCost() );
 			
 		//if vendor sku code was provided then find existing Vendor Sku or create one
@@ -224,10 +226,17 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 		}
 		
 		newVendorOrderItem.setQuantity( arguments.processObject.getQuantity() );
-		
+		getHibachiScope().addModifiedEntity(arguments.vendorOrder);
 		this.saveVendorOrderItem(newVendorOrderItem);
-		
 		return arguments.vendorOrder;
+	}
+	
+	public boolean function deleteVendorOrderItem(required any vendorOrderItem){
+		var deleteOK = super.delete(arguments.vendorOrderItem);
+		if(deleteOK){
+			getHibachiScope().addModifiedEntity(arguments.vendorOrderItem.getVendorOrder());	
+		}
+		return deleteOK;
 	}
 	
 	public any function processVendorOrder_receive(required any vendorOrder, required any processObject){
@@ -249,6 +258,8 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 		// Automatically keep preference history of vendor and product/sku for future convenience
 		var newVendorProductPreferenceFlag = false;
 		
+		
+		
 		for(var thisRecord in arguments.data.vendorOrderItems) {
 			
 			if(val(thisRecord.quantity) gt 0) {
@@ -256,7 +267,7 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 				var foundItem = false;
 				var vendorOrderItem = this.getVendorOrderItem( thisRecord.vendorOrderItem.vendorOrderItemID );
 				var stock = getStockService().getStockBySkuAndLocation( vendorOrderItem.getStock().getSku(), locationEntity );
-				
+			
 				var stockReceiverItem = getStockService().newStockReceiverItem();
 
 				stockreceiverItem.setQuantity( thisRecord.quantity );
@@ -267,12 +278,32 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 				stockreceiverItem.setStockReceiver( stockReceiver );
 
 				// Adding vendor to product/sku if no existing relationship
-				var product = vendorOrderItem.getSku().getProduct();
-				if (!arguments.vendorOrder.getVendor().hasProduct(product)) {
-					// Add vendor product relationship
-					arguments.vendorOrder.getVendor().addProduct(product);
-					newVendorProductPreferenceFlag = true;
+				if(!isNull(vendorOrderItem.getSku()) && !isNull(vendorOrderItem.getSku().getProduct())){
+					var sku = vendorOrderItem.getSku();
+					var product = sku.getProduct();
+					if (!arguments.vendorOrder.getVendor().hasProduct(product)) {
+						// Add vendor product relationship
+						arguments.vendorOrder.getVendor().addProduct(product);
+						newVendorProductPreferenceFlag = true;
+					}
+					
+					//Update Sku price with vendor order item price.
+					if(len(vendorOrderItem.getPrice())){
+						if(arguments.vendorOrder.getCurrencyCode() == getSettingService().getSettingValue("skuCurrency")){
+							if(vendorOrderItem.getPrice() != sku.getPrice()){
+								sku.setPrice(vendorOrderItem.getPrice());
+							}
+						}else{
+							var skuPrice = getSkuPriceDAO().getSkuPricesForSkuByCurrencyCode(sku.getSkuID(),arguments.vendorOrder.getCurrencyCode());
+							if(!isNull(skuPrice) && vendorOrderItem.getPrice() != skuPrice.getPrice()){
+								skuPrice.setPrice(vendorOrderItem.getPrice());
+							}
+							
+						}
+					}
+					
 				}
+				
 				
 			}
 		}
@@ -299,6 +330,10 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 		// Persist and update vendor products if necessary
 		if (newVendorProductPreferenceFlag) {
 			getVendorService().saveVendor(arguments.vendorOrder.getVendor());
+
+			if (arguments.vendorOrder.getVendor().hasErrors()) {
+				vendorOrder.addErrors(arguments.vendorOrder.getVendor().getErrors());
+			}
 		}
 
 		return arguments.vendorOrder;

@@ -413,15 +413,36 @@ component output="false" accessors="true" persistent="false" extends="HibachiObj
 					var uploadDirectory = this.invokeMethod("get#currentProperty.name#UploadDirectory");
 
 					// If the directory where this file is going doesn't exists, then create it
-					if(!directoryExists(uploadDirectory)) {
-						directoryCreate(uploadDirectory);
+					if(left(uploadDirectory, 5) == 's3://'){
+
+						var uploadData = fileUpload(getVirtualFileSystemPath(), currentProperty.name, currentProperty.hb_fileAcceptMIMEType, 'makeUnique' );
+
+						uploadDirectory = replace(uploadDirectory,'s3://','');
+						var bucket = listLast(uploadDirectory, '@');
+						var loginPart = listFirst(uploadDirectory, '@');
+
+						getService("hibachiUtilityService").uploadToS3(
+							bucketName=bucket,
+							fileName=uploadData.serverfile,
+							contentType='application/octet-stream',
+							awsAccessKeyId=listFirst(loginPart, ':'),
+							awsSecretAccessKey=listLast(loginPart, ':'),
+							uploadDir=uploadData.serverdirectory
+						);
+
+						_setProperty(currentProperty.name, uploadData.serverfile);
+					}else{
+						if(!directoryExists(uploadDirectory)) {
+							directoryCreate(uploadDirectory);
+						}
+
+						// Do the upload
+						var uploadData = fileUpload( uploadDirectory, currentProperty.name, currentProperty.hb_fileAcceptMIMEType, 'makeUnique' );
+
+						// Update the property with the serverFile name
+						_setProperty(currentProperty.name, uploadData.serverFile);
 					}
 
-					// Do the upload
-					var uploadData = fileUpload( uploadDirectory, currentProperty.name, currentProperty.hb_fileAcceptMIMEType, 'makeUnique' );
-					
-					// Update the property with the serverFile name
-					_setProperty(currentProperty.name, uploadData.serverFile);
 				} catch(any e) {
 					this.addError(currentProperty.name, rbKey('validate.fileUpload'));
 				}
@@ -559,6 +580,28 @@ component output="false" accessors="true" persistent="false" extends="HibachiObj
 			return object.getPropertyMetaData( propertyName ).ormtype;
 		}
 		return "";
+	}
+	
+	public string function getSingularNameByPropertyIdentifier( required string propertyIdentifier ) {
+		var entityName = getService('HibachiService').getLastEntityNameInPropertyIdentifier(entityName=this.getClassName(), propertyIdentifier=arguments.propertyIdentifier );
+		var object = getService('HibachiService').getEntityObject(entityName);
+		var propertyName = listLast(arguments.propertyIdentifier,'.');
+		if(
+			!isNull(object) 
+			&& !isSimpleValue(object)
+			&& structKeyExists(object.getPropertyMetaData( propertyName ),'fieldtype')
+			&& object.getPropertyMetaData( propertyName ).fieldtype == 'one-to-many'
+		) {
+			return object.getPropertyMetaData( propertyName ).singularName;
+		}
+		return "";
+	}
+	
+	public string function getFormatTypeByPropertyIdentifier( required string propertyIdentifier ) {
+		var entityName = getService('HibachiService').getLastEntityNameInPropertyIdentifier(entityName=this.getClassName(), propertyIdentifier=arguments.propertyIdentifier );
+		var object = getService('HibachiService').getEntityObject(entityName);
+		var propertyName = listLast(arguments.propertyIdentifier,'.');
+		return object.getPropertyFormatType(propertyName);
 	}
 
 	public any function getLastObjectByPropertyIdentifier(required string propertyIdentifier) {

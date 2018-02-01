@@ -89,10 +89,10 @@ Notes:
 	    data-collection="'StockAdjustmentItem'"
 	    data-edit="false"
 	    data-has-search="true"
-	    record-edit-action="admin:entity.editstockadjustment"
-	    record-detail-action="admin:entity.detailstockadjustment"
-	    record-detail-action-property="stockAdjustment.stockAdjustmentID"
-	    record-edit-action-property="stockAdjustment.stockAdjustmentID"
+	    record-edit-action="admin:entity.editstockadjustmentitem"
+	    record-detail-action="admin:entity.detailstockadjustmentitem"
+	    record-detail-action-property="stockAdjustmentitem.stockAdjustmentItemID"
+	    record-edit-action-property="stockAdjustmentitem.stockAdjustmentItemID"
 	    data-is-angular-route="false"
 	    data-angular-links="false"
 	    data-has-action-bar="false"
@@ -108,7 +108,6 @@ Notes:
     	<sw-listing-column data-property-identifier="fromstock.location.locationName" title="#$.slatwall.rbKey('admin.warehouse.detailstockadjustment.fromlocationname')#" ></sw-listing-column>
     	<sw-listing-column data-property-identifier="tostock.location.locationName" title="#$.slatwall.rbKey('admin.warehouse.detailstockadjustment.tolocationname')#" ></sw-listing-column>
     	<sw-listing-column data-property-identifier="quantity" ></sw-listing-column>
-	</sw-listing-display data-using-personal-collection="true">
+	</sw-listing-display>
 
 </cfoutput>
-

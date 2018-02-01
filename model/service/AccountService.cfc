@@ -49,6 +49,7 @@ Notes:
 component extends="HibachiService" accessors="true" output="false" {
 
 	property name="accountDAO" type="any";
+	property name="permissionGroupDAO" type="any";
 
 	property name="addressService" type="any";
 	property name="emailService" type="any";
@@ -309,7 +310,21 @@ component extends="HibachiService" accessors="true" output="false" {
 
 		return arguments.account;
 	}
-	
+	public any function processAccount_changePosPin(required any account, required any processObject) {
+
+		var existingPosPin = arguments.account.getPosPin();
+
+		// Set the password
+		var newPosPin = getHashedAndSaltedPassword(arguments.processObject.getPosPin(), arguments.account.getAccountID());
+		
+		if(!isNull(existingPosPin) && existingPosPin == newPosPin)
+		{
+			arguments.account.addError("samePosPin",rbKey('admin.entity.account.samePosPin'));
+		} else {
+			arguments.account.setPosPin(newPosPin);
+		}
+		return arguments.account;
+	}
 	public any function saveAccount(required any account, struct data={}, string context="save"){
 		
 		if(!isNull(arguments.account.getOrganizationFlag()) && arguments.account.getOrganizationFlag()){
@@ -1392,6 +1407,28 @@ component extends="HibachiService" accessors="true" output="false" {
 		return arguments.permission;
 	}
 
+	public any function processPermissionGroup_clonePermission(required any permissionGroup, required any processObject, struct data = {}) {
+
+		var permissionType = '';
+		if(arguments.processObject.getActionPermissionFlag()){
+			permissionType = listAppend(permissionType, 'action');
+		}
+		if(arguments.processObject.getDataPermissionFlag()){
+			permissionType = listAppend(permissionType, 'entity');
+		}
+
+		if(listLen(permissionType)){
+			getPermissionGroupDAO().clonePermissions(
+				permissionType,
+				arguments.processObject.getFromPermissionGroupID(),
+				arguments.permissionGroup.getPermissionGroupID()
+			);
+			getService("HibachiCacheService").resetCachedKey(arguments.permissionGroup.getPermissionGroupID() & 'permissionByDetails');
+		}
+
+		return arguments.permissionGroup;
+	}
+
 	// =====================  END: Process Methods ============================
 
 	// ====================== START: Save Overrides ===========================
@@ -1441,6 +1478,10 @@ component extends="HibachiService" accessors="true" output="false" {
 
 		// As long as permissions were passed in we can set those up
 		if(structKeyExists(arguments.data, "permissions")) {
+			
+			arguments.data.permissions = arrayFilter(arguments.data.permissions,function(value){
+				return !isNull(value);
+			});
 			// Loop over all of the permissions that were passed in.
 			for(var i=1; i<=arrayLen(arguments.data.permissions); i++) {
 
@@ -1612,7 +1653,7 @@ component extends="HibachiService" accessors="true" output="false" {
 
 			// If the primary address is this address then set the primary to null
 			if(arguments.accountAddress.getAccount().getPrimaryAddress().getAccountAddressID() eq arguments.accountAddress.getAccountAddressID()) {
-				arguments.accountAddress.getAccount().setPrimaryAddress(javaCast("null",""));
+				getAccountDAO().removePrimaryAddress(arguments.accountAddress.getAccount().getAccountID());
 			}
 			// If the primary address is this address then set the primary to null
 			if(!isNull(arguments.accountAddress.getAccount()) && !isNull(arguments.accountAddress.getAccount().getPrimaryShippingAddress())&&!isNull(arguments.accountAddress.getAccount().getPrimaryShippingAddress().getAccountAddressID()) && arguments.accountAddress.getAccount().getPrimaryShippingAddress().getAccountAddressID() eq arguments.accountAddress.getAccountAddressID()) {
@@ -1628,6 +1669,7 @@ component extends="HibachiService" accessors="true" output="false" {
 			getAccountDAO().removeAccountAddressFromOrderPayments( accountAddressID = arguments.accountAddress.getAccountAddressID() );
 			getAccountDAO().removeAccountAddressFromOrders( accountAddressID = arguments.accountAddress.getAccountAddressID() );
 			getAccountDAO().removeAccountAddressFromSubscriptionUsages( accountAddressID = arguments.accountAddress.getAccountAddressID() );
+			getAccountDAO().removeAccountAddressFromAccountPaymentMethods(accountAddressID = arguments.accountAddress.getAccountAddressID());
 		   
 		    arguments.accountAddress.removeAccount();
             arguments.accountAddress.setAddress(javaCast("null","")); 

@@ -73,7 +73,7 @@ component entityname="SlatwallSku" table="SwSku" persistent=true accessors=true 
 	property name="attendedQuantity" ormtype="integer" hint="Optional field for manually entered event attendance.";
 	property name="allowEventWaitlistingFlag" ormtype="boolean" default="0";
 	property name="redemptionAmountType" ormtype="string" hb_formFieldType="select" hint="used for gift card credit calculation. Values sameAsPrice, fixedAmount, Percentage"  hb_formatType="rbKey";
-	property name="redemptionAmount" ormtype="big_decimal" hint="value to be used in calculation conjunction with redeptionAmountType";
+	property name="redemptionAmount" hb_formatType="currency" ormtype="big_decimal" hint="value to be used in calculation conjunction with redeptionAmountType";
 	property name="inventoryTrackBy" ormtype="string" default="Quantity" hb_formFieldType="select";
 
 	// Calculated Properties
@@ -150,7 +150,7 @@ component entityname="SlatwallSku" table="SwSku" persistent=true accessors=true 
 	property name="currentAssetValue" persistent="false" hb_formatType="currency";
 	//property name="currentRevenueTotal" persistent="false" hb_formatType="currency";
 	property name="averagePriceSold" persistent="false" hb_formatType="currency";
-	property name="averagePriceSoldBeforeDiscount" persistent="false" hb_formatType="currency";
+	property name="averagePriceSoldAfterDiscount" persistent="false" hb_formatType="currency";
 	property name="averageDiscountAmount" persistent="false" hb_formatType="currency";
 	property name="averageMarkup" persistent="false" hb_formatType="percentage";
 	property name="averageLandedMarkup" persistent="false" hb_formatType="percentage";
@@ -208,6 +208,8 @@ component entityname="SlatwallSku" table="SwSku" persistent=true accessors=true 
 
 
 	// ==================== START: Logical Methods =========================	
+	
+	
 	public any function getVendorSkusSmartList(){
 		var vendorSkuSmartList = getService('VendorOrderService').getVendorSkuSmartList();
 		vendorSkuSmartList.addFilter('sku.skuID',this.getSkuID());
@@ -218,8 +220,8 @@ component entityname="SlatwallSku" table="SwSku" persistent=true accessors=true 
 		return getDao('skuDao').getAveragePriceSold(skuID=this.getSkuID(),currencyCode=arguments.currencyCode);
 	}
 	
-	public numeric function getAveragePriceSoldBeforeDiscount(required string currencyCode="USD"){
-		return getDao('skuDao').getAveragePriceSoldBeforeDiscount(skuID=this.getSkuID(),currencyCode=arguments.currencyCode);
+	public numeric function getAveragePriceSoldAfterDiscount(required string currencyCode="USD"){
+		return getDao('skuDao').getAveragePriceSoldAfterDiscount(skuID=this.getSkuID(),currencyCode=arguments.currencyCode);
 	}
 	
 	public numeric function getAverageDiscountAmount(required string currencyCode="USD"){
@@ -586,7 +588,7 @@ component entityname="SlatwallSku" table="SwSku" persistent=true accessors=true 
 
 	public any function getPriceByCurrencyCode( required string currencyCode, numeric quantity ) {
 		if(structKeyExists(arguments, "quantity")){
-			skuPriceResults = getDAO("SkuPriceDAO").getSkuPricesForSkuCurrencyCodeAndQuantity(this.getSkuID(), currencyCode, quantity);
+			var skuPriceResults = getDAO("SkuPriceDAO").getSkuPricesForSkuCurrencyCodeAndQuantity(this.getSkuID(), currencyCode, quantity);
 			if(!isNull(skuPriceResults) && isArray(skuPriceResults) && arrayLen(skuPriceResults) > 0){
 				var prices = [];
 				for(var i=1; i <= arrayLen(skuPriceResults); i++){
@@ -596,6 +598,10 @@ component entityname="SlatwallSku" table="SwSku" persistent=true accessors=true 
 				return prices[1];
 			} else if (!isNull(skuPriceResults) && !isNull(skuPriceResults.getPrice())){
 				return skuPriceResults.getPrice();
+			}
+			var baseSkuPrice = getDAO("SkuPriceDAO").getBaseSkuPriceForSkuByCurrencyCode(this.getSkuID(), currencyCode);  
+			if(!isNull(baseSkuPrice)){
+				return baseSkuPrice.getPrice(); 
 			}
 		}
     	if(structKeyExists(getCurrencyDetails(), arguments.currencyCode)) {
@@ -1142,6 +1148,16 @@ component entityname="SlatwallSku" table="SwSku" persistent=true accessors=true 
 		}
 
 		return variables.placedOrderItemsSmartList;
+	}
+	
+	public any function getPlacedOrderItemsCollectionList() {
+		if(!structKeyExists(variables, "placedOrderItemsCollectionList")) {
+			variables.placedOrderItemsCollectionList = getService("OrderService").getOrderItemCollectionList();
+			variables.placedOrderItemsCollectionList.addFilter('sku.skuID', getSkuID());
+			variables.placedOrderItemsCollectionList.addFilter('order.orderStatusType.systemCode', 'ostNew,ostProcessing,ostOnHold,ostClosed,ostCanceled','IN');
+		}
+
+		return variables.placedOrderItemsCollectionList;
 	}
 
 	public any function getPlacedVendorOrderItemsSmartList() {
