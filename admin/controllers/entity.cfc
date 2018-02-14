@@ -300,6 +300,13 @@ component output="false" accessors="true" extends="Slatwall.org.Hibachi.HibachiC
 		}
 	}
 
+	// public void function createBrand(required struct rc) {
+	// 	//super.genericCreateMethod('Brand', rc);
+	// 	//param name="rc.myname" default="Denny";
+	// 	rc.myname = "This is cool";
+
+	// }
+
 	// Setting
 	public void function createSetting(required struct rc) {
 		super.genericCreateMethod('Setting', rc);

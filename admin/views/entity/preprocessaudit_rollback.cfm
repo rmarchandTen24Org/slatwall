@@ -39,7 +39,7 @@
 	the above guidelines as a combined work under the terms of GPL for this program, 
 	provided that you include the source code of that other code when and as the 
 	GNU GPL requires distribution of source code.
-    
+     
     If you modify this program, you may extend this exception to your version 
     of the program, but you are not obligated to do so.
 
@@ -66,6 +66,7 @@ Notes:
 </cfif>
 
 <cfoutput>
+
 	
 	<cfif !isNull(rc.audit.getChangeDetails())>
 		<cfset changeDetails = rc.audit.getChangeDetails() />

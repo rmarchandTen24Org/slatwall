@@ -11,6 +11,7 @@
 			<hb:HibachiPropertyDisplay object="#rc.product#" property="publishedFlag" edit="#rc.edit#">
 			<hb:HibachiPropertyDisplay object="#rc.product#" property="productName" edit="#rc.edit#">
 			<hb:HibachiPropertyDisplay object="#rc.product#" property="productCode" edit="#rc.edit#">
+			<!--- <hb:HibachiPropertyDisplay object="#rc.product#" property="urlTitle" edit="#rc.edit#" > --->
 			<hb:HibachiPropertyDisplay object="#rc.product#" property="urlTitle" edit="#rc.edit#" valueLink="#rc.product.getProductURL()#">
 			<cfif rc.product.getBaseProductType() EQ "event">
 				<hb:HibachiPropertyDisplay object="#rc.product#" property="purchaseStartDateTime" hb_rbKey="entity.product.purchaseStartDateTime" edit="#rc.edit#"/>

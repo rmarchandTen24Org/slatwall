@@ -243,6 +243,7 @@ Notes:
 									<hb:HibachiActionCaller action="admin:entity.listschedule" type="list">
 									<hb:HibachiActionCaller action="admin:entity.listsession" type="list">
 									<hb:HibachiActionCaller action="admin:entity.listtask" type="list">
+									<hb:HibachiActionCaller action="admin:entity.listnote" type="list">
 									<hb:HibachiActionCaller action="admin:entity.listtaskhistory" type="list">
 									<hb:HibachiActionCaller action="admin:main.ckfinder" type="list" modal="true">
 									<hb:HibachiActionCaller action="admin:main.log" type="list">

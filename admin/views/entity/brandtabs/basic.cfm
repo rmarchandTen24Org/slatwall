@@ -15,4 +15,5 @@
 			</cfif>
 		</hb:HibachiPropertyList>
 	</hb:HibachiPropertyRow>
+	<h2></h2>
 </cfoutput>
