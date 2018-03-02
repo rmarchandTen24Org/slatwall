@@ -93,7 +93,7 @@ jobs:
     # Test
     #   This would typically be a build job when using workflows, possibly combined with build
     # This is based on your 1.0 configuration file or project settings
-    - run: docker-compose -f meta/docker/slatwall-ci/docker-compose-circleci.yml up -d
+    - run: sudo docker-compose -f meta/docker/slatwall-ci/docker-compose-circleci.yml up -d
     - run: sudo mkdir -p meta/tests/testresults/xml/integration
     - run: sudo chmod -R 777 meta/tests/testresults
     - run:
