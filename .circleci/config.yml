@@ -1,11 +1,12 @@
 version: 2
-machine:
-  hosts:
-    slatwall-qa: 127.0.0.1
-  services:
-    - docker
-  node:
-    version: 6.9.1
+jobs:
+  build:
+    hosts:
+      slatwall-qa: 127.0.0.1
+    services:
+      - docker
+    node:
+      version: 6.9.1
 
 dependencies:
   cache_directories:
