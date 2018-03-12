@@ -99,8 +99,8 @@ jobs:
     # This is based on your 1.0 configuration file or project settings
     
     
-    - run: eval "$(docker-machine env default)"
-    - run: docker-compose --verbose -f meta/docker/slatwall-ci/docker-compose-circleci.yml up -d
+    - run: sudo eval "$(docker-machine env default)"
+    - run: sudo docker-compose --verbose -f meta/docker/slatwall-ci/docker-compose-circleci.yml up -d
     - run: sudo mkdir -p meta/tests/testresults/xml/integration
     - run: sudo chmod -R 777 meta/tests/testresults
     - run:
