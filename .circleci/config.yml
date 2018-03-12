@@ -73,7 +73,7 @@ jobs:
     - run: cd admin/client && webpack --config webpack-production.config.js -p --display-error-details
     - run: cd admin/client/css && lessc main.less main.css
     #- run: curl -L https://github.com/docker/compose/releases/download/1.4.1/docker-compose-`uname -s`-`uname -m` > docker-compose
-    - run: curl -L https://github.com/docker/machine/releases/download/v0.14.0/docker-machine-`uname -s`-`uname -m` >/tmp/docker-machine && \
+    - run: curl -L https://github.com/docker/machine/releases/download/v0.14.0/docker-machine-`uname -s`-`uname -m` >/tmp/docker-machine
     - run: sudo install /tmp/docker-machine /usr/local/bin/docker-machine
     - run: chmod +x docker-compose
     - run: sudo mv docker-compose /usr/local/bin
