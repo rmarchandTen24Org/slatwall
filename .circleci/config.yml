@@ -75,6 +75,7 @@ jobs:
     #- run: curl -L https://github.com/docker/compose/releases/download/1.4.1/docker-compose-`uname -s`-`uname -m` > docker-compose
     #- run: chmod +x docker-compose
     #- run: sudo mv docker-compose /usr/local/bin
+    - run: sudo chmod -R 777 ~/
     # Save dependency cache
     - save_cache:
         key: v1-dep-{{ .Branch }}-{{ epoch }}
@@ -96,8 +97,7 @@ jobs:
     
     
     - run: eval "$(docker-machine env default)"
-    - run: sudo chmod -R 777 ./
-    - run: docker-compose -f meta/docker/slatwall-ci/docker-compose-circleci.yml up -d
+    - run: docker-compose --verbose -f meta/docker/slatwall-ci/docker-compose-circleci.yml up -d
     - run: sudo mkdir -p meta/tests/testresults/xml/integration
     - run: sudo chmod -R 777 meta/tests/testresults
     - run:
