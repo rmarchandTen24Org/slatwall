@@ -1,5 +1,5 @@
-version: '2'
 slatwallweb:
+  version: '2'
   build: .
   ports:
    - "80:8888"
@@ -16,6 +16,7 @@ slatwallweb:
    LUCEE_PASSWORD: CiPassword
    LUCEE_JAVA_OPTS: -Xms1024m -Xmx1024m
 slatwalldb:
+  version: '2'
   image: mysql
   environment:
    MYSQL_ROOT_PASSWORD : CiPassword
