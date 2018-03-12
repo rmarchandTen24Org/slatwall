@@ -72,9 +72,9 @@ jobs:
     - run: cd admin/client && gulp gen-ts-refs
     - run: cd admin/client && webpack --config webpack-production.config.js -p --display-error-details
     - run: cd admin/client/css && lessc main.less main.css
-    #- run: curl -L https://github.com/docker/compose/releases/download/1.4.1/docker-compose-`uname -s`-`uname -m` > docker-compose
-    #- run: chmod +x docker-compose
-    #- run: sudo mv docker-compose /usr/local/bin
+    - run: curl -L https://github.com/docker/compose/releases/download/1.4.1/docker-compose-`uname -s`-`uname -m` > docker-compose
+    - run: chmod +x docker-compose
+    - run: sudo mv docker-compose /usr/local/bin
     - run: sudo chmod -R 777 ~/
     # Save dependency cache
     - save_cache:
