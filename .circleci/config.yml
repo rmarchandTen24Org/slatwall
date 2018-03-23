@@ -27,7 +27,7 @@ jobs:
     # To see the list of pre-built images that CircleCI provides for most common languages see
     # https://circleci.com/docs/2.0/circleci-images/
     docker:
-    - image: lucee/lucee4:latest
+    - image: circleci/build-image:ubuntu-14.04-XXL-upstart-1189-5614f37
       command: /sbin/init
     steps:
     # Machine Setup
@@ -72,7 +72,15 @@ jobs:
     - run: cd admin/client && gulp gen-ts-refs
     - run: cd admin/client && webpack --config webpack-production.config.js -p --display-error-details
     - run: cd admin/client/css && lessc main.less main.css
-    
+    - run:
+        name: Install Docker Compose
+        command: |
+          curl -L https://github.com/docker/compose/releases/download/1.19.0/docker-compose-`uname -s`-`uname -m` > ~/docker-compose
+          chmod +x ~/docker-compose
+          sudo mv ~/docker-compose /usr/local/bin/docker-compose
+    - setup_remote_docker
+    #- run: chmod +x docker-compose
+    #- run: sudo mv docker-compose /usr/local/bin
     # Save dependency cache
     - save_cache:
         key: v1-dep-{{ .Branch }}-{{ epoch }}
