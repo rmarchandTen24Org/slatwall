@@ -81,7 +81,8 @@ Notes:
         <link href="#request.slatwallScope.getBaseURL()#/org/Hibachi/client/lib/angularjs-datetime-picker/angularjs-datetime-picker.css" rel="stylesheet">
 		<!---<link href="#request.slatwallScope.getBaseURL()#/org/Hibachi/ng-ckeditor/ng-ckeditor.css" rel="stylesheet" type='text/css'>--->
 
-		<script type="text/javascript" src="#request.slatwallScope.getBaseURL()#/org/Hibachi/HibachiAssets/js/jquery-1.7.1.min.js"></script>
+		<script type="text/javascript" src="#request.slatwallScope.getBaseURL()#/org/Hibachi/HibachiAssets/js/jquery-3.3.1.min.js"></script>
+		<script type="text/javascript" src="#request.slatwallScope.getBaseURL()#/org/Hibachi/HibachiAssets/js/jquery-migrate-1.4.1.min.js"></script>
 		<script type="text/javascript" src="#request.slatwallScope.getBaseURL()#/org/Hibachi/HibachiAssets/js/jquery-ui.min.js"></script>
 		<script type="text/javascript" src="#request.slatwallScope.getBaseURL()#/org/Hibachi/HibachiAssets/js/jquery-validate-1.9.0.min.js"></script>
 		<script type="text/javascript" src="#request.slatwallScope.getBaseURL()#/org/Hibachi/HibachiAssets/js/bootstrap.min.js"></script>
@@ -90,8 +91,7 @@ Notes:
 		<script type="text/javascript">
 			var hibachiConfig = $.slatwall.getConfig();
 		</script>
-
-		<script type="text/javascript" src="#request.slatwallScope.getBaseURL()#/assets/js/admin.js?instantiationKey=#$.slatwall.getApplicationValue('instantiationKey')#"></script>
+		<hb:HibachiScript type="text/javascript" src="#request.slatwallScope.getBaseURL()#/assets/js/admin.js"></hb:HibachiScript>
 		<script type="text/javascript" src="#request.slatwallScope.getBaseURL()#/assets/js/qrcode.min.js"></script>
 		<!--- Trigger Print Window --->
 		<cfif $.slatwall.getLoggedInFlag() and listLen($.slatwall.getPrintQueue()) and request.context.slatAction neq "admin:print.default">

@@ -169,7 +169,7 @@ component extends="HibachiService"  accessors="true" output="false"
         
         if (structKeyExists(data, "processObject")){
             try{
-                var processObject = evaluate("this.#data.processObject#(data)");
+                var processObject = this.invokeMethod(data.processObject,{1=data});
                 
             }catch(any e){
                 arguments.data.ajaxResponse['processObject']['errors'] = "#e#";
@@ -202,6 +202,7 @@ component extends="HibachiService"  accessors="true" output="false"
         if(account.hasErrors()){
             addErrors(data, getHibachiScope().getAccount().getProcessObject("logout").getErrors());
         }
+        arguments.data.ajaxResponse['token'] = '';
         return account;
     }   
     
@@ -1427,7 +1428,7 @@ component extends="HibachiService"  accessors="true" output="false"
             }
             getHibachiCacheService().setCachedValue(cacheKey,stateCodeOptions);
         }
-          arguments.data.ajaxResponse["stateCodeOptions"] = stateCodeOptions;
+          arguments.data.ajaxResponse["stateCodeOptions"] = listSort(stateCodeOptions,'text');
     }
     
     /** Given a country - this returns all of the address options for that country */
