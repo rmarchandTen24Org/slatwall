@@ -98,8 +98,6 @@ jobs:
     #   This would typically be a build job when using workflows, possibly combined with build
     # This is based on your 1.0 configuration file or project settings
     
-    - run: sudo eval "$(docker-machine ls)"
-    - run: sudo eval "$(docker-machine env default)"
     - run: sudo docker-compose --verbose -f meta/docker/slatwall-ci/docker-compose-circleci.yml up -d
     - run: sudo mkdir -p meta/tests/testresults/xml/integration
     - run: sudo chmod -R 777 meta/tests/testresults
