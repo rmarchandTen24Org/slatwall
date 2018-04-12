@@ -617,7 +617,9 @@ component extends="Slatwall.meta.tests.unit.entity.SlatwallEntityTestBase" {
 		};
 		//By default Active flag is true.
 		var SkusInActiveProducts = createPersistedTestEntity('product', productWithActiveSkusData);
-
+		
+		
+		
 		var myProductCollection = variables.entityService.getProductCollectionList();
 		myProductCollection.setDisplayProperties('productName,productDescription,activeFlag');
 		myProductCollection.addFilter('productName','ProductUnitTest');
@@ -627,7 +629,11 @@ component extends="Slatwall.meta.tests.unit.entity.SlatwallEntityTestBase" {
 		assertEquals(myProductCollection.getRecordsCount(),1);
 		
 		var pageRecords = myProductCollection.getPageRecords();
+<<<<<<< HEAD
 
+=======
+		
+>>>>>>> 098450ca59fab84ee8b6bd685eb136efef354b04
 		assertTrue(arrayLen(pageRecords) == 1, "Wrong amount of products returned! Expecting 1 record but returned #arrayLen(pageRecords)#");
 	}
 
