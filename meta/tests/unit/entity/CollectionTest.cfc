@@ -629,6 +629,144 @@ component extends="Slatwall.meta.tests.unit.entity.SlatwallEntityTestBase" {
 		
 		assertTrue(arrayLen(pageRecords) == 1, "Wrong amount of products returned! Expecting 1 record but returned #arrayLen(pageRecords)#");
 	}
+	
+	/**
+	* @test
+	* @description when doing a sum with a one-to-many filter we were experiencing numerics multiplying based on the number of related objects
+	*/
+	public void function aggregatesWithOneToManyFilterstest(){
+		var accountData = {
+			accountID="",
+			firstName="Ryan"
+			
+		};
+		var account = createPersistedTestEntity('Account',accountData);
+		
+		var productData = {
+			productID="",
+			productName="test"&createUUID()
+		};
+		var product = createPersistedTestEntity('Product',productData);
+		
+		var skuData = {
+			skuID="",
+			product={
+				productID=product.getProductID()
+			}
+		};
+		var sku = createPersistedTestEntity('Sku',skuData);
+		
+		var productData2 = {
+			productID="",
+			productName="test"&createUUID()
+		};
+		var product2 = createPersistedTestEntity('Product',productData2);
+		
+		var skuData2 = {
+			skuID="",
+			product={
+				productID=product2.getProductID()
+			}
+		};
+		var sku2 = createPersistedTestEntity('Sku',skuData2);
+		
+		var orderData = {
+			orderID="",
+			account={
+				accountID=account.getAccountID()
+			},
+			calculatedTotal = 14.52
+		};
+		var order = createPersistedTestEntity('Order',orderData);
+		
+		var orderItemData = {
+			orderItemID="",
+			order={
+				orderID=order.getOrderID()
+			},
+			sku={
+				skuID=sku.getSkuID()
+			}
+		};
+		var orderItem = createPersistedTestEntity('OrderItem',orderItemData);
+		orderItem.setOrder(order);
+		
+		var orderItemData2 = {
+			orderItemID="",
+			sku={
+				skuID=sku2.getSkuID()
+			}
+		};
+		var orderItem2 = createPersistedTestEntity('OrderItem',orderItemData2);
+		
+		orderItem2.setOrder(order);
+		
+		var orderData2 = {
+			orderId="",
+			account={
+				accountID=account.getAccountID()
+			},
+			calculatedTotal = 14.52
+		};
+		var order2 = createPersistedTestEntity('Order',orderData2);
+		
+		var orderItemData3 = {
+			orderItemID="",
+			order={
+				orderID=order2.getOrderID()
+			},
+			sku={
+				skuID=sku.getSkuID()
+			}
+		};
+		var orderItem3 = createPersistedTestEntity('OrderItem',orderItemData3);
+		
+		orderItem3.setOrder(order2);
+		
+		var orderItemData4 = {
+			orderItemID="",
+			order={
+				orderID=order2.getOrderID()
+			},
+			sku={
+				skuID=sku2.getSkuID()
+			}
+		};
+		var orderItem4 = createPersistedTestEntity('OrderItem',orderItemData4);
+		
+		orderItem4.setOrder(order2);
+		
+		var urlTitle = "test"&createUUID();
+		var productTypeData={
+			productTypeID="",
+			urlTitle=urlTitle,
+			productTypeName="test"&createUUID(),
+			products=[
+				{
+					productID=product.getProductID()
+				},
+				{
+					productID=product2.getProductID()
+				}
+			]
+		};
+		var productType = createPersistedTestEntity('ProductType',productTypeData);
+		product.setProductTYpe(productTYpe);
+		product2.setProductTYpe(productTYpe);
+		
+		assert(!isNull(account.getOrders()[1].getOrderItems()[1].getSku().getProduct().getProductType()));
+		var accountCollectionList = request.slatwallScope.getService('HibachiService').getAccountCollectionList();
+		
+		accountCollectionlist.setDisplayProperties('accountID,firstName,lastName,company');
+		accountCollectionlist.addDisplayAggregate('orders','Count','ordersCount');
+		accountCollectionlist.addDisplayAggregate('orders.calculatedTotal','SUM','calculatedTotalSUM');
+		
+		accountCollectionList.addFilter('orders.orderItems.sku.product.productID',product.getProductID());
+		
+		debug(accountCollectionList.getHQL());
+		
+		accountCollectionList.getPageRecords();
+	}
 
 	/**
 	* @test

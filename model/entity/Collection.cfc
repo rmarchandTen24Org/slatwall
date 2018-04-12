@@ -1378,7 +1378,7 @@ component displayname="Collection" entityname="SlatwallCollection" table="SwColl
 
 		getPropertyIdentifierAlias(arguments.column.propertyIdentifier);
 		if(aggregateFunction != 'COUNT'){
-			return " #aggregateFunction#(COALESCE(#arguments.column.propertyIdentifier#,0)) as #arguments.column.aggregate.aggregateAlias#";
+			return " #aggregateFunction#(#arguments.column.propertyIdentifier#) as #arguments.column.aggregate.aggregateAlias#";
 		}else{
 
 			var distinct = "";
@@ -2355,7 +2355,7 @@ component displayname="Collection" entityname="SlatwallCollection" table="SwColl
 				}
 			}
 		}else{
-			try{
+			//try{
 
 				if( !structKeyExists(variables, "pageRecords")) {
 
@@ -2413,6 +2413,7 @@ component displayname="Collection" entityname="SlatwallCollection" table="SwColl
 							
 							} else {
 								//Get the pageRecords
+								
 								variables.pageRecords = ormExecuteQuery(HQL, HQLParams, false, {offset=getPageRecordsStart()-1, maxresults=getPageRecordsShow(), ignoreCase="true", cacheable=getCacheable(), cachename="pageRecords-#getCacheName()#"});	
 								
 								//If this is cacheable but we don't have a cached value yet, then set one.
@@ -2428,12 +2429,12 @@ component displayname="Collection" entityname="SlatwallCollection" table="SwColl
 						}
 					}
 				}
-			}
+			/*}
 			catch(any e){
 				variables.pageRecords = [{'failedCollection'=e.message & ' HQL: ' & HQL}];
 				writelog(file="collection",text="Error:#e.message#");
 				writelog(file="collection",text="HQL:#HQL#");
-			}
+			}*/
 
 		}
 

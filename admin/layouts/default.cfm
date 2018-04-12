@@ -46,6 +46,46 @@
 Notes:
 
 --->
+
+<cfset HQL = "
+	SELECT new Map( 
+		_account_orders.totalSum as totalSum, 
+		_account.firstName as firstName, 
+		_account.lastName as lastName, 
+		_account.company as company, 
+		_account_primaryEmailAddress.emailAddress as emailAddress,
+		COUNT(DISTINCT _account_orders) as ordersCount
+	) FROM SlatwallAccount as _account 
+	left join _account.primaryEmailAddress as _account_primaryEmailAddress
+	left join _account.orders as _account_orders 
+	left join _account_orders.orderItems as _account_orders_orderItems 
+	left join _account_orders_orderItems.sku as _account_orders_orderItems_sku 
+	left join _account_orders_orderItems_sku.product as _account_orders_orderItems_sku_product 
+	left join _account_orders_orderItems_sku_product.productType as _account_orders_orderItems_sku_product_productType 
+
+"/>
+<cfset test = ORMExecuteQuery(hql,{},false,{maxresults=10})/>
+<cfdump var="#test#"><cfabort>
+
+
+<!---
+<cfscript>
+	
+	ormSessionFactory = ORMGetSessionFactory();
+	ormSession = ORMGetSession();
+	cb = ormsession.createCriteria('SlatwallAccount');
+	
+	writedump(cb);abort;
+</cfscript>
+<cfset test = ORMExecuteQuery(hql,{to='1-1-2017',from='31-12-2017'},false,{maxresults=10})/>
+<cfdump var="#test#"/><cfabort>--->
+<cfset test = $.slatwall.getService('hibachiService').getAccountCollectionList()/>
+<cfset test.setDisplayProperties('orders.totalSum')/>
+<cfset test.addFilter('orders.orderNumber','NULL','IS NOT')/>
+<cfset test.addFilter('orders.orderItems.sku.product.productType.urlTitle','test')/>
+<cfdump var="##"/>
+<cfdump var="#test.getPageRecords()#"/><cfabort>
+
 <cfimport prefix="swa" taglib="../../tags" />
 <cfimport prefix="hb" taglib="../../org/Hibachi/HibachiTags" />
 
