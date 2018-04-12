@@ -72,15 +72,18 @@ class SWDisplayItemAggregate{
                 scope.$watch('selectedProperty', function(selectedProperty) {
                     if(angular.isDefined(selectedProperty)){
                         if(angular.isUndefined(scope.propertiesList[selectedProperty.propertyIdentifier])){
-                            var filterPropertiesPromise = $hibachi.getFilterPropertiesByBaseEntityName(selectedProperty.cfc);
-                            filterPropertiesPromise.then(function(value){
-                                metadataService.setPropertiesList(value,selectedProperty.propertyIdentifier);
-                                scope.propertiesList[selectedProperty.propertyIdentifier] = metadataService.getPropertiesListByBaseEntityAlias(selectedProperty.propertyIdentifier);
-                                metadataService.formatPropertiesList(scope.propertiesList[selectedProperty.propertyIdentifier],selectedProperty.propertyIdentifier);
-                            }, function(reason){
+                            if(selectedProperty.$$group == 'compareCollections'){
+                                var filterPropertiesPromise = $hibachi.getFilterPropertiesByBaseEntityName(selectedProperty.cfc);
+                                filterPropertiesPromise.then(function(value){
+                                    metadataService.setPropertiesList(value,selectedProperty.propertyIdentifier);
+                                }, function(reason){
+    
+                                });                                
+                            }
 
-                            });
                         }
+                                                    scope.propertiesList[selectedProperty.propertyIdentifier] = metadataService.getPropertiesListByBaseEntityAlias(selectedProperty.propertyIdentifier);
+                            metadataService.formatPropertiesList(scope.propertiesList[selectedProperty.propertyIdentifier],selectedProperty.propertyIdentifier);
                         scope.showDisplayItem = true;
                     }
                 });

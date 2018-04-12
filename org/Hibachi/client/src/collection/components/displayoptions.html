@@ -57,18 +57,7 @@
                             </button>
                         </div>
                     </div>
-                    <div class="col-xs-6" ng-if="showAggregates">
-                        
-                        <!-- Simple -->
-                        <span
-                                data-ng-if="selectedProperty.$$group === 'simple' && selectedProperty.ormtype !== 'string'"
-                                sw-display-item-aggregate-simple
-                                data-selected-property="selectedProperty"
-                                data-properties-list="propertiesList"
-                                data-bread-crumbs="breadCrumbs"
-                                data-selected-property-changed="selectedPropertyChanged(selectedProperty, true)"
-                                >
-                        </span>
+                    <div class="col-xs-6" >
                         
                         <!-- Drill down -->
                         <span
@@ -83,7 +72,7 @@
 
                         <!-- Compare Collections -->
                         <span
-                                data-ng-if="selectedProperty.$$group == 'compareCollections'"
+                                data-ng-if="selectedProperty.$$group == 'compareCollections' || (selectedProperty.$$group === 'simple' && selectedProperty.ormtype !== 'string')"
                                 sw-display-item-aggregate
                                 data-selected-property="selectedProperty"
                                 data-properties-list="propertiesList"
