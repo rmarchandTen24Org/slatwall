@@ -116,7 +116,7 @@ class ValidationService{
 
     public validateMaxValue=(value:number|string,comparisonValue:number|string=0):boolean=>{
         return this.validateLte(value,comparisonValue);
-    }
+    } 
 
     public validateMinLength=(value:number|string,comparisonValue:number|string=0):boolean=>{
         return this.validateGte(value,comparisonValue);
