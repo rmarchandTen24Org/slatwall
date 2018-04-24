@@ -49,16 +49,16 @@ Notes:
 
 component extends="HibachiService" accessors="true" {
 
-    public struct function snsReceive( required struct snsPayload, struct result = {} ) {
+    public struct function snsReceive( required struct snsPayload ) {
+
+        var resultData = {};
+
+        // Reference to data received from AWS SNS
+        resultData.snsPayload = arguments.snsPayload;
 
         // Response status to send back to AWS SNS
-        arguments.result.responseStatus = {statusCode = 200, statusText = "OK"}; 
-        
-        // Reference to data received from AWS SNS
-        arguments.result.snsPayload = arguments.snsPayload;
-        
-        // Data to populate for application consumption
-        arguments.result.data = {};
+        responseStatus = {statusCode = 200, statusText = "OK"}; 
+        resultData.responseStatus = responseStatus; 
 
         if (verifyAwsSignature()) {
 
@@ -89,23 +89,31 @@ component extends="HibachiService" accessors="true" {
     
                     // Automatically retrieve S3 object if not named "AMAZON_SES_SETUP_NOTIFICATION" and not spam or a virus verdict.
                     if (structKeyExists(arguments.snsPayload.message, 'receipt') && structKeyExists(arguments.snsPayload.message.receipt, 'action') && structKeyExists(arguments.snsPayload.message.receipt.action, 'type') && arguments.snsPayload.message.receipt.action.type == 'S3') {
-                        arguments.result.data.s3FileContent = getHibachiUtilityService().retrieveFromS3();
+                        var retrieveFromS3Args = {};
+                        retrieveFromS3Args.objectKey = arguments.snsPayload.message.receipt.action.objectKey;
+                        retrieveFromS3Args.bucketName = arguments.snsPayload.message.receipt.action.bucketName;
+                        retrieveFromS3Args.objectKeyPrefix = arguments.snsPayload.message.receipt.action.objectKeyPrefix;
+                        retrieveFromS3Args.awsAccessKeyId = '';
+                        retrieveFromS3Args.awsSecretAccessKey = '';
+                        retrieveFromS3Args.deleteS3ObjectAfter = false;
+
+                        arguments.snsPayload.s3FileData = getHibachiUtilityService().retrieveFromS3(argumentCollection = retrieveFromS3Args);
                     }
                 }
 
                 // Announce event with the data
-                getHibachiEventService().announceEvent(eventName="onAwsSnsReceive", eventData=arguments.result);
+                getHibachiEventService().announceEvent(eventName="onAwsSnsReceive", eventData=resultData);
             
             // Error further implementation required to handle notification type
             } else {
                 logHibachi("Need to further implement handling for SNS notifications of type '#snsPayload.type#'.");
-                arguments.result.responseStatus.statusCode = 501;
-                arguments.result.responseStatus.statusText = "Not implemented to handle '#snsPayload.type#'";
+                responseStatus.statusCode = 501;
+                responseStatus.statusText = "Not implemented to handle '#snsPayload.type#'";
             }
 
         }
 
-        return arguments.result;
+        return resultData;
     }
 
     /**
