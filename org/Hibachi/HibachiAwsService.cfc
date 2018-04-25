@@ -50,15 +50,11 @@ Notes:
 component extends="HibachiService" accessors="true" {
 
     public struct function snsReceive( required struct snsPayload ) {
-
-        var resultData = {};
-
-        // Reference to data received from AWS SNS
-        resultData.snsPayload = arguments.snsPayload;
+        
+        // Note: arguments.snsPayload is a reference to deserialized JSON data received from AWS SNS
 
         // Response status to send back to AWS SNS
         var responseStatus = {statusCode = 200, statusText = "OK"}; 
-        resultData.responseStatus = responseStatus; 
 
         if (verifyAwsSignature()) {
 
@@ -102,7 +98,7 @@ component extends="HibachiService" accessors="true" {
                 }
 
                 // Announce event with the data
-                getHibachiEventService().announceEvent(eventName="onAwsSnsReceive", eventData=resultData);
+                getHibachiEventService().announceEvent(eventName="onAwsSnsReceive", eventData={snsPayload=arguments.snsPayload, responseStatus=responseStatus});
             
             // Error further implementation required to handle notification type
             } else {
@@ -113,7 +109,7 @@ component extends="HibachiService" accessors="true" {
 
         }
 
-        return resultData;
+        return {snsPayload=arguments.snsPayload, responseStatus=responseStatus};
     }
 
     /**
