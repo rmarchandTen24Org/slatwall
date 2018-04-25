@@ -1122,11 +1122,6 @@
 		 * @return struct containing the parsed data
 		 */
 		public struct function parseEmail(required any emailContent) {
-
-			// Message Extraction RegEx
-			// Example: Replying back to notification after 3 attachments we sent to task. I've added some files also. Joe Smith On Fri, Apr 13, 2018 at 3:16 PM, Miguel Targa (ten24) < application@teamwork.com> wrote: > ===== WRITE YOUR REPLY ABOVE THIS LINE =====
-			// $1 contains message, $2 might not exist?, $3 is the delimiter    (.+)(\WOn\W\w{3}\,\W.+)(===== WRITE YOUR REPLY ABOVE THIS LINE =====)
-			// or finally try, $1 contains message                              (.+)(===== WRITE YOUR REPLY ABOVE THIS LINE =====)
 		
 			// Relevant Java Classes
 			// java.lang.Byte[]
@@ -1265,7 +1260,7 @@
 					messageOrAttachmentData.contentType = listFirst(messageOrAttachmentData.headers['Content-Type'], ";");
 					messageOrAttachmentData.disposition = arguments.mimeMessageOrBodyPart.getDisposition();
 					messageOrAttachmentData.filename = arguments.mimeMessageOrBodyPart.getFileName();
-					messageOrAttachmentData.fileExtension = listLast(messageOrAttachmentData.filename, ".");
+					messageOrAttachmentData.fileExtension = listLen(messageOrAttachmentData.filename, '.') > 1 ? listLast(messageOrAttachmentData.filename, ".") : "";
 					
 					// Plain Text Content
 					if (isInstanceOf(arguments.mimeMessageOrBodyPart.getContent(), "java.lang.String")) {
