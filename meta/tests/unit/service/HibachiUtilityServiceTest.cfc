@@ -355,12 +355,19 @@ component extends="Slatwall.meta.tests.unit.SlatwallUnitTestBase" {
 		//decrypt('2Tef82tq+TUV3XPJCaBANQ==', 'PRE8ihKSRr8vOczQgCo2fw==', 'AES/CBC/PKCS5Padding', 'Base64');
 	}
 
+	private any function readSampleEmailFile(required string filename) {
+		return fileReadBinary("/meta/tests/unit/resources/email/#arguments.filename#");
+	}
+
 	/**
 	 * @test
 	 */
-	public void function email_parser_variant_01() {
+	public void function email_parser_message_variant_01() {
+
+		// Very basic case, email has no attachments
+
 		// Read raw email content from local test file resource
-		var emailData = variables.service.parseEmail(emailContent=fileReadBinary("/meta/tests/unit/resources/email/sample_01.txt"));
+		var emailData = variables.service.parseEmail(emailContent=readSampleEmailFile("message_sample_01.txt"));
 
 		expect(emailData).toHaveKey('to');
 		expect(emailData).toHaveKey('from');
@@ -414,9 +421,108 @@ component extends="Slatwall.meta.tests.unit.SlatwallUnitTestBase" {
 		expect(emailData.messages[1]).toHaveKey('contentType');
 		expect(emailData.messages[1]).toHaveKey('headers');
 		expect(emailData.messages[1].contentType).toBe("text/plain");
+		expect(emailData.messages[1].body).notToMatch(".+\</div\>\B"); // no div tag present
 		expect(emailData.messages[1].body).toBe("this is just a plain simple message#chr(13)##chr(10)#");
 		expect(emailData.messages[2].contentType).toBe("text/html");
-		expect(emailData.messages[2].body).toMatch(".+\</div\>\B");
+		expect(emailData.messages[2].body).toMatch(".+\</div\>\B"); // div tag present
+	}
+
+	/**
+	 * @test
+	 */
+	public void function email_parser_message_variant_02() {
+
+		// Email has several attachments (octet-streams)
+
+		// Read raw email content from local test file resource
+		var emailData = variables.service.parseEmail(emailContent=readSampleEmailFile("message_sample_02.txt"));
+
+		expect(emailData).toHaveKey('to');
+		expect(emailData).toHaveKey('from');
+		expect(emailData).toHaveKey('replyTo');
+		expect(emailData).toHaveKey('cc');
+		expect(emailData).toHaveKey('bcc');
+		expect(emailData).toHaveKey('subject');
+		expect(emailData).toHaveKey('messages');
+		expect(emailData).toHaveKey('attachments');
+		expect(emailData).toHaveKey('headers');
+
+		expect(emailData).toHaveKey('messageID');
+		expect(emailData.sentDate).toBeTypeOf('string');
+		
+		expect(emailData).toHaveKey('sentDate');
+		expect(emailData.sentDate).toBeTypeOf('date');
+
+		expect(emailData.headers).toBeTypeOf('struct');
+		expect(emailData.headers).toHaveLength(25);
+
+		expect(emailData.attachments).toBeTypeOf('array');
+		expect(emailData.attachments).notToBeEmpty("Expecting attachments to exist.");
+		expect(emailData.attachments).toHaveLength(3);
+
+		expect(emailData.attachments[1]).toHaveKey('headers');
+		expect(emailData.attachments[1].headers).toHaveLength(3);
+		expect(emailData.attachments[1].headers).toHaveKey('content-transfer-encoding');
+		expect(emailData.attachments[1]).toHaveKey('contentType');
+		expect(emailData.attachments[1].contentType).toBe('application/octet-stream');
+		expect(emailData.attachments[1]).toHaveKey('disposition');
+		expect(emailData.attachments[1].disposition).toBe('attachment');
+		expect(emailData.attachments[1]).toHaveKey('fileBytes');
+		expect(emailData.attachments[1].fileBytes).toBeInstanceOf('[B'); // ByteArray
+		expect(emailData.attachments[1]).toHaveKey('fileExtension');
+		expect(emailData.attachments[1].fileExtension).toBe('config');
+		expect(emailData.attachments[1]).toHaveKey('filename');
+		expect(emailData.attachments[1].filename).toBe('web (2).config');
+		expect(emailData.attachments[1]).toHaveKey('fileSize');
+		expect(emailData.attachments[1].fileSize).toBeTypeOf('number');
+		expect(emailData.attachments[1].fileSize).toBe(2766);
+		
+		expect(emailData.attachments[2]).toHaveKey('filename');
+		expect(emailData.attachments[2].filename).toBe('web (1).config');
+		expect(emailData.attachments[2]).toHaveKey('fileSize');
+		expect(emailData.attachments[2].fileSize).toBeTypeOf('number');
+		expect(emailData.attachments[2].fileSize).toBe(2458);
+
+		expect(emailData.attachments[3]).toHaveKey('filename');
+		expect(emailData.attachments[3].filename).toBe('web.config');
+		expect(emailData.attachments[3]).toHaveKey('fileSize');
+		expect(emailData.attachments[3].fileSize).toBeTypeOf('number');
+		expect(emailData.attachments[3].fileSize).toBe(2766);
+
+		expect(emailData.from).toBeTypeOf('struct');
+		expect(emailData.from).toHaveKey('emailAddress');
+		expect(emailData.from).toHaveKey('name');
+		expect(emailData.from).toHaveKey('full');
+		expect(emailData.from.emailAddress).toBe("miguel.targa@dummy.com");
+
+		expect(emailData.to).toBeTypeOf('array');
+		expect(emailData.to).toHaveLength(1);
+		expect(emailData.to[1]).toHaveKey('emailAddress');
+		expect(emailData.to[1]).toHaveKey('name');
+		expect(emailData.to[1]).toHaveKey('full');
+		expect(emailData.to[1].emailAddress).toBe("reply.18.34454723.64@dummy.com");
+
+		expect(emailData.cc).toBeTypeOf('array');
+		expect(emailData.cc).notToBeEmpty();
+
+		expect(emailData.bcc).toBeTypeOf('array');
+		expect(emailData.bcc).toBeEmpty();
+
+		expect(emailData.replyTo).toBeTypeOf('struct');
+		expect(emailData.replyTo).toHaveKey('emailAddress');
+		expect(emailData.replyTo).toHaveKey('name');
+		expect(emailData.replyTo).toHaveKey('full');
+		expect(emailData.replyTo.emailAddress).toBe("miguel.targa@dummy.com");
+
+		expect(emailData.messages).notToBeEmpty("Expecting two messages to be parsed.");
+		expect(emailData.messages[1]).toHaveKey('body');
+		expect(emailData.messages[1]).toHaveKey('contentType');
+		expect(emailData.messages[1]).toHaveKey('headers');
+		expect(emailData.messages[1].contentType).toBe("text/plain");
+		expect(emailData.messages[1].body).notToMatch(".+\</html\>\B"); // no html tag present
+		expect(emailData.messages[1].body).toMatch("Adding 3 attachments#chr(13)##chr(10)##chr(13)##chr(10)##chr(13)##chr(10)#to this message reply!.*");
+		expect(emailData.messages[2].contentType).toBe("text/html");
+		expect(emailData.messages[2].body).toMatch(".+\</html\>\B"); // html tag present
 	}
 
 	titleStrings = ["Gift Card-$50", "Gift Card $50", "Gift - Card - $50", "Gift -- Card -- $50"];
