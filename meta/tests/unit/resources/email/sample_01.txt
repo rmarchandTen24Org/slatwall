@@ -1,0 +1,60 @@
+Return-Path: <todd.hatcher@ten24dev.com>
+Received: from mail-oi0-f67.google.com (mail-oi0-f67.google.com [209.85.218.67])
+ by inbound-smtp.us-east-1.amazonaws.com with SMTP id lr7oge40dasckhr22d363tca430pvetuqfumuk81
+ for dummy@ten24dev.com;
+ Mon, 09 Apr 2018 19:07:39 +0000 (UTC)
+X-SES-Spam-Verdict: PASS
+X-SES-Virus-Verdict: PASS
+Received-SPF: pass (spfCheck: domain of _spf.google.com designates 209.85.218.67 as permitted sender) client-ip=209.85.218.67; envelope-from=todd.hatcher@ten24dev.com; helo=mail-oi0-f67.google.com;
+Authentication-Results: amazonses.com;
+ spf=pass (spfCheck: domain of _spf.google.com designates 209.85.218.67 as permitted sender) client-ip=209.85.218.67; envelope-from=todd.hatcher@ten24dev.com; helo=mail-oi0-f67.google.com;
+ dkim=pass header.i=@gmail.com;
+X-SES-RECEIPT: AEFBQUFBQUFBQUFFN0ZvelZ2Q2VlUDQ0SUViSStwaVhyOFFOempkVExvYXlZQVlLbDh5aW41dWtNczhMdm1Ca3plZWduUTBsYTVaNmpWcVVZQnFtTkZXUElPSjVNOGR6blVxeUcxRU5DWEl5ZkVRK0U5M3RKYjVhdW53MWtJRDRtK0xyc3NLVTJQamx6MHdJR2pSMW5jZTQrUGdmN290VjUzazlMdW93d2NVeVdKSHY5RFAwb0tlR0RXTXBtMHBJOEY2Z2tmaEFzQ3hMc0NRV2lnQnc2cmc2cjRCRk5iVkMvSTZwbXdvMVdkN1ZsemVZUVRZdGIxNGNCWGRWRFZnRFhybWVybE1GQk51OVFmaFErVUtCZWl0NVBodjhyc0JwTHZ4V0NPMjRCZVBEVDM2TXNicjBrMHc9PQ==
+X-SES-DKIM-SIGNATURE: a=rsa-sha256; q=dns/txt; b=MZY1Dftlgexjric9GOx119EJ5OvRMee7uiZsbGOEEa5Z9xT5gKrThlcv6AETQ8RKz2JLTzoCp/93x0E57iOm1BrHcUThl0yBF+PV+A+SWvfTzcEX/x6dFeYz4R0QxvRKuVz9O1gfulE+UYI9LF3wyaXObr28VplNIFqo439sqLg=; c=relaxed/simple; s=ug7nbtf4gccmlpwj322ax3p6ow6yfsug; d=amazonses.com; t=1523300859; v=1; bh=abYCnbuTrGhJPQ0sc56Yi0Fvb79tM0BR+/7jaBwvVRw=; h=From:To:Cc:Bcc:Subject:Date:Message-ID:MIME-Version:Content-Type:X-SES-RECEIPT;
+Received: by mail-oi0-f67.google.com with SMTP id e123-v6so8704486oih.13
+        for <dummy@ten24dev.com>; Mon, 09 Apr 2018 12:07:39 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:from:date:message-id:subject:to;
+        bh=abYCnbuTrGhJPQ0sc56Yi0Fvb79tM0BR+/7jaBwvVRw=;
+        b=HkQsfAU89HWX5rRejM5x84EzgPHoPb5kdOSXqahA8LBRxN8cYZ3QTA90ncNlf2ICcC
+         qRMIZquDoD76ct3JWMCD0RnccYblMTNK3Ys6MArIluKaBXLE1EFQ4M4fDFrmzdgx0eNB
+         QgZKLBPKByWrN+qlKFKUgMtENVc1QyV7aElJ2yE+5/WEnlLs83VcnnVI9VeOgElsVSxL
+         QbHbHixivFavyLw/6MTNb5YZUxbGJ8R6N044r5UvshqyWZnDnDHbj/8LnILdjb40EX2J
+         B77aaXWBjuofQXSQcryiawxvUw8eaI+FPvWLO3Aqh0gEnjx8KS8ZOjG9h237QwRqONWc
+         6FYA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:from:date:message-id:subject:to;
+        bh=abYCnbuTrGhJPQ0sc56Yi0Fvb79tM0BR+/7jaBwvVRw=;
+        b=o8/Ma2fvKZ9k1CA+YUVkaaQ1VNXaXSXvCCI2ZoUPTxKz+T80i6rvQqVycI648ARNdZ
+         aN5es+5odDMbhYLJYC0N/sHCgUfbGVyNjkiAhXTFG/B7S6JhrYYV74t2pG62Fd0RiRYg
+         iLV0RB+ty+15uaVoiosvn0myP4QGAR8UAkJWZE12/mouE5aXsLeY99IKvk1xX1GrdeQh
+         XPGP3gVpBcRuIzLgHLYsfwSairXZgnLytf5d5dHsbEoDXy837saEh2Y8RCHHhSoIj8N9
+         o89mMv8HKtRtt4/H4CEx3JmiVcW1sgtwtYeD901bc34K+RF3819w8nk/oCSzZ49vCwMK
+         7pCA==
+X-Gm-Message-State: ALQs6tC9I8BaQRtnjdmUuXmzJwPjFwWXqvcy13/C+3aY0citHUIpyTmS
+	67kQvgA0TYC/mDR6/O+IeFl7/RFGUaQFwu8aZwk=
+X-Google-Smtp-Source: AIpwx48dxlMfyl+FyWK2b5Ip6l2PX570GYr27yHkEwY7KGQ86ToEeHZdEsmciIXBr4F2Df3qJwb+VChg7+T1t3zwJzc=
+X-Received: by 2002:aca:f416:: with SMTP id s22-v6mr163107oih.204.1523300858272;
+ Mon, 09 Apr 2018 12:07:38 -0700 (PDT)
+MIME-Version: 1.0
+Received: by 10.74.209.75 with HTTP; Mon, 9 Apr 2018 12:07:37 -0700 (PDT)
+From: Todd Hatcher <todd.hatcher@ten24dev.com>
+Date: Mon, 9 Apr 2018 14:07:37 -0500
+Message-ID: <CAFeFMakQx1kpjkkcknYiE87WcpuGNXyhxN1ccjGpPRJa2aU01g@mail.gmail.com>
+Subject: message #2
+To: dummy@ten24dev.com
+Content-Type: multipart/alternative; boundary="0000000000008b338805696f1ef8"
+
+--0000000000008b338805696f1ef8
+Content-Type: text/plain; charset="UTF-8"
+
+this is just a plain simple message
+
+--0000000000008b338805696f1ef8
+Content-Type: text/html; charset="UTF-8"
+
+<div dir="ltr">this is just a plain simple message</div>
+
+--0000000000008b338805696f1ef8--

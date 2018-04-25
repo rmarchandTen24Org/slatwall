@@ -355,6 +355,70 @@ component extends="Slatwall.meta.tests.unit.SlatwallUnitTestBase" {
 		//decrypt('2Tef82tq+TUV3XPJCaBANQ==', 'PRE8ihKSRr8vOczQgCo2fw==', 'AES/CBC/PKCS5Padding', 'Base64');
 	}
 
+	/**
+	 * @test
+	 */
+	public void function email_parser_variant_01() {
+		// Read raw email content from local test file resource
+		var emailData = variables.service.parseEmail(emailContent=fileReadBinary("/meta/tests/unit/resources/email/sample_01.txt"));
+
+		expect(emailData).toHaveKey('to');
+		expect(emailData).toHaveKey('from');
+		expect(emailData).toHaveKey('replyTo');
+		expect(emailData).toHaveKey('cc');
+		expect(emailData).toHaveKey('bcc');
+		expect(emailData).toHaveKey('subject');
+		expect(emailData).toHaveKey('messages');
+		expect(emailData).toHaveKey('attachments');
+		expect(emailData).toHaveKey('headers');
+
+		expect(emailData).toHaveKey('messageID');
+		expect(emailData.sentDate).toBeTypeOf('string');
+		
+		expect(emailData).toHaveKey('sentDate');
+		expect(emailData.sentDate).toBeTypeOf('date');
+
+		expect(emailData.headers).toBeTypeOf('struct');
+		expect(emailData.headers).toHaveLength(20);
+
+		expect(emailData.attachments).toBeTypeOf('array');
+		expect(emailData.attachments).toBeEmpty("Not expecting any attachments.");
+		
+		expect(emailData.from).toBeTypeOf('struct');
+		expect(emailData.from).toHaveKey('emailAddress');
+		expect(emailData.from).toHaveKey('name');
+		expect(emailData.from).toHaveKey('full');
+		expect(emailData.from.emailAddress).toBe("todd.hatcher@ten24dev.com");
+
+		expect(emailData.to).toBeTypeOf('array');
+		expect(emailData.to).toHaveLength(1);
+		expect(emailData.to[1]).toHaveKey('emailAddress');
+		expect(emailData.to[1]).notToHaveKey('name');
+		expect(emailData.to[1]).toHaveKey('full');
+		expect(emailData.to[1].emailAddress).toBe("dummy@ten24dev.com");
+
+		expect(emailData.cc).toBeTypeOf('array');
+		expect(emailData.cc).toBeEmpty();
+
+		expect(emailData.bcc).toBeTypeOf('array');
+		expect(emailData.bcc).toBeEmpty();
+
+		expect(emailData.replyTo).toBeTypeOf('struct');
+		expect(emailData.replyTo).toHaveKey('emailAddress');
+		expect(emailData.replyTo).toHaveKey('name');
+		expect(emailData.replyTo).toHaveKey('full');
+		expect(emailData.replyTo.emailAddress).toBe("todd.hatcher@ten24dev.com");
+
+		expect(emailData.messages).notToBeEmpty("Expecting two messages to be parsed.");
+		expect(emailData.messages[1]).toHaveKey('body');
+		expect(emailData.messages[1]).toHaveKey('contentType');
+		expect(emailData.messages[1]).toHaveKey('headers');
+		expect(emailData.messages[1].contentType).toBe("text/plain");
+		expect(emailData.messages[1].body).toBe("this is just a plain simple message#chr(13)##chr(10)#");
+		expect(emailData.messages[2].contentType).toBe("text/html");
+		expect(emailData.messages[2].body).toMatch(".+\</div\>\B");
+	}
+
 	titleStrings = ["Gift Card-$50", "Gift Card $50", "Gift - Card - $50", "Gift -- Card -- $50"];
 
 	/**
