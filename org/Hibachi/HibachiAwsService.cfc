@@ -57,7 +57,7 @@ component extends="HibachiService" accessors="true" {
         resultData.snsPayload = arguments.snsPayload;
 
         // Response status to send back to AWS SNS
-        responseStatus = {statusCode = 200, statusText = "OK"}; 
+        var responseStatus = {statusCode = 200, statusText = "OK"}; 
         resultData.responseStatus = responseStatus; 
 
         if (verifyAwsSignature()) {
