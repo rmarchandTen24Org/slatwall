@@ -1313,7 +1313,7 @@
 		
 					// TODO: DELETE THIS, DEBUGGING ONLY
 					// fileWrite needs byteArray, it cannot handle an outputStream, CF documentation is ambiguous explaining the finer detail of the "data" parameter
-					fileWrite('#expandPath(".")#\assets\images\generated\#randRange(1,1000)#_#messageOrAttachmentData.filename#', messageOrAttachmentData.fileBytes);
+					// fileWrite('#expandPath(".")#\assets\images\generated\#randRange(1,1000)#_#messageOrAttachmentData.filename#', messageOrAttachmentData.fileBytes);
 				}
 			}
 		
