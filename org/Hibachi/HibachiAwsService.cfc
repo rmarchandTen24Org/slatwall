@@ -49,8 +49,8 @@ Notes:
 
 component extends="HibachiService" accessors="true" {
 
-    public struct function snsReceive( required struct snsPayload ) {
-        
+    public struct function snsReceive( required struct snsPayload, boolean autoRetrieveS3Object = true ) {
+
         // Note: arguments.snsPayload is a reference to deserialized JSON data received from AWS SNS
 
         // Response status to send back to AWS SNS
@@ -84,7 +84,7 @@ component extends="HibachiService" accessors="true" {
                     arguments.snsPayload.message = deserializeJSON(arguments.snsPayload.message);
     
                     // Automatically retrieve S3 object if not named "AMAZON_SES_SETUP_NOTIFICATION" and not spam or a virus verdict.
-                    if (structKeyExists(arguments.snsPayload.message, 'receipt') && structKeyExists(arguments.snsPayload.message.receipt, 'action') && structKeyExists(arguments.snsPayload.message.receipt.action, 'type') && arguments.snsPayload.message.receipt.action.type == 'S3') {
+                    if (arguments.autoRetrieveS3Object && structKeyExists(arguments.snsPayload.message, 'receipt') && structKeyExists(arguments.snsPayload.message.receipt, 'action') && structKeyExists(arguments.snsPayload.message.receipt.action, 'type') && arguments.snsPayload.message.receipt.action.type == 'S3') {
                         var retrieveFromS3Args = {};
                         retrieveFromS3Args.objectKey = arguments.snsPayload.message.receipt.action.objectKey;
                         retrieveFromS3Args.bucketName = arguments.snsPayload.message.receipt.action.bucketName;
