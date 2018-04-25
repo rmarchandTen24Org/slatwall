@@ -47,7 +47,21 @@ Notes:
 
 */
 component accessors="true" output="false" extends="Slatwall.org.Hibachi.HibachiAwsService" {
+
+    property name="settingService" type="any";
+
+    // TODO: Implement utilizing Aws Key getter methods
     public boolean function verifyAwsSignature() {
         return true;
+    }
+
+    // @hint Overridden helper method that provides AWS public access key id.
+    private string function getAwsAccessKeyId() {
+        return getService("settingService").getSettingValue(settingName="globalS3AccessKey", object=this);
+    }
+
+    // @hint Overridden method that provides AWS private secret access key.
+    private string function getAwsSecretAccessKey() {
+        return getService("settingService").getSettingValue(settingName="globalS3SecretAccessKey", object=this);
     }
 }

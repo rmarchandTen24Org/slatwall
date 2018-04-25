@@ -93,8 +93,8 @@ component extends="HibachiService" accessors="true" {
                         retrieveFromS3Args.objectKey = arguments.snsPayload.message.receipt.action.objectKey;
                         retrieveFromS3Args.bucketName = arguments.snsPayload.message.receipt.action.bucketName;
                         retrieveFromS3Args.objectKeyPrefix = arguments.snsPayload.message.receipt.action.objectKeyPrefix;
-                        retrieveFromS3Args.awsAccessKeyId = '';
-                        retrieveFromS3Args.awsSecretAccessKey = '';
+                        retrieveFromS3Args.awsAccessKeyId = getAwsAccessKeyId();
+                        retrieveFromS3Args.awsSecretAccessKey = getAwsSecretAccessKey();
                         retrieveFromS3Args.deleteS3ObjectAfter = false;
 
                         arguments.snsPayload.s3FileData = getHibachiUtilityService().retrieveFromS3(argumentCollection = retrieveFromS3Args);
@@ -117,10 +117,20 @@ component extends="HibachiService" accessors="true" {
     }
 
     /**
-     * Check to prevent processing a spoofed requests
+     * Verfifcation check to prevent processing a spoofed requests, Should be overriden with implementation specific logic
      * TODO: Needs params specified, extend to rely on Slatwall settings within model/service/HibachiAwsService
      */
     public boolean function verifyAwsSignature() {
         return true;
+    }
+
+    // @hint helper method that provides AWS public access key id. Should be overridden with implementation specific logic.
+    private string function getAwsAccessKeyId() {
+        return '';
+    }
+
+    // @hint helper method that provides AWS private secret access key. Should be overridden with implementation specific logic.
+    private string function getAwsSecretAccessKey() {
+        return '';
     }
 }
