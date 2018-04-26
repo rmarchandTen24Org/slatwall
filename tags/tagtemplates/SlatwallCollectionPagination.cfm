@@ -1,13 +1,15 @@
 <cfoutput>
-	<cfif attributes.collection.getTotalPages() gt 1>
 		<nav>
-			
 		    <ul class="pagination">
 		    	<cfif currentPage gt 1>
-			    	<!--- First --->
-			    	<li><a href="#attributes.slatwallScope.getService('hibachiCollectionService').buildURL( 'p:current=1' )#" <cfif currentPage EQ 1>disabled="disabled" title="First Page" </cfif>>
-			    		#attributes.first#
-			    		</a></li>
+			    	
+			    	<cfif attributes.showFirstAndLast>
+						<!--- First --->
+			    		<li><a href="#attributes.slatwallScope.getService('hibachiCollectionService').buildURL( 'p:current=1' )#" <cfif currentPage EQ 1>disabled="disabled" title="First Page" </cfif>>
+			    			#attributes.first#
+			    		</a></li>	
+			    	</cfif>
+
 			        
 			        <!--- Previous --->
 			        <li><a href="#attributes.slatwallScope.getService('hibachiCollectionService').buildURL( 'p:current='&previousPage )#" <cfif currentPage EQ 1>disabled="disabled" title="Previous Page #currentPage-1#" </cfif>>
@@ -44,15 +46,16 @@
 			        		#attributes.next#
 			        	</a>
 			        </li>
-			        <!--- Last --->
-			        <li>
-			        	<a href="#attributes.slatwallScope.getService('hibachiCollectionService').buildURL( 'p:current='&lastPage )#" title="Last Page #lastPage#">
-			        		#attributes.last#
-			        	</a>
-			        </li>
+			       <cfif attributes.showFirstAndLast>
+				        <!--- Last --->
+				        <li>
+				        	<a href="#attributes.slatwallScope.getService('hibachiCollectionService').buildURL( 'p:current='&lastPage )#" title="Last Page #lastPage#">
+				        		#attributes.last#
+				        	</a>
+				        </li>
+				    </cfif>
 		        </cfif>
 		    </ul>
 		</nav>
-	</cfif>
 </cfoutput>
 

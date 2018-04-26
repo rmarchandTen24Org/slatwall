@@ -57,12 +57,13 @@ Notes:
 <cfimport prefix="swa" taglib="../tags" />
 <cfimport prefix="hb" taglib="../org/Hibachi/HibachiTags" />
 <cfparam name="attributes.collection" type="any" />
-<cfparam name="attributes.template" type="any" default="./tagtemplates/slatwallcollectionpagination.cfm"/>
+<cfparam name="attributes.template" type="any" default="tagtemplates/SlatwallCollectionPagination.cfm"/>
 <cfparam name="attributes.slatwallScope" type="any" />
 <cfparam name="attributes.first" type="string" default="&laquo;"/>
 <cfparam name="attributes.previous" type="string" default="&lsaquo; "/>
 <cfparam name="attributes.next" type="string" default="&rsaquo;"/>
 <cfparam name="attributes.last" type="string"default="&raquo;" />
+<cfparam name="attributes.showFirstAndLast" type="boolean" default="true">
 <cfif thisTag.executionMode is "start">
 	<cfoutput>
 		<cfset lastPage = attributes.collection.getTotalPages()>
@@ -70,8 +71,6 @@ Notes:
 	    <cfset nextPage = currentPage+1>
 	    <cfset previousPage = (currentPage GT 1) ? currentPage-1 : 1>
 	    <cfset maxPage = nextPage + 3>
-		<cfif !isNull(attributes.collection) AND attributes.collection.getTotalPages() GT 1>
 			<cfoutput>#getHTML(attributes)#</cfoutput>
-        </cfif>
 	</cfoutput>
 </cfif>

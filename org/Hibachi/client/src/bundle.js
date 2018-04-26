@@ -233,7 +233,7 @@ var Observable = (function () {
             }, reject, resolve);
         });
     };
-    /** @deprecated internal use only */ Observable.prototype._subscribe = function (subscriber) {
+    Observable.prototype._subscribe = function (subscriber) {
         return this.source.subscribe(subscriber);
     };
     /**
@@ -453,7 +453,7 @@ var Subscriber = (function (_super) {
         this.destination.complete();
         this.unsubscribe();
     };
-    /** @deprecated internal use only */ Subscriber.prototype._unsubscribeAndRecycle = function () {
+    Subscriber.prototype._unsubscribeAndRecycle = function () {
         var _a = this, _parent = _a._parent, _parents = _a._parents;
         this._parent = null;
         this._parents = null;
@@ -574,7 +574,7 @@ var SafeSubscriber = (function (_super) {
         }
         return false;
     };
-    /** @deprecated internal use only */ SafeSubscriber.prototype._unsubscribe = function () {
+    SafeSubscriber.prototype._unsubscribe = function () {
         var _parentSubscriber = this._parentSubscriber;
         this._context = null;
         this._parentSubscriber = null;
@@ -1064,7 +1064,7 @@ var Subject = (function (_super) {
             return _super.prototype._trySubscribe.call(this, subscriber);
         }
     };
-    /** @deprecated internal use only */ Subject.prototype._subscribe = function (subscriber) {
+    Subject.prototype._subscribe = function (subscriber) {
         if (this.closed) {
             throw new ObjectUnsubscribedError_1.ObjectUnsubscribedError();
         }
@@ -1120,7 +1120,7 @@ var AnonymousSubject = (function (_super) {
             this.destination.complete();
         }
     };
-    /** @deprecated internal use only */ AnonymousSubject.prototype._subscribe = function (subscriber) {
+    AnonymousSubject.prototype._subscribe = function (subscriber) {
         var source = this.source;
         if (source) {
             return this.source.subscribe(subscriber);
@@ -1322,7 +1322,7 @@ var ArrayObservable = (function (_super) {
         state.index = index + 1;
         this.schedule(state);
     };
-    /** @deprecated internal use only */ ArrayObservable.prototype._subscribe = function (subscriber) {
+    ArrayObservable.prototype._subscribe = function (subscriber) {
         var index = 0;
         var array = this.array;
         var count = array.length;
@@ -1417,7 +1417,7 @@ var EmptyObservable = (function (_super) {
         var subscriber = arg.subscriber;
         subscriber.complete();
     };
-    /** @deprecated internal use only */ EmptyObservable.prototype._subscribe = function (subscriber) {
+    EmptyObservable.prototype._subscribe = function (subscriber) {
         var scheduler = this.scheduler;
         if (scheduler) {
             return scheduler.schedule(EmptyObservable.dispatch, 0, { subscriber: subscriber });
@@ -1773,7 +1773,6 @@ var coremodule = angular.module('hibachi.core', [
     }])
     .constant('hibachiPathBuilder', new hibachipathbuilder_1.HibachiPathBuilder())
     .constant('corePartialsPath', 'core/components/')
-    //services
     .service('cacheService', cacheservice_1.CacheService)
     .service('publicService', publicservice_1.PublicService)
     .service('utilityService', utilityservice_1.UtilityService)
@@ -1801,16 +1800,13 @@ var coremodule = angular.module('hibachi.core', [
     .service('cartService', cartservice_1.CartService)
     .service('hibachiValidationService', hibachivalidationservice_1.HibachiValidationService)
     .service('entityService', entityservice_1.EntityService)
-    //controllers
     .controller('globalSearch', globalsearch_1.GlobalSearchController)
-    //filters
     .filter('dateFilter', ['$filter', datefilter_1.DateFilter.Factory])
     .filter('percentage', [percentage_1.PercentageFilter.Factory])
     .filter('trim', [swtrim_1.SWTrim.Factory])
     .filter('entityRBKey', ['rbkeyService', entityrbkey_1.EntityRBKey.Factory])
     .filter('swdate', ['$filter', datefilter_1.DateFilter.Factory])
     .filter('unique', [swunique_1.SWUnique.Factory])
-    //directives
     .directive('swCollectionConfig', swcollectionconfig_1.SWCollectionConfig.Factory())
     .directive('swCollectionColumn', swcollectioncolumn_1.SWCollectionColumn.Factory())
     .directive('swCollectionFilter', swcollectionfilter_1.SWCollectionFilter.Factory())
@@ -2578,7 +2574,7 @@ var AsyncAction = (function (_super) {
             return errorValue;
         }
     };
-    /** @deprecated internal use only */ AsyncAction.prototype._unsubscribe = function () {
+    AsyncAction.prototype._unsubscribe = function () {
         var id = this.id;
         var scheduler = this.scheduler;
         var actions = scheduler.actions;
@@ -2807,7 +2803,7 @@ var AsyncSubject = (function (_super) {
         this.hasNext = false;
         this.hasCompleted = false;
     }
-    /** @deprecated internal use only */ AsyncSubject.prototype._subscribe = function (subscriber) {
+    AsyncSubject.prototype._subscribe = function (subscriber) {
         if (this.hasError) {
             subscriber.error(this.thrownError);
             return Subscription_1.Subscription.EMPTY;
@@ -2879,7 +2875,7 @@ var ReplaySubject = (function (_super) {
         this._trimBufferThenGetEvents();
         _super.prototype.next.call(this, value);
     };
-    /** @deprecated internal use only */ ReplaySubject.prototype._subscribe = function (subscriber) {
+    ReplaySubject.prototype._subscribe = function (subscriber) {
         var _events = this._trimBufferThenGetEvents();
         var scheduler = this.scheduler;
         var subscription;
@@ -3501,7 +3497,7 @@ var ThrottleSubscriber = (function (_super) {
             return null;
         }
     };
-    /** @deprecated internal use only */ ThrottleSubscriber.prototype._unsubscribe = function () {
+    ThrottleSubscriber.prototype._unsubscribe = function () {
         var _a = this, throttled = _a.throttled, _trailingValue = _a._trailingValue, _hasTrailingValue = _a._hasTrailingValue, _trailing = _a._trailing;
         this._trailingValue = null;
         this._hasTrailingValue = false;
@@ -4001,7 +3997,7 @@ var ScalarObservable = (function (_super) {
         state.done = true;
         this.schedule(state);
     };
-    /** @deprecated internal use only */ ScalarObservable.prototype._subscribe = function (subscriber) {
+    ScalarObservable.prototype._subscribe = function (subscriber) {
         var value = this.value;
         var scheduler = this.scheduler;
         if (scheduler) {
@@ -4960,7 +4956,7 @@ var RefCountSubscriber = (function (_super) {
         _super.call(this, destination);
         this.connectable = connectable;
     }
-    /** @deprecated internal use only */ RefCountSubscriber.prototype._unsubscribe = function () {
+    RefCountSubscriber.prototype._unsubscribe = function () {
         var connectable = this.connectable;
         if (!connectable) {
             this.connection = null;
@@ -5253,7 +5249,7 @@ var SwitchMapSubscriber = (function (_super) {
             _super.prototype._complete.call(this);
         }
     };
-    /** @deprecated internal use only */ SwitchMapSubscriber.prototype._unsubscribe = function () {
+    SwitchMapSubscriber.prototype._unsubscribe = function () {
         this.innerSubscription = null;
     };
     SwitchMapSubscriber.prototype.notifyComplete = function (innerSub) {
@@ -5488,9 +5484,7 @@ var alertcontroller_1 = __webpack_require__(485);
 //services
 var alertservice_1 = __webpack_require__(487);
 var alertmodule = angular.module('hibachi.alert', [])
-    //controllers
     .controller('alertController', alertcontroller_1.AlertController)
-    //services
     .service('alertService', alertservice_1.AlertService);
 exports.alertmodule = alertmodule;
 
@@ -5957,7 +5951,7 @@ var BehaviorSubject = (function (_super) {
         enumerable: true,
         configurable: true
     });
-    /** @deprecated internal use only */ BehaviorSubject.prototype._subscribe = function (subscriber) {
+    BehaviorSubject.prototype._subscribe = function (subscriber) {
         var subscription = _super.prototype._subscribe.call(this, subscriber);
         if (subscription && !subscription.closed) {
             subscriber.next(this._value);
@@ -6064,18 +6058,17 @@ var refCount_1 = __webpack_require__(52);
  */
 var ConnectableObservable = (function (_super) {
     __extends(ConnectableObservable, _super);
-    function ConnectableObservable(/** @deprecated internal use only */ source, 
-        /** @deprecated internal use only */ subjectFactory) {
+    function ConnectableObservable(source, subjectFactory) {
         _super.call(this);
         this.source = source;
         this.subjectFactory = subjectFactory;
-        /** @deprecated internal use only */ this._refCount = 0;
+        this._refCount = 0;
         this._isComplete = false;
     }
-    /** @deprecated internal use only */ ConnectableObservable.prototype._subscribe = function (subscriber) {
+    ConnectableObservable.prototype._subscribe = function (subscriber) {
         return this.getSubject().subscribe(subscriber);
     };
-    /** @deprecated internal use only */ ConnectableObservable.prototype.getSubject = function () {
+    ConnectableObservable.prototype.getSubject = function () {
         var subject = this._subject;
         if (!subject || subject.isStopped) {
             this._subject = this.subjectFactory();
@@ -6132,7 +6125,7 @@ var ConnectableSubscriber = (function (_super) {
         this._unsubscribe();
         _super.prototype._complete.call(this);
     };
-    /** @deprecated internal use only */ ConnectableSubscriber.prototype._unsubscribe = function () {
+    ConnectableSubscriber.prototype._unsubscribe = function () {
         var connectable = this.connectable;
         if (connectable) {
             this.connectable = null;
@@ -6169,7 +6162,7 @@ var RefCountSubscriber = (function (_super) {
         _super.call(this, destination);
         this.connectable = connectable;
     }
-    /** @deprecated internal use only */ RefCountSubscriber.prototype._unsubscribe = function () {
+    RefCountSubscriber.prototype._unsubscribe = function () {
         var connectable = this.connectable;
         if (!connectable) {
             this.connection = null;
@@ -6333,7 +6326,7 @@ var FromObservable = (function (_super) {
         }
         throw new TypeError((ish !== null && typeof ish || ish) + ' is not observable');
     };
-    /** @deprecated internal use only */ FromObservable.prototype._subscribe = function (subscriber) {
+    FromObservable.prototype._subscribe = function (subscriber) {
         var ish = this.ish;
         var scheduler = this.scheduler;
         if (scheduler == null) {
@@ -6402,7 +6395,7 @@ var PromiseObservable = (function (_super) {
     PromiseObservable.create = function (promise, scheduler) {
         return new PromiseObservable(promise, scheduler);
     };
-    /** @deprecated internal use only */ PromiseObservable.prototype._subscribe = function (subscriber) {
+    PromiseObservable.prototype._subscribe = function (subscriber) {
         var _this = this;
         var promise = this.promise;
         var scheduler = this.scheduler;
@@ -6598,7 +6591,7 @@ var AjaxObservable = (function (_super) {
         }
         this.request = request;
     }
-    /** @deprecated internal use only */ AjaxObservable.prototype._subscribe = function (subscriber) {
+    AjaxObservable.prototype._subscribe = function (subscriber) {
         return new AjaxSubscriber(subscriber, this.request);
     };
     /**
@@ -7400,7 +7393,7 @@ var BufferTimeSubscriber = (function (_super) {
         }
         _super.prototype._complete.call(this);
     };
-    /** @deprecated internal use only */ BufferTimeSubscriber.prototype._unsubscribe = function () {
+    BufferTimeSubscriber.prototype._unsubscribe = function () {
         this.contexts = null;
     };
     BufferTimeSubscriber.prototype.onBufferFull = function (context) {
@@ -7703,7 +7696,7 @@ var BufferWhenSubscriber = (function (_super) {
         }
         _super.prototype._complete.call(this);
     };
-    /** @deprecated internal use only */ BufferWhenSubscriber.prototype._unsubscribe = function () {
+    BufferWhenSubscriber.prototype._unsubscribe = function () {
         this.buffer = null;
         this.subscribing = false;
     };
@@ -8689,12 +8682,12 @@ var DelayWhenSubscriber = (function (_super) {
  */
 var SubscriptionDelayObservable = (function (_super) {
     __extends(SubscriptionDelayObservable, _super);
-    function SubscriptionDelayObservable(/** @deprecated internal use only */ source, subscriptionDelay) {
+    function SubscriptionDelayObservable(source, subscriptionDelay) {
         _super.call(this);
         this.source = source;
         this.subscriptionDelay = subscriptionDelay;
     }
-    /** @deprecated internal use only */ SubscriptionDelayObservable.prototype._subscribe = function (subscriber) {
+    SubscriptionDelayObservable.prototype._subscribe = function (subscriber) {
         this.subscriptionDelay.subscribe(new SubscriptionDelaySubscriber(subscriber, this.source));
     };
     return SubscriptionDelayObservable;
@@ -10068,7 +10061,7 @@ var GroupDurationSubscriber = (function (_super) {
     GroupDurationSubscriber.prototype._next = function (value) {
         this.complete();
     };
-    /** @deprecated internal use only */ GroupDurationSubscriber.prototype._unsubscribe = function () {
+    GroupDurationSubscriber.prototype._unsubscribe = function () {
         var _a = this, parent = _a.parent, key = _a.key;
         this.key = this.parent = null;
         if (parent) {
@@ -10093,7 +10086,7 @@ var GroupedObservable = (function (_super) {
         this.groupSubject = groupSubject;
         this.refCountSubscription = refCountSubscription;
     }
-    /** @deprecated internal use only */ GroupedObservable.prototype._subscribe = function (subscriber) {
+    GroupedObservable.prototype._subscribe = function (subscriber) {
         var subscription = new Subscription_1.Subscription();
         var _a = this, refCountSubscription = _a.refCountSubscription, groupSubject = _a.groupSubject;
         if (refCountSubscription && !refCountSubscription.closed) {
@@ -11460,7 +11453,7 @@ var RepeatWhenSubscriber = (function (_super) {
             this.notifications.next();
         }
     };
-    /** @deprecated internal use only */ RepeatWhenSubscriber.prototype._unsubscribe = function () {
+    RepeatWhenSubscriber.prototype._unsubscribe = function () {
         var _a = this, notifications = _a.notifications, retriesSubscription = _a.retriesSubscription;
         if (notifications) {
             notifications.unsubscribe();
@@ -11472,7 +11465,7 @@ var RepeatWhenSubscriber = (function (_super) {
         }
         this.retries = null;
     };
-    /** @deprecated internal use only */ RepeatWhenSubscriber.prototype._unsubscribeAndRecycle = function () {
+    RepeatWhenSubscriber.prototype._unsubscribeAndRecycle = function () {
         var _a = this, notifications = _a.notifications, retries = _a.retries, retriesSubscription = _a.retriesSubscription;
         this.notifications = null;
         this.retries = null;
@@ -11647,7 +11640,7 @@ var RetryWhenSubscriber = (function (_super) {
             errors.next(err);
         }
     };
-    /** @deprecated internal use only */ RetryWhenSubscriber.prototype._unsubscribe = function () {
+    RetryWhenSubscriber.prototype._unsubscribe = function () {
         var _a = this, errors = _a.errors, retriesSubscription = _a.retriesSubscription;
         if (errors) {
             errors.unsubscribe();
@@ -12685,7 +12678,7 @@ var SwitchMapToSubscriber = (function (_super) {
             _super.prototype._complete.call(this);
         }
     };
-    /** @deprecated internal use only */ SwitchMapToSubscriber.prototype._unsubscribe = function () {
+    SwitchMapToSubscriber.prototype._unsubscribe = function () {
         this.innerSubscription = null;
     };
     SwitchMapToSubscriber.prototype.notifyComplete = function (innerSub) {
@@ -13434,7 +13427,7 @@ var TimeoutSubscriber = (function (_super) {
         }
         _super.prototype._next.call(this, value);
     };
-    /** @deprecated internal use only */ TimeoutSubscriber.prototype._unsubscribe = function () {
+    TimeoutSubscriber.prototype._unsubscribe = function () {
         this.action = null;
         this.scheduler = null;
         this.errorInstance = null;
@@ -13568,7 +13561,7 @@ var TimeoutWithSubscriber = (function (_super) {
         }
         _super.prototype._next.call(this, value);
     };
-    /** @deprecated internal use only */ TimeoutWithSubscriber.prototype._unsubscribe = function () {
+    TimeoutWithSubscriber.prototype._unsubscribe = function () {
         this.action = null;
         this.scheduler = null;
         this.withObservable = null;
@@ -13699,7 +13692,7 @@ var WindowSubscriber = (function (_super) {
         this.window.complete();
         this.destination.complete();
     };
-    /** @deprecated internal use only */ WindowSubscriber.prototype._unsubscribe = function () {
+    WindowSubscriber.prototype._unsubscribe = function () {
         this.window = null;
     };
     WindowSubscriber.prototype.openWindow = function () {
@@ -13846,7 +13839,7 @@ var WindowCountSubscriber = (function (_super) {
         }
         this.destination.complete();
     };
-    /** @deprecated internal use only */ WindowCountSubscriber.prototype._unsubscribe = function () {
+    WindowCountSubscriber.prototype._unsubscribe = function () {
         this.count = 0;
         this.windows = null;
     };
@@ -14146,7 +14139,7 @@ var WindowToggleSubscriber = (function (_super) {
         }
         _super.prototype._complete.call(this);
     };
-    /** @deprecated internal use only */ WindowToggleSubscriber.prototype._unsubscribe = function () {
+    WindowToggleSubscriber.prototype._unsubscribe = function () {
         var contexts = this.contexts;
         this.contexts = null;
         if (contexts) {
@@ -15014,17 +15007,13 @@ var collectionmodule = angular.module('hibachi.collection', [core_module_1.corem
     .config([function () {
     }]).run([function () {
     }])
-    //constants
     .constant('collectionPartialsPath', 'collection/components/')
-    //controllers
     .controller('collections', collections_1.CollectionController)
     .controller('confirmationController', confirmationcontroller_1.ConfirmationController)
     .controller('createCollection', createcollection_1.CreateCollection)
     .controller('entity_createcollection', entity_createcollection_1.CollectionCreateController)
-    //services
     .factory('collectionConfigService', ['rbkeyService', '$hibachi', 'utilityService', 'observerService', function (rbkeyService, $hibachi, utilityService, observerService) { return new collectionconfigservice_1.CollectionConfig(rbkeyService, $hibachi, utilityService, observerService); }])
     .service('collectionService', collectionservice_1.CollectionService)
-    //directives
     .directive('swRestrictionConfig', swrestrictionconfig_1.SWRestrictionConfig.Factory())
     .directive('swCollection', swcollection_1.SWCollection.Factory())
     .directive('swAddFilterButtons', swaddfilterbuttons_1.SWAddFilterButtons.Factory())
@@ -15047,7 +15036,6 @@ var collectionmodule = angular.module('hibachi.collection', [core_module_1.corem
     .directive('swFilterGroups', swfiltergroups_1.SWFilterGroups.Factory())
     .directive('swFilterItem', swfilteritem_1.SWFilterItem.Factory())
     .directive('swFilterGroupItem', swfiltergroupitem_1.SWFilterGroupItem.Factory())
-    //filters
     .filter('aggregateFilter', ['$filter', aggregatefilter_1.AggregateFilter.Factory]);
 exports.collectionmodule = collectionmodule;
 
@@ -15277,12 +15265,8 @@ var dialogservice_1 = __webpack_require__(612);
 var pagedialog_1 = __webpack_require__(611);
 var dialogmodule = angular.module('hibachi.dialog', []).config(function () {
 })
-    //services
     .service('dialogService', dialogservice_1.DialogService)
-    //controllers
     .controller('pageDialog', pagedialog_1.PageDialogController)
-    //filters
-    //constants
     .constant('dialogPartials', 'dialog/components/');
 exports.dialogmodule = dialogmodule;
 
@@ -17782,7 +17766,7 @@ var ArrayLikeObservable = (function (_super) {
         state.index = index + 1;
         this.schedule(state);
     };
-    /** @deprecated internal use only */ ArrayLikeObservable.prototype._subscribe = function (subscriber) {
+    ArrayLikeObservable.prototype._subscribe = function (subscriber) {
         var index = 0;
         var _a = this, arrayLike = _a.arrayLike, scheduler = _a.scheduler;
         var length = arrayLike.length;
@@ -17979,7 +17963,7 @@ var BoundCallbackObservable = (function (_super) {
             return new BoundCallbackObservable(func, selector, args, this, scheduler);
         };
     };
-    /** @deprecated internal use only */ BoundCallbackObservable.prototype._subscribe = function (subscriber) {
+    BoundCallbackObservable.prototype._subscribe = function (subscriber) {
         var callbackFunc = this.callbackFunc;
         var args = this.args;
         var scheduler = this.scheduler;
@@ -18239,7 +18223,7 @@ var BoundNodeCallbackObservable = (function (_super) {
             return new BoundNodeCallbackObservable(func, selector, args, this, scheduler);
         };
     };
-    /** @deprecated internal use only */ BoundNodeCallbackObservable.prototype._subscribe = function (subscriber) {
+    BoundNodeCallbackObservable.prototype._subscribe = function (subscriber) {
         var callbackFunc = this.callbackFunc;
         var args = this.args;
         var scheduler = this.scheduler;
@@ -18416,7 +18400,7 @@ var DeferObservable = (function (_super) {
     DeferObservable.create = function (observableFactory) {
         return new DeferObservable(observableFactory);
     };
-    /** @deprecated internal use only */ DeferObservable.prototype._subscribe = function (subscriber) {
+    DeferObservable.prototype._subscribe = function (subscriber) {
         return new DeferSubscriber(subscriber, this.observableFactory);
     };
     return DeferObservable;
@@ -18518,7 +18502,7 @@ var ErrorObservable = (function (_super) {
         var error = arg.error, subscriber = arg.subscriber;
         subscriber.error(error);
     };
-    /** @deprecated internal use only */ ErrorObservable.prototype._subscribe = function (subscriber) {
+    ErrorObservable.prototype._subscribe = function (subscriber) {
         var error = this.error;
         var scheduler = this.scheduler;
         subscriber.syncErrorThrowable = true;
@@ -18684,7 +18668,7 @@ var ForkJoinObservable = (function (_super) {
         }
         return new ForkJoinObservable(sources, resultSelector);
     };
-    /** @deprecated internal use only */ ForkJoinObservable.prototype._subscribe = function (subscriber) {
+    ForkJoinObservable.prototype._subscribe = function (subscriber) {
         return new ForkJoinSubscriber(subscriber, this.sources, this.resultSelector);
     };
     return ForkJoinObservable;
@@ -18941,7 +18925,7 @@ var FromEventObservable = (function (_super) {
         }
         subscriber.add(new Subscription_1.Subscription(unsubscribe));
     };
-    /** @deprecated internal use only */ FromEventObservable.prototype._subscribe = function (subscriber) {
+    FromEventObservable.prototype._subscribe = function (subscriber) {
         var sourceObj = this.sourceObj;
         var eventName = this.eventName;
         var options = this.options;
@@ -19044,7 +19028,7 @@ var FromEventPatternObservable = (function (_super) {
     FromEventPatternObservable.create = function (addHandler, removeHandler, selector) {
         return new FromEventPatternObservable(addHandler, removeHandler, selector);
     };
-    /** @deprecated internal use only */ FromEventPatternObservable.prototype._subscribe = function (subscriber) {
+    FromEventPatternObservable.prototype._subscribe = function (subscriber) {
         var _this = this;
         var removeHandler = this.removeHandler;
         var handler = !!this.selector ? function () {
@@ -19123,7 +19107,7 @@ var GenerateObservable = (function (_super) {
         }
         return new GenerateObservable(initialStateOrOptions, condition, iterate, resultSelectorOrObservable, scheduler);
     };
-    /** @deprecated internal use only */ GenerateObservable.prototype._subscribe = function (subscriber) {
+    GenerateObservable.prototype._subscribe = function (subscriber) {
         var state = this.initialState;
         if (this.scheduler) {
             return this.scheduler.schedule(GenerateObservable.dispatch, 0, {
@@ -19256,7 +19240,7 @@ var IfObservable = (function (_super) {
     IfObservable.create = function (condition, thenSource, elseSource) {
         return new IfObservable(condition, thenSource, elseSource);
     };
-    /** @deprecated internal use only */ IfObservable.prototype._subscribe = function (subscriber) {
+    IfObservable.prototype._subscribe = function (subscriber) {
         var _a = this, condition = _a.condition, thenSource = _a.thenSource, elseSource = _a.elseSource;
         return new IfSubscriber(subscriber, condition, thenSource, elseSource);
     };
@@ -19374,7 +19358,7 @@ var IntervalObservable = (function (_super) {
         state.index += 1;
         this.schedule(state, period);
     };
-    /** @deprecated internal use only */ IntervalObservable.prototype._subscribe = function (subscriber) {
+    IntervalObservable.prototype._subscribe = function (subscriber) {
         var index = 0;
         var period = this.period;
         var scheduler = this.scheduler;
@@ -19440,7 +19424,7 @@ var IteratorObservable = (function (_super) {
         }
         this.schedule(state);
     };
-    /** @deprecated internal use only */ IteratorObservable.prototype._subscribe = function (subscriber) {
+    IteratorObservable.prototype._subscribe = function (subscriber) {
         var index = 0;
         var _a = this, iterator = _a.iterator, scheduler = _a.scheduler;
         if (scheduler) {
@@ -19613,7 +19597,7 @@ var NeverObservable = (function (_super) {
     NeverObservable.create = function () {
         return new NeverObservable();
     };
-    /** @deprecated internal use only */ NeverObservable.prototype._subscribe = function (subscriber) {
+    NeverObservable.prototype._subscribe = function (subscriber) {
         noop_1.noop();
     };
     return NeverObservable;
@@ -19691,7 +19675,7 @@ var PairsObservable = (function (_super) {
     PairsObservable.create = function (obj, scheduler) {
         return new PairsObservable(obj, scheduler);
     };
-    /** @deprecated internal use only */ PairsObservable.prototype._subscribe = function (subscriber) {
+    PairsObservable.prototype._subscribe = function (subscriber) {
         var _a = this, keys = _a.keys, scheduler = _a.scheduler;
         var length = keys.length;
         if (scheduler) {
@@ -19786,7 +19770,7 @@ var RangeObservable = (function (_super) {
         state.start = start + 1;
         this.schedule(state);
     };
-    /** @deprecated internal use only */ RangeObservable.prototype._subscribe = function (subscriber) {
+    RangeObservable.prototype._subscribe = function (subscriber) {
         var index = 0;
         var start = this.start;
         var count = this._count;
@@ -19858,7 +19842,7 @@ var SubscribeOnObservable = (function (_super) {
         var source = arg.source, subscriber = arg.subscriber;
         return this.add(source.subscribe(subscriber));
     };
-    /** @deprecated internal use only */ SubscribeOnObservable.prototype._subscribe = function (subscriber) {
+    SubscribeOnObservable.prototype._subscribe = function (subscriber) {
         var delay = this.delayTime;
         var source = this.source;
         var scheduler = this.scheduler;
@@ -19972,7 +19956,7 @@ var TimerObservable = (function (_super) {
         state.index = index + 1;
         action.schedule(state, period);
     };
-    /** @deprecated internal use only */ TimerObservable.prototype._subscribe = function (subscriber) {
+    TimerObservable.prototype._subscribe = function (subscriber) {
         var index = 0;
         var _a = this, period = _a.period, dueTime = _a.dueTime, scheduler = _a.scheduler;
         return scheduler.schedule(TimerObservable.dispatch, dueTime, {
@@ -20013,7 +19997,7 @@ var UsingObservable = (function (_super) {
     UsingObservable.create = function (resourceFactory, observableFactory) {
         return new UsingObservable(resourceFactory, observableFactory);
     };
-    /** @deprecated internal use only */ UsingObservable.prototype._subscribe = function (subscriber) {
+    UsingObservable.prototype._subscribe = function (subscriber) {
         var _a = this, resourceFactory = _a.resourceFactory, observableFactory = _a.observableFactory;
         var resource;
         try {
@@ -20441,7 +20425,7 @@ var WebSocketSubject = (function (_super) {
             }
         };
     };
-    /** @deprecated internal use only */ WebSocketSubject.prototype._subscribe = function (subscriber) {
+    WebSocketSubject.prototype._subscribe = function (subscriber) {
         var _this = this;
         var source = this.source;
         if (source) {
@@ -26189,7 +26173,7 @@ var HotObservable = (function (_super) {
         this.subscriptions = [];
         this.scheduler = scheduler;
     }
-    /** @deprecated internal use only */ HotObservable.prototype._subscribe = function (subscriber) {
+    HotObservable.prototype._subscribe = function (subscriber) {
         var subject = this;
         var index = subject.logSubscribedFrame();
         subscriber.add(new Subscription_1.Subscription(function () {
@@ -27437,9 +27421,7 @@ var cardmodule = angular.module('hibachi.card', [core_module_1.coremodule.name])
     .config([function () {
     }]).run([function () {
     }])
-    //constants
     .constant('cardPartialsPath', 'card/components/')
-    //components
     .directive('swCardLayout', swcardlayout_1.SWCardLayout.Factory())
     .directive('swCardView', swcardview_1.SWCardView.Factory())
     .directive('swCardHeader', swcardheader_1.SWCardHeader.Factory())
@@ -31348,14 +31330,6 @@ var SWEditFilterItem = /** @class */ (function () {
                                 }
                                 filterItem.displayValue = filterItem.value;
                                 break;
-                            //case 'one-to-many':
-                            //
-                            //case 'many-to-many':
-                            //    filterItem.collectionID = selectedFilterProperty.selectedCollection.collectionID;
-                            //    filterItem.displayValue = selectedFilterProperty.selectedCollection.collectionName;
-                            //    filterItem.criteria = selectedFilterProperty.selectedCriteriaType.comparisonOperator;
-                            //
-                            //    break;
                         }
                         if (angular.isUndefined(filterItem.displayValue)) {
                             filterItem.displayValue = filterItem.value;
@@ -42949,12 +42923,8 @@ var entitymodule = angular.module('hibachi.entity', ['ngRoute', core_module_1.co
         //     });
     }])
     .constant('coreEntityPartialsPath', 'entity/components/')
-    //services
-    //controllers
     .controller('otherwiseController', otherwisecontroller_1.OtherWiseController)
     .controller('routerController', routercontroller_1.RouterController)
-    //filters
-    //directives
     .directive('swDetail', swdetail_1.SWDetail.Factory())
     .directive('swDetailTabs', swdetailtabs_1.SWDetailTabs.Factory())
     .directive('swList', swlist_1.SWList.Factory());
@@ -44726,7 +44696,6 @@ var formmodule = angular.module('hibachi.form', ['angularjs-datetime-picker', co
 })
     .constant('coreFormPartialsPath', 'form/components/')
     .service('fileService', fileservice_1.FileService)
-    //directives
     .directive('swInput', swinput_1.SWInput.Factory())
     .directive('swfFormField', swfformfield_1.SWFFormField.Factory())
     .directive('swForm', swform_1.SWForm.Factory())
@@ -46768,9 +46737,7 @@ var swlistingglobalsearch_1 = __webpack_require__(645);
 var listingmodule = angular.module('hibachi.listing', [collection_module_1.collectionmodule.name])
     .run([function () {
     }])
-    //services
     .service('listingService', listingservice_1.ListingService)
-    //directives
     .directive('swListingDisplay', swlistingdisplay_1.SWListingDisplay.Factory())
     .directive('swListingControls', swlistingcontrols_1.SWListingControls.Factory())
     .directive('swListingAggregate', swlistingaggregate_1.SWListingAggregate.Factory())
@@ -46785,7 +46752,6 @@ var listingmodule = angular.module('hibachi.listing', [collection_module_1.colle
     .directive('swListingRowSave', swlistingrowsave_1.SWListingRowSave.Factory())
     .directive('swListingSearch', swlistingsearch_1.SWListingSearch.Factory())
     .directive('swListingGlobalSearch', swlistingglobalsearch_1.SWListingGlobalSearch.Factory())
-    //constants
     .constant('listingPartialPath', 'listing/components/');
 exports.listingmodule = listingmodule;
 
@@ -47780,15 +47746,10 @@ var paginationservice_1 = __webpack_require__(654);
 var swpaginationbar_1 = __webpack_require__(652);
 var core_module_1 = __webpack_require__(16);
 var paginationmodule = angular.module('hibachi.pagination', [core_module_1.coremodule.name])
-    // .config(['$provide','baseURL',($provide,baseURL)=>{
-    // 	$provide.constant('paginationPartials', baseURL+basePartialsPath+'pagination/components/');
-    // }])
     .run([function () {
     }])
-    //services
     .service('paginationService', paginationservice_1.PaginationService)
     .directive('swPaginationBar', swpaginationbar_1.SWPaginationBar.Factory())
-    //constants
     .constant('partialsPath', 'pagination/components/');
 exports.paginationmodule = paginationmodule;
 
@@ -48073,7 +48034,7 @@ var SWValidate = /** @class */ (function () {
                                 //Iterate over the array and call the validate function if it has that property.
                                 for (var i = 0; i < elementValidationArr.length; i++) {
                                     if (elementValidationArr[i] == true) {
-                                        if (validationPropertiesArray[i] === "regex" && elementValue !== "") { //If element is zero, need to check required 
+                                        if (validationPropertiesArray[i] === "regex" && elementValue !== "") {
                                             //Get the regex string to match and send to validation function.
                                             var re = validationObject[key][inner].regex;
                                             var result = validate_RegExp(elementValue, re); //true if pattern match, fail otherwise.
@@ -49021,7 +48982,6 @@ var core_module_1 = __webpack_require__(16);
 var validationmodule = angular.module('hibachi.validation', [core_module_1.coremodule.name])
     .run([function () {
     }])
-    //directives
     .directive('swValidate', swvalidate_1.SWValidate.Factory())
     .directive('swvalidationminlength', swvalidationminlength_1.SWValidationMinLength.Factory())
     .directive('swvalidationdatatype', swvalidationdatatype_1.SWValidationDataType.Factory())
@@ -49037,7 +48997,6 @@ var validationmodule = angular.module('hibachi.validation', [core_module_1.corem
     .directive("swvalidationrequired", swvalidationrequired_1.SWValidationRequired.Factory())
     .directive("swvalidationunique", swvalidationunique_1.SWValidationUnique.Factory())
     .directive("swvalidationuniqueornull", swvalidationuniqueornull_1.SWValidationUniqueOrNull.Factory())
-    //services
     .service("validationService", validationservice_1.ValidationService);
 exports.validationmodule = validationmodule;
 
@@ -50482,12 +50441,9 @@ var swschedulepreview_1 = __webpack_require__(673);
 //filters
 var workflowmodule = angular.module('hibachi.workflow', ['hibachi.collection']).config(function () {
 })
-    //constants
     .constant('workflowPartialsPath', 'workflow/components/')
-    //services
     .service('workflowConditionService', workflowconditionservice_1.WorkflowConditionService)
     .service('scheduleService', scheduleservice_1.ScheduleService)
-    //directives
     .directive('swAdminCreateSuperUser', swadmincreatesuperuser_1.SWAdminCreateSuperUser.Factory())
     .directive('swWorkflowBasic', swworkflowbasic_1.SWWorkflowBasic.Factory())
     .directive('swWorkflowCondition', swworkflowcondition_1.SWWorkflowCondition.Factory())
