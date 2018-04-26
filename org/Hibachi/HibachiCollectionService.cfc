@@ -580,6 +580,8 @@ component output="false" accessors="true" extends="HibachiService" {
 		}
 		modifiedURL = replace(modifiedURL,'%5E','^','ALL');
 		modifiedURL = replace(modifiedURL,"%3A",":",'ALL');
+		modifiedURL = replace(modifiedURL,"%7C","|",'ALL');
+		modifiedURL = replace(modifiedURL,"%2",',','ALL');
 		return modifiedURL;
 	}
 
