@@ -62,12 +62,16 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 		string subscriptionTypeSystemCode, 
 		string productTypeID,
 		string productID,
-		string reportYear
+		string reportYear,
+		boolean groupByProductName=false
 	){
 		if(!structKeyExists(arguments,'reportYear')||!len(arguments.reportYear)){
 			arguments.reportYear = Year(now());
 		}
 		var deferredRevenueData = getSubscriptionDAO().getDeferredRevenueData(argumentCollection=arguments);
+		if(arguments.groupByProductName){
+			writedump(deferredRevenueData);abort;
+		}
 		var deferredActiveSubscriptionData = getSubscriptionDAO().getDeferredActiveSubscriptionData(argumentCollection=arguments);
 		var deferredExpiringSubscriptionData = getSubscriptionDAO().getDeferredExpiringSubscriptionData(argumentCollection=arguments);
 		
@@ -82,58 +86,112 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 			var monthNamePattern = arguments.reportYear&'-'&possibleMonths[i];
 			monthData[monthNamePattern]={};
 			
-			if(!isNull(deferredRevenueData)){
-				for(var j=1; j <= deferredRevenueData.recordCount;j++){
-					var currentRecord = QueryGetRow(deferredRevenueData,j);
-					if(currentRecord.thisMonth == monthNamePattern){
-						monthData[monthNamePattern]['deferredRevenue'] = getService('hibachiUtilityService').formatValue(currentRecord.deferredRevenue,'currency');
-						monthData[monthNamePattern]['deferredTax'] = getService('hibachiUtilityService').formatValue(currentRecord.deferredTax,'currency');
-						monthData[monthNamePattern]['deferredTotal'] = getService('hibachiUtilityService').formatValue(currentRecord.deferredRevenue+currentRecord.deferredTax,'currency');
+			if(arguments.groupByProductName){
+				if(!isNull(deferredRevenueData)){
+					for(var j=1; j <= deferredRevenueData.recordCount;j++){
+						var currentRecord = QueryGetRow(deferredRevenueData,j);
+						if(currentRecord.thisMonth == monthNamePattern){
+							monthData[monthNamePattern][currentRecord.productName]={};
+							monthData[monthNamePattern][currentRecord.productName]['deferredRevenue'] = getService('hibachiUtilityService').formatValue(currentRecord.deferredRevenue,'currency');
+							monthData[monthNamePattern][currentRecord.productName]['deferredTax'] = getService('hibachiUtilityService').formatValue(currentRecord.deferredTax,'currency');
+							monthData[monthNamePattern][currentRecord.productName]['deferredTotal'] = getService('hibachiUtilityService').formatValue(currentRecord.deferredRevenue+currentRecord.deferredTax,'currency');
+						}
 					}
 				}
-			}
-			
-			if(!structKeyExists(monthData[monthNamePattern],'deferredRevenue')){
-				monthData[monthNamePattern]['deferredRevenue'] = getService('hibachiUtilityService').formatValue(0,'currency');
-			}
-			
-			if(!structKeyExists(monthData[monthNamePattern],'deferredTax')){
-				monthData[monthNamePattern]['deferredTax'] = getService('hibachiUtilityService').formatValue(0,'currency');
-			}
-			
-			if(!structKeyExists(monthData[monthNamePattern],'deferredTotal')){
-				monthData[monthNamePattern]['deferredTotal'] = getService('hibachiUtilityService').formatValue(0,'currency');
-			}
-			
-			if(!isNull(deferredActiveSubscriptionData)){
-				for(var k=1; k <= deferredActiveSubscriptionData.recordCount;k++){
-					var currentRecord = QueryGetRow(deferredActiveSubscriptionData,k);
-					
-					if(currentRecord.thisMonth == monthNamePattern){
-						monthData[monthNamePattern]['activeSubscriptions'] = currentRecord.subscriptionUsageCount;
+				
+				// if(!structKeyExists(monthData[monthNamePattern],'deferredRevenue')){
+				// 	monthData[monthNamePattern]['deferredRevenue'] = getService('hibachiUtilityService').formatValue(0,'currency');
+				// }
+				
+				// if(!structKeyExists(monthData[monthNamePattern],'deferredTax')){
+				// 	monthData[monthNamePattern]['deferredTax'] = getService('hibachiUtilityService').formatValue(0,'currency');
+				// }
+				
+				// if(!structKeyExists(monthData[monthNamePattern],'deferredTotal')){
+				// 	monthData[monthNamePattern]['deferredTotal'] = getService('hibachiUtilityService').formatValue(0,'currency');
+				// }
+				
+				// if(!isNull(deferredActiveSubscriptionData)){
+				// 	for(var k=1; k <= deferredActiveSubscriptionData.recordCount;k++){
+				// 		var currentRecord = QueryGetRow(deferredActiveSubscriptionData,k);
+						
+				// 		if(currentRecord.thisMonth == monthNamePattern){
+				// 			monthData[monthNamePattern]['activeSubscriptions'] = currentRecord.subscriptionUsageCount;
+				// 		}
+				// 	}
+				// }
+				
+				// if(!structKeyExists(monthData[monthNamePattern],'activeSubscriptions')){
+				// 	monthData[monthNamePattern]['activeSubscriptions'] = 0;
+				// }
+				
+				// if(!isNull(deferredExpiringSubscriptionData)){
+				// 	for(var l=1; l <= deferredExpiringSubscriptionData.recordCount;l++){
+				// 		var currentRecord = QueryGetRow(deferredExpiringSubscriptionData,l);
+						
+				// 		if(currentRecord.thisMonth == monthNamePattern){
+				// 			monthData[monthNamePattern]['expiringSubscriptions'] = currentRecord.subscriptionUsageCount;
+				// 		}
+				// 	}
+				// }
+				
+				// if(!structKeyExists(monthData[monthNamePattern],'expiringSubscriptions')){
+				// 	monthData[monthNamePattern]['expiringSubscriptions'] = 0;
+				// }
+			}else{
+				if(!isNull(deferredRevenueData)){
+					for(var j=1; j <= deferredRevenueData.recordCount;j++){
+						var currentRecord = QueryGetRow(deferredRevenueData,j);
+						if(currentRecord.thisMonth == monthNamePattern){
+							monthData[monthNamePattern]['deferredRevenue'] = getService('hibachiUtilityService').formatValue(currentRecord.deferredRevenue,'currency');
+							monthData[monthNamePattern]['deferredTax'] = getService('hibachiUtilityService').formatValue(currentRecord.deferredTax,'currency');
+							monthData[monthNamePattern]['deferredTotal'] = getService('hibachiUtilityService').formatValue(currentRecord.deferredRevenue+currentRecord.deferredTax,'currency');
+						}
 					}
 				}
-			}
-			
-			if(!structKeyExists(monthData[monthNamePattern],'activeSubscriptions')){
-				monthData[monthNamePattern]['activeSubscriptions'] = 0;
-			}
-			
-			if(!isNull(deferredExpiringSubscriptionData)){
-				for(var l=1; l <= deferredExpiringSubscriptionData.recordCount;l++){
-					var currentRecord = QueryGetRow(deferredExpiringSubscriptionData,l);
-					
-					if(currentRecord.thisMonth == monthNamePattern){
-						monthData[monthNamePattern]['expiringSubscriptions'] = currentRecord.subscriptionUsageCount;
+				
+				if(!structKeyExists(monthData[monthNamePattern],'deferredRevenue')){
+					monthData[monthNamePattern]['deferredRevenue'] = getService('hibachiUtilityService').formatValue(0,'currency');
+				}
+				
+				if(!structKeyExists(monthData[monthNamePattern],'deferredTax')){
+					monthData[monthNamePattern]['deferredTax'] = getService('hibachiUtilityService').formatValue(0,'currency');
+				}
+				
+				if(!structKeyExists(monthData[monthNamePattern],'deferredTotal')){
+					monthData[monthNamePattern]['deferredTotal'] = getService('hibachiUtilityService').formatValue(0,'currency');
+				}
+				
+				if(!isNull(deferredActiveSubscriptionData)){
+					for(var k=1; k <= deferredActiveSubscriptionData.recordCount;k++){
+						var currentRecord = QueryGetRow(deferredActiveSubscriptionData,k);
+						
+						if(currentRecord.thisMonth == monthNamePattern){
+							monthData[monthNamePattern]['activeSubscriptions'] = currentRecord.subscriptionUsageCount;
+						}
 					}
 				}
+				
+				if(!structKeyExists(monthData[monthNamePattern],'activeSubscriptions')){
+					monthData[monthNamePattern]['activeSubscriptions'] = 0;
+				}
+				
+				if(!isNull(deferredExpiringSubscriptionData)){
+					for(var l=1; l <= deferredExpiringSubscriptionData.recordCount;l++){
+						var currentRecord = QueryGetRow(deferredExpiringSubscriptionData,l);
+						
+						if(currentRecord.thisMonth == monthNamePattern){
+							monthData[monthNamePattern]['expiringSubscriptions'] = currentRecord.subscriptionUsageCount;
+						}
+					}
+				}
+				
+				if(!structKeyExists(monthData[monthNamePattern],'expiringSubscriptions')){
+					monthData[monthNamePattern]['expiringSubscriptions'] = 0;
+				}
 			}
-			
-			if(!structKeyExists(monthData[monthNamePattern],'expiringSubscriptions')){
-				monthData[monthNamePattern]['expiringSubscriptions'] = 0;
-			}
-			
 		}
+		
 		return monthData;
 		
 	}

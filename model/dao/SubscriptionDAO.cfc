@@ -181,13 +181,16 @@ Notes:
 		<cfargument name="productTypeID" type="string"/>
 		<cfargument name="productID" type="string"/>
 		<cfargument name="reportYear" type="string"/>
+		<cfargument name="groupByProductName" type="boolean" default="false"/>
 		
 		<cfquery name="local.deferredActiveSubscriptionQuery">
 			<cfloop from="1" to="12" index="i">
 				<cfset monthTimeStamp = CreateDateTime(INT(arguments.reportYear),i,1,0,0,0)/>
 				
 				(
-					select count(su.subscriptionUsageID) as subscriptionUsageCount,DATE_FORMAT(<cfqueryparam value="#monthTimeStamp#" cfsqltype="cf_sql_timestamp"/>,'%Y-%M') as thisMonth
+					select count(su.subscriptionUsageID) as subscriptionUsageCount,
+						DATE_FORMAT(<cfqueryparam value="#monthTimeStamp#" cfsqltype="cf_sql_timestamp"/>,'%Y-%M') as thisMonth
+						<cfif arguments.groupByProductName>,p.productName</cfif>
 					FROM SwSubsUsage su 
 					inner join SwSubscriptionStatus ss on su.currentSubscriptionStatusID = ss.subscriptionStatusID
 					inner join SwSubscriptionOrderItem soi on su.subscriptionUsageID = soi.subscriptionUsageID
@@ -209,6 +212,7 @@ Notes:
 					
 					AND su.expirationDate > <cfqueryparam value="#monthTimeStamp#" cfsqltype="cf_sql_timestamp"/>
 					group by DATE_FORMAT(<cfqueryparam value="#monthTimeStamp#" cfsqltype="cf_sql_timestamp"/>,'%M')
+					<cfif arguments.groupByProductName>,p.productName</cfif>
 				)
 				<cfif i neq 12>
 					UNION ALL
@@ -223,8 +227,11 @@ Notes:
 		<cfargument name="productTypeID" type="string"/>
 		<cfargument name="productID" type="string"/>
 		<cfargument name="reportYear" type="string"/>
+		<cfargument name="groupByProductName" type="boolean" default="false"/>
 		<cfquery name="local.deferredExpiringSubscriptionQuery">
-			select count(su.subscriptionUsageID) as subscriptionUsageCount,DATE_FORMAT(su.expirationDate,'%Y-%M') as thisMonth
+			select count(su.subscriptionUsageID) as subscriptionUsageCount,
+				DATE_FORMAT(su.expirationDate,'%Y-%M') as thisMonth
+				<cfif arguments.groupByProductName>,p.productName</cfif>
 			FROM SwSubsUsage su 
 			inner join SwSubscriptionStatus ss on su.currentSubscriptionStatusID = ss.subscriptionStatusID
 			inner join SwSubscriptionOrderItem soi on su.subscriptionUsageID = soi.subscriptionUsageID
@@ -251,6 +258,7 @@ Notes:
 			</cfif>
 			
 			group by DATE_FORMAT(su.expirationDate,'%M')
+			<cfif arguments.groupByProductName>,p.productName</cfif>
 			
 		</cfquery>
 		<cfreturn local.deferredExpiringSubscriptionQuery/>
@@ -261,6 +269,7 @@ Notes:
 		<cfargument name="productTypeID" type="string"/>
 		<cfargument name="productID" type="string"/>
 		<cfargument name="reportYear" type="string"/>
+		<cfargument name="groupByProductName" type="boolean" default="false"/>
 		
 		<cfset currentDateTime = now()/>
 		
@@ -300,14 +309,19 @@ Notes:
 			</cfif>
 			group by soi.subscriptionOrderItemID
 		</cfquery>
+		
 		<cfset var currentRecordsCount = 0/>
 		<cfif local.subscriptionOrderItemQuery.recordCount>
 			<cfquery name="local.deferredRevenueQuery">
-				select thisMonth,SUM(pricePerDelivery) as deferredRevenue,SUM(taxPerDelivery) as deferredTax from (
+				select thisMonth,SUM(pricePerDelivery) as deferredRevenue,
+				SUM(taxPerDelivery) as deferredTax 
+				from (
 					<cfloop query="local.subscriptionOrderItemQuery">
 						<cfset currentRecordsCount++/>	
 							(
-								SELECT DATE_FORMAT(dsd.deliveryScheduleDateValue,'%Y-%M') as thisMonth, '#local.subscriptionOrderItemQuery.pricePerDelivery#' as pricePerDelivery,'#local.subscriptionOrderItemQuery.taxPerDelivery#' as taxPerDelivery
+								SELECT DATE_FORMAT(dsd.deliveryScheduleDateValue,'%Y-%M') as thisMonth, 
+									'#local.subscriptionOrderItemQuery.pricePerDelivery#' as pricePerDelivery,
+									'#local.subscriptionOrderItemQuery.taxPerDelivery#' as taxPerDelivery
 								FROM swDeliveryScheduleDate dsd
 								inner join swProduct p on p.productID = dsd.productID
 								inner join swSku s on s.productID = p.productID

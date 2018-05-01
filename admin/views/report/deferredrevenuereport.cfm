@@ -6,6 +6,8 @@
     <cfset slatAction = 'report.deferredRevenueReport'/>
     <!--gets deferred revenue-->
     <cfset deferredRevenueData = $.slatwall.getService('subscriptionService').getDeferredRevenueData(rc.subscriptionType,rc.productType,rc.productID,rc.reportYear)/>    
+    <cfset deferredRevenueDataByProductName = $.slatwall.getService('subscriptionService').getDeferredRevenueData(rc.subscriptionType,rc.productType,rc.productID,rc.reportYear,true)/>    
+    <cfdump var="#deferredRevenueDataByProductName#"><cfabort>
     
     <cfset possibleYearsRecords = []/>
     <cfset currentYear = Year(now())/>
