@@ -315,6 +315,7 @@ Notes:
 			<cfquery name="local.deferredRevenueQuery">
 				select thisMonth,SUM(pricePerDelivery) as deferredRevenue,
 				SUM(taxPerDelivery) as deferredTax 
+				<cfif arguments.groupByProductName>,productName</cfif>
 				from (
 					<cfloop query="local.subscriptionOrderItemQuery">
 						<cfset currentRecordsCount++/>	
@@ -322,6 +323,7 @@ Notes:
 								SELECT DATE_FORMAT(dsd.deliveryScheduleDateValue,'%Y-%M') as thisMonth, 
 									'#local.subscriptionOrderItemQuery.pricePerDelivery#' as pricePerDelivery,
 									'#local.subscriptionOrderItemQuery.taxPerDelivery#' as taxPerDelivery
+									<cfif arguments.groupByProductName>,p.productName as productName</cfif>
 								FROM swDeliveryScheduleDate dsd
 								inner join swProduct p on p.productID = dsd.productID
 								inner join swSku s on s.productID = p.productID
@@ -329,6 +331,7 @@ Notes:
 								inner join swSubscriptionOrderItem soi on soi.subscriptionOrderItemID = '#local.subscriptionOrderItemQuery.subscriptionOrderItemID#'
 								where dsd.deliveryScheduleDateValue > <cfqueryparam value="#currentDateTime#" cfsqltype="cf_sql_timestamp"/>
 								GROUP BY DATE_FORMAT(dsd.deliveryScheduleDateValue,'%Y-%M')
+								<cfif arguments.groupByProductName>,p.productName</cfif>
 								ORDER BY dsd.deliveryScheduleDateValue ASC
 								limit #local.subscriptionOrderItemQuery.totalItemToDeliver#
 							)
@@ -338,6 +341,7 @@ Notes:
 					</cfloop>
 				) t1
 				GROUP BY thisMonth
+				<cfif arguments.groupByProductName>,productName</cfif>
 			</cfquery>
 			<cfreturn local.deferredRevenueQuery/>
 		</cfif>
