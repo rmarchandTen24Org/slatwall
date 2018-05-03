@@ -1756,18 +1756,26 @@ component displayname="Collection" entityname="SlatwallCollection" table="SwColl
 		return filterGroupsHQL;
 	}
 
-	private string function getLeafNodeHQL(){
+	private string function getLeafNodeHQL(string entityName, string propertyIdentifier){
+		var baseEntityAlias = "";
+		if(!structKeyExists(arguments,'entityName')){
+			baseEntityAlias = getBaseEntityAlias();
+			arguments.entityName = arguments.entityName;
+		}else{
+			baseEntityAlias = listFirst(arguments.propertyIdentifier,'.');
+			arguments.entity = getService('HibachiService').getLastEntityNameInPropertyIdentifier(arguments.entityName,convertAliasToPropertyIdentifier(arguments.propertyIdentifier));
+		}
 		var leafNodeHQL = "";
-		var parentPropertyName = getService('hibachiService').getParentPropertyByEntityName(getCollectionObject());
+		var parentPropertyName = getService('hibachiService').getParentPropertyByEntityName(arguments.entityName);
 		var parentTableAlias = "_#parentPropertyName#LeafJoin";
 		//TODO: make subquery into othere collection call for elastic search to work better
 		var notLeafNodeSubQuery = "
 			SELECT #parentTableAlias#.#parentPropertyName#.id
-			FROM #getDao('HibachiDao').getApplicationKey()##getCollectionObject()# #parentTableAlias#
+			FROM #getDao('HibachiDao').getApplicationKey()##arguments.entity# #parentTableAlias#
 			WHERE #parentTableAlias#.#parentPropertyName# IS NOT NULL
 		";
 
-		leafNodeHQL = " #getBaseEntityAlias()#.id NOT IN (#trim(notLeafNodeSubQuery)#) ";
+		leafNodeHQL = " #baseEntityAlias#.id NOT IN (#trim(notLeafNodeSubQuery)#) ";
 
 		return leafNodeHQL;
 	}

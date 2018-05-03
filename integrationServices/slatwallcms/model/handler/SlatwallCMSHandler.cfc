@@ -192,10 +192,8 @@ component extends="Slatwall.org.Hibachi.HibachiEventHandler" {
 	public void function prepareSiteForRendering(required any site, required struct argumentsCollection){
 		//declare sitePath
 		var sitePath = getFullSitePath(site);
-		
 		//if a site does exist then check that site directory for the template
 		//are we rendering a basic content node or have we been provided with an entityURL type?
-		
 		if(directoryExists(sitePath)) {
 			var slatwallCMSApplication = getSlatwallCMSApplication(site);
 			slatwallCMSApplication.onRequestStart(argumentCollection=arguments.argumentsCollection);

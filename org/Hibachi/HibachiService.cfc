@@ -1182,7 +1182,6 @@
 			required any collectionList, required string entityName, required string propertyIdentifier
 		){
 			var entityCollectionList = getOptionsCollectionListByEntityNameAndPropertyIdentifier(argumentCollection=arguments);
-			
 			return entityCollectionList.getRecords();
 		}
 		
@@ -1307,7 +1306,10 @@
 			entityCollectionList.applyData(data=url,excludesList=excludesList);
 			entityCollectionList.setDirtyReadFlag(true);
 			entityCollectionList.setApplyOrderBysToGroupBys(false);
-			
+			if(arguments.propertyIdentifier=='categories'){
+				writedump(entityCollectionlist.getHQL());
+				writedump(var=entityCollectionlist.getPageRecords(),top=2);abort;
+			}
 			
 			return entityCollectionList;
 		}
