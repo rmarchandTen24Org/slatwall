@@ -43,9 +43,11 @@
     If you modify this program, you may extend this exception to your version 
     of the program, but you are not obligated to do so.
 	
-Notes:
+Notes: 
 	
 --->
+
+<!--- This header include should be changed to the header of your site.  Make sure that you review the header to include necessary JS elements for slatwall templates to work ---> 
 <cfinclude template="_slatwall-header.cfm" />
 
 <!--- This import allows for the custom tags required by this page to work --->
@@ -66,53 +68,9 @@ Notes:
 --->
 
 <cfoutput>
-<div class="container" ng-cloak ng-if="slatwall.cart.orderItems.length">
-        <h1 class="my-4">Shopping Cart</h1>
-        <div class="card mb-5">
-            <div class="card-header bg-dark text-light">
-                <div class="row">
-                    <div class="col-sm-9">
-                        <h5 class="mb-0 pt-2 pb-2">Cart Items</h5>
-                    </div>
-                    <div class="col-sm-3">
-                        <a href="/checkout/" class="btn-block btn btn-success float-right">Checkout</a>
-                        <a href="" class="btn-block btn btn-success float-right disabled"><i class="fa fa-refresh fa-spin fa-fw"></i></a>
-                    </div>
-                </div>
-            </div>
-            <div class="card-body">
-                <cfinclude template="inc/cartItems.cfm" />
-            </div>
-            <div class="card-footer">
-                <div class="row">
-                    <div class="col-sm-9 pull-left">
-
-                    </div>
-                    <div class="col-sm-3">
-                        <a href="/checkout/" class="btn-block btn btn-success float-right">Checkout</a>
-                        <a href="" class="btn-block btn btn-success float-right disabled"><i class="fa fa-refresh fa-spin fa-fw"></i></a>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div class="row">
-            <div class="col-md-5">
-                <cfinclude template="inc/promoBox.cfm" />
-            </div>
-            <div class="col-md-5 offset-md-2">
-                <cfinclude template="inc/orderSummary.cfm" />
-            </div>
-        </div>
-
-        <div class="text-center m-4">
-            <a href="/checkout/" class="btn btn-lg btn-success">Continue to Checkout</a>
-            <a href="/checkout/" class="btn btn-lg btn-success disabled"><i class="fa fa-refresh fa-spin fa-fw"></i></a>
-        </div>
-
-    </div>
-    <div ng-if="!slatwall.getRequestByAction('getCart').loading && !slatwall.cart.orderItems.length">
-        <div class="alert alert-danger">There are no items in your cart.</div>
-    </div>
+	<div class="container">
+		this content is restricted		
+	</div>
 </cfoutput>
+
 <cfinclude template="_slatwall-footer.cfm" />

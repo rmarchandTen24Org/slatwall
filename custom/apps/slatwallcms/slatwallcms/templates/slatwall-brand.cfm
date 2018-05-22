@@ -43,9 +43,11 @@
     If you modify this program, you may extend this exception to your version 
     of the program, but you are not obligated to do so.
 	
-Notes:
+Notes: 
 	
 --->
+
+<!--- This header include should be changed to the header of your site.  Make sure that you review the header to include necessary JS elements for slatwall templates to work ---> 
 <cfinclude template="_slatwall-header.cfm" />
 
 <!--- This import allows for the custom tags required by this page to work --->
@@ -66,53 +68,53 @@ Notes:
 --->
 
 <cfoutput>
-<div class="container" ng-cloak ng-if="slatwall.cart.orderItems.length">
-        <h1 class="my-4">Shopping Cart</h1>
-        <div class="card mb-5">
-            <div class="card-header bg-dark text-light">
-                <div class="row">
-                    <div class="col-sm-9">
-                        <h5 class="mb-0 pt-2 pb-2">Cart Items</h5>
-                    </div>
-                    <div class="col-sm-3">
-                        <a href="/checkout/" class="btn-block btn btn-success float-right">Checkout</a>
-                        <a href="" class="btn-block btn btn-success float-right disabled"><i class="fa fa-refresh fa-spin fa-fw"></i></a>
-                    </div>
-                </div>
-            </div>
-            <div class="card-body">
-                <cfinclude template="inc/cartItems.cfm" />
-            </div>
-            <div class="card-footer">
-                <div class="row">
-                    <div class="col-sm-9 pull-left">
-
-                    </div>
-                    <div class="col-sm-3">
-                        <a href="/checkout/" class="btn-block btn btn-success float-right">Checkout</a>
-                        <a href="" class="btn-block btn btn-success float-right disabled"><i class="fa fa-refresh fa-spin fa-fw"></i></a>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div class="row">
-            <div class="col-md-5">
-                <cfinclude template="inc/promoBox.cfm" />
-            </div>
-            <div class="col-md-5 offset-md-2">
-                <cfinclude template="inc/orderSummary.cfm" />
-            </div>
-        </div>
-
-        <div class="text-center m-4">
-            <a href="/checkout/" class="btn btn-lg btn-success">Continue to Checkout</a>
-            <a href="/checkout/" class="btn btn-lg btn-success disabled"><i class="fa fa-refresh fa-spin fa-fw"></i></a>
-        </div>
-
-    </div>
-    <div ng-if="!slatwall.getRequestByAction('getCart').loading && !slatwall.cart.orderItems.length">
-        <div class="alert alert-danger">There are no items in your cart.</div>
-    </div>
+	<div class="container">
+		
+		<div class="row">
+			<div class="span12">
+				<h2>#$.slatwall.getBrand().getBrandName()#</h2>
+			</div>
+		</div>
+		<div class="row">
+			<div class="span12">
+				
+				<ul class="thumbnails">
+					
+					<!--- Primary Loop that displays all of the products for this brand in the grid format --->
+					<cfloop array="#$.slatwall.getBrand().getProductsSmartList().getPageRecords()#" index="product">
+						
+						<!--- Individual Product --->
+						<li class="span3">
+							
+							<div class="thumbnail">
+								
+								<!--- Product Image --->
+								<img src="#product.getResizedImagePath(size='m')#" alt="#product.getCalculatedTitle()#" />
+								
+								<!--- The Calculated Title allows you to setup a title string as a dynamic setting.  When you call getTitle() it generates the title based on that title string setting. To be more perfomant this value is cached as getCalculatedTitle() ---> 
+								<h5>#product.getCalculatedTitle()#</h5>
+	      						
+								<!--- Check to see if the products price is > the sale price.  If so, then display the original price with a line through it --->
+								<cfif product.getPrice() gt product.getCalculatedSalePrice()>
+									<p><span style="text-decoration:line-through;">#product.getPrice()#</span> <span class="text-error">#product.getFormattedValue('calculatedSalePrice')#</span></p>
+								<cfelse>
+									<p>#product.getFormattedValue('calculatedSalePrice')#</p>	
+								</cfif>
+								
+								<!--- This is the link to the product detail page.  By using the getListingProductURL() instead of getProductURL() it will append to the end of the URL string so that the breadcrumbs on the detail page can know what listing page you came from.  This is also good for SEO purposes as long as you remember to add a canonical url meta information to the detail page --->
+								<a href="#product.getListingProductURL()#">Details / Buy</a>
+								
+							</div>
+							
+						</li>
+						
+					</cfloop> 
+					<!--- END: Primary loop --->
+						
+				</ul>
+			</div>
+		</div>
+	</div>
 </cfoutput>
+
 <cfinclude template="_slatwall-footer.cfm" />
