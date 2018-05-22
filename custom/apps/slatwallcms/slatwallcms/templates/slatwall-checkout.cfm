@@ -1411,6 +1411,10 @@ Notes:
 		<!--- END CHECKOUT EXAMPLE 1 --->
 		
 	</div>
+	<!--- initial data--->
+	<span ng-init="slatwall.currentAccountPage = 'Login'"></span>
+	
+	
 	<!---new template start--->
 	<div class="container">
         <h1 class="my-4">Checkout</h4>
@@ -1426,14 +1430,15 @@ Notes:
                             <li class="nav-item">
                                 <a class="nav-link active" id="pills-account-tab" data-toggle="pill" href="##pills-account" role="tab" aria-controls="account" aria-selected="true">Account</a>
                             </li>
+                            <!---disabled commented out but is used to when logic wants a button to be unclickable--->
                             <li class="nav-item">
-                                <a class="nav-link disabled" id="pills-shipping-tab" data-toggle="pill" href="##pills-shipping" role="tab" aria-controls="shipping" aria-selected="true">Shipping</a>
+                                <a class="nav-link <!---disabled--->" id="pills-shipping-tab" data-toggle="pill" href="##pills-shipping" role="tab" aria-controls="shipping" aria-selected="true">Shipping</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link disabled" id="pills-payment-tab" data-toggle="pill" href="##pills-payment" role="tab" aria-controls="payment" aria-selected="true">Payment</a>
+                                <a class="nav-link <!---disabled--->" id="pills-payment-tab" data-toggle="pill" href="##pills-payment" role="tab" aria-controls="payment" aria-selected="true">Payment</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link disabled" id="pills-review-tab" data-toggle="pill" href="##pills-review" role="tab" aria-controls="review" aria-selected="true">Order Review</a>
+                                <a class="nav-link <!---disabled--->" id="pills-review-tab" data-toggle="pill" href="##pills-review" role="tab" aria-controls="review" aria-selected="true">Order Review</a>
                             </li>
                         </ul>
                     </div>
@@ -1442,40 +1447,43 @@ Notes:
                         	<div class="tab-pane fade active show" id="pills-account" role="tabpanel" aria-labelledby="account">
                                 <div id="accountCollapse">
                                     <!-- Account Login -->
-                                    <div class="collapse show" id="login">
-                                		<form action="##">
+                                    <div class="collapse show" id="login" ng-show="slatwall.currentAccountPage == 'Login'">
+                                		<form  ng-model="Account_Login" 
+											ng-submit="swfForm.submitForm()" 
+											swf-form 
+											data-method="Login"
+										>
                                 			<h5>Account Login</h5>
 
                                             <!-- Invalid account error -->
-                                            <div class="alert alert-danger">The username or password entered is invalid.</div>
 
                                 			<div class="row">
                                                 <div class="col-6 offset-md-3">
                                     				<div class="form-group">
-                                    					<label for="email" class="form-label">Email Address</label>
-                                    					<input id="email" type="email" name="email" placeholder="Email Address" class="form-control success" required>
-                                                        <div class="px-2 mt-1 bg-danger text-white"><small>Email Address Required</small></div>
-                                                        <div class="px-2 mt-1 bg-danger text-white"><small>Invalid Email Address</small></div>
+                                    					<label for="emailAddress_Login" class="form-label">Email Address</label>
+                                    					<input id="emailAddress_Login" name="emailAddress" placeholder="Email Address" 
+                                    						class="form-control success" 
+                                    						ng-model="Account_Login.emailAddress" swvalidationdatatype="email" swvalidationrequired="true"
+                                    					>
+                                    					<sw:SwfErrorDisplay propertyIdentifier="emailAddress"/>
                                     				</div>
                                                     <div class="form-group">
-                                    					<label for="password" class="form-label">Password</label>
-                                    					<input id="password" type="text" name="password" placeholder="Password" class="form-control success" required>
-                                                        <div class="px-2 mt-1 bg-danger text-white"><small>Password Required</small></div>
+                                    					<label for="password_Login" class="form-label">Password</label>
+                                    					<input id="password_Login" type="password" name="password" placeholder="Password" class="form-control success"
+                                    						ng-model="Account_Login.password" swvalidationrequired="true"
+                                    					>
+                                    					<sw:SwfErrorDisplay propertyIdentifier="password"/>
                                     				</div>
 
                                                     <!-- Create Account toggle  -->
-                                                    <a class="btn btn-link float-left" data-toggle="collapse" href="##createAccount" data-parent="##accountCollapse" role="button" aria-expanded="false" aria-controls="resetPassword">Create Account</a>
+                                                    <a class="btn btn-link float-left" ng-click="slatwall.currentAccountPage = 'CreateAccount'"  role="button" aria-expanded="false" aria-controls="forgotPassword">Create Account</a>
 
                                                     <!-- Reset Password toggle -->
-                                                    <a class="btn btn-link float-right" data-toggle="collapse" href="##resetPassword" data-parent="##accountCollapse" role="button" aria-expanded="false" aria-controls="resetPassword">Reset Password</a>
+                                                    <a class="btn btn-link float-right" ng-click="slatwall.currentAccountPage = 'ForgotPassword'"  role="button" aria-expanded="false" aria-controls="forgotPassword">Reset Password</a>
 
                                                     <!-- Login Button -->
-                                                    <button type="submit" class="btn btn-primary btn-block">Login & Continue</button>
+                                                    <button ng-click="swfForm.form.submit()" ng-class="{disabled:slatwall.getRequestByAction('Login').loading}" class="btn btn-primary btn-block">{{(slatwall.getRequestByAction('Login').loading ? '' : 'Login & Continue')}}<i ng-show="slatwall.getRequestByAction('Login').loading" class='fa fa-refresh fa-spin fa-fw'></i></button>
 
-                                                    <!-- Login loader button -->
-                                                    <button type="submit" class="btn btn-primary btn-block disabled">
-                                                        <i class="fa fa-refresh fa-spin fa-fw"></i>
-                                                    </button>
                                                     <!-- Continue as Guest -->
                                                     <button type="button" class="btn btn-link btn-block">Continue as Guest <i class="fa fa-angle-double-right"></i></a>
                                                 </div>
@@ -1484,77 +1492,96 @@ Notes:
                                     </div>
 
                                     <!-- Reset Password -->
-                                    <div class="collapse" id="resetPassword">
-                                		<form action="##">
+                                    <div class="collapse" id="forgotPassword" ng-show="slatwall.currentAccountPage == 'ForgotPassword'">
+                                		<form 
+                                			ng-model="Account_ForgotPassword" 
+											ng-submit="swfForm.submitForm()" 
+											swf-form 
+											data-method="ForgotPassword"
+                                		>
                                 			<h5>Reset Password</h5>
-                                            <!-- Reset Password Fail Message -->
-                                            <div class="alert alert-danger">Account email address not found. Please create an account to continue.</div>
                                             <!-- Reset Password Success Message -->
-                                            <div class="alert alert-success">An email with instructions to reset your password has been sent to your inbox.</div>
+                                            
+                                            <div ng-show="slatwall.requests[swfForm.method].successfulActions.length" class="alert alert-success">An email with instructions to reset your password has been sent to your inbox.</div>
 
                                 			<div class="row">
                                                 <div class="col-6 offset-md-3">
                                                     <p>Enter your email to receive a password reset email or login.</p>
                                     				<div class="form-group">
-                                    					<label for="email" class="form-label">Email Address</label>
-                                    					<input id="email" type="email" name="email" placeholder="Email Address" class="form-control" required>
-                                                        <div class="px-2 mt-1 bg-danger text-white"><small>Email Address Required</small></div>
-                                                        <div class="px-2 mt-1 bg-danger text-white"><small>Invalid Email Address</small></div>
+                                    					<label for="emailAddress_ForgotPassword" class="form-label">Email Address</label>
+                                    					<input id="emailAddress_ForgotPassword" name="emailAddress" type="text" placeholder="Email Address" class="form-control"
+                                    						ng-model="Account_ForgotPassword.emailAddress" swvalidationdatatype="email" swvalidationrequired="true"
+                                    					>
+                                                        <sw:SwfErrorDisplay propertyIdentifier="emailAddress"/>
                                     				</div>
-                                                    <button type="submit" class="btn btn-primary btn-block">Reset Password</button>
-                                                    <button type="submit" class="btn btn-primary btn-block disabled">
-                                                        <i class="fa fa-refresh fa-spin fa-fw"></i>
-                                                    </button>
+                                                    <button ng-click="swfForm.form.submit()" ng-class="{disabled:slatwall.getRequestByAction('ForgotPassword').loading}" class="btn btn-primary btn-block">{{(slatwall.getRequestByAction('ForgotPassword').loading ? '' : 'Reset Password')}}<i ng-show="slatwall.getRequestByAction('Login').loading" class='fa fa-refresh fa-spin fa-fw'></i></button>
                                                 </div>
                                 			</div>
                                         </form>
                                     </div>
 
                                     <!-- Create Account -->
-                                    <div class="collapse" id="createAccount">
+                                    <div class="collapse" id="createAccount" ng-show="slatwall.currentAccountPage == 'CreateAccount'">
                                 			<h5>Create Account</h5>
 
-                                            <div class="alert alert-danger">Error creating account. See errors below.</div>
+                                            <div ng-show="slatwall.requests[swfForm.method].errors.length" class="alert alert-danger">Error creating account. See errors below.</div>
 
-                                            <form action="##">
+                                            <form 
+                                            	ng-model="Account_CreateAccount" 
+												ng-submit="swfForm.submitForm()" 
+												swf-form 
+												data-method="CreateAccount"
+                                            >
                                             	<div class="row">
                                             		<div class="form-group col-md-6">
-                                            			<label for="firstname" class="form-label">First Name</label>
-                                            			<input id="firstname" type="text" name="first-name" placeholder="First Name" class="form-control" required>
-                                                        <div class="px-2 mt-1 bg-danger text-white"><small>First Name Required</small></div>
+                                            			<label for="firstname_CreateAccount" class="form-label">First Name</label>
+                                            			<input id="firstname_CreateAccount" type="text" name="firstName" placeholder="First Name" class="form-control"
+                                            				ng-model="Account_CreateAccount.firstName" swvalidationrequired="true"
+                                            			>
+                                                        <sw:SwfErrorDisplay propertyIdentifier="firstName"/>
                                                     </div>
                                             		<div class="form-group col-md-6">
-                                            			<label for="lastname" class="form-label">Last Name</label>
-                                            			<input id="lastname" type="text" name="last-name" placeholder="Last Name" class="form-control" required>
-                                                        <div class="px-2 mt-1 bg-danger text-white"><small>Last Name Required</small></div>
+                                            			<label for="lastname_CreateAccount" class="form-label">Last Name</label>
+                                            			<input id="lastname_CreateAccount" type="text" name="lastName" placeholder="Last Name" class="form-control" 
+                                            				ng-model="Account_CreateAccount.lastName" swvalidationrequired="true"
+                                            			>
+                                                        <sw:SwfErrorDisplay propertyIdentifier="lastName"/>
                                                     </div>
                                             		<div class="form-group col-md-6">
-                                            			<label for="email" class="form-label">Email Address</label>
-                                            			<input id="email" type="email" name="email" placeholder="Email Address" class="form-control" required>
-                                                        <div class="px-2 mt-1 bg-danger text-white"><small>Email Address Required</small></div>
-                                                        <div class="px-2 mt-1 bg-danger text-white"><small>Invalid Email Address</small></div>
+                                            			<label for="email_CreateAccount" class="form-label">Email Address</label>
+                                            			<input id="email_CreateAccount" type="text" name="emailAddress" placeholder="Email Address" class="form-control"
+                                            				ng-model="Account_CreateAccount.emailAddress" swvalidationdatatype="email" swvalidationrequired="true"
+                                            			>
+                                                        <sw:SwfErrorDisplay propertyIdentifier="emailAddress"/>
                                                     </div>
                                             		<div class="form-group col-md-6">
-                                            			<label for="street" class="form-label">Confirm Email Address</label>
-                                            			<input id="street" type="text" name="address" placeholder="Confirm Email Address" class="form-control" required>
-                                                        <div class="px-2 mt-1 bg-danger text-white"><small>Confirm Email Address Required</small></div>
-                                                        <div class="px-2 mt-1 bg-danger text-white"><small>Invalid Email Address</small></div>
+                                            			<label for="emailAddressConfirm_CreateAccount" class="form-label">Confirm Email Address</label>
+                                            			<input id="emailAddressConfirm_CreateAccount" type="text" name="emailAddressConfirm" placeholder="Confirm Email Address" class="form-control" 
+                                            				ng-model="Account_CreateAccount.emailAddressConfirm" swvalidationrequired="true"
+                                            			>
+                                                        <sw:SwfErrorDisplay propertyIdentifier="emailAddresConfirm"/>
                                                     </div>
                                             		<div class="form-group col-md-6">
-                                            			<label for="password" class="form-label">Password</label>
-                                            			<input id="password" type="tel" name="password" placeholder="Password" class="form-control" required>
-                                                        <div class="px-2 mt-1 bg-danger text-white"><small>Password Required</small></div>
+                                            			<label for="password_CreateAccount" class="form-label">Password</label>
+                                            			<input id="password_CreateAccount" type="password" name="password" placeholder="Password" class="form-control"
+                                            				ng-model="Account_CreateAccount.password" swvalidationrequired="true"
+                                            			>
+                                                        <sw:SwfErrorDisplay propertyIdentifier="password"/>
                                                     </div>
                                             		<div class="form-group col-md-6">
-                                            			<label for="confirmPassword" class="form-label">Confirm Password</label>
-                                            			<input id="confirmPassword" type="text" name="confirmPassword" placeholder="Confirm Password" class="form-control" required>
-                                                        <div class="px-2 mt-1 bg-danger text-white"><small>Confirm Password Required</small></div>
-                                                        <div class="px-2 mt-1 bg-danger text-white"><small>Passwords must match</small></div>
+                                            			<label for="confirmPassword_CreateAccount" class="form-label">Confirm Password</label>
+                                            			<input id="confirmPassword_CreateAccount" type="password" name="confirmPassword" placeholder="Confirm Password" class="form-control" 
+                                            				ng-model="Account_CreateAccount.passwordConfirm" swvalidationrequired="true"
+                                            			>
+                                                        <sw:SwfErrorDisplay propertyIdentifier="passwordConfirm"/>
                                                     </div>
 
                                                     <div class="form-group col-md-6">
-                                            			<label for="phoneNumber" class="form-label">Phone Number</label>
-                                            			<input id="phoneNumber" type="text" name="phoneNumber" placeholder="Phone Number" class="form-control" required>
+                                            			<label for="phoneNumber_CreateAccount" class="form-label">Phone Number</label>
+                                            			<input id="phoneNumber_CreateAccount" type="text" name="phoneNumber" placeholder="Phone Number" class="form-control"
+                                            				ng-model="Account_CreateAccount.phoneNumber"
+                                            			>
+                                            			<sw:SwfErrorDisplay propertyIdentifier="phoneNumber"/>
                                             		</div>
 
                                                     <div class="col-6 offset-md-3">
