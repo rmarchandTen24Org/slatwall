@@ -96,23 +96,23 @@ Notes:
                         <!-- Checkout tabbed nav -->
                         <ul class="nav nav-pills nav-fill" id="pills-tab" role="tablist" swf-navigation>
                             <li class="nav-item">
-                                <a class="nav-link active" id="pills-account-tab" data-toggle="pill" href="##pills-account" role="tab" aria-controls="account" aria-selected="true">Account</a>
+                                <a class="nav-link" id="account-tab" data-toggle="pill" href="##pills-account" role="tab" aria-controls="account" aria-selected="true">Account</a>
                             </li>
                             <!---disabled commented out but is used to when logic wants a button to be unclickable--->
                             <li class="nav-item">
-                                <a class="nav-link" ng-class="{disabled:swfNavigation.fulfillmentTabDisabled}" id="pills-shipping-tab" data-toggle="pill" href="##pills-shipping" role="tab" aria-controls="shipping" aria-selected="true">Shipping</a>
+                                <a class="nav-link" ng-class="{disabled:swfNavigation.fulfillmentTabDisabled}" id="fulfillment-tab" data-toggle="pill" href="##pills-shipping" role="tab" aria-controls="shipping" aria-selected="true">Shipping</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link" ng-class="{disabled:swfNavigation.paymentTabDisabled}" id="pills-payment-tab" data-toggle="pill" href="##pills-payment" role="tab" aria-controls="payment" aria-selected="true">Payment</a>
+                                <a class="nav-link" ng-class="{disabled:swfNavigation.paymentTabDisabled}" id="payment-tab" data-toggle="pill" href="##pills-payment" role="tab" aria-controls="payment" aria-selected="true">Payment</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link" ng-class="{disabled:swfNavigation.reviewTabDisabled}" id="pills-review-tab" data-toggle="pill" href="##pills-review" role="tab" aria-controls="review" aria-selected="true">Order Review</a>
+                                <a class="nav-link" ng-class="{disabled:swfNavigation.reviewTabDisabled}" id="review-tab" data-toggle="pill" href="##pills-review" role="tab" aria-controls="review" aria-selected="true">Order Review</a>
                             </li>
                         </ul>
                     </div>
                     <div class="card-body">
                         <div class="tab-content">
-                        	<div class="tab-pane fade active show" id="pills-account" role="tabpanel" aria-labelledby="account">
+                        	<div class="tab-pane fade active" id="pills-account" role="tabpanel" aria-labelledby="account">
                                 <div id="accountCollapse">
                                     <!-- Account Login -->
                                     <div class="collapse show" id="login" ng-show="slatwall.currentAccountPage == 'Login'">
@@ -121,7 +121,7 @@ Notes:
 											swf-form 
 											data-method="Login"
 										>
-                                			<h5>Account Login</h5>
+                                			<h5>Account Login <a ng-click="slatwall.doAction('logout')">log out sneaky bruh</a></h5>
 
                                             <!-- Invalid account error -->
 

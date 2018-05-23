@@ -45140,23 +45140,37 @@ exports.SWFDirective = SWFDirective;
 /// <reference path='../../../typings/tsd.d.ts' />
 Object.defineProperty(exports, "__esModule", { value: true });
 var SWFNavigationController = /** @class */ (function () {
-    function SWFNavigationController($rootScope, $scope) {
+    function SWFNavigationController($rootScope, $scope, $timeout) {
         var _this = this;
         this.$rootScope = $rootScope;
         this.$scope = $scope;
+        this.$timeout = $timeout;
         this.fulfillmentTabDisabled = true;
         this.paymentTabDisabled = true;
         this.reviewTabDisabled = true;
-        this.updateNavbar = function (newList) {
-            _this.fulfillmentTabDisabled = newList.indexOf('account') > -1;
-            _this.paymentTabDisabled = _this.fulfillmentTabDisabled || newList.indexOf('fulfillment') > -1;
-            _this.reviewTabDisabled = _this.paymentTabDisabled || newList.indexOf('payment') > -1;
+        this.updateNavbar = function (orderRequirementsList) {
+            _this.fulfillmentTabDisabled = orderRequirementsList.indexOf('account') > -1;
+            _this.paymentTabDisabled = _this.fulfillmentTabDisabled || orderRequirementsList.indexOf('fulfillment') > -1;
+            _this.reviewTabDisabled = _this.paymentTabDisabled || orderRequirementsList.indexOf('payment') > -1;
         };
-        // private selectTab = (newList,oldList){
-        // }
-        this.updateView = function (newList, oldList) {
-            _this.updateNavbar(newList);
-            // this.selectTab(newList,oldList);
+        this.selectTab = function (orderRequirementsList) {
+            var sections = ['account', 'fulfillment', 'payment'];
+            var activeTab = '';
+            for (var index = sections.length - 1; index >= 0; index--) {
+                var section = sections[index];
+                if (orderRequirementsList.includes(section)) {
+                    activeTab = section;
+                }
+            }
+            if (activeTab.length) {
+                _this.tabs[activeTab].tab('show');
+            }
+        };
+        this.updateView = function (orderRequirementsList) {
+            _this.updateNavbar(orderRequirementsList);
+            _this.$timeout(function () {
+                _this.selectTab(orderRequirementsList);
+            });
         };
         this.$rootScope = $rootScope;
         this.slatwall = $rootScope.slatwall;
@@ -45173,7 +45187,14 @@ var SWFNavigation = /** @class */ (function () {
             controllerAs: "swfNavigation",
             bindToController: {},
             restrict: "A",
-            link: function (scope, element, attributes, ngModel) {
+            link: function (scope, element, attributes, controller) {
+                var tabs = {
+                    account: $('#account-tab'),
+                    fulfillment: $('#fulfillment-tab'),
+                    payment: $('#payment-tab'),
+                    review: $('#review-tab')
+                };
+                controller.tabs = tabs;
             }
         };
     }
