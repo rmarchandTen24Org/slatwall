@@ -1638,16 +1638,16 @@ Notes:
                                 <form 
                                 	ng-model="::slatwall.selectedAccountAddress" 
 									swf-form 
-									data-method="addNewAccountAddress,addShippingAddressUsingAccountAddress"
+									data-method="addEditAccountAddress,addShippingAddressUsingAccountAddress"
 									ng-show="slatwall.selectedAccountAddress"
                                 >
-                                	<input id="shipping_addressAccountID" type="text" name="accountAddressID"  class="form-control"
+                                	<input id="shipping_addressAccountID" type="hidden" name="accountAddressID"  class="form-control"
             							ng-model="slatwall.selectedAccountAddress.accountAddressID" 
             						>
 	                                <h5>Create/Edit Shipping Address</h5>
 									<!---TODO:drive by success and failure actions being populated--->
-	                                <div class="alert alert-success">Shipping Address saved.</div>
-	                                <div class="alert alert-danger">Error saving shipping address. See below for errors.</div>
+	                                <div class="alert alert-success" ng-show="slatwall.requests[swfForm.method].successfulActions.length">Shipping Address saved.</div>
+	                                <div class="alert alert-danger" ng-show="slatwall.requests[swfForm.method].failureActions.length">Error saving shipping address. See below for errors.</div>
 	                                <div class="row">
 	                					<div class="form-group col-md-6">
 	                						<label for="shipping_firstname" class="form-label">First Name</label>
@@ -1782,7 +1782,7 @@ Notes:
 	                                    </button>
 	
 	                                    <!-- Close button for create/edit address - only should show if other addresses exists show address listing on close -->
-	                                    <button type="button" name="closeAddress" class="btn btn-link">Close</button>
+	                                    <button type="button" name="closeAddress" ng-click="slatwall.selectedAccountAddress=undefined" class="btn btn-link">Close</button>
 	                                </div>
 	                                <!-- Create Shipping Address Button - only show when other addresses exist -->
 	                                
