@@ -645,6 +645,11 @@ class PublicService {
     public selectShippingAccountAddress = (accountAddressID)=>{
         this.doAction('addShippingAddressUsingAccountAddress', {accountAddressID:accountAddressID});
     }
+    
+     /** Selects shippingAddress*/
+    public selectBillingAccountAddress = (accountAddressID)=>{
+        this.doAction('addBillingAddressUsingAccountAddress', {accountAddressID:accountAddressID});
+    }
 
     /**
      * Returns true if on a mobile device. This is important for placeholders.
