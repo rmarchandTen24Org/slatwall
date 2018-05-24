@@ -726,29 +726,45 @@ component extends="HibachiService"  accessors="true" output="false"
         
     }
     
+    public any function addBillingAddressUsingAccountAddress(required data){
+        var accountAddress = getService('addressService').getAccountAddress(data.accountAddressID);
+        
+        var addressData = {
+            address=accountAddress.getAddress()  
+        };
+        
+        return addBillingAddress(addressData);
+    }
+    
     /** adds a billing address to an order. 
     @ProcessMethod Address_Save
     */
     public any function addBillingAddress(required data){
         param name="data.saveAsAccountAddressFlag" default="0"; 
         //if we have that data and don't have any suggestions to make, than try to populate the address
-            billingAddress = getService('AddressService').newAddress();    
+        billingAddress = getService('AddressService').newAddress();    
+        
+        //if we have an address then copy it and validate it
+        if(structKeyExists(data,'address')){
+            var savedAddress = getService('AddressService').copyAddress(data.address);
+            savedAddress = getService('AddressService').saveAddress(savedAddress, {}, "full");    
+        //get a new address populated with the data.    
+        }else{
+            var savedAddress = getService('AddressService').saveAddress(billingAddress, arguments.data, "full");    
+        }
+        
+        if (!isNull(savedAddress) && !savedAddress.hasErrors()){
+            //save the address at the order level.
+            var order = getHibachiScope().cart();
+            order.setBillingAddress(savedAddress);
             
-            //get a new address populated with the data.
-            var savedAddress = getService('AddressService').saveAddress(billingAddress, arguments.data, "full");
-            
-            if (!isNull(savedAddress) && !savedAddress.hasErrors()){
-                //save the address at the order level.
-                var order = getHibachiScope().cart();
-                order.setBillingAddress(savedAddress);
-                
-                getService("OrderService").saveOrder(order);
-            }
-            if(savedAddress.hasErrors()){
-                  this.addErrors(arguments.data, savedAddress.getErrors()); //add the basic errors
-            	    getHibachiScope().addActionResult( "public:cart.addBillingAddress", true);
-            }
-            return savedAddress;
+            getService("OrderService").saveOrder(order);
+        }
+        if(savedAddress.hasErrors()){
+              this.addErrors(arguments.data, savedAddress.getErrors()); //add the basic errors
+        	    getHibachiScope().addActionResult( "public:cart.addBillingAddress", true);
+        }
+        return savedAddress;
     }
     
     /** 
