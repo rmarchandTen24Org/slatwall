@@ -758,52 +758,53 @@ Notes:
                                 <h5>Select Billing Address</h5>
 
                                 <!-- Billing Dropdown Select -->
-                                <select class="form-control my-3" name="billingAddress" required>
-                                    <option value="">Tony Montana - 1 Main Street - Montanaville, MN</option>
+                                <select class="form-control my-3" name="billingAddress" required 
+                                	ng-model="slatwall.cart.billingAccountAddress.accountAddressID"
+                                	ng-change="slatwall.selectBillingAccountAddress(slatwall.cart.billingAccountAddress.accountAddressID)"
+                                	ng-disabled="slatwall.getRequestByAction('addBillingAddressUsingAccountAddress').loading"
+                                >
+                                	<option  value="">Select Account Address</option>
+                                    <option ng-repeat="accountAddress in slatwall.account.accountAddresses track by accountAddress.accountAddressID" 
+                                    	ng-selected="accountAddress.accountAddressID == slatwall.cart.billingAccountAddress.accountAddressID"
+                                    	ng-value="accountAddress.accountAddressID" 
+                                    	ng-bind="accountAddress.getSimpleRepresentation()"
+                                    >
+                                    </option>
                                 </select>
 
-                                <div class="card-deck mb-3">
+                                <div class="card-deck mb-3" ng-repeat="accountAddress in slatwall.account.accountAddresses track by accountAddress.accountAddressID">
                                     <!-- Shipping Address block selector -->
-                                    <address class="card border-secondary">
+                                    <address class="card border-secondary" >
                                         <div class="card-header">
                                             <div class="form-check">
-                                                <input class="form-check-input" type="radio" name="billingAddress" id="billingAddress1" value="billingAddress1" checked>
-                                                <label class="form-check-label" for="billingAddress1">Selected</label>
+                                                <input class="form-check-input" type="radio" name="address" 
+                                                	ng-value="accountAddress.accountAddressID" ng-checked="accountAddress.accountAddressID == slatwall.cart.billingAccountAddress.accountAddressID"
+                                                	ng-model="slatwall.cart.billingAccountAddress.accountAddressID" ng-click="slatwall.selectBilliingAccountAddress(accountAddress.accountAddressID)" 
+                                                >
+                                                <label class="form-check-label" for="address1">Selected</label>
                                                 <!-- Select Address Loader -->
-                                                <i class="fa fa-refresh fa-spin fa-fw my-1 float-right"></i>
+                                                <i ng-show="slatwall.getRequestByAction('addBillingAddressUsingAccountAddress').loading" class="fa fa-refresh fa-spin fa-fw my-1 float-right"></i>
                                             </div>
                                         </div>
                                         <div class="card-body">
-                                            <strong>Tony Montna</strong><br>
-                                            1 Main Street<br>
-                                            Apt 333<br>
-                                            Montanaville, MN 01701<br>
-                                            508-555-5555
+                                            <strong ng-bind="accountAddress.address.name"></strong><br>
+                                            {{accountAddress.address.streetAddress}}<br>
+                                            {{accountAddress.address.street2Address}}<br ng-if="accountAddress.address.street2Address">
+                                            {{accountAddress.address.city}}, {{accountAddress.address.stateCode}} {{accountAddress.address.postalCode}}<br>
+                                            {{accountAddress.address.phoneNumber}}
                                             <hr>
-                                            <a href="##" class="card-link float-left">Edit</a>
-                                            <a href="##" class="card-link float-right">Delete</a>
+                                            <a href="##" ng-click="slatwall.selectedBillingAccountAddress=accountAddress;" class="card-link float-left">Edit</a>
+                                            <a href="##" ng-disabled="slatwall.getRequestByAction('removeAccountAddress').loading" 
+                                            	ng-click="slatwall.deleteAccountAddress(accountAddress.accountAddressID)" class="card-link float-right"
+                                            >
+                                            	{{slatwall.getRequestByAction('deleteAccountAddress').loading ? '':'Delete'}}
+                                            	<i ng-show="slatwall.getRequestByAction('deleteAccountAddress').loading" class="fa fa-refresh fa-spin fa-fw my-1 float-right"></i>
+                                            </a>
                                         </div>
                                     </address>
 
                                     <!-- Address block -->
-                                    <address class="card">
-                                        <div class="card-header">
-                                            <div class="form-check">
-                                                <input class="form-check-input" type="radio" name="billingAddress" id="billingAddress2" value="billingAddress2">
-                                                <label class="form-check-label" for="billingAddress2">Select</label>
-                                            </div>
-                                        </div>
-                                        <div class="card-body">
-                                            <strong>Tony Montna</strong><br>
-                                            1 Main Street<br>
-                                            Apt 333<br>
-                                            Montanaville, MN 01701<br>
-                                            508-555-5555
-                                            <hr>
-                                            <a href="##" class="card-link float-left">Edit</a>
-                                            <a href="##" class="card-link float-right">Delete</a>
-                                        </div>
-                                    </address>
+                                    
                                 </div>
 
                                 <!-- Select Payment Method -->
