@@ -19,7 +19,7 @@ class SWFNavigationController{
     
     private selectTab = (orderRequirementsList)=>{
         let sections = ['account','fulfillment','payment'];
-        let activeTab = '';
+        let activeTab = 'review';
         for(let index=sections.length-1; index>=0; index--){
             let section = sections[index];
             if(orderRequirementsList.includes(section)){

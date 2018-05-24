@@ -45157,7 +45157,7 @@ var SWFNavigationController = /** @class */ (function () {
         };
         this.selectTab = function (orderRequirementsList) {
             var sections = ['account', 'fulfillment', 'payment'];
-            var activeTab = '';
+            var activeTab = 'review';
             for (var index = sections.length - 1; index >= 0; index--) {
                 var section = sections[index];
                 if (orderRequirementsList.includes(section)) {

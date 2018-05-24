@@ -121,7 +121,7 @@ Notes:
 											swf-form 
 											data-method="Login"
 										>
-                                			<h5>Account Login <a ng-click="slatwall.doAction('logout')">log out sneaky bruh</a></h5>
+                                			<h5>Account Login</h5>
 
                                             <!-- Invalid account error -->
 
