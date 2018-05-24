@@ -96,7 +96,7 @@ Notes:
                         <!-- Checkout tabbed nav -->
                         <ul class="nav nav-pills nav-fill" id="pills-tab" role="tablist" swf-navigation>
                             <li class="nav-item">
-                                <a class="nav-link" id="account-tab" data-toggle="pill" href="##pills-account" role="tab" aria-controls="account" aria-selected="true">Account</a>
+                                <a class="nav-link" ng-class="{disabled:swfNavigation.accountTabDisabled}" id="account-tab" data-toggle="pill" href="##pills-account" role="tab" aria-controls="account" aria-selected="true">Account</a>
                             </li>
                             <!---disabled commented out but is used to when logic wants a button to be unclickable--->
                             <li class="nav-item">
@@ -156,7 +156,7 @@ Notes:
                                             		</button>
 
                                                     <!-- Continue as Guest -->
-                                                    <button type="button" class="btn btn-link btn-block">Continue as Guest <i class="fa fa-angle-double-right"></i></a>
+                                                    <button type="button" class="btn btn-link btn-block" ng-click="slatwall.currentAccountPage = 'GuestAccount'">Continue as Guest <i class="fa fa-angle-double-right"></i></a>
                                                 </div>
                                 			</div>
                                         </form>
@@ -266,6 +266,53 @@ Notes:
                                                     	<a class="btn btn-link float-left" ng-click="slatwall.currentAccountPage = 'Login'"  role="button" aria-expanded="false" aria-controls="login">&lt;- Back to Login</a>
                                                     
                                                         <button type="submit" class="btn btn-primary btn-block" ng-class="{disabled:slatwall.getRequestByAction('CreateAccount').loading}">{{slatwall.getRequestByAction('CreateAccount').loading ? '' : 'Create Account & Continue'}}
+                                                        	<i ng-show="slatwall.getRequestByAction('CreateAccount').loading" class="fa fa-refresh fa-spin fa-fw"></i>
+                                                        </button>
+                                                    </div>
+                                            	</div>
+                                            </form>
+                            			</div>
+                            		<span ng-init="Account_GuestAccount={
+                            		    createAuthenticationFlag:0
+                            		}"></span>
+                                    <!-- Guest Account -->
+                                    <div class="collapse" id="guestAccount" ng-show="slatwall.currentAccountPage == 'GuestAccount'">
+                                			<h5>Continue as Guest</h5>
+                                            
+                                            <form 
+                                            	ng-model="Account_GuestAccount" 
+												ng-submit="swfForm.submitForm()" 
+												swf-form 
+												data-method="CreateAccount"
+                                            >
+                                                <input type="hidden" id="createAuthenticationFlag_GuestAccount" ng-model="Account_GuestAccount.createAuthenticationFlag" name="createAuthenticationFlag" value="0">
+                                            	<div class="row">
+                                            		<div class="form-group col-md-6">
+                                            			<label for="firstname_GuestAccount" class="form-label">First Name</label>
+                                            			<input id="firstname_GuestAccount" type="text" name="firstName" placeholder="First Name" class="form-control"
+                                            				ng-model="Account_GuestAccount.firstName" swvalidationrequired="true"
+                                            			>
+                                                        <sw:SwfErrorDisplay propertyIdentifier="firstName"/>
+                                                    </div>
+                                            		<div class="form-group col-md-6">
+                                            			<label for="lastname_GuestAccount" class="form-label">Last Name</label>
+                                            			<input id="lastname_GuestAccount" type="text" name="lastName" placeholder="Last Name" class="form-control" 
+                                            				ng-model="Account_GuestAccount.lastName" swvalidationrequired="true"
+                                            			>
+                                                        <sw:SwfErrorDisplay propertyIdentifier="lastName"/>
+                                                    </div>
+                                            		<div class="form-group col-md-6">
+                                            			<label for="email_GuestAccount" class="form-label">Email Address</label>
+                                            			<input id="email_GuestAccount" type="text" name="emailAddress" placeholder="Email Address" class="form-control"
+                                            				ng-model="Account_GuestAccount.emailAddress" swvalidationdatatype="email" swvalidationrequired="true"
+                                            			>
+                                                        <sw:SwfErrorDisplay propertyIdentifier="emailAddress"/>
+                                                    </div>
+                                                    <div class="col-6 offset-md-3">
+                                                    	<!-- Login toggle  -->
+                                                    	<a class="btn btn-link float-left" ng-click="slatwall.currentAccountPage = 'Login'"  role="button" aria-expanded="false" aria-controls="login">&lt;- Back to Login</a>
+                                                    
+                                                        <button type="submit" class="btn btn-primary btn-block" ng-class="{disabled:slatwall.getRequestByAction('CreateAccount').loading}">{{slatwall.getRequestByAction('CreateAccount').loading ? '' : 'Continue'}}
                                                         	<i ng-show="slatwall.getRequestByAction('CreateAccount').loading" class="fa fa-refresh fa-spin fa-fw"></i>
                                                         </button>
                                                     </div>

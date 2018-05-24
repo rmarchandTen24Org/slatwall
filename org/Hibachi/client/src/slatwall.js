@@ -45145,10 +45145,12 @@ var SWFNavigationController = /** @class */ (function () {
         this.$rootScope = $rootScope;
         this.$scope = $scope;
         this.$timeout = $timeout;
+        this.accountTabDisabled = false;
         this.fulfillmentTabDisabled = true;
         this.paymentTabDisabled = true;
         this.reviewTabDisabled = true;
         this.updateNavbar = function (orderRequirementsList) {
+            _this.accountTabDisabled = orderRequirementsList.indexOf('account') == -1;
             _this.fulfillmentTabDisabled = orderRequirementsList.indexOf('account') > -1;
             _this.paymentTabDisabled = _this.fulfillmentTabDisabled || orderRequirementsList.indexOf('fulfillment') > -1;
             _this.reviewTabDisabled = _this.paymentTabDisabled || orderRequirementsList.indexOf('payment') > -1;
@@ -45163,10 +45165,12 @@ var SWFNavigationController = /** @class */ (function () {
                 }
             }
             if (activeTab.length) {
+                console.log(activeTab);
                 _this.tabs[activeTab].tab('show');
             }
         };
         this.updateView = function (orderRequirementsList) {
+            console.log(orderRequirementsList);
             _this.updateNavbar(orderRequirementsList);
             _this.$timeout(function () {
                 _this.selectTab(orderRequirementsList);

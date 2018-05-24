@@ -5,11 +5,13 @@ class SWFNavigationController{
     //@ngInject
     public slatwall;
     public tabs;
+    public accountTabDisabled=false;
     public fulfillmentTabDisabled=true;
     public paymentTabDisabled=true;
     public reviewTabDisabled=true;
     
     private updateNavbar = (orderRequirementsList)=>{
+        this.accountTabDisabled = orderRequirementsList.indexOf('account') == -1;
         this.fulfillmentTabDisabled = orderRequirementsList.indexOf('account') > -1;
         this.paymentTabDisabled = this.fulfillmentTabDisabled || orderRequirementsList.indexOf('fulfillment') > -1;
         this.reviewTabDisabled = this.paymentTabDisabled || orderRequirementsList.indexOf('payment') > -1;
@@ -25,11 +27,13 @@ class SWFNavigationController{
             }
         }
         if(activeTab.length){
+            console.log(activeTab);
             this.tabs[activeTab].tab('show');
         }
     }
     
     private updateView = (orderRequirementsList)=>{
+        console.log(orderRequirementsList);
         this.updateNavbar(orderRequirementsList);
         this.$timeout(()=>{
             this.selectTab(orderRequirementsList);
