@@ -187,6 +187,13 @@ component extends="Slatwall.org.Hibachi.HibachiEventHandler" {
 		
 		// Setup the correct site in the request object
 		arguments.slatwallScope.setSite( site );
+		
+		if(
+			!isNull(arguments.slatwallScope.getCart())
+			&& isNull(arguments.slatwallScope.getCart().getOrderCreatedSite())
+		){
+			arguments.slatwallScope.getCart().setOrderCreatedSite(site);
+		}
 	}
 	
 	public void function prepareSiteForRendering(required any site, required struct argumentsCollection){

@@ -27,11 +27,23 @@ class SWFFormController {
     public $onInit=()=>{
     }
     
+    public getFormData = ()=>{
+        var formData = {};
+        for(var key in this.form){
+            if(key.indexOf('$')==-1){
+                formData[key]=this.form[key].$modalValue||this.form[key].$viewValue;
+            }
+        }
+        console.log('test',formData);
+        return formData;
+    }
+    
     
     public submitForm = ()=>{
         //example of entityName Account_Login
+        
         if(this.form.$valid){
-            this.$rootScope.slatwall.doAction(this.method,this.ngModel.$modelValue).then( (result) =>{
+            this.$rootScope.slatwall.doAction(this.method,this.getFormData()).then( (result) =>{
                 if(!result) return;
                 if(result.successfulActions.length)
                 {

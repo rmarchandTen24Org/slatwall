@@ -446,6 +446,35 @@ component extends="HibachiService"  accessors="true" output="false"
         }
     }
     
+    public void function addEditAccountAddress(required data){
+        if(structKeyExists(data,'accountAddressID') && len(data['accountAddressID'])){
+            param name="data.countrycode" default="US";
+     	
+         	var accountAddress = getService("AccountService").getAccountAddress(data.accountAddressID);
+         	if (structKeyExists(data, "accountAddressName")){
+         		accountAddress.setAccountAddressName(data.accountAddressName);
+         	}
+         	var address = accountAddress.getAddress();
+         	address = getService("AddressService").saveAddress(address, data, "full");
+          	
+          	if (!address.hasErrors()){
+          		accountAddress.setAddress(address);
+          		accountAddress.setAccount(getHibachiScope().getAccount());	
+          		var savedAccountAddress = getService("AccountService").saveAccountAddress(accountAddress);
+                getHibachiScope().addActionResult("public:account.addNewAccountAddress", savedAccountAddress.hasErrors());
+       	     	if (!savedAccountAddress.hasErrors()){
+       	     		getDao('hibachiDao').flushOrmSession();
+                    data.accountAddressID = savedAccountAddress.getAccountAddressID();
+       	     	}
+          	}else{
+              this.addErrors(data, address.getErrors());
+              getHibachiScope().addActionResult("public:account.addNewAccountAddress", address.hasErrors());
+            }
+        }else{
+            addNewAccountAddress(argumentCollection=arguments);
+        }
+    }
+    
      /**
       * Adds a new account address.
       */
@@ -582,6 +611,7 @@ component extends="HibachiService"  accessors="true" output="false"
             for(var fulfillment in order.getOrderFulfillments()){
               if(structKeyExists(data,'fulfillmentID') && fulfillment.getOrderFulfillmentID() == data.fulfillmentID){
                 var orderFulfillment = fulfillment;
+                break;
               }else if(!structKeyExists(data,'fulfillmentID')){
                 fulfillment.setShippingAddress(accountAddress.getAddress());
                 fulfillment.setAccountAddress(accountAddress);
