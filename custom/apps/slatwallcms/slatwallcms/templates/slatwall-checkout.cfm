@@ -811,43 +811,61 @@ Notes:
                                 <h5 class="pb-2">Select Payment Method</h5>
 
                                 <!-- Credit Card Info -->
-                                <div id="accordion" role="tablist" aria-multiselectable="true" class="mb-3">
+                                <div role="tablist" aria-multiselectable="true" class="mb-3">
                                 	<div class="card mb-3">
-                                        <a data-toggle="collapse" data-parent="##accordion" href="##collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                                        <a aria-expanded="true" >
                                     		<div id="headingOne" role="tab" class="card-header">Credit Card</div>
                                         </a>
-                                		<div id="collapseOne" role="tabpanel" aria-labelledby="headingOne" class="collapse">
+                                		<div  role="tabpanel" aria-labelledby="headingOne">
                                 			<div class="card-body">
                                                 <!-- Add Payment Success/Fail -->
-                                                <div class="alert alert-success">Credit Card Payment added.</div>
-                                                <div class="alert alert-danger">Error adding credit card payment. See below for errors.</div>
-
-                                				<form action="##">
+                                				<form 
+                                					ng-model="OrderPayment_addOrderPayment" 
+													swf-form 
+													data-method="addOrderPayment"
+													
+												>
+                                					<div class="alert alert-success" ng-show="slatwall.requests[swfForm.method].successfulActions.length">Credit Card Payment added.</div>
+                                                	<div class="alert alert-danger" ng-show="slatwall.requests[swfForm.method].failureActions.length">Error adding credit card payment. See below for errors.</div>
+													
                                 					<div class="row">
+                                						<input type="hidden" name="accountAddressID" id="billingAccountAddress-addressID" class="form-control"
+	                        								ng-model="slatwall.cart.billingAccountAddress.accountAddressID"
+	                        							>
                                 						<div class="form-group col-md-6">
                                 							<label for="card-name" class="form-label">Name on Card</label>
-                                							<input type="text" name="card-name" placeholder="Name on card" id="card-name" class="form-control" required>
-                                                            <div class="px-2 mt-1 bg-danger text-white"><small>Name Required</small></div>
+                                							<input type="text" name="newOrderPayment.nameOnCreditCard" placeholder="Name on card" id="card-name" class="form-control"
+                                								ng-model="OrderPayment_addOrderPayment.nameOnCreditCard" swvalidationrequired="true"
+                                							>
+                                                            <sw:SwfErrorDisplay propertyIdentifier="newOrderPayment.nameOnCreditCard"/>
                                 						</div>
                                 						<div class="form-group col-md-6">
                                 							<label for="card-number" class="form-label">Card Number</label>
-                                							<input type="text" name="card-number" placeholder="Card Number" id="card-number" class="form-control" required>
-                                                            <div class="px-2 mt-1 bg-danger text-white"><small>Card Number Required</small></div>
+                                							<input type="text" name="newOrderPayment.creditCardNumber" placeholder="Card Number" id="card-number" class="form-control" 
+                                								ng-model="OrderPayment_addOrderPayment.creditCardNumber" swvalidationrequired="true"
+                                							>
+                                                            <sw:SwfErrorDisplay propertyIdentifier="newOrderPayment.creditCardNumber"/>
                                 						</div>
                                 						<div class="form-group col-md-4">
-                                							<label for="expiry-date" class="form-label">Expiration Date</label>
-                                							<input type="text" name="expiry-date" placeholder="MM/YY" id="expiry-date" class="form-control" required>
-                                                            <div class="px-2 mt-1 bg-danger text-white"><small>Expiration Date Required</small></div>
+                                							<label for="expiry-date-month" class="form-label">Expiration Month</label>
+                                							<input type="text" name="newOrderPayment.expirationMonth" placeholder="MM" id="expiry-date-month" class="form-control"
+                                								ng-model="OrderPayment_addOrderPayment.expirationMonth" swvalidationrequired="true"
+                                							>
+                                                            <sw:SwfErrorDisplay propertyIdentifier="newOrderPayment.expirationMonth"/>
+                                						</div>
+                                						<div class="form-group col-md-4">
+                                							<label for="expiry-date-year" class="form-label">Expiration Year</label>
+                                							<input type="text" name="newOrderPayment.expirationYear" placeholder="YYYY" id="expiry-date-year" class="form-control" 
+                                								ng-model="OrderPayment_addOrderPayment.expirationYear" swvalidationrequired="true"
+                                							>
+                                                            <sw:SwfErrorDisplay propertyIdentifier="newOrderPayment.expirationYear"/>
                                 						</div>
                                 						<div class="form-group col-md-4">
                                 							<label for="cvv" class="form-label">CVC/CVV</label>
-                                							<input type="text" name="cvv" placeholder="123" id="cvv" class="form-control" required>
-                                                            <div class="px-2 mt-1 bg-danger text-white"><small>CVV Required</small></div>
-                                						</div>
-                                						<div class="form-group col-md-4">
-                                							<label for="zip" class="form-label">Zip Code</label>
-                                							<input type="text" name="zip" placeholder="12345" id="zip" class="form-control" required>
-                                                            <div class="px-2 mt-1 bg-danger text-white"><small>Zip Code Required</small></div>
+                                							<input type="text" name="newOrderPayment.securityCode" placeholder="123" id="cvv" class="form-control" 
+                                								ng-model="OrderPayment_addOrderPayment.securityCode" swvalidationrequired="true"
+                                							>
+                                                            <sw:SwfErrorDisplay propertyIdentifier="newOrderPayment.securityCode"/>
                                 						</div>
                                 					</div>
 
@@ -857,9 +875,13 @@ Notes:
                                                     </div>
 
                                                     <!-- Credit Card Payment Submit & Close buttons -->
-                                                    <button type="submit" name="submit" class="btn btn-primary w-25">Add Payment</button>
-                                                    <button type="button" name="addPayment" class="btn btn-primary w-25 disabled"><i class="fa fa-refresh fa-spin fa-fw"></i></button>
-                                                    <button type="button" name="close" class="btn btn-link">Cancel</button>
+                                                    <button ng-click="swfForm.submitForm()" 
+				                                    	ng-class="{disabled:slatwall.getRequestByAction('addOrderPayment').loading}" 
+				                                    	class="btn btn-primary btn-block"
+				                                    >{{(slatwall.getRequestByAction('addOrderPayment').loading ? '' : 'Add Payment')}}
+				                                    	<i ng-show="slatwall.getRequestByAction('addOrderPayment').loading" class='fa fa-refresh fa-spin fa-fw'></i>
+				                                    </button>
+                                                    <!---<button type="button" name="close" class="btn btn-link">Cancel</button>--->
                                 				</form>
                                 			</div>
                                 		</div>
@@ -867,10 +889,10 @@ Notes:
 
                                     <!-- Purchase Order -->
                                 	<div class="card mb-3">
-                                        <a data-toggle="collapse" data-parent="##accordion" href="##collapseTwo" aria-expanded="false" aria-controls="collapseTwo" class="collapsed">
+                                        <a aria-expanded="false" aria-controls="collapseTwo" class="collapsed">
                                     		<div id="headingTwo" role="tab" class="card-header">Purchase Order</div>
                                         </a>
-                                		<div id="collapseTwo" role="tabpanel" aria-labelledby="headingTwo" class="collapse">
+                                		<div  role="tabpanel" aria-labelledby="headingTwo" class="collapse">
                                 			<div class="card-body">
                                                 <!-- Add Payment Success/Fail -->
                                                 <div class="alert alert-success">Credit Card Payment added.</div>
@@ -895,10 +917,10 @@ Notes:
 
                                     <!-- Gift Card -->
                                     <div class="card">
-                                        <a data-toggle="collapse" data-parent="##accordion" href="##collapseThree" aria-expanded="false" aria-controls="collapseThree" class="collapsed">
+                                        <a  aria-expanded="false" aria-controls="collapseThree" class="collapsed">
                                             <div id="headingThree" role="tab" class="card-header">Gift Card</div>
                                         </a>
-                                        <div id="collapseThree" role="tabpanel" aria-labelledby="headingThree" class="collapse">
+                                        <div  role="tabpanel" aria-labelledby="headingThree" class="collapse">
                                             <div class="card-body">
                                                 <!-- Add Payment Success/Fail -->
                                                 <div class="alert alert-success">Gift Card Payment added.</div>

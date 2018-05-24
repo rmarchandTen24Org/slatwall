@@ -1277,77 +1277,93 @@ component extends="HibachiService"  accessors="true" output="false"
      * @description Add Order Payment
      @ProcessMethod Order_AddOrderPayment
      */
-    public any function addOrderPayment(required any data, boolean giftCard=false) {
-        param name="data.newOrderPayment" default="#structNew()#";
-        param name="data.newOrderPayment.orderPaymentID" default="";
-        param name="data.newOrderPayment.requireBillingAddress" default="1";
-        param name="data.newOrderPayment.saveShippingAsBilling" default="0";
-        param name="data.accountAddressID" default="";
-        param name="data.accountPaymentMethodID" default="";
-        param name="data.newOrderPayment.paymentMethod.paymentMethodID" default="444df303dedc6dab69dd7ebcc9b8036a";
-        param name="data.orderID" default="";
-        
+    public any function addOrderPayment(required any data, boolean giftCard = false) {
+        param name = "data.newOrderPayment" default = "#structNew()#";
+        param name = "data.newOrderPayment.orderPaymentID" default = "";
+        param name = "data.newOrderPayment.requireBillingAddress" default = "1";
+        param name = "data.newOrderPayment.saveShippingAsBilling" default = "0";
+        param name = "data.accountAddressID" default = "";
+        param name = "data.accountPaymentMethodID" default = "";
+        param name = "data.newOrderPayment.paymentMethod.paymentMethodID" default = "444df303dedc6dab69dd7ebcc9b8036a";
+        param name = "data.orderID" default = "";
+
         //Make sure orderID passed in belongs to logged in account
         var accountID = getHibachiScope().getAccount().getAccountID();
-        if(len(data.orderID)){
-            if(isNull(accountID) || !len(accountID) || accountID != getOrderService().getOrder(data.orderID).getAccount().getAccountID()){
+        if (len(data.orderID)) {
+            if (isNull(accountID) || !len(accountID) || accountID != getOrderService().getOrder(data.orderID).getAccount().getAccountID()) {
                 data.orderID = '';
             }
         }
+        
+        if (len(data.orderID)) {
+            var order = getOrderService().getOrder(orderID);
+        }
+        else {
+            var order = getHibachiScope().getCart();
+        }
 
-        if(structKeyExists(data.newOrderPayment, 'billingAddress') && structKeyExists(data.newOrderPayment.billingAddress, 'accountAddressID')){
+        if (structKeyExists(data, 'accountAddressID')) {
+            var accountAddress = getService('addressService').getAccountAddress(data.accountAddressID);
+            var addOrderPayment = getService('OrderService').processOrder(order, arguments.data, 'addOrderPayment');
+            for (var payment in addOrderPayment.getOrderPayments()) {
+                addErrors(data, payment.getErrors());
+            }
+            getHibachiScope().addActionResult("public:cart.addOrderPayment", addOrderPayment.hasErrors());
+            return addOrderPayment;
+        }
+
+        if (structKeyExists(data.newOrderPayment, 'billingAddress') && structKeyExists(data.newOrderPayment.billingAddress, 'accountAddressID')) {
             data.accountAddressID = data.newOrderPayment.billingAddress.accountAddressID;
         }
+
+
         // Make sure that someone isn't trying to pass in another users orderPaymentID
-        if(len(data.newOrderPayment.orderPaymentID)) {
+        if (len(data.newOrderPayment.orderPaymentID)) {
             var orderPayment = getService("OrderService").getOrderPayment(data.newOrderPayment.orderPaymentID);
-            if(orderPayment.getOrder().getOrderID() != getHibachiScope().cart().getOrderID()) {
+            if (orderPayment.getOrder().getOrderID() != getHibachiScope().cart().getOrderID()) {
                 data.newOrderPayment.orderPaymentID = "";
             }
         }
 
-        if(data.newOrderPayment.requireBillingAddress || data.newOrderPayment.saveShippingAsBilling){
-          if(!structKeyExists(data.newOrderPayment, 'billingAddress')){
 
-            var orderPayment = this.newOrderPayment();
-            orderPayment.populate(data.newOrderPayment);
-            orderPayment.setOrder(getHibachiScope().getCart());
-            if(orderPayment.getPaymentMethod().getPaymentMethodType() == 'termPayment'){
-              orderPayment.setTermPaymentAccount(getHibachiScope().getAccount());
+        if (data.newOrderPayment.requireBillingAddress || data.newOrderPayment.saveShippingAsBilling) {
+            if (!structKeyExists(data.newOrderPayment, 'billingAddress')) {
+
+                var orderPayment = this.newOrderPayment();
+                orderPayment.populate(data.newOrderPayment);
+                orderPayment.setOrder(getHibachiScope().getCart());
+                if (orderPayment.getPaymentMethod().getPaymentMethodType() == 'termPayment') {
+                    orderPayment.setTermPaymentAccount(getHibachiScope().getAccount());
+                }
+                //Add billing address error
+                orderPayment.addError('addBillingAddress', getHibachiScope().rbKey('validate.processOrder_addOrderPayment.billingAddress'));
+                //Validate to get all errors
+                orderPayment.validate('save');
+
+                this.addErrors(data, orderPayment.getErrors());
+
+                getHibachiScope().addActionResult("public:cart.addOrderPayment", true);
+                return;
             }
-            //Add billing address error
-            orderPayment.addError('addBillingAddress', getHibachiScope().rbKey('validate.processOrder_addOrderPayment.billingAddress'));
-            //Validate to get all errors
-            orderPayment.validate('save');
+            //use this billing information
+            var newBillingAddress = this.addBillingAddress(data.newOrderPayment.billingAddress, "billing");
+        }
 
-            this.addErrors(data, orderPayment.getErrors());
-
-            getHibachiScope().addActionResult( "public:cart.addOrderPayment", true);
+        if (!isNull(newBillingAddress) && newBillingAddress.hasErrors()) {
+            this.addErrors(arguments.data, newBillingAddress.getErrors());
             return;
-          }
-          //use this billing information
-          var newBillingAddress = this.addBillingAddress(data.newOrderPayment.billingAddress, "billing");
-      }
-
-      if(!isNull(newBillingAddress) && newBillingAddress.hasErrors()){
-        this.addErrors(arguments.data, newBillingAddress.getErrors());
-        return;
-      }
-      
-      if(len(data.orderID)){
-            var order = getOrderService().getOrder(orderID);
-        }else{
-            var order = getHibachiScope().getCart();
         }
-      var addOrderPayment = getService('OrderService').processOrder( order, arguments.data, 'addOrderPayment');
 
-      if(!giftCard){
-        for(var payment in addOrderPayment.getOrderPayments()){
-          addErrors(data, payment.getErrors());
+        
+        var addOrderPayment = getService('OrderService').processOrder(order, arguments.data, 'addOrderPayment');
+
+        if (!giftCard) {
+            for (var payment in addOrderPayment.getOrderPayments()) {
+                addErrors(data, payment.getErrors());
+            }
+            getHibachiScope().addActionResult("public:cart.addOrderPayment", addOrderPayment.hasErrors());
         }
-        getHibachiScope().addActionResult( "public:cart.addOrderPayment", addOrderPayment.hasErrors() );
-      }
-      return addOrderPayment;
+        return addOrderPayment;
     }
 
 
