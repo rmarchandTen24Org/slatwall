@@ -59,6 +59,7 @@ Notes:
 																						
 	
 --->
+
 <cfinclude template="_slatwall-header.cfm" />
 
 <!--- This import allows for the custom tags required by this page to work --->
@@ -113,6 +114,9 @@ Notes:
                     <div class="card-body">
                         <div class="tab-content">
                         	<div class="tab-pane fade active" id="pills-account" role="tabpanel" aria-labelledby="account">
+                                
+                                <!---ACCOUNT BEGIN--->
+
                                 <div id="accountCollapse">
                                     <!-- Account Login -->
                                     <div class="collapse show" id="login" ng-show="slatwall.currentAccountPage == 'Login'">
@@ -150,7 +154,7 @@ Notes:
                                                     <a class="btn btn-link float-right" ng-click="slatwall.currentAccountPage = 'ForgotPassword'"  role="button" aria-expanded="false" aria-controls="forgotPassword">Reset Password</a>
 
                                                     <!-- Login Button -->
-                                                    <button ng-click="swfForm.form.submit()" ng-class="{disabled:slatwall.getRequestByAction('Login').loading}" class="btn btn-primary btn-block">
+                                                    <button ng-click="swfForm.submitForm()" ng-class="{disabled:slatwall.getRequestByAction('Login').loading}" class="btn btn-primary btn-block">
                                                     	{{(slatwall.getRequestByAction('Login').loading ? '' : 'Login & Continue')}}
                                                     	<i ng-show="slatwall.getRequestByAction('Login').loading" class='fa fa-refresh fa-spin fa-fw'></i>
                                             		</button>
@@ -188,7 +192,7 @@ Notes:
                                     				<!-- Login toggle  -->
                                                     <a class="btn btn-link float-left" ng-click="slatwall.currentAccountPage = 'Login'"  role="button" aria-expanded="false" aria-controls="login">&lt;- Back to Login</a>
                                                     
-                                                    <button ng-click="swfForm.form.submit()" ng-class="{disabled:slatwall.getRequestByAction('ForgotPassword').loading}" class="btn btn-primary btn-block">
+                                                    <button ng-click="swfForm.submitForm()" ng-class="{disabled:slatwall.getRequestByAction('ForgotPassword').loading}" class="btn btn-primary btn-block">
                                                     	{{(slatwall.getRequestByAction('ForgotPassword').loading ? '' : 'Reset Password')}}
                                                     	<i ng-show="slatwall.getRequestByAction('ForgotPassword').loading" class='fa fa-refresh fa-spin fa-fw'></i>
                                                 	</button>
@@ -322,15 +326,16 @@ Notes:
                                     </div>
                                 </div>
 
+                                <!---ACCOUNT END--->
 
-                			<!-- Shipping Tab 2-->
+                			<!--- SHIPPING BEGIN--->
                 			<div class="tab-pane fade" id="pills-shipping" role="tabpanel" aria-labelledby="pill-shipping-tab">
 
                                 <!-- Select Shipping Method -->
                                 <h5>Select Shipping Method</h5>
 
                                 <!-- Alert message if no shipping methods available -->
-                                <div class="alert alert-danger">There are no shipping methods available.</div>
+                                <div class="alert alert-danger" ng-show="slatwall.cart.orderFulfillments[0].shippingMethodOptions.length === 0">There are no shipping methods available.</div>
 
 
                                 <!-- Store & Pickup Shipping Methods -->
@@ -341,209 +346,252 @@ Notes:
                                             <h5 class="card-title text-center mt-3">Shipping</h5>
                                         </div>
                                     </label>
-
-                                    <label class="card bg-light mb-3" style="max-width: 18rem;">
+									<!---TODO: implement pickup--->
+                                    <!---<label class="card bg-light mb-3" style="max-width: 18rem;">
                                         <div class="card-body">
                                             <i class="fa fa-building fa-3x d-block text-center"></i>
                                             <h5 class="card-title text-center mt-3">Store Pickup</h5>
                                         </div>
-                                    </label>
+                                    </label>--->
                                 </div>
 
                                 <!-- Create Shipping Address form - opens by default if none exist -->
-                                <h5>Create/Edit Shipping Address</h5>
+                                <!--- NOTE: if we have an account then we should save accountaddresses otherwise only addresses--->
+                                <form 
+                                	ng-model="::slatwall.selectedAccountAddress" 
+									swf-form 
+									data-method="addEditAccountAddress,addShippingAddressUsingAccountAddress"
+									ng-show="slatwall.selectedAccountAddress"
+                                >
+                                	<input id="shipping_addressAccountID" type="hidden" name="accountAddressID"  class="form-control"
+            							ng-model="slatwall.selectedAccountAddress.accountAddressID" 
+            						>
+	                                <h5>Create/Edit Shipping Address</h5>
+									<!---TODO:drive by success and failure actions being populated--->
+	                                <div class="alert alert-success" ng-show="slatwall.requests[swfForm.method].successfulActions.length">Shipping Address saved.</div>
+	                                <div class="alert alert-danger" ng-show="slatwall.requests[swfForm.method].failureActions.length">Error saving shipping address. See below for errors.</div>
+	                                <div class="row">
+	                					<div class="form-group col-md-6">
+	                						<label for="shipping_firstname" class="form-label">First Name</label>
+	                						<input id="shipping_firstname" type="text" name="firstName" placeholder="First Name" class="form-control"
+	                							ng-model="slatwall.selectedAccountAddress.address.firstName" swvalidationrequired="true"
+	                						>
+	                                        <sw:SwfErrorDisplay propertyIdentifier="firstName"/>
+	                					</div>
+	                					<div class="form-group col-md-6">
+	                						<label for="shipping_lastname" class="form-label">Last Name</label>
+	                						<input id="lshipping_astname" type="text" name="lastName" placeholder="Last Name" class="form-control"
+	                							ng-model="slatwall.selectedAccountAddress.address.lastName" swvalidationrequired="true"
+	                						>
+	                                        <sw:SwfErrorDisplay propertyIdentifier="lastName"/>
+	                                    </div>
+	                					<div class="form-group col-md-6">
+	                						<label for="shipping_street" class="form-label">Street</label>
+	                						<input id="shipping_street" type="text" name="streetAddress" placeholder="Street Address" class="form-control"
+	                							ng-model="slatwall.selectedAccountAddress.address.streetAddress" swvalidationrequired="true"
+	                						>
+	                                        <sw:SwfErrorDisplay propertyIdentifier="streetAddress"/>
+	                                    </div>
+	                                    <div class="form-group col-md-6">
+	                						<label for="shipping_street2" class="form-label">Street Address 2</label>
+	                						<input id="shipping_street2" type="text" name="street2Address" placeholder="Street Address" class="form-control"
+	                							ng-model="slatwall.selectedAccountAddress.address.street2Address" 
+	                						>
+	                						<sw:SwfErrorDisplay propertyIdentifier="street2Address"/>
+	                                    </div>
+	                					<div class="form-group col-md-3">
+	                						<label for="shipping_city" class="form-label">City</label>
+	                						<input id="shipping_city" type="text" name="city" placeholder="City" class="form-control"
+	                							ng-model="slatwall.selectedAccountAddress.address.city" swvalidationrequired="true"
+	                						>
+	                                        <sw:SwfErrorDisplay propertyIdentifier="city"/>
+	                                    </div>
+	                					<div class="form-group col-md-3">
+	                						<label for="shipping_zip" class="form-label">Zip Code</label>
+	                						<input id="shipping_zip" type="text" name="postalCode" placeholder="Zip code" class="form-control"
+	                							ng-model="slatwall.selectedAccountAddress.address.postalCode" swvalidationrequired="true"
+	                						>
+	                                        <sw:SwfErrorDisplay propertyIdentifier="postalCode"/>
+	                                    </div>
+	                					<div class="form-group col-md-3">
+	                						<label for="shipping_state" class="form-label">State</label>
+	                						<select id="shipping_state" type="text" name="stateCode" placeholder="State" class="form-control"
+	                							ng-model="slatwall.selectedAccountAddress.address.stateCode" swvalidationrequired="true"
+	                						>
+	                							<option value="">State list...</option>
+	                                            <option ng-repeat="state in slatwall.states.stateCodeOptions track by state.value" ng-value="state.value" ng-bind="state.name"
+	                                            	ng-selected="state.value==slatwall.selectedAccountAddress.address.stateCode"
+	                                            ></option>
+	                                        </select>
+	                                        <sw:SwfErrorDisplay propertyIdentifier="stateCode"/>
+	                                    </div>
+	                					<div class="form-group col-md-3">
+	                						<label for="shipping_country" class="form-label">Country</label>
+	                						<select id="shipping_country" type="text" name="countryCode" placeholder="Country" class="form-control"
+	                							ng-model="slatwall.selectedAccountAddress.address.countryCode" swvalidationrequired="true"
+	                						>
+	                                            <option value="">Country list...</option>
+	                                            <option ng-repeat="country in slatwall.countries.countryCodeOptions track by country.value" ng-value="country.value" ng-bind="country.name"
+	                                            	ng-selected="country.value==slatwall.selectedAccountAddress.address.countryCode"
+	                                            ></option>
+	                                        </select>
+	                                        <sw:SwfErrorDisplay propertyIdentifier="countryCode"/>
+	                                    </div>
+	                					<div class="form-group col-md-6">
+	                						<label for="shipping_phone-number" class="form-label">Phone Number</label>
+	                						<input id="shipping_phone-number" type="tel" name="phoneNumber" placeholder="Phone number" class="form-control"
+	                							ng-model="slatwall.selectedAccountAddress.address.phoneNumber" swvalidationrequired="true"
+	                						>
+	                                        <sw:SwfErrorDisplay propertyIdentifier="phoneNumber"/>
+	                					</div>
+	                                    <div class="form-group col-md-6">
+	                						<label for="shipping_email" class="form-label">Email Address</label>
+	                						<input id="shipping_email" name="emailAddress" placeholder="Email Address" class="form-control"
+	                							ng-model="slatwall.selectedAccountAddress.address.emailAddress" swvalidationrequired="true" swvalidationdatatype="email"
+	                						>
+	                                        <sw:SwfErrorDisplay propertyIdentifier="emailAddress"/>
+	                                    </div>
+	                                    <div class="form-group col-md-6">
+	                						<label for="shipping_company" class="form-label">Company</label>
+	                						<input id="shipping_company" type="text" name="company" placeholder="Company" class="form-control"
+	                							ng-model="slatwall.selectedAccountAddress.address.company"
+	                						>
+	                						<sw:SwfErrorDisplay propertyIdentifier="company"/>
+	                					</div>
+	                                    <div class="form-group col-md-6">
+	                						<label for="shipping_addressNickname" class="form-label">Address Nickname</label>
+	                						<input id="shipping_addressNickname" type="text" name="accountAddressName" placeholder="Address Nickname" class="form-control"
+	                							ng-model="slatwall.selectedAccountAddress.accountAddressName"
+	                						>
+	                						<sw:SwfErrorDisplay propertyIdentifier="accountAddressName"/>
+	                					</div>
+	                				</div>
+	                			
+		                			<!---TODO:implement options--->
+	                                <!---<div class="row">
+	                                    <div class="form-group col-md-6">
+	                                        <div class="form-group custom-control custom-checkbox">
+	                                            <input type="checkbox" class="custom-control-input" id="address_save">
+	                                            <label class="custom-control-label" for="address_save">Save to address book?</label>
+	                                        </div>
+	                                        <div class="form-group custom-control custom-checkbox">
+	                                            <input type="checkbox" class="custom-control-input" id="address_default">
+	                                            <label class="custom-control-label" for="address_default">Set as default address?</label>
+	                                        </div>
+	                                        <div class="form-group custom-control custom-checkbox">
+	                                            <input type="checkbox" class="custom-control-input" id="address_billing_shipping">
+	                                            <label class="custom-control-label" for="address_billing_shipping">Billing same as Shipping?</label>
+	                                        </div>
+	                                    </div>
+	                                </div>--->
 
-                                <div class="alert alert-success">Shipping Address saved.</div>
-                                <div class="alert alert-danger">Error saving shipping address. See below for errors.</div>
-
-                                <div class="row">
-                					<div class="form-group col-md-6">
-                						<label for="shipping_firstname" class="form-label">First Name</label>
-                						<input id="shipping_firstname" type="text" name="shipping_first-name" placeholder="First Name" class="form-control">
-                                        <div class="px-2 mt-1 bg-danger text-white"><small>First Name Required</small></div>
-                					</div>
-                					<div class="form-group col-md-6">
-                						<label for="shipping_lastname" class="form-label">Last Name</label>
-                						<input id="lshipping_astname" type="text" name="shipping_last-name" placeholder="Last Name" class="form-control">
-                                        <div class="px-2 mt-1 bg-danger text-white"><small>First Name Required</small></div>
-                                    </div>
-                					<div class="form-group col-md-6">
-                						<label for="shipping_street" class="form-label">Street</label>
-                						<input id="shipping_street" type="text" name="shipping_address" placeholder="Street Address" class="form-control">
-                                        <div class="px-2 mt-1 bg-danger text-white"><small>Street Required</small></div>
-                                    </div>
-                                    <div class="form-group col-md-6">
-                						<label for="shipping_street2" class="form-label">Street Address 2</label>
-                						<input id="shipping_street2" type="text" name="shipping_street2" placeholder="Street Address" class="form-control">
-                                    </div>
-                					<div class="form-group col-md-3">
-                						<label for="shipping_city" class="form-label">City</label>
-                						<input id="shipping_city" type="text" name="shipping_city" placeholder="City" class="form-control">
-                                        <div class="px-2 mt-1 bg-danger text-white"><small>City Required</small></div>
-                                    </div>
-                					<div class="form-group col-md-3">
-                						<label for="shipping_zip" class="form-label">Zip Code</label>
-                						<input id="shipping_zip" type="text" name="shipping_zip" placeholder="Zip code" class="form-control">
-                                        <div class="px-2 mt-1 bg-danger text-white"><small>Zip Code Required</small></div>
-                                    </div>
-                					<div class="form-group col-md-3">
-                						<label for="shipping_state" class="form-label">State</label>
-                						<select id="shipping_state" type="text" name="shipping_state" placeholder="State" class="form-control">
-                                            <option value="">State list...</option>
-                                        </select>
-                                        <div class="px-2 mt-1 bg-danger text-white"><small>State Required</small></div>
-                                    </div>
-                					<div class="form-group col-md-3">
-                						<label for="shipping_country" class="form-label">Country</label>
-                						<select id="shipping_country" type="text" name="shipping_country" placeholder="Country" class="form-control">
-                                            <option value="">Country list...</option>
-                                        </select>
-                                        <div class="px-2 mt-1 bg-danger text-white"><small>Country Required</small></div>
-                                    </div>
-                					<div class="form-group col-md-6">
-                						<label for="shipping_phone-number" class="form-label">Phone Number</label>
-                						<input id="shipping_phone-number" type="tel" name="shipping_phone-number" placeholder="Phone number" class="form-control">
-                                        <div class="px-2 mt-1 bg-danger text-white"><small>Phone Number Required</small></div>
-                					</div>
-                                    <div class="form-group col-md-6">
-                						<label for="shipping_email" class="form-label">Email Address</label>
-                						<input id="shipping_email" type="email" name="shipping_email" placeholder="Email Address" class="form-control">
-                                        <div class="px-2 mt-1 bg-danger text-white"><small>Email Address Required</small></div>
-                                    </div>
-                                    <div class="form-group col-md-6">
-                						<label for="shipping_company" class="form-label">Company</label>
-                						<input id="shipping_company" type="text" name="shipping_company" placeholder="Company" class="form-control">
-                					</div>
-                                    <div class="form-group col-md-6">
-                						<label for="shipping_addressNickname" class="form-label">Address Nickname</label>
-                						<input id="shipping_addressNickname" type="text" name="shipping_addressNickname" placeholder="Address Nickname" class="form-control">
-                					</div>
-                				</div>
-                                <div class="row">
-                                    <div class="form-group col-md-6">
-                                        <div class="form-group custom-control custom-checkbox">
-                                            <input type="checkbox" class="custom-control-input" id="address_save">
-                                            <label class="custom-control-label" for="address_save">Save to address book?</label>
-                                        </div>
-                                        <div class="form-group custom-control custom-checkbox">
-                                            <input type="checkbox" class="custom-control-input" id="address_default">
-                                            <label class="custom-control-label" for="address_default">Set as default address?</label>
-                                        </div>
-                                        <div class="form-group custom-control custom-checkbox">
-                                            <input type="checkbox" class="custom-control-input" id="address_billing_shipping">
-                                            <label class="custom-control-label" for="address_billing_shipping">Billing same as Shipping?</label>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <div class="form-group">
-                                    <!-- Save Address button -->
-                                    <button type="submit" class="btn btn-primary">Save Shipping Address</button>
-                                    <button type="submit" class="btn btn-primary disabled">
-                                        <i class="fa fa-refresh fa-spin fa-fw"></i>
-                                    </button>
-
-                                    <!-- Close button to close create/edit shipping address & display  -->
-                                    <button type="submit" class="btn btn-danger btn-sm mt-2">Delete Address</button>
-
-                                    <button type="submit" class="btn btn-danger btn-sm mt-2 disabled">
-                                        <i class="fa fa-refresh fa-spin fa-fw"></i>
-                                    </button>
-
-                                    <!-- Close button for create/edit address - only should show if other addresses exists show address listing on close -->
-                                    <button type="button" name="closeAddress" class="btn btn-link">Close</button>
-                                </div>
-
-                                <!-- Create Shipping Address Button - only show when other addresses exist -->
-                                <button type="button" name="createShippingAddress" class="btn btn-secondary btn-sm float-right">
+	                                <div class="form-group">
+	                                    <!-- Save Address button -->
+	                                    <button ng-click="swfForm.submitForm()" 
+	                                    	ng-class="{disabled:slatwall.getRequestByAction('addNewAccountAddress,addShippingAddressUsingAccountAddress').loading}" 
+	                                    	class="btn btn-primary btn-block"
+	                                    >{{(slatwall.getRequestByAction('addNewAccountAddress,addShippingAddressUsingAccountAddress').loading ? '' : 'Save Shipping Address')}}
+	                                    	<i ng-show="slatwall.getRequestByAction('addNewAccountAddress,addShippingAddressUsingAccountAddress').loading" class='fa fa-refresh fa-spin fa-fw'></i>
+	                                    </button>
+	                                    <!-- Close button to close create/edit shipping address & display  -->
+	                                    <button ng-show="slatwall.selectedAccountAddress.accountAddressID.trim().length" 
+	                                    	class="btn btn-danger btn-sm mt-2"
+	                                    	ng-click="slatwall.deleteAccountAddress(slatwall.selectedAccountAddress.accountAddressID)"
+	                                    	ng-disabled="slatwall.getRequestByAction('deleteAccountAddress').loading"
+	                                    >
+	                                    	{{slatwall.getRequestByAction('deleteAccountAddress').loading ? '':'Delete Address'}}
+                                            <i ng-show="slatwall.getRequestByAction('deleteAccountAddress').loading" class="fa fa-refresh fa-spin fa-fw my-1 float-right"></i>
+	                                    </button>
+	
+	                                    <!-- Close button for create/edit address - only should show if other addresses exists show address listing on close -->
+	                                    <button type="button" name="closeAddress" ng-click="slatwall.selectedAccountAddress=undefined" class="btn btn-link">Close</button>
+	                                </div>
+	                                <!-- Create Shipping Address Button - only show when other addresses exist -->
+	                                
+	                            </form>
+	                            <button type="button" ng-click="slatwall.selectedAccountAddress=slatwall.accountAddressService.newAccountAddress()" class="btn btn-secondary btn-sm float-right">
                                     <i class="fa fa-plus-circle"></i> Add Shipping Address
                                 </button>
+                                
 
+                                
+								
                                 <!-- Select Existing Shipping address -->
                                 <h5>Select Shipping Address</h5>
 
                                 <!-- Shipping Dropdown Select -->
-                                <select class="form-control my-3" name="shippingAddress" required>
-                                    <option value="">Tony Montana - 1 Main Street - Montanaville, MN</option>
+                                <select class="form-control my-3" name="shippingAddress" required 
+                                	ng-model="slatwall.cart.orderFulfillments[0].accountAddress.accountAddressID"
+                                	ng-change="slatwall.selectShippingAccountAddress(slatwall.cart.orderFulfillments[0].accountAddress.accountAddressID)"
+                                	ng-disabled="slatwall.getRequestByAction('addShippingAddressUsingAccountAddress').loading"
+                                >
+                                	<option  value="">Select Account Address</option>
+                                    <option ng-repeat="accountAddress in slatwall.account.accountAddresses track by accountAddress.accountAddressID" 
+                                    	ng-selected="accountAddress.accountAddressID == slatwall.cart.orderFulfillments[0].accountAddress.accountAddressID"
+                                    	ng-value="accountAddress.accountAddressID" 
+                                    	ng-bind="accountAddress.getSimpleRepresentation()"
+                                    >
+                                    </option>
                                 </select>
 
-                                <div class="card-deck mb-3">
+                                <div class="card-deck mb-3" ng-repeat="accountAddress in slatwall.account.accountAddresses track by accountAddress.accountAddressID">
                                     <!-- Shipping Address block selector -->
-                                    <address class="card border-secondary">
+                                    <address class="card border-secondary" >
                                         <div class="card-header">
                                             <div class="form-check">
-                                                <input class="form-check-input" type="radio" name="address" id="address1" value="address1" checked>
+                                                <input class="form-check-input" type="radio" name="address" 
+                                                	ng-value="accountAddress.accountAddressID" ng-checked="accountAddress.accountAddressID == slatwall.cart.orderFulfillments[0].accountAddress.accountAddressID"
+                                                	ng-model="slatwall.cart.orderFulfillments[0].accountAddress.accountAddressID" ng-click="slatwall.selectShippingAccountAddress(accountAddress.accountAddressID)" 
+                                                >
                                                 <label class="form-check-label" for="address1">Selected</label>
                                                 <!-- Select Address Loader -->
-                                                <i class="fa fa-refresh fa-spin fa-fw my-1 float-right"></i>
+                                                <i ng-show="slatwall.getRequestByAction('addShippingAddressUsingAccountAddress').loading" class="fa fa-refresh fa-spin fa-fw my-1 float-right"></i>
                                             </div>
                                         </div>
                                         <div class="card-body">
-                                            <strong>Tony Montna</strong><br>
-                                            1 Main Street<br>
-                                            Apt 333<br>
-                                            Montanaville, MN 01701<br>
-                                            508-555-5555
+                                            <strong ng-bind="accountAddress.address.name"></strong><br>
+                                            {{accountAddress.address.streetAddress}}<br>
+                                            {{accountAddress.address.street2Address}}<br ng-if="accountAddress.address.street2Address">
+                                            {{accountAddress.address.city}}, {{accountAddress.address.stateCode}} {{accountAddress.address.postalCode}}<br>
+                                            {{accountAddress.address.phoneNumber}}
                                             <hr>
-                                            <a href="##" class="card-link float-left">Edit</a>
-                                            <a href="##" class="card-link float-right">Delete</a>
+                                            <a href="##" ng-click="slatwall.selectedAccountAddress=accountAddress;" class="card-link float-left">Edit</a>
+                                            <a href="##" ng-disabled="slatwall.getRequestByAction('removeAccountAddress').loading" 
+                                            	ng-click="slatwall.deleteAccountAddress(accountAddress.accountAddressID)" class="card-link float-right"
+                                            >
+                                            	{{slatwall.getRequestByAction('deleteAccountAddress').loading ? '':'Delete'}}
+                                            	<i ng-show="slatwall.getRequestByAction('deleteAccountAddress').loading" class="fa fa-refresh fa-spin fa-fw my-1 float-right"></i>
+                                            </a>
                                         </div>
                                     </address>
 
                                     <!-- Address block -->
-                                    <address class="card">
-                                        <div class="card-header">
-                                            <div class="form-check">
-                                                <input class="form-check-input" type="radio" name="address" id="address2" value="address2">
-                                                <label class="form-check-label" for="address2">Select</label>
-                                            </div>
-                                        </div>
-                                        <div class="card-body">
-                                            <strong>Tony Montna</strong><br>
-                                            1 Main Street<br>
-                                            Apt 333<br>
-                                            Montanaville, MN 01701<br>
-                                            508-555-5555
-                                            <hr>
-                                            <a href="##" class="card-link float-left">Edit</a>
-                                            <a href="##" class="card-link float-right">Delete</a>
-                                        </div>
-                                    </address>
+                                    
                                 </div>
 
                                 <!-- Shipping Delievery Options -->
                                 <h5>Select Delivery Method</h5>
 
                                 <div class="card-deck mb-3">
-                                    <div class="card border-secondary">
+                                    <div class="card border-secondary" 
+                                    	ng-repeat="shippingMethodOption in slatwall.cart.orderFulfillments[0].shippingMethodOptions | orderBy:shippingMethod.sortOrder"
+                                	>
                                         <div class="card-header">
                                             <div class="form-check">
-                                                <input class="form-check-input" type="radio" name="shipping" id="shipping1" value="shipping1" checked>
+                                                <input class="form-check-input" type="radio" name="shipping" 
+                                                	ng-value="shippingMethodOption.value" ng-checked="shippingMethodOption.value == slatwall.cart.orderFulfillments[0].shippingMethod.shippingMethodID"
+                                                	ng-model="slatwall.cart.orderFulfillments[0].shippingMethod.shippingMethodID" 
+                                                	ng-click="slatwall.selectShippingMethod(shippingMethodOption,0)" 
+                                                >
                                                 <label class="form-check-label" for="shipping1">
                                                     Selected
                                                 </label>
                                                 <!-- Select Address Loader -->
-                                                <i class="fa fa-refresh fa-spin fa-fw my-1 float-right"></i>
+                                                <i class="fa fa-refresh fa-spin fa-fw my-1 float-right" ng-show="slatwall.getRequestByAction('addShippingMethodUsingShippingMethodID').loading"></i>
                                             </div>
                                         </div>
                                         <div class="card-body">
-                                            Shipping Method Name<br>
-                                            Shipping Method Provider<br>
-                                            Shipping Rate<br>
-                                        </div>
-                                    </div>
-
-                                    <div class="card">
-                                        <div class="card-header">
-                                            <div class="form-check">
-                                                <input class="form-check-input" type="radio" name="shipping" id="shipping2" value="shipping2">
-                                                <label class="form-check-label" for="shipping2">Select</label>
-                                            </div>
-                                        </div>
-                                        <div class="card-body">
-                                            Shipping Method Name<br>
-                                            Shipping Method Provider<br>
-                                            Shipping Rate<br>
+                                            {{shippingMethodOption.name}}<br>
                                         </div>
                                     </div>
                                 </div>
@@ -561,7 +609,10 @@ Notes:
                                 </button>
 
                 			</div>
-                            <!-- //Shipping-tab 2 -->
+                			
+                			
+                            <!--- SHIPPING END--->
+
 
                             <!-- Payment Tab 3 -->
                             <div class="tab-pane fade" id="pills-payment" role="tabpanel" aria-labelledby="pill-payment-tab">
@@ -972,37 +1023,37 @@ Notes:
                         <ul class="list-group list-group-flush">
                             <li class="list-group-item">
                                 <span>Order Subtotal</span>
-                                <span class="float-right">$390.00</span>
+                                <span class="float-right" ng-bind="slatwall.cart.subtotal|currency"></span>
                                 <i class="fa fa-refresh fa-spin fa-fw float-right my-1 mr-1"></i>
                             </li>
                             <li class="list-group-item">
                                 <span>Item Discount Total</span>
-                                <span class="text-danger float-right">- $50.00</span>
+                                <span class="text-danger float-right">- {{slatwall.cart.discountTotal|currency}}</span>
                                 <i class="fa fa-refresh fa-spin fa-fw float-right my-1 mr-1"></i>
                             </li>
                             <li class="list-group-item">
                                 <span>Order Discount Total</span>
-                                <span class="text-danger float-right">- $50.00</span>
+                                <span class="text-danger float-right">- {{slatwall.cart.discountTotal|currency}}</span>
                                 <i class="fa fa-refresh fa-spin fa-fw float-right my-1 mr-1"></i>
                             </li>
                             <li class="list-group-item">
                                 <span>Shipping Discount Total</span>
-                                <span class="text-danger float-right">- $50.00</span>
+                                <span class="text-danger float-right">- {{slatwall.cart.orderFulfillments[0].discountTotal || 0|currency}}</span>
                                 <i class="fa fa-refresh fa-spin fa-fw float-right my-1 mr-1"></i>
                             </li>
                             <li class="list-group-item">
                                 <span>Shipping and handling</span>
-                                <span class="float-right">$10.00</span>
+                                <span class="float-right" ng-bind="slatwall.cart.fulfillmentTotal|currency"></span>
                                 <i class="fa fa-refresh fa-spin fa-fw float-right my-1 mr-1"></i>
                             </li>
                             <li class="list-group-item">
                                 <span>Tax</span>
-                                <span class="float-right">$0.00</span>
+                                <span class="float-right" ng-bind="slatwall.cart.taxTotal|currency"></span>
                                 <i class="fa fa-refresh fa-spin fa-fw float-right my-1 mr-1"></i>
                             </li>
                             <li class="list-group-item">
                                 <span>Total</span>
-                                <strong class="float-right">$400.00</strong>
+                                <strong class="float-right" ng-bind="slatwall.cart.total|currency"></strong>
                                 <i class="fa fa-refresh fa-spin fa-fw float-right my-1 mr-1"></i>
                             </li>
                         </ul>
@@ -1015,30 +1066,39 @@ Notes:
                         <h5 class="mb-0">Order Items</h5>
                     </div>
                     <div class="card-body">
-                        <div class="row">
+                        <div class="row" ng-repeat="orderItem in slatwall.cart.orderItems track by orderItem.orderItemID">
                             <div class="col-3">
                                 <img class="img-fluid" src="http://placehold.it/50x50" alt="preview">
                             </div>
                             <div class="col-9 pl-0">
-                                <small class="text-secondary">Product Type</small>
-                                <h6><a href="##">Product Name</a></h6>
+                                <small class="text-secondary" ng-bind="orderItem.sku.product.productType.productTypeName">Product Type</small>
+                                <h6><a href="##" ng-bind="orderItem.sku.product.productName">Product Name</a></h6>
 
                                 <div class="row">
                                     <div class="col-4">
-                                        <input type="number" class="form-control form-control-sm" min="1" value="2" required>
+                                        <input type="number" class="form-control form-control-sm" min="1" required
+                                        	ng-model="orderItem.quantity"
+                                        	ng-disabled="slatwall.getRequestByAction('updateOrderItemQuantity').loading" 
+                                			ng-change="slatwall.updateOrderItemQuantity(orderItem.orderItemID,orderItem.quantity)"
+                                        />
+                                        <i ng-show="slatwall.getRequestByAction('updateOrderItemQuantity').loading" class="fa fa-refresh fa-spin fa-fw"></i>
                                     </div>
                                     <div class="col-8 pl-0">
-                                        <small>$25.00 <span class="text-muted"><s>$50.00</s></span></small>
-                                        <strong>$50.00</strong>
+                                        <small >{{orderItem.extendedPriceAfterDiscount|currency}} <span class="text-muted"><s ng-bind="orderItem.extendedPrice|currency"></s></span></small>
+                                        <strong ng-bind="orderItem.extendedPrice|currency"></strong>
                                     </div>
                                 </div>
 
-                                <small><strong>SKU Code:</strong> Sku Code Value</small>
-                                <p class="mb-3"><small><strong>SKU Defintion Label: </strong>SKU Definition Value</small></p>
+                                <small><strong>SKU Code:</strong> {{orderItem.sku.skuCode}}</small>
+                                <p class="mb-3"><small><strong>SKU Defintion Label: </strong>{{orderItem.sku.skuDefinition}}</small></p>
 
-                                <button type="button" class="btn btn-danger btn-sm rounded">&times;</button>
-                                <button type="button" class="btn btn-danger btn-sm rounded disabled"><i class="fa fa-refresh fa-spin fa-fw"></i></button>
-
+                                <button type="button" class="btn btn-danger btn-sm rounded" 
+                                	ng-disabled="slatwall.getRequestByAction('updateOrderItemQuantity').loading" 
+                                	ng-click="slatwall.updateOrderItemQuantity(orderItem.orderItemID,0)">
+                                	<span ng-show="!slatwall.getRequestByAction('updateOrderItemQuantity').loading">&times;</span>
+                                	<i ng-show="slatwall.getRequestByAction('updateOrderItemQuantity').loading" class="fa fa-refresh fa-spin fa-fw"></i>
+                                		
+                                </button>
                             </div>
                         </div>
                     </div>
@@ -1054,17 +1114,26 @@ Notes:
                         <div class="alert alert-success">Promotion added.</div>
                         <div class="alert alert-danger">Invalid Promotion.</div>
 
-                        <form action="##" class="mb-1">
+                        <form  class="mb-1"
+                        	ng-model="Order_addPromotion" 
+							ng-submit="swfForm.submitForm()" 
+							swf-form 
+							data-method="addPromotionCode"
+                        >
                             <div class="row">
                                 <div class="col-sm-8 col-7">
-                                    <input type="text" class="form-control form-control-sm" placeholder="Enter Promo Code..." required>
-                                    <div class="px-2 mt-1 bg-danger text-white"><small>Phone Number Required</small></div>
+                                    <input type="text" class="form-control form-control-sm" placeholder="Enter Promo Code..." name="promotionCode"
+                                    	ng-model="Order_addPromotion.promotionCode" swvalidationrequired="true"
+                                    />
+                                    <sw:SwfErrorDisplay propertyIdentifier="promotionCode"/>
                                 </div>
                                 <div class="col-sm-4 col-5">
                                     <!-- Apply promo button -->
-                                    <button type="submit" class="btn btn-secondary btn-sm btn-block">Apply</button>
+                                    <button type="submit" class="btn btn-secondary btn-sm btn-block" ng-disabled="slatwall.getRequestByAction('addPromotionCode').loading">
+                                    	{{slatwall.getRequestByAction('updateOrderItemQuantity').loading ? '' : 'Apply'}}
+                                    	<i ng-show="slatwall.getRequestByAction('updateOrderItemQuantity').loading" class="fa fa-refresh fa-spin fa-fw"></i>
+                                    	</button>
                                     <!-- Apply promo loader -->
-                                    <button type="submit" class="btn btn-secondary btn-sm btn-block disabled"><i class="fa fa-refresh fa-spin fa-fw"></i></button>
                                 </div>
                             </div>
                         </form>
@@ -1081,7 +1150,7 @@ Notes:
         </div>
 
         <!-- Cart Empty Message -->
-        <div class="alert alert-danger my-2">There are no items in your cart.</div>
+        <div class="alert alert-danger my-2" ng-show="slatwall.cart.orderItems.length === 0">There are no items in your cart.</div>
     </div>
 </cfoutput>
 <cfinclude template="_slatwall-footer.cfm" />
