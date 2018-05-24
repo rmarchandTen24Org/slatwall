@@ -949,7 +949,7 @@ Notes:
                                 <!-- Add disabled class until all criteria is met -->
                                 <button type="button" name="review" class="btn btn-secondary w-25 disabled">Review Order</button>
                                 <button type="button" name="review" class="btn btn-secondary w-25 disabled"><i class="fa fa-refresh fa-spin fa-fw"></i></button>
-
+					
                                 <button type="submit" name="submit" class="btn btn-primary w-25 disabled">Place Order</button>
                                 <button type="submit" class="btn btn-primary w-25 disabled"><i class="fa fa-refresh fa-spin fa-fw"></i></button>
 
@@ -961,7 +961,7 @@ Notes:
                                 <h5>Review Order</h5>
 
                                 <!-- Place Order alert fail -->
-                                <div class="alert alert-danger">Order could not be placed.</div>
+                                <div class="alert alert-danger" ng-show="slatwall.requests['placeOrder'].failureActions.length">Order could not be placed.</div>
 
                                 <!-- Shipping  -->
                                 <h6>Shipping</h6>
@@ -974,11 +974,11 @@ Notes:
                                             <a href="##" class="float-right">Edit</a>
                                         </div>
                                         <div class="card-body">
-                                            <strong>Tony Montana</strong><br>
-                                            1 Main Street<br>
-                                            Apt 333<br>
-                                            Montanaville, MN 01701<br>
-                                            508-555-5555
+                                            <strong ng-bind="slatwall.cart.orderFulfillments[0].shippingAddress.name"></strong><br>
+                                            {{slatwall.cart.orderFulfillments[0].shippingAddress.streetAddress}}<br>
+                                            {{slatwall.cart.orderFulfillments[0].shippingAddress.street2Address}}<br ng-if="slatwall.cart.orderFulfillments[0].shippingAddress.street2Address"/>
+                                            {{slatwall.cart.orderFulfillments[0].shippingAddress.city}}, {{slatwall.cart.orderFulfillments[0].shippingAddress.stateCode}} {{slatwall.cart.orderFulfillments[0].shippingAddress.postalCode}}<br>
+                                            {{slatwall.cart.orderFulfillments[0].shippingAddress.phoneNumber}}
                                         </div>
                                     </address>
 
@@ -989,39 +989,40 @@ Notes:
                                             <a href="##" class="float-right">Edit</a>
                                         </div>
                                         <div class="card-body">
-                                        <strong>Shipping Method Name</strong><br>
-                                            Shipping Method Provider<br>
-                                            Shipping Rate
+                                        	<strong ng-bind="slatwall.cart.orderFulfillments[0].shippingMethod.shippingMethodName"></strong><br>
                                         </div>
                                     </div>
                                 </div>
-
-                                <!-- Store Pickup  -->
-                                <h6>Store Pickup</h6>
-
-                                <div class="card-deck mb-3">
-                                    <!-- Pickup Date -->
-                                    <address class="card">
-                                        <div class="card-header">
-                                            <span class="float-left"><i class="fa fa-check-circle"></i> Store Pickup Date</span>
-                                            <a href="##" class="float-right">Edit</a>
-                                        </div>
-                                        <div class="card-body">
-                                            <i class="fa fa-calendar"></i> <strong>January 25, 2018</strong>
-                                        </div>
-                                    </address>
-
-                                    <!-- Store Pickup Location  -->
-                                    <div class="card">
-                                        <div class="card-header">
-                                            <span class="float-left"><i class="fa fa-check-circle"></i> Store Pickup Location</span>
-                                            <a href="##" class="float-right">Edit</a>
-                                        </div>
-                                        <div class="card-body">
-                                            <i class="fa fa-map-marker"></i> <strong>Pickup Location Address</strong>
-                                        </div>
-                                    </div>
-                                </div>
+								
+								<!--- TODO:STORE PICKUP TO BE CONTINUED
+								
+	                                <!-- Store Pickup  -->
+	                                <h6>Store Pickup</h6>
+	
+	                                <div class="card-deck mb-3">
+	                                    <!-- Pickup Date -->
+	                                    <address class="card">
+	                                        <div class="card-header">
+	                                            <span class="float-left"><i class="fa fa-check-circle"></i> Store Pickup Date</span>
+	                                            <a href="##" class="float-right">Edit</a>
+	                                        </div>
+	                                        <div class="card-body">
+	                                            <i class="fa fa-calendar"></i> <strong>January 25, 2018</strong>
+	                                        </div>
+	                                    </address>
+	
+	                                    <!-- Store Pickup Location  -->
+	                                    <div class="card">
+	                                        <div class="card-header">
+	                                            <span class="float-left"><i class="fa fa-check-circle"></i> Store Pickup Location</span>
+	                                            <a href="##" class="float-right">Edit</a>
+	                                        </div>
+	                                        <div class="card-body">
+	                                            <i class="fa fa-map-marker"></i> <strong>Pickup Location Address</strong>
+	                                        </div>
+	                                    </div>
+	                                </div>
+	                            --->
 
                                 <!-- Billing -->
                                 <h6>Billing</h6>
@@ -1034,11 +1035,11 @@ Notes:
                                             <a href="##" class="float-right">Edit</a>
                                         </div>
                                         <div class="card-body">
-                                            <strong>Tony Montna</strong><br>
-                                            1 Main Street<br>
-                                            Apt 333<br>
-                                            Montanaville, MN 01701<br>
-                                            508-555-5555
+                                            <strong ng-bind="slatwall.cart.orderPayments[0].billingAddress.name"></strong><br>
+                                            {{slatwall.cart.orderPayments[0].billingAddress.streetAddress}}<br>
+                                            {{slatwall.cart.orderPayments[0].billingAddress.street2Address}}<br ng-if="slatwall.cart.orderPayments[0].billingAddress.street2Address"/>
+                                            {{slatwall.cart.orderPayments[0].billingAddress.city}}, {{slatwall.cart.orderPayments[0].billingAddress.stateCode}} {{slatwall.cart.orderPayments[0].billingAddress.postalCode}}<br>
+                                            {{slatwall.cart.orderPayments[0].billingAddress.phoneNumber}}
                                         </div>
                                     </address>
 
@@ -1048,18 +1049,17 @@ Notes:
                                             <span class="float-left"><i class="fa fa-check-circle"></i> Payment Method</span>
                                             <a href="##" class="float-right">Edit</a>
                                         </div>
-                                        <div class="card-body">
+                                        <div class="card-body" ng-switch="slatwall.cart.orderPayments[0].creditCardType.toLowerCase()">
                                             <h6>Credit Card</h6>
+                                            <i class="fa fa-cc-visa fa-2x" ng-switch-when="visa"></i>
+                                            <i class="fa fa-cc-mastercard fa-2x" ng-switch-when="mastercard"></i>
+                                            <i class="fa fa-cc-discover fa-2x" ng-switch-when="discover"></i>
+                                            <i class="fa fa-cc-amex fa-2x" ng-switch-when="amex"></i>
 
-                                            <i class="fa fa-cc-visa fa-2x"></i>
-                                            <i class="fa fa-cc-mastercard fa-2x"></i>
-                                            <i class="fa fa-cc-discover fa-2x"></i>
-                                            <i class="fa fa-cc-amex fa-2x"></i>
+                                            ****{{slatwall.cart.orderPayments[0].creditCardLastFour}}
 
-                                            ****1234
-
-                                            <small class="d-block">Amount: $100</small>
-
+                                            <small class="d-block">Amount: {{slatwall.cart.orderPayments[0].amount|currency}}</small>
+											<!---TODO:gift card and purchase order
                                             <h6 class="mt-3">Gift Card</h6>
 
                                             <small class="d-block">##12345678</small>
@@ -1067,13 +1067,15 @@ Notes:
 
                                             <h6 class="mt-3">Purchase Order</h6>
                                             <small class="d-block">##12345678</small>
+                                            --->
                                         </div>
                                     </div>
                                 </div>
 
                                 <!-- Place Order Button  -->
-                                <button type="submit" name="submit" class="btn btn-primary w-25">Place Order</button>
-                                <button type="submit" class="btn btn-primary w-25 disabled"><i class="fa fa-refresh fa-spin fa-fw"></i></button>
+                                <button ng-click="slatwall.doAction('placeOrder')" class="btn btn-primary btn-block" ng-class="{disabled:slatwall.getRequestByAction('placeOrder').loading}">{{slatwall.getRequestByAction('placeOrder').loading ? '' : 'PlaceOrder'}}
+                                	<i ng-show="slatwall.getRequestByAction('placeOrder').loading" class="fa fa-refresh fa-spin fa-fw"></i>
+                                </button>
 
                             </div>
                             <!-- //Review-tab 4  -->
