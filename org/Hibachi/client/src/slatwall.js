@@ -43329,6 +43329,8 @@ var SWFFormController = /** @class */ (function () {
                         if (_this.sRedirectUrl) {
                             _this.$rootScope.slatwall.redirectExact(_this.sRedirectUrl);
                         }
+                        _this.form.$setSubmitted(false);
+                        _this.form.$setPristine(true);
                     }
                     if (result.errors) {
                         if (_this.fRedirectUrl) {

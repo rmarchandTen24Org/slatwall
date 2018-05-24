@@ -51,6 +51,8 @@ class SWFFormController {
                     if(this.sRedirectUrl){
                         this.$rootScope.slatwall.redirectExact(this.sRedirectUrl);
                     }
+                    this.form.$setSubmitted(false);
+                    this.form.$setPristine(true);
                 }
                 if (result.errors) {
                     if(this.fRedirectUrl){

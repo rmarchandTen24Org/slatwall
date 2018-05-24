@@ -1894,91 +1894,141 @@ Notes:
 
                             <!-- Payment Tab 3 -->
                             <div class="tab-pane fade" id="pills-payment" role="tabpanel" aria-labelledby="pill-payment-tab">
-
-                                <!-- Create Billing Address form - opens by default if none exist -->
-                                <h5>Create/Edit Billing Address</h5>
-
-                                <div class="alert alert-success">Billing Address saved.</div>
-                                <div class="alert alert-danger">Error saving billing address. See below for errors.</div>
-
-                                <div class="row">
-                					<div class="form-group col-md-6">
-                						<label for="billing_firstname" class="form-label">First Name</label>
-                						<input id="billing_firstname" type="text" name="billing_first-name" placeholder="First Name" class="form-control">
-                                        <div class="px-2 mt-1 bg-danger text-white"><small>First Name Required</small></div>
-                					</div>
-                					<div class="form-group col-md-6">
-                						<label for="billing_lastname" class="form-label">Last Name</label>
-                						<input id="billing_lastname" type="text" name="billing_last-name" placeholder="Last Name" class="form-control">
-                                        <div class="px-2 mt-1 bg-danger text-white"><small>First Name Required</small></div>
-                                    </div>
-                					<div class="form-group col-md-6">
-                						<label for="billing_street" class="form-label">Street</label>
-                						<input id="billing_street" type="text" name="billing_address" placeholder="Street Address" class="form-control">
-                                        <div class="px-2 mt-1 bg-danger text-white"><small>Street Required</small></div>
-                                    </div>
-                                    <div class="form-group col-md-6">
-                						<label for="billing_street2" class="form-label">Street Address 2</label>
-                						<input id="billing_street2" type="text" name="billing_street2" placeholder="Street Address" class="form-control">
-                                    </div>
-                					<div class="form-group col-md-3">
-                						<label for="billing_city" class="form-label">City</label>
-                						<input id="billing_city" type="text" name="billing_city" placeholder="City" class="form-control">
-                                        <div class="px-2 mt-1 bg-danger text-white"><small>City Required</small></div>
-                                    </div>
-                					<div class="form-group col-md-3">
-                						<label for="billing_zip" class="form-label">Zip Code</label>
-                						<input id="billing_zip" type="text" name="billing_zip" placeholder="Zip code" class="form-control">
-                                        <div class="px-2 mt-1 bg-danger text-white"><small>Zip Code Required</small></div>
-                                    </div>
-                					<div class="form-group col-md-3">
-                						<label for="billing_state" class="form-label">State</label>
-                						<select id="billing_state" type="text" name="billing_state" placeholder="State" class="form-control">
-                                            <option value="">State list...</option>
-                                        </select>
-                                        <div class="px-2 mt-1 bg-danger text-white"><small>State Required</small></div>
-                                    </div>
-                					<div class="form-group col-md-3">
-                						<label for="billing_country" class="form-label">Country</label>
-                						<select id="billing_country" type="text" name="billing_country" placeholder="Country" class="form-control">
-                                            <option value="">Country list...</option>
-                                        </select>
-                                        <div class="px-2 mt-1 bg-danger text-white"><small>Country Required</small></div>
-                                    </div>
-                					<div class="form-group col-md-6">
-                						<label for="billing_phone-number" class="form-label">Phone Number</label>
-                						<input id="billing_phone-number" type="tel" name="billing_phone-number" placeholder="Phone number" class="form-control">
-                                        <div class="px-2 mt-1 bg-danger text-white"><small>Phone Number Required</small></div>
-                					</div>
-                                    <div class="form-group col-md-6">
-                						<label for="billing_email" class="form-label">Email Address</label>
-                						<input id="billingemail" type="email" name="billing_email" placeholder="Email Address" class="form-control">
-                                        <div class="px-2 mt-1 bg-danger text-white"><small>Email Address Required</small></div>
-                                    </div>
-                                    <div class="form-group col-md-6">
-                						<label for="billing_company" class="form-label">Company</label>
-                						<input id="billing_company" type="text" name="billing_company" placeholder="Company" class="form-control">
-                					</div>
-                                    <div class="form-group col-md-6">
-                						<label for="billing_addressNickname" class="form-label">Address Nickname</label>
-                						<input id="billing_addressNickname" type="text" name="billing_addressNickname" placeholder="Address Nickname" class="form-control">
-                					</div>
-                				</div>
-
-                                <div class="form-group">
-                                    <!-- Save Address button -->
-                                    <button type="submit" class="btn btn-primary w-25">Save Billing Address</button>
-
-                                    <button type="submit" class="btn btn-primary w-25 disabled">
-                                        <i class="fa fa-refresh fa-spin fa-fw"></i>
-                                    </button>
-
-                                    <!-- Close button for create/edit billing address - only should show if other addresses exists show address listing on close -->
-                                    <button type="button" name="closeAddress" class="btn btn-link">Close</button>
-                                </div>
-
-                                <!-- Create Shipping Address Button - only show when other addresses exist -->
-                                <button type="button" name="createShippingAddress" class="btn btn-secondary btn-sm float-right">
+								<form 
+                                	ng-model="::slatwall.selectedBillingAccountAddress" 
+									swf-form 
+									data-method="addEditAccountAddress,addBillingAddressUsingAccountAddress"
+									ng-show="slatwall.selectedBillingAccountAddress"
+                                >
+									<input id="shipping_addressAccountID" type="hidden" name="accountAddressID"  class="form-control"
+            							ng-model="slatwall.selectedBillingAccountAddress.accountAddressID" 
+            						>
+	                                <!-- Create Billing Address form - opens by default if none exist -->
+	                                <h5>Create/Edit Billing Address</h5>
+	
+	                                <div class="alert alert-success"  ng-show="slatwall.requests[swfForm.method].successfulActions.length">Billing Address saved.</div>
+	                                <div class="alert alert-danger"  ng-show="slatwall.requests[swfForm.method].failureActions.length">Error saving billing address. See below for errors.</div>
+	
+	                                <div class="row">
+	                					<div class="form-group col-md-6">
+	                						<label for="billing_firstname" class="form-label">First Name</label>
+	                						<input id="billing_firstname" type="text" name="firstName" placeholder="First Name" class="form-control"
+	                							ng-model="slatwall.selectedBillingAccountAddress.address.firstName" swvalidationrequired="true"
+	                						>
+	                                        <sw:SwfErrorDisplay propertyIdentifier="firstName"/>
+	                					</div>
+	                					<div class="form-group col-md-6">
+	                						<label for="billing_lastname" class="form-label">Last Name</label>
+	                						<input id="billing_lastname" type="text" name="lastName" placeholder="Last Name" class="form-control"
+	                							ng-model="slatwall.selectedBillingAccountAddress.address.lastName" swvalidationrequired="true"
+	                						>
+	                                        <sw:SwfErrorDisplay propertyIdentifier="lastName"/>
+	                                    </div>
+	                					<div class="form-group col-md-6">
+	                						<label for="billing_street" class="form-label">Street</label>
+	                						<input id="billing_street" type="text" name="streetAddress" placeholder="Street Address" class="form-control"
+	                							ng-model="slatwall.selectedBillingAccountAddress.address.streetAddress" swvalidationrequired="true"
+	                						>
+	                                        <sw:SwfErrorDisplay propertyIdentifier="streetAddress"/>
+	                                    </div>
+	                                    <div class="form-group col-md-6">
+	                						<label for="billing_street2" class="form-label">Street Address 2</label>
+	                						<input id="billing_street2" type="text" name="street2Address" placeholder="Street Address" class="form-control"
+	                							ng-model="slatwall.selectedBillingAccountAddress.address.street2Address" 
+	                						>
+	                						<sw:SwfErrorDisplay propertyIdentifier="street2Address"/>
+	                                    </div>
+	                					<div class="form-group col-md-3">
+	                						<label for="billing_city" class="form-label">City</label>
+	                						<input id="billing_city" type="text" name="city" placeholder="City" class="form-control"
+	                							ng-model="slatwall.selectedBillingAccountAddress.address.city" swvalidationrequired="true"
+	                						>
+	                                        <sw:SwfErrorDisplay propertyIdentifier="city"/>
+	                                    </div>
+	                					<div class="form-group col-md-3">
+	                						<label for="billing_zip" class="form-label">Zip Code</label>
+	                						<input id="billing_zip" type="text" name="postalCode" placeholder="Zip code" class="form-control"
+	                							ng-model="slatwall.selectedBillingAccountAddress.address.postalCode" swvalidationrequired="true"
+	                						>
+	                                        <sw:SwfErrorDisplay propertyIdentifier="postalCode"/>
+	                                    </div>
+	                					<div class="form-group col-md-3">
+	                						<label for="billing_state" class="form-label">State</label>
+	                                        <select id="billing_state" type="text" name="stateCode" placeholder="State" class="form-control"
+	                							ng-model="slatwall.selectedBillingAccountAddress.address.stateCode" swvalidationrequired="true"
+	                						>
+	                							<option value="">State list...</option>
+	                                            <option ng-repeat="state in slatwall.states.stateCodeOptions track by state.value" ng-value="state.value" ng-bind="state.name"
+	                                            	ng-selected="state.value==slatwall.selectedBillingAccountAddress.address.stateCode"
+	                                            ></option>
+	                                        </select>
+	                                        <sw:SwfErrorDisplay propertyIdentifier="stateCode"/>
+	                                    </div>
+	                					<div class="form-group col-md-3">
+	                						<label for="billing_country" class="form-label">Country</label>
+	                						<select id="billing_country" type="text" name="countryCode" placeholder="Country" class="form-control"
+	                							ng-model="slatwall.selectedBillingAccountAddress.address.countryCode" swvalidationrequired="true"
+	                						>
+	                                            <option value="">Country list...</option>
+	                                            <option ng-repeat="country in slatwall.countries.countryCodeOptions track by country.value" ng-value="country.value" ng-bind="country.name"
+	                                            	ng-selected="country.value==slatwall.selectedBillingAccountAddress.address.countryCode"
+	                                            ></option>
+	                                        </select>
+	                                        <sw:SwfErrorDisplay propertyIdentifier="countryCode"/>
+	                                    </div>
+	                					<div class="form-group col-md-6">
+	                						<label for="billing_phone-number" class="form-label">Phone Number</label>
+	                						<input id="billing_phone-number" type="tel" name="phoneNumber" placeholder="Phone number" class="form-control"
+	                							ng-model="slatwall.selectedBillingAccountAddress.address.phoneNumber" swvalidationrequired="true"
+	                						>
+	                                        <sw:SwfErrorDisplay propertyIdentifier="phoneNumber"/>
+	                					</div>
+	                                    <div class="form-group col-md-6">
+	                						<label for="billing_email" class="form-label">Email Address</label>
+	                						<input id="billingemail" name="emailAddress" placeholder="Email Address" class="form-control"
+	                							ng-model="slatwall.selectedBillingAccountAddress.address.emailAddress" swvalidationrequired="true" swvalidationdatatype="email"
+	                						>
+	                                        <sw:SwfErrorDisplay propertyIdentifier="emailAddress"/>
+	                                    </div>
+	                                    <div class="form-group col-md-6">
+	                						<label for="billing_company" class="form-label">Company</label>
+	                						<input id="billing_company" type="text" name="company" placeholder="Company" class="form-control"
+	                							ng-model="slatwall.selectedBillingAccountAddress.address.company" 
+	                						>
+	                						<sw:SwfErrorDisplay propertyIdentifier="company"/>
+	                					</div>
+	                                    <div class="form-group col-md-6">
+	                						<label for="billing_addressNickname" class="form-label">Address Nickname</label>
+	                						<input id="billing_addressNickname" type="text" name="addressAccountName" placeholder="Address Nickname" class="form-control"
+	                							ng-model="slatwall.selectedBillingAccountAddress.addressAccountname"
+	                						>
+	                						<sw:SwfErrorDisplay propertyIdentifier="addressAccountName"/>
+	                					</div>
+	                				</div>
+	                				<div class="form-group">
+	                                	<button ng-click="swfForm.submitForm()" 
+	                                    	ng-class="{disabled:slatwall.getRequestByAction('addNewAccountAddress,addBillingAddressUsingAccountAddress').loading}" 
+	                                    	class="btn btn-primary btn-block"
+	                                    >{{(slatwall.getRequestByAction('addNewAccountAddress,addBillingAddressUsingAccountAddress').loading ? '' : 'Save Billing Address')}}
+	                                    	<i ng-show="slatwall.getRequestByAction('addNewAccountAddress,addBillingAddressUsingAccountAddress').loading" class='fa fa-refresh fa-spin fa-fw'></i>
+	                                    </button>
+	                                    <!-- Close button to close create/edit shipping address & display  -->
+	                                    <button ng-show="slatwall.selectedBillingAccountAddress.accountAddressID.trim().length" 
+	                                    	class="btn btn-danger btn-sm mt-2"
+	                                    	ng-click="slatwall.deleteAccountAddress(slatwall.selectedBillingAccountAddress.accountAddressID)"
+	                                    	ng-disabled="slatwall.getRequestByAction('deleteAccountAddress').loading"
+	                                    >
+	                                    	{{slatwall.getRequestByAction('deleteAccountAddress').loading ? '':'Delete Address'}}
+                                            <i ng-show="slatwall.getRequestByAction('deleteAccountAddress').loading" class="fa fa-refresh fa-spin fa-fw my-1 float-right"></i>
+	                                    </button>
+	
+	                                    <!-- Close button for create/edit address - only should show if other addresses exists show address listing on close -->
+	                                    <button type="button" name="closeAddress" ng-click="slatwall.selectedBillingAccountAddress=undefined" class="btn btn-link">Close</button>
+	                                </div>
+	                				
+	                			</form>
+								
+								<button type="button" ng-click="slatwall.selectedBillingAccountAddress=slatwall.accountAddressService.newAccountAddress()" class="btn btn-secondary btn-sm float-right">
                                     <i class="fa fa-plus-circle"></i> Add Billing Address
                                 </button>
 
