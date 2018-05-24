@@ -1186,8 +1186,7 @@ Notes:
                     </div>
                     <div class="card-body">
                         <!-- Promo success/fail alerts -->
-                        <div class="alert alert-success">Promotion added.</div>
-                        <div class="alert alert-danger">Invalid Promotion.</div>
+                        
 
                         <form  class="mb-1"
                         	ng-model="Order_addPromotion" 
@@ -1195,6 +1194,8 @@ Notes:
 							swf-form 
 							data-method="addPromotionCode"
                         >
+                        	<div class="alert alert-success" ng-show="slatwall.requests[swfForm.method].successfulActions.length">Promotion added.</div>
+                        	<div class="alert alert-danger" ng-show="slatwall.requests[swfForm.method].failureActions.length">Invalid Promotion.</div>
                             <div class="row">
                                 <div class="col-sm-8 col-7">
                                     <input type="text" class="form-control form-control-sm" placeholder="Enter Promo Code..." name="promotionCode"
