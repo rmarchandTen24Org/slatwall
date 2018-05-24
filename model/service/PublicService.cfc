@@ -582,6 +582,7 @@ component extends="HibachiService"  accessors="true" output="false"
             for(var fulfillment in order.getOrderFulfillments()){
               if(structKeyExists(data,'fulfillmentID') && fulfillment.getOrderFulfillmentID() == data.fulfillmentID){
                 var orderFulfillment = fulfillment;
+                break;
               }else if(!structKeyExists(data,'fulfillmentID')){
                 fulfillment.setShippingAddress(accountAddress.getAddress());
                 fulfillment.setAccountAddress(accountAddress);

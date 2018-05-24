@@ -378,7 +378,7 @@ component output="false" accessors="true" extends="Slatwall.org.Hibachi.HibachiS
 		return ReReplace("accountID,firstName,lastName,company,remoteID,primaryPhoneNumber.accountPhoneNumberID,primaryPhoneNumber.phoneNumber,primaryEmailAddress.accountEmailAddressID,primaryEmailAddress.emailAddress,
 			primaryAddress.accountAddressID,
 			accountAddresses.accountAddressName,accountAddresses.accountAddressID,
-			accountAddresses.address.addressID,accountAddresses.address.streetAddress,accountAddresses.address.street2Address,accountAddresses.address.city,accountAddresses.address.stateCode,accountAddresses.address.postalCode,accountAddresses.address.countrycode,accountAddresses.address.name,accountAddresses.address.company,accountAddresses.address.phoneNumber,accountPaymentMethods.accountPaymentMethodID,accountPaymentMethods.creditCardLastFour,accountPaymentMethods.creditCardType,accountPaymentMethods.nameOnCreditCard,accountPaymentMethods.expirationMonth,accountPaymentMethods.expirationYear,accountPaymentMethods.accountPaymentMethodName","[[:space:]]","","all");
+			accountAddresses.address.addressID,accountAddresses.address.countryCode,accountAddresses.address.firstName,accountAddresses.address.lastName,accountAddresses.address.emailAddress,accountAddresses.accountAddressName,accountAddresses.address.streetAddress,accountAddresses.address.street2Address,accountAddresses.address.city,accountAddresses.address.stateCode,accountAddresses.address.postalCode,accountAddresses.address.countrycode,accountAddresses.address.name,accountAddresses.address.company,accountAddresses.address.phoneNumber,accountPaymentMethods.accountPaymentMethodID,accountPaymentMethods.creditCardLastFour,accountPaymentMethods.creditCardType,accountPaymentMethods.nameOnCreditCard,accountPaymentMethods.expirationMonth,accountPaymentMethods.expirationYear,accountPaymentMethods.accountPaymentMethodName","[[:space:]]","","all");
 	}
 	
 	public any function getAccountData(string propertyList) {
@@ -420,7 +420,7 @@ component output="false" accessors="true" extends="Slatwall.org.Hibachi.HibachiS
 			orderItems.sku.product.productID,orderItems.sku.product.productName,orderItems.sku.product.productCode,orderItems.sku.product.urlTitle,orderItems.sku.product.baseProductType,
 			orderItems.sku.product.brand.brandName,
 			orderItems.sku.product.productType.productTypeName,
-			orderFulfillments.orderFulfillmentID,orderFulfillments.fulfillmentCharge,orderFulfillments.currencyCode,
+			orderFulfillments.accountAddress.accountAddressID,orderFulfillments.orderFulfillmentID,orderFulfillments.fulfillmentCharge,orderFulfillments.currencyCode,
 			orderFulfillments.fulfillmentMethod.fulfillmentMethodID,orderFulfillments.fulfillmentMethod.fulfillmentMethodName,orderFulfillments.fulfillmentMethod.fulfillmentMethodType,orderFulfillments.orderFulfillmentItems.sku.skuName,orderFulfillments.orderFulfillmentItems.sku.product.productName,
 			orderFulfillments.shippingMethod.shippingMethodID,orderFulfillments.shippingMethod.shippingMethodName,
 			orderFulfillments.shippingAddress.addressID,orderFulfillments.shippingAddress.streetAddress,orderFulfillments.shippingAddress.street2Address,orderFulfillments.shippingAddress.city,orderFulfillments.shippingAddress.stateCode,orderFulfillments.shippingAddress.postalCode,orderFulfillments.shippingAddress.countrycode,

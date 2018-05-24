@@ -76,6 +76,7 @@ class PublicService {
         public $injector:ng.auto.IInjectorService,
         public requestService,
         public accountService,
+        public accountAddressService,
         public cartService,
         public orderService,
         public observerService,
@@ -85,6 +86,7 @@ class PublicService {
         this.orderService = orderService;
         this.cartService = cartService;
         this.accountService = accountService;
+        this.accountAddressService = accountAddressService;
         this.requestService = requestService;
         this.appConfig = appConfig;
         this.baseActionPath = this.appConfig.baseURL+"/index.cfm/api/scope/"; //default path
@@ -638,6 +640,11 @@ class PublicService {
             }
         }
     }
+    
+    /** Selects shippingAddress*/
+    public selectShippingAccountAddress = (accountAddressID)=>{
+        this.doAction('addShippingAddressUsingAccountAddress', {accountAddressID:accountAddressID});
+    }
 
     /**
      * Returns true if on a mobile device. This is important for placeholders.
@@ -692,6 +699,10 @@ class PublicService {
      /** Removes promotional code from order*/
      public removePromoCode = (code)=>{
          this.doAction('removePromotionCode', {promotionCode:code});
+     }
+     
+     public deleteAccountAddress = (accountAddressID:string)=>{
+         this.doAction('deleteAccountAddress',{accountAddressID:accountAddressID})
      }
 
     //gets the calcuated total minus the applied gift cards.
@@ -1257,18 +1268,10 @@ class PublicService {
         this.showEmailSelector[fulfillmentIndex] = false;
     }
 
-    public incrementItemQuantity = (orderItem, amount=1) =>{
-        orderItem.quantity += amount;
-        if(orderItem.quantity < 0){
-            orderItem.quantity = 0;
-        }
-        this.updateOrderItemQuantity(orderItem);
+    public updateOrderItemQuantity = (orderItemID:string,quantity:number=1) =>{
+        this.doAction('updateOrderItemQuantity',{'orderItem.orderItemID':orderItemID,'orderItem.quantity':quantity});
     }
-
-    public updateOrderItemQuantity = (event) =>{
-        event.swForm.submit();
-    }
-
+    
     public getOrderAttributeValues = (allowedAttributeSets) =>{
         var attributeValues = {};
         var orderAttributeModel = JSON.parse(localStorage.attributeMetaData)["Order"];
