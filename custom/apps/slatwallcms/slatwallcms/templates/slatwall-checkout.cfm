@@ -1900,7 +1900,7 @@ Notes:
 									data-method="addEditAccountAddress,addBillingAddressUsingAccountAddress"
 									ng-show="slatwall.selectedBillingAccountAddress"
                                 >
-									<input id="shipping_addressAccountID" type="hidden" name="accountAddressID"  class="form-control"
+									<input id="billing_addressAccountID" type="hidden" name="accountAddressID"  class="form-control"
             							ng-model="slatwall.selectedBillingAccountAddress.accountAddressID" 
             						>
 	                                <!-- Create Billing Address form - opens by default if none exist -->
