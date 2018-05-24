@@ -339,7 +339,7 @@ Notes:
 
 
                                 <!-- Store & Pickup Shipping Methods -->
-                                <div class="card-deck">
+                                <!--- <div class="card-deck">
                                     <label class="card border-secondary bg-light mb-3" style="max-width: 18rem;">
                                         <div class="card-body">
                                             <i class="fa fa-truck fa-3x d-block text-center"></i>
@@ -353,162 +353,16 @@ Notes:
                                             <h5 class="card-title text-center mt-3">Store Pickup</h5>
                                         </div>
                                     </label>--->
-                                </div>
+                                </div>--->
 
                                 <!-- Create Shipping Address form - opens by default if none exist -->
                                 <!--- NOTE: if we have an account then we should save accountaddresses otherwise only addresses--->
-                                <form 
-                                	ng-model="::slatwall.selectedAccountAddress" 
-									swf-form 
-									data-method="addEditAccountAddress,addShippingAddressUsingAccountAddress"
-									ng-show="slatwall.selectedAccountAddress"
-                                >
-                                	<input id="shipping_addressAccountID" type="hidden" name="accountAddressID"  class="form-control"
-            							ng-model="slatwall.selectedAccountAddress.accountAddressID" 
-            						>
-	                                <h5>Create/Edit Shipping Address</h5>
-									<!---TODO:drive by success and failure actions being populated--->
-	                                <div class="alert alert-success" ng-show="slatwall.requests[swfForm.method].successfulActions.length">Shipping Address saved.</div>
-	                                <div class="alert alert-danger" ng-show="slatwall.requests[swfForm.method].failureActions.length">Error saving shipping address. See below for errors.</div>
-	                                <div class="row">
-	                					<div class="form-group col-md-6">
-	                						<label for="shipping_firstname" class="form-label">First Name</label>
-	                						<input id="shipping_firstname" type="text" name="firstName" placeholder="First Name" class="form-control"
-	                							ng-model="slatwall.selectedAccountAddress.address.firstName" swvalidationrequired="true"
-	                						>
-	                                        <sw:SwfErrorDisplay propertyIdentifier="firstName"/>
-	                					</div>
-	                					<div class="form-group col-md-6">
-	                						<label for="shipping_lastname" class="form-label">Last Name</label>
-	                						<input id="lshipping_astname" type="text" name="lastName" placeholder="Last Name" class="form-control"
-	                							ng-model="slatwall.selectedAccountAddress.address.lastName" swvalidationrequired="true"
-	                						>
-	                                        <sw:SwfErrorDisplay propertyIdentifier="lastName"/>
-	                                    </div>
-	                					<div class="form-group col-md-6">
-	                						<label for="shipping_street" class="form-label">Street</label>
-	                						<input id="shipping_street" type="text" name="streetAddress" placeholder="Street Address" class="form-control"
-	                							ng-model="slatwall.selectedAccountAddress.address.streetAddress" swvalidationrequired="true"
-	                						>
-	                                        <sw:SwfErrorDisplay propertyIdentifier="streetAddress"/>
-	                                    </div>
-	                                    <div class="form-group col-md-6">
-	                						<label for="shipping_street2" class="form-label">Street Address 2</label>
-	                						<input id="shipping_street2" type="text" name="street2Address" placeholder="Street Address" class="form-control"
-	                							ng-model="slatwall.selectedAccountAddress.address.street2Address" 
-	                						>
-	                						<sw:SwfErrorDisplay propertyIdentifier="street2Address"/>
-	                                    </div>
-	                					<div class="form-group col-md-3">
-	                						<label for="shipping_city" class="form-label">City</label>
-	                						<input id="shipping_city" type="text" name="city" placeholder="City" class="form-control"
-	                							ng-model="slatwall.selectedAccountAddress.address.city" swvalidationrequired="true"
-	                						>
-	                                        <sw:SwfErrorDisplay propertyIdentifier="city"/>
-	                                    </div>
-	                					<div class="form-group col-md-3">
-	                						<label for="shipping_zip" class="form-label">Zip Code</label>
-	                						<input id="shipping_zip" type="text" name="postalCode" placeholder="Zip code" class="form-control"
-	                							ng-model="slatwall.selectedAccountAddress.address.postalCode" swvalidationrequired="true"
-	                						>
-	                                        <sw:SwfErrorDisplay propertyIdentifier="postalCode"/>
-	                                    </div>
-	                					<div class="form-group col-md-3">
-	                						<label for="shipping_state" class="form-label">State</label>
-	                						<select id="shipping_state" type="text" name="stateCode" placeholder="State" class="form-control"
-	                							ng-model="slatwall.selectedAccountAddress.address.stateCode" swvalidationrequired="true"
-	                						>
-	                							<option value="">State list...</option>
-	                                            <option ng-repeat="state in slatwall.states.stateCodeOptions track by state.value" ng-value="state.value" ng-bind="state.name"
-	                                            	ng-selected="state.value==slatwall.selectedAccountAddress.address.stateCode"
-	                                            ></option>
-	                                        </select>
-	                                        <sw:SwfErrorDisplay propertyIdentifier="stateCode"/>
-	                                    </div>
-	                					<div class="form-group col-md-3">
-	                						<label for="shipping_country" class="form-label">Country</label>
-	                						<select id="shipping_country" type="text" name="countryCode" placeholder="Country" class="form-control"
-	                							ng-model="slatwall.selectedAccountAddress.address.countryCode" swvalidationrequired="true"
-	                						>
-	                                            <option value="">Country list...</option>
-	                                            <option ng-repeat="country in slatwall.countries.countryCodeOptions track by country.value" ng-value="country.value" ng-bind="country.name"
-	                                            	ng-selected="country.value==slatwall.selectedAccountAddress.address.countryCode"
-	                                            ></option>
-	                                        </select>
-	                                        <sw:SwfErrorDisplay propertyIdentifier="countryCode"/>
-	                                    </div>
-	                					<div class="form-group col-md-6">
-	                						<label for="shipping_phone-number" class="form-label">Phone Number</label>
-	                						<input id="shipping_phone-number" type="tel" name="phoneNumber" placeholder="Phone number" class="form-control"
-	                							ng-model="slatwall.selectedAccountAddress.address.phoneNumber" swvalidationrequired="true"
-	                						>
-	                                        <sw:SwfErrorDisplay propertyIdentifier="phoneNumber"/>
-	                					</div>
-	                                    <div class="form-group col-md-6">
-	                						<label for="shipping_email" class="form-label">Email Address</label>
-	                						<input id="shipping_email" name="emailAddress" placeholder="Email Address" class="form-control"
-	                							ng-model="slatwall.selectedAccountAddress.address.emailAddress" swvalidationrequired="true" swvalidationdatatype="email"
-	                						>
-	                                        <sw:SwfErrorDisplay propertyIdentifier="emailAddress"/>
-	                                    </div>
-	                                    <div class="form-group col-md-6">
-	                						<label for="shipping_company" class="form-label">Company</label>
-	                						<input id="shipping_company" type="text" name="company" placeholder="Company" class="form-control"
-	                							ng-model="slatwall.selectedAccountAddress.address.company"
-	                						>
-	                						<sw:SwfErrorDisplay propertyIdentifier="company"/>
-	                					</div>
-	                                    <div class="form-group col-md-6">
-	                						<label for="shipping_addressNickname" class="form-label">Address Nickname</label>
-	                						<input id="shipping_addressNickname" type="text" name="accountAddressName" placeholder="Address Nickname" class="form-control"
-	                							ng-model="slatwall.selectedAccountAddress.accountAddressName"
-	                						>
-	                						<sw:SwfErrorDisplay propertyIdentifier="accountAddressName"/>
-	                					</div>
-	                				</div>
-	                			
-		                			<!---TODO:implement options--->
-	                                <!---<div class="row">
-	                                    <div class="form-group col-md-6">
-	                                        <div class="form-group custom-control custom-checkbox">
-	                                            <input type="checkbox" class="custom-control-input" id="address_save">
-	                                            <label class="custom-control-label" for="address_save">Save to address book?</label>
-	                                        </div>
-	                                        <div class="form-group custom-control custom-checkbox">
-	                                            <input type="checkbox" class="custom-control-input" id="address_default">
-	                                            <label class="custom-control-label" for="address_default">Set as default address?</label>
-	                                        </div>
-	                                        <div class="form-group custom-control custom-checkbox">
-	                                            <input type="checkbox" class="custom-control-input" id="address_billing_shipping">
-	                                            <label class="custom-control-label" for="address_billing_shipping">Billing same as Shipping?</label>
-	                                        </div>
-	                                    </div>
-	                                </div>--->
-
-	                                <div class="form-group">
-	                                    <!-- Save Address button -->
-	                                    <button ng-click="swfForm.submitForm()" 
-	                                    	ng-class="{disabled:slatwall.getRequestByAction('addNewAccountAddress,addShippingAddressUsingAccountAddress').loading}" 
-	                                    	class="btn btn-primary btn-block"
-	                                    >{{(slatwall.getRequestByAction('addNewAccountAddress,addShippingAddressUsingAccountAddress').loading ? '' : 'Save Shipping Address')}}
-	                                    	<i ng-show="slatwall.getRequestByAction('addNewAccountAddress,addShippingAddressUsingAccountAddress').loading" class='fa fa-refresh fa-spin fa-fw'></i>
-	                                    </button>
-	                                    <!-- Close button to close create/edit shipping address & display  -->
-	                                    <button ng-show="slatwall.selectedAccountAddress.accountAddressID.trim().length" 
-	                                    	class="btn btn-danger btn-sm mt-2"
-	                                    	ng-click="slatwall.deleteAccountAddress(slatwall.selectedAccountAddress.accountAddressID)"
-	                                    	ng-disabled="slatwall.getRequestByAction('deleteAccountAddress').loading"
-	                                    >
-	                                    	{{slatwall.getRequestByAction('deleteAccountAddress').loading ? '':'Delete Address'}}
-                                            <i ng-show="slatwall.getRequestByAction('deleteAccountAddress').loading" class="fa fa-refresh fa-spin fa-fw my-1 float-right"></i>
-	                                    </button>
-	
-	                                    <!-- Close button for create/edit address - only should show if other addresses exists show address listing on close -->
-	                                    <button type="button" name="closeAddress" ng-click="slatwall.selectedAccountAddress=undefined" class="btn btn-link">Close</button>
-	                                </div>
-	                                <!-- Create Shipping Address Button - only show when other addresses exist -->
-	                                
-	                            </form>
+                                <sw:SwfAddressForm 
+                                    selectedAccountAddress="slatwall.selectedAccountAddress" 
+                                    method="addEditAccountAddress,addShippingAddressUsingAccountAddress"
+                                    visible="slatwall.selectedAccountAddress"
+                                    formID="shipping" />
+                                
 	                            <button type="button" ng-click="slatwall.selectedAccountAddress=slatwall.accountAddressService.newAccountAddress()" class="btn btn-secondary btn-sm float-right">
                                     <i class="fa fa-plus-circle"></i> Add Shipping Address
                                 </button>

@@ -31,7 +31,7 @@ class SWFFormController {
         var formData = {};
         for(var key in this.form){
             if(key.indexOf('$')==-1){
-                formData[key]=this.form[key].$modalValue||this.form[key].$viewValue;
+                formData[key]=this.form[key].$modelValue||this.form[key].$viewValue;
             }
         }
         console.log('test',formData);
