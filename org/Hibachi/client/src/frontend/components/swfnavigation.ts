@@ -5,6 +5,7 @@ class SWFNavigationController{
     //@ngInject
     public slatwall;
     public tabs;
+    public currentTab;
     public accountTabDisabled=false;
     public fulfillmentTabDisabled=true;
     public paymentTabDisabled=true;
@@ -15,25 +16,46 @@ class SWFNavigationController{
         this.fulfillmentTabDisabled = orderRequirementsList.indexOf('account') > -1;
         this.paymentTabDisabled = this.fulfillmentTabDisabled || orderRequirementsList.indexOf('fulfillment') > -1;
         this.reviewTabDisabled = this.paymentTabDisabled || orderRequirementsList.indexOf('payment') > -1;
+        
+        if(!this.slatwall.account.accountID){
+            this.showTab('account');
+        }
     }
     
-    private selectTab = (orderRequirementsList)=>{
-        let sections = ['account','fulfillment','payment'];
+    private selectTab = (accountID)=>{
+        console.log('yao');
         let activeTab = 'review';
-        for(let index=sections.length-1; index>=0; index--){
-            let section = sections[index];
-            if(orderRequirementsList.includes(section)){
-                activeTab = section;
+        if(!accountID){
+            console.log('yao?');
+            let activeTab = 'account';
+        }
+        else{
+            console.log('yaoooo');
+            let orderRequirementsList = this.slatwall.cart.orderRequirementsList;
+            let sections = ['account','fulfillment','payment'];
+            for(let index=sections.length-1; index>=0; index--){
+                let section = sections[index];
+                if(orderRequirementsList.includes(section)){
+                    activeTab = section;
+                }
             }
         }
+        console.log('yao!!!');
         if(activeTab.length){
-            console.log(activeTab);
-            this.tabs[activeTab].tab('show');
+            console.log('yoooooo');
+            this.showTab(activeTab);
         }
+    }
+    
+    private showTab(tab){
+        console.log(tab);
+        this[tab+'TabDisabled'] = false;
+        this.$timeout(()=>{
+            this.tabs[tab].tab('show');
+        })
     }
     
     private updateView = (orderRequirementsList)=>{
-        console.log(orderRequirementsList);
         this.updateNavbar(orderRequirementsList);
         this.$timeout(()=>{
             this.selectTab(orderRequirementsList);
@@ -43,7 +65,8 @@ class SWFNavigationController{
     constructor(private $rootScope, private $scope, private $timeout){
         this.$rootScope = $rootScope;
         this.slatwall = $rootScope.slatwall;
-        $scope.$watch('slatwall.cart.orderRequirementsList',this.updateView)
+        $scope.$watch('slatwall.cart.orderRequirementsList',this.updateNavbar);
+        $scope.$watch('slatwall.account.accountID',this.selectTab);
     }
     
 }

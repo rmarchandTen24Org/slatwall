@@ -689,22 +689,20 @@ class PublicService {
 
      /** Select a shipping method - temporarily changes the selected method on the front end while awaiting official change from server
      */
-     public selectShippingMethod = (option, fulfillmentIndex) =>{
+     public selectShippingMethod = (option, orderFulfillment:any) =>{
          let fulfillmentID = '';
-         if(fulfillmentIndex.length == 32){
-             fulfillmentID = fulfillmentIndex;
-         }else{
-             fulfillmentID = this.cart.orderFulfillments[fulfillmentIndex].orderFulfillmentID;
+         if(typeof orderFulfillment == 'string'){
+             orderFulfillment = this.cart.orderFulfillments[orderFulfillment];
          }
          let data = {
              'shippingMethodID': option.value,
-             'fulfillmentID':fulfillmentID
+             'fulfillmentID':orderFulfillment.orderFulfillmentID
          };
          this.doAction('addShippingMethodUsingShippingMethodID', data);
-         if(!this.cart.orderFulfillments[fulfillmentIndex].data.shippingMethod){
-             this.cart.orderFulfillments[fulfillmentIndex].data.shippingMethod = {};
+         if(!orderFulfillment.data.shippingMethod){
+             orderFulfillment.data.shippingMethod = {};
          }
-         this.cart.orderFulfillments[fulfillmentIndex].data.shippingMethod.shippingMethodID = option.value;
+         orderFulfillment.data.shippingMethod.shippingMethodID = option.value;
      }
 
      /** Removes promotional code from order*/

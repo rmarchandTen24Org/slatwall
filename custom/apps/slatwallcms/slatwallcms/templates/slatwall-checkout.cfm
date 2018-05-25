@@ -447,7 +447,7 @@ Notes:
                                                         <input class="form-check-input" type="radio" name="shipping" 
                                                         	ng-value="shippingMethodOption.value" ng-checked="shippingMethodOption.value == orderFulfillment.shippingMethod.shippingMethodID"
                                                         	ng-model="orderFulfillment.shippingMethod.shippingMethodID" 
-                                                        	ng-click="slatwall.selectShippingMethod(shippingMethodOption,orderFulfillment.orderFulfillmentID)" 
+                                                        	ng-click="slatwall.selectShippingMethod(shippingMethodOption,orderFulfillment)" 
                                                         >
                                                         <label class="form-check-label" for="shipping1">
                                                             Selected
@@ -464,19 +464,22 @@ Notes:
         
         
                                         <!-- Shipping Notes -->
-                                        <h6 class="pt-3">Shipping Notes/Instructions</h6>
-                                        <textarea name="shippingNotes" rows="5" cols="80" class="form-control mb-3"></textarea>
-        
-                                        <!-- Select Shipping Submit Button -->
-                                        <button type="submit" class="btn btn-primary w-25">Save &amp; Continue</button>
-        
-                                        <button type="submit" class="btn btn-primary w-25 disabled">
-                                            <i class="fa fa-refresh fa-spin fa-fw"></i>
-                                        </button>
+                                        <form swf-form
+                                            method="updateOrderFulfillment"
+                                            ng-model="orderFulfillment">
+                                            <h6 class="pt-3">Shipping Notes/Instructions</h6>
+                                            <textarea ng-model="orderFulfillment.shippingInstructions" name="shippingInstructions" rows="5" cols="80" class="form-control mb-3"></textarea>
+            
+                                            <!-- Select Shipping Submit Button -->
+                                            <button type="submit" class="btn btn-primary w-25" ng-class="{disabled:swfForm.loading}">
+                                                {{swfForm.loading ? '' : 'Save Shipping Instructions'}}
+                                                <i class="fa fa-refresh fa-spin fa-fw" ng-show="swfForm.loading"></i>
+                                            </button>
+                                        </form>
                                     </div>
                                 </div>
+                			    <button class="btn btn-primary w-25" ng-class="{disabled:slatwall.cart.orderRequirementsList.indexOf('fulfillment') > -1}" data-toggle="pill" href="##pills-payment">Continue to Payment</button>
                 			</div>
-                			
                 			
                             <!--- SHIPPING END--->
 
