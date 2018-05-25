@@ -41,6 +41,8 @@
     of the program, but you are not obligated to do so.
 Notes:
 --->
+<cfimport prefix="sw" taglib="." />
+
 <cfparam name="attributes.selectedAccountAddress" type="string" />
 <cfparam name="attributes.method" type="string" />
 <cfparam name="attributes.visible" type="string" />
@@ -189,10 +191,10 @@ Notes:
             <div class="form-group">
                 <!-- Save Address button -->
                 <button ng-click="swfAddressForm.submitAddressForm()" 
-                	ng-class="{disabled:slatwall.getRequestByAction('addNewAccountAddress,addShippingAddressUsingAccountAddress').loading}" 
+                	ng-class="{disabled:slatwall.getRequestByAction('addEditAccountAddress,addShippingAddressUsingAccountAddress').loading}" 
                 	class="btn btn-primary btn-block"
-                >{{(slatwall.getRequestByAction('addNewAccountAddress,addShippingAddressUsingAccountAddress').loading ? '' : 'Save Shipping Address')}}
-                	<i ng-show="slatwall.getRequestByAction('addNewAccountAddress,addShippingAddressUsingAccountAddress').loading" class='fa fa-refresh fa-spin fa-fw'></i>
+                >{{(slatwall.getRequestByAction('addEditAccountAddress,addShippingAddressUsingAccountAddress').loading ? '' : 'Save Shipping Address')}}
+                	<i ng-show="slatwall.getRequestByAction('addEditAccountAddress,addShippingAddressUsingAccountAddress').loading" class='fa fa-refresh fa-spin fa-fw'></i>
                 </button>
                 <!-- Close button to close create/edit shipping address & display  -->
                 <button ng-show="#attributes.selectedAccountAddress#.accountAddressID.trim().length" 
