@@ -330,140 +330,159 @@ Notes:
 
                 			<!--- SHIPPING BEGIN--->
                 			<div class="tab-pane fade" id="pills-shipping" role="tabpanel" aria-labelledby="pill-shipping-tab">
-
-                                <!-- Select Shipping Method -->
-                                <h5>Select Shipping Method</h5>
-
-                                <!-- Alert message if no shipping methods available -->
-                                <div class="alert alert-danger" ng-show="slatwall.cart.orderFulfillments[0].shippingMethodOptions.length === 0">There are no shipping methods available.</div>
-
-
-                                <!-- Store & Pickup Shipping Methods -->
-                                <!--- <div class="card-deck">
-                                    <label class="card border-secondary bg-light mb-3" style="max-width: 18rem;">
-                                        <div class="card-body">
-                                            <i class="fa fa-truck fa-3x d-block text-center"></i>
-                                            <h5 class="card-title text-center mt-3">Shipping</h5>
-                                        </div>
-                                    </label>
-									<!---TODO: implement pickup--->
-                                    <!---<label class="card bg-light mb-3" style="max-width: 18rem;">
-                                        <div class="card-body">
-                                            <i class="fa fa-building fa-3x d-block text-center"></i>
-                                            <h5 class="card-title text-center mt-3">Store Pickup</h5>
-                                        </div>
-                                    </label>--->
-                                </div>--->
-
-                                <!-- Create Shipping Address form - opens by default if none exist -->
-                                <!--- NOTE: if we have an account then we should save accountaddresses otherwise only addresses--->
-                                <sw:SwfAddressForm 
-                                    selectedAccountAddress="slatwall.selectedAccountAddress" 
-                                    method="addEditAccountAddress,addShippingAddressUsingAccountAddress"
-                                    visible="slatwall.selectedAccountAddress"
-                                    formID="shipping" />
-                                
-	                            <button type="button" ng-click="slatwall.selectedAccountAddress=slatwall.accountAddressService.newAccountAddress()" class="btn btn-secondary btn-sm float-right">
-                                    <i class="fa fa-plus-circle"></i> Add Shipping Address
-                                </button>
-                                
-
-                                
-								
-                                <!-- Select Existing Shipping address -->
-                                <h5>Select Shipping Address</h5>
-
-                                <!-- Shipping Dropdown Select -->
-                                <select class="form-control my-3" name="shippingAddress" required 
-                                	ng-model="slatwall.cart.orderFulfillments[0].accountAddress.accountAddressID"
-                                	ng-change="slatwall.selectShippingAccountAddress(slatwall.cart.orderFulfillments[0].accountAddress.accountAddressID)"
-                                	ng-disabled="slatwall.getRequestByAction('addShippingAddressUsingAccountAddress').loading"
-                                >
-                                	<option  value="">Select Account Address</option>
-                                    <option ng-repeat="accountAddress in slatwall.account.accountAddresses track by accountAddress.accountAddressID" 
-                                    	ng-selected="accountAddress.accountAddressID == slatwall.cart.orderFulfillments[0].accountAddress.accountAddressID"
-                                    	ng-value="accountAddress.accountAddressID" 
-                                    	ng-bind="accountAddress.getSimpleRepresentation()"
-                                    >
-                                    </option>
-                                </select>
-
-                                <div class="card-deck mb-3" ng-repeat="accountAddress in slatwall.account.accountAddresses track by accountAddress.accountAddressID">
-                                    <!-- Shipping Address block selector -->
-                                    <address class="card border-secondary" >
-                                        <div class="card-header">
-                                            <div class="form-check">
-                                                <input class="form-check-input" type="radio" name="address" 
-                                                	ng-value="accountAddress.accountAddressID" ng-checked="accountAddress.accountAddressID == slatwall.cart.orderFulfillments[0].accountAddress.accountAddressID"
-                                                	ng-model="slatwall.cart.orderFulfillments[0].accountAddress.accountAddressID" ng-click="slatwall.selectShippingAccountAddress(accountAddress.accountAddressID)" 
-                                                >
-                                                <label class="form-check-label" for="address1">Selected</label>
-                                                <!-- Select Address Loader -->
-                                                <i ng-show="slatwall.getRequestByAction('addShippingAddressUsingAccountAddress').loading" class="fa fa-refresh fa-spin fa-fw my-1 float-right"></i>
+                                <div ng-repeat="orderFulfillment in slatwall.cart.orderFulfillments">
+                                    <!-- Store & Pickup Shipping Methods -->
+                                    <!--- <div class="card-deck">
+                                        <label class="card border-secondary bg-light mb-3" style="max-width: 18rem;">
+                                            <div class="card-body">
+                                                <i class="fa fa-truck fa-3x d-block text-center"></i>
+                                                <h5 class="card-title text-center mt-3">Shipping</h5>
                                             </div>
-                                        </div>
-                                        <div class="card-body">
-                                            <strong ng-bind="accountAddress.address.name"></strong><br>
-                                            {{accountAddress.address.streetAddress}}<br>
-                                            {{accountAddress.address.street2Address}}<br ng-if="accountAddress.address.street2Address">
-                                            {{accountAddress.address.city}}, {{accountAddress.address.stateCode}} {{accountAddress.address.postalCode}}<br>
-                                            {{accountAddress.address.phoneNumber}}
-                                            <hr>
-                                            <a href="##" ng-click="slatwall.selectedAccountAddress=accountAddress;" class="card-link float-left">Edit</a>
-                                            <a href="##" ng-disabled="slatwall.getRequestByAction('removeAccountAddress').loading" 
-                                            	ng-click="slatwall.deleteAccountAddress(accountAddress.accountAddressID)" class="card-link float-right"
+                                        </label>
+    									<!---TODO: implement pickup--->
+                                        <!---<label class="card bg-light mb-3" style="max-width: 18rem;">
+                                            <div class="card-body">
+                                                <i class="fa fa-building fa-3x d-block text-center"></i>
+                                                <h5 class="card-title text-center mt-3">Store Pickup</h5>
+                                            </div>
+                                        </label>--->
+                                    </div>--->
+                                    <div ng-if="orderFulfillment.fulfillmentMethod.fulfillmentMethodType='shipping'">
+                                        <!-- Select Shipping Method -->
+                                        <h5>Select Shipping Method</h5>
+        
+                                        <!-- Alert message if no shipping methods available -->
+                                        <div class="alert alert-danger" ng-show="orderFulfillment.shippingMethodOptions.length === 0">There are no shipping methods available.</div>
+        
+        
+        
+                                        <!-- Create Shipping Address form - opens by default if none exist -->
+                                        <!--- NOTE: if we have an account then we should save accountaddresses otherwise only addresses--->
+                                        <sw:SwfAddressForm 
+                                            selectedAccountAddress="orderFulfillment.selectedAccountAddress" 
+                                            method="addEditAccountAddress,addShippingAddressUsingAccountAddress"
+                                            visible="orderFulfillment.selectedAccountAddress || !slatwall.account.accountAddresses.length"
+                                            additionalParameters="{fulfillmentID:orderFulfillment.orderFulfillmentID}"
+                                            formID="shipping" />
+                                            
+                                        <!-- Close button for create/edit address - only should show if other addresses exists show address listing on close -->
+                                        <button type="button" name="closeAddress" 
+                                                ng-show="orderFulfillment.selectedAccountAddress && slatwall.account.accountAddresses.length" 
+                                                ng-click="orderFulfillment.selectedAccountAddress=undefined" 
+                                                class="btn btn-link">Close</button>
+        	                            <button type="button"
+        	                                    ng-hide="orderFulfillment.selectedAccountAddress || !slatwall.account.accountAddresses.length"
+        	                                    ng-click="orderFulfillment.selectedAccountAddress=slatwall.accountAddressService.newAccountAddress()" 
+        	                                    class="btn btn-secondary btn-sm float-right">
+                                            <i class="fa fa-plus-circle"></i> Add Shipping Address
+                                        </button>
+                                        
+        
+                                        
+        								
+                                        <!-- Select Existing Shipping address -->
+                                        <div ng-show="slatwall.account.accountAddresses.length">
+                                            <h5>Select Shipping Address</h5>
+            
+                                            <!-- Shipping Dropdown Select -->
+                                            <select class="form-control my-3" name="shippingAddress" required 
+                                            	ng-model="orderFulfillment.accountAddress.accountAddressID"
+                                            	ng-change="slatwall.selectShippingAccountAddress(orderFulfillment.accountAddress.accountAddressID,orderFulfillment.orderFulfillmentID)"
+                                            	ng-disabled="slatwall.getRequestByAction('addShippingAddressUsingAccountAddress').loading"
                                             >
-                                            	{{slatwall.getRequestByAction('deleteAccountAddress').loading ? '':'Delete'}}
-                                            	<i ng-show="slatwall.getRequestByAction('deleteAccountAddress').loading" class="fa fa-refresh fa-spin fa-fw my-1 float-right"></i>
-                                            </a>
-                                        </div>
-                                    </address>
-
-                                    <!-- Address block -->
-                                    
-                                </div>
-
-                                <!-- Shipping Delievery Options -->
-                                <h5>Select Delivery Method</h5>
-
-                                <div class="card-deck mb-3">
-                                    <div class="card border-secondary" 
-                                    	ng-repeat="shippingMethodOption in slatwall.cart.orderFulfillments[0].shippingMethodOptions | orderBy:shippingMethod.sortOrder"
-                                	>
-                                        <div class="card-header">
-                                            <div class="form-check">
-                                                <input class="form-check-input" type="radio" name="shipping" 
-                                                	ng-value="shippingMethodOption.value" ng-checked="shippingMethodOption.value == slatwall.cart.orderFulfillments[0].shippingMethod.shippingMethodID"
-                                                	ng-model="slatwall.cart.orderFulfillments[0].shippingMethod.shippingMethodID" 
-                                                	ng-click="slatwall.selectShippingMethod(shippingMethodOption,0)" 
+                                            	<option  value="">Select Account Address</option>
+                                                <option ng-repeat="accountAddress in slatwall.account.accountAddresses track by accountAddress.accountAddressID" 
+                                                	ng-selected="accountAddress.accountAddressID == orderFulfillment.accountAddress.accountAddressID"
+                                                	ng-value="accountAddress.accountAddressID" 
+                                                	ng-bind="accountAddress.getSimpleRepresentation()"
                                                 >
-                                                <label class="form-check-label" for="shipping1">
-                                                    Selected
-                                                </label>
-                                                <!-- Select Address Loader -->
-                                                <i class="fa fa-refresh fa-spin fa-fw my-1 float-right" ng-show="slatwall.getRequestByAction('addShippingMethodUsingShippingMethodID').loading"></i>
+                                                </option>
+                                            </select>
+            
+                                            <div class="card-deck mb-3" ng-repeat="accountAddress in slatwall.account.accountAddresses track by accountAddress.accountAddressID">
+                                                <!-- Shipping Address block selector -->
+                                                <address class="card border-secondary" >
+                                                    <div class="card-header">
+                                                        <div class="form-check">
+                                                            <input class="form-check-input" type="radio" name="address" 
+                                                            	ng-value="accountAddress.accountAddressID" ng-checked="accountAddress.accountAddressID == orderFulfillment.accountAddress.accountAddressID"
+                                                            	ng-model="orderFulfillment.accountAddress.accountAddressID" ng-click="slatwall.selectShippingAccountAddress(accountAddress.accountAddressID,orderFulfillment.orderFulfillmentID)" 
+                                                            >
+                                                            <label class="form-check-label" for="address1">Selected</label>
+                                                            <!-- Select Address Loader -->
+                                                            <i ng-show="slatwall.loadingThisRequest('addShippingAddressUsingAccountAddress',{accountAddressID:accountAddress.accountAddressID})" class="fa fa-refresh fa-spin fa-fw my-1 float-right"></i>
+                                                        </div>
+                                                    </div>
+                                                    <div class="card-body">
+                                                        <strong ng-bind="accountAddress.address.name"></strong><br>
+                                                        {{accountAddress.address.streetAddress}}<br>
+                                                        {{accountAddress.address.street2Address}}<br ng-if="accountAddress.address.street2Address">
+                                                        {{accountAddress.address.city}}, {{accountAddress.address.stateCode}} {{accountAddress.address.postalCode}}<br>
+                                                        {{accountAddress.address.phoneNumber}}
+                                                        <hr>
+                                                        <a href="##" ng-click="slatwall.selectedAccountAddress=accountAddress;" class="card-link float-left">Edit</a>
+                                                        <a href="##" ng-disabled="slatwall.getRequestByAction('removeAccountAddress').loading" 
+                                                        	ng-click="slatwall.deleteAccountAddress(accountAddress.accountAddressID)" class="card-link float-right"
+                                                        >
+                                                        	{{slatwall.getRequestByAction('deleteAccountAddress').loading ? '':'Delete'}}
+                                                        	<i ng-show="slatwall.loadingThisRequest('deleteAccountAddress',{accountAddressID:accountAddress.accountAddressID})" class="fa fa-refresh fa-spin fa-fw my-1 float-right"></i>
+                                                        </a>
+                                                    </div>
+                                                </address>
+            
+                                                <!-- Address block -->
+                                                
                                             </div>
                                         </div>
-                                        <div class="card-body">
-                                            {{shippingMethodOption.name}}<br>
+        
+                                        <!-- Shipping Delievery Options -->
+                                        <h5>Select Delivery Method</h5>
+        
+                                        <div class="card-deck mb-3">
+                                            <div class="card border-secondary" 
+                                            	ng-repeat="shippingMethodOption in orderFulfillment.shippingMethodOptions | orderBy:shippingMethod.sortOrder"
+                                        	>
+                                                <div class="card-header">
+                                                    <div class="form-check">
+                                                        <input class="form-check-input" type="radio" name="shipping" 
+                                                        	ng-value="shippingMethodOption.value" ng-checked="shippingMethodOption.value == orderFulfillment.shippingMethod.shippingMethodID"
+                                                        	ng-model="orderFulfillment.shippingMethod.shippingMethodID" 
+                                                        	ng-click="slatwall.selectShippingMethod(shippingMethodOption,orderFulfillment)" 
+                                                        >
+                                                        <label class="form-check-label" for="shipping1">
+                                                            Selected
+                                                        </label>
+                                                        <!-- Select Address Loader -->
+                                                        <i class="fa fa-refresh fa-spin fa-fw my-1 float-right" ng-show="slatwall.loadingThisRequest('addShippingMethodUsingShippingMethodID',{shippingMethodID:shippingMethodOption.value})"></i>
+                                                    </div>
+                                                </div>
+                                                <div class="card-body">
+                                                    {{shippingMethodOption.name}}<br>
+                                                </div>
+                                            </div>
                                         </div>
+        
+        
+                                        <!-- Shipping Notes -->
+                                        <form swf-form
+                                            method="updateOrderFulfillment"
+                                            ng-model="orderFulfillment"
+                                            ng-submit="swfForm.submitForm()">
+                                            <h6 class="pt-3">Shipping Notes/Instructions</h6>
+                                            <textarea ng-model="orderFulfillment.shippingInstructions" name="shippingInstructions" rows="5" cols="80" class="form-control mb-3"></textarea>
+                                            <input type="hidden" name="orderFulfillmentID" ng-model="orderFulfillment.orderFulfillmentID">
+                                            <!-- Select Shipping Submit Button -->
+                                            <button type="submit" class="btn btn-primary w-25" ng-class="{disabled:swfForm.loading}">
+                                                {{swfForm.loading ? '' : 'Save Shipping Instructions'}}
+                                                <i class="fa fa-refresh fa-spin fa-fw" ng-show="swfForm.loading"></i>
+                                            </button>
+                                        </form>
                                     </div>
                                 </div>
-
-
-                                <!-- Shipping Notes -->
-                                <h6 class="pt-3">Shipping Notes/Instructions</h6>
-                                <textarea name="shippingNotes" rows="5" cols="80" class="form-control mb-3"></textarea>
-
-                                <!-- Select Shipping Submit Button -->
-                                <button type="submit" class="btn btn-primary w-25">Save &amp; Continue</button>
-
-                                <button type="submit" class="btn btn-primary w-25 disabled">
-                                    <i class="fa fa-refresh fa-spin fa-fw"></i>
-                                </button>
-
+                                <div>
+                			        <button ng-click="swfNavigation.changeTab('payment')" class="btn btn-primary w-25 nav-item" ng-class="{disabled:swfNavigation.paymentTabDisabled}">Continue to Payment</button>
+            			        </div>
                 			</div>
-                			
                 			
                             <!--- SHIPPING END--->
 

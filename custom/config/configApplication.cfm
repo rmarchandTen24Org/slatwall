@@ -1,2 +1,2 @@
 <cfset this.name = "slatwall" & hash(getCurrentTemplatePath()) />
-<cfset this.datasource.name = "etr" />
+<cfset this.datasource.name = "slatwall" />
