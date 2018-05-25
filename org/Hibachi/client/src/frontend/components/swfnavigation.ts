@@ -23,14 +23,11 @@ class SWFNavigationController{
     }
     
     private selectTab = (accountID)=>{
-        console.log('yao');
         let activeTab = 'review';
         if(!accountID){
-            console.log('yao?');
             let activeTab = 'account';
         }
         else{
-            console.log('yaoooo');
             let orderRequirementsList = this.slatwall.cart.orderRequirementsList;
             let sections = ['account','fulfillment','payment'];
             for(let index=sections.length-1; index>=0; index--){
@@ -40,15 +37,12 @@ class SWFNavigationController{
                 }
             }
         }
-        console.log('yao!!!');
         if(activeTab.length){
-            console.log('yoooooo');
             this.showTab(activeTab);
         }
     }
     
     private showTab(tab){
-        console.log(tab);
         this[tab+'TabDisabled'] = false;
         this.$timeout(()=>{
             this.tabs[tab].tab('show');

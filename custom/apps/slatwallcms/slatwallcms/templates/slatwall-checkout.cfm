@@ -466,10 +466,11 @@ Notes:
                                         <!-- Shipping Notes -->
                                         <form swf-form
                                             method="updateOrderFulfillment"
-                                            ng-model="orderFulfillment">
+                                            ng-model="orderFulfillment"
+                                            ng-submit="swfForm.submitForm()">
                                             <h6 class="pt-3">Shipping Notes/Instructions</h6>
                                             <textarea ng-model="orderFulfillment.shippingInstructions" name="shippingInstructions" rows="5" cols="80" class="form-control mb-3"></textarea>
-            
+                                            <input type="hidden" name="orderFulfillmentID" ng-model="orderFulfillment.orderFulfillmentID">
                                             <!-- Select Shipping Submit Button -->
                                             <button type="submit" class="btn btn-primary w-25" ng-class="{disabled:swfForm.loading}">
                                                 {{swfForm.loading ? '' : 'Save Shipping Instructions'}}
@@ -478,7 +479,9 @@ Notes:
                                         </form>
                                     </div>
                                 </div>
-                			    <button class="btn btn-primary w-25" ng-class="{disabled:slatwall.cart.orderRequirementsList.indexOf('fulfillment') > -1}" data-toggle="pill" href="##pills-payment">Continue to Payment</button>
+                                <div>
+                			        <button ng-click="swfNavigation.changeTab('payment')" class="btn btn-primary w-25 nav-item" ng-class="{disabled:swfNavigation.paymentTabDisabled}">Continue to Payment</button>
+            			        </div>
                 			</div>
                 			
                             <!--- SHIPPING END--->
