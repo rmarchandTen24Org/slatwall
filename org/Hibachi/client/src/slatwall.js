@@ -45099,7 +45099,8 @@ var SWFAddressFormController = /** @class */ (function (_super) {
                 if (result && result.successfulActions.length) {
                     console.log(_this.ngModel);
                     _this.$timeout(function () {
-                        _this.ngModel = null;
+                        _this.ngModel.$setViewValue(null);
+                        _this.ngModel.$commitViewValue();
                     });
                 }
             });
@@ -45109,7 +45110,6 @@ var SWFAddressFormController = /** @class */ (function (_super) {
         $scope.$watch(angular.bind(_this, function () {
             return _this.form['countryCode'].$modelValue;
         }), function (val) {
-            console.log(val);
             _this.slatwall.getStates(val);
         });
         $scope.$watch('slatwall.states.addressOptions', function () {
