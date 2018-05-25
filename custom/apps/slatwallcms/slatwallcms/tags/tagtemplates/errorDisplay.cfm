@@ -18,7 +18,7 @@
     	<div ng-show="key === 'swvalidationmaxlength'" class="px-2 mt-1 bg-danger text-white">The value entered is incorrect</div><br ng-show="key === 'swvalidationmaxlength'">
     </div>
     <!--server side validation-->
-    <div class="px-2 mt-1 bg-danger text-white" ng-show="slatwall.requests[#attributes.formController#.method].errors.#attributes.propertyIdentifier#" ng-repeat="error in slatwall.requests[#attributes.formController#.method].errors.#attributes.propertyIdentifier#" ng-bind="error">
+    <div class="px-2 mt-1 bg-danger text-white" ng-show="slatwall.requests[#attributes.formController#.method].errors.#attributes.propertyIdentifier#" ng-repeat="error in slatwall.requests[#attributes.formController#.method].errors.#listLast(attributes.propertyIdentifier,'.')#" ng-bind="error">
         
     </div>
 </cfoutput>
