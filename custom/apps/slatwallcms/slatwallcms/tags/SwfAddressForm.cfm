@@ -47,9 +47,12 @@ Notes:
 <cfparam name="attributes.method" type="string" />
 <cfparam name="attributes.visible" type="string" />
 <cfparam name="attributes.formID" type="string" default="#createUUID()#" />
+<cfparam name="attributes.additionalParameters" type="string" default="{}" />
 
 <cfoutput>
     <cfif thisTag.executionMode is "start">
+        <span ng-init="additionalParameters = #attributes.additionalParameters#"></span>
+        
         <div class="alert alert-success" ng-show="slatwall.requests['#attributes.method#'].successfulActions.length">Shipping Address saved.</div>
         <div class="alert alert-danger" ng-show="slatwall.requests['#attributes.method#'].failureActions.length">Error saving shipping address. See below for errors.</div>
         <form 
@@ -169,7 +172,11 @@ Notes:
         			<sw:SwfErrorDisplay formController="swfAddressForm" propertyIdentifier="accountAddressName"/>
         		</div>
         	</div>
-        
+        	
+        	<!-- Additional Parameters -->
+        	<span ng-repeat="(key,value) in additionalParameters">
+                <input type="hidden" name="{{key}}" ng-model="additionalParameters[key]">
+            </span>
         	<!---TODO:implement options--->
             <!---<div class="row">
                 <div class="form-group col-md-6">
@@ -191,10 +198,10 @@ Notes:
             <div class="form-group">
                 <!-- Save Address button -->
                 <button ng-click="swfAddressForm.submitAddressForm()" 
-                	ng-class="{disabled:slatwall.getRequestByAction('addEditAccountAddress,addShippingAddressUsingAccountAddress').loading}" 
+                	ng-class="{disabled:slatwall.getRequestByAction('#attributes.method#').loading}" 
                 	class="btn btn-primary btn-block"
-                >{{(slatwall.getRequestByAction('addEditAccountAddress,addShippingAddressUsingAccountAddress').loading ? '' : 'Save Shipping Address')}}
-                	<i ng-show="slatwall.getRequestByAction('addEditAccountAddress,addShippingAddressUsingAccountAddress').loading" class='fa fa-refresh fa-spin fa-fw'></i>
+                >{{(slatwall.getRequestByAction('#attributes.method#').loading ? '' : 'Save Address')}}
+                	<i ng-show="slatwall.getRequestByAction('#attributes.method#').loading" class='fa fa-refresh fa-spin fa-fw'></i>
                 </button>
                 <!-- Close button to close create/edit shipping address & display  -->
                 <button ng-show="#attributes.selectedAccountAddress#.accountAddressID.trim().length" 
@@ -205,9 +212,6 @@ Notes:
                 	{{slatwall.getRequestByAction('deleteAccountAddress').loading ? '':'Delete Address'}}
                     <i ng-show="slatwall.getRequestByAction('deleteAccountAddress').loading" class="fa fa-refresh fa-spin fa-fw my-1 float-right"></i>
                 </button>
-        
-                <!-- Close button for create/edit address - only should show if other addresses exists show address listing on close -->
-                <button type="button" name="closeAddress" ng-click="#attributes.selectedAccountAddress#=undefined" class="btn btn-link">Close</button>
             </div>
             <!-- Create Shipping Address Button - only show when other addresses exist -->
             

@@ -40933,8 +40933,8 @@ var PublicService = /** @class */ (function () {
             }
         };
         /** Selects shippingAddress*/
-        this.selectShippingAccountAddress = function (accountAddressID) {
-            _this.doAction('addShippingAddressUsingAccountAddress', { accountAddressID: accountAddressID });
+        this.selectShippingAccountAddress = function (accountAddressID, orderFulfillmentID) {
+            _this.doAction('addShippingAddressUsingAccountAddress', { accountAddressID: accountAddressID, fulfillmentID: orderFulfillmentID });
         };
         /** Selects shippingAddress*/
         this.selectBillingAccountAddress = function (accountAddressID) {

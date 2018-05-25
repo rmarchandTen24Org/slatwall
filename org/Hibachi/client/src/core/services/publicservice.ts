@@ -642,8 +642,8 @@ class PublicService {
     }
     
     /** Selects shippingAddress*/
-    public selectShippingAccountAddress = (accountAddressID)=>{
-        this.doAction('addShippingAddressUsingAccountAddress', {accountAddressID:accountAddressID});
+    public selectShippingAccountAddress = (accountAddressID,orderFulfillmentID)=>{
+        this.doAction('addShippingAddressUsingAccountAddress', {accountAddressID:accountAddressID,fulfillmentID:orderFulfillmentID});
     }
     
      /** Selects shippingAddress*/
