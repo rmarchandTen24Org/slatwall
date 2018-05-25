@@ -134,7 +134,7 @@
 										<!--- use s-redirect-url or f-redirect-url as attributes here if needed ---->
 									>
 		    							<input type="hidden" ng-model="OrderItem_Add_#local.formUniqueID#.skuID" name="skuID" />
-									    <button class="btn btn-primary float-left" >{{(slatwall.getRequestByAction('addOrderItem').loading ? 'Loading...' : 'Buy Now (client side)')}}</button>
+									    <button class="btn btn-primary float-left" >{{(swfForm.loading ? 'Loading...' : 'Buy Now (client side)')}}</button>
 
 									</form>
 									
