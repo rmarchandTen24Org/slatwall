@@ -1,7 +1,7 @@
 <cfoutput>
     <!--client side validation-->
-    <div  ng-repeat="(key, value) in swfForm.form['#attributes.propertyIdentifier#'].$error"
-    		ng-show="swfForm.form.$submitted"
+    <div  ng-repeat="(key, value) in #attributes.formController#.form['#attributes.propertyIdentifier#'].$error"
+    		ng-show="#attributes.formController#.form.$submitted"
     >
     	<div ng-show="key === 'swvalidationrequired'" class="px-2 mt-1 bg-danger text-white" sw-Rbkey="'validation.define.required'"></div><br ng-show="key === 'swvalidationrequired'">
     	<div ng-show="key === 'swvalidationemail'" class="px-2 mt-1 bg-danger text-white" sw-Rbkey="'validation.define.emailrequired'"></div><br ng-show="key === 'swvalidationemail'">
@@ -13,12 +13,12 @@
     	<div ng-show="key === 'swvalidationlte'" class="px-2 mt-1 bg-danger text-white" sw-Rbkey="'validation.define.lte'"></div><br ng-show="key === 'swvalidationlte'">
     	<div ng-show="key === 'swvalidationeq'" class="px-2 mt-1 bg-danger text-white" sw-Rbkey="'validation.define.neq'"></div><br ng-show="key === 'swvalidationeq'">
     	<div ng-show="key === 'swvalidationminvalue'" class="px-2 mt-1 bg-danger text-white">The value entered is incorrect</div><br ng-show="key === 'swvalidationminvalue'">
-    	<div ng-show="key === 'swvalidatiomaxvalue'" class="px-2 mt-1 bg-danger text-white">The value entered is incorrect</div><br ng-show="key === 'swvalidatiomaxvalue'">
+    	<div ng-show="key === 'swvalidatiomaxvalue'" class="px-2 mt-1 bg-danger text-white">The value entered is incorrect</div><br ng-show="key === 'swvalidationmaxvalue'">
     	<div ng-show="key === 'swvalidationminlength'" class="px-2 mt-1 bg-danger text-white">The value entered is incorrect</div><br ng-show="key === 'swvalidationminlength'">
     	<div ng-show="key === 'swvalidationmaxlength'" class="px-2 mt-1 bg-danger text-white">The value entered is incorrect</div><br ng-show="key === 'swvalidationmaxlength'">
     </div>
     <!--server side validation-->
-    <div class="px-2 mt-1 bg-danger text-white" ng-show="slatwall.requests[swfForm.method].errors.#attributes.propertyIdentifier#" ng-repeat="error in slatwall.requests[swfForm.method].errors.#attributes.propertyIdentifier#" ng-bind="error">
+    <div class="px-2 mt-1 bg-danger text-white" ng-show="slatwall.requests[#attributes.formController#.method].errors.#attributes.propertyIdentifier#" ng-repeat="error in slatwall.requests[#attributes.formController#.method].errors.#attributes.propertyIdentifier#" ng-bind="error">
         
     </div>
 </cfoutput>

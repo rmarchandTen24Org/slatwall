@@ -48,8 +48,10 @@ Notes:
 
 <cfoutput>
     <cfif thisTag.executionMode is "start">
+        <div class="alert alert-success" ng-show="slatwall.requests['#attributes.method#'].successfulActions.length">Shipping Address saved.</div>
+        <div class="alert alert-danger" ng-show="slatwall.requests['#attributes.method#'].failureActions.length">Error saving shipping address. See below for errors.</div>
         <form 
-        	ng-model="::#attributes.selectedAccountAddress#" 
+        	ng-model="#attributes.selectedAccountAddress#" 
         	data-method="#attributes.method#"
         	ng-show="#attributes.visible#"
         	id="#attributes.formID#"
@@ -60,50 +62,48 @@ Notes:
         	>
             <h5>Create/Edit Shipping Address</h5>
         	<!---TODO:drive by success and failure actions being populated--->
-            <div class="alert alert-success" ng-show="slatwall.requests[swfForm.method].successfulActions.length">Shipping Address saved.</div>
-            <div class="alert alert-danger" ng-show="slatwall.requests[swfForm.method].failureActions.length">Error saving shipping address. See below for errors.</div>
             <div class="row">
         		<div class="form-group col-md-6">
         			<label for="#attributes.formID#_firstname" class="form-label">First Name</label>
         			<input id="#attributes.formID#_firstname" type="text" name="firstName" placeholder="First Name" class="form-control"
         				ng-model="#attributes.selectedAccountAddress#.address.firstName" swvalidationrequired="true"
         			>
-                    <sw:SwfErrorDisplay propertyIdentifier="firstName"/>
+                    <sw:SwfErrorDisplay formController="swfAddressForm" propertyIdentifier="firstName"/>
         		</div>
         		<div class="form-group col-md-6">
         			<label for="#attributes.formID#_lastname" class="form-label">Last Name</label>
         			<input id="#attributes.formID#_lastname" type="text" name="lastName" placeholder="Last Name" class="form-control"
         				ng-model="#attributes.selectedAccountAddress#.address.lastName" swvalidationrequired="true"
         			>
-                    <sw:SwfErrorDisplay propertyIdentifier="lastName"/>
+                    <sw:SwfErrorDisplay formController="swfAddressForm" propertyIdentifier="lastName"/>
                 </div>
         		<div class="form-group col-md-6">
         			<label for="#attributes.formID#_street" class="form-label">{{swfAddressForm.addressOptions.streetAddressLabel || 'Street'}}</label>
         			<input id="#attributes.formID#_street" type="text" name="streetAddress" placeholder="Street Address" class="form-control"
         				ng-model="#attributes.selectedAccountAddress#.address.streetAddress" swvalidationrequired="true"
         			>
-                    <sw:SwfErrorDisplay propertyIdentifier="streetAddress"/>
+                    <sw:SwfErrorDisplay formController="swfAddressForm" propertyIdentifier="streetAddress"/>
                 </div>
                 <div class="form-group col-md-6">
         			<label for="#attributes.formID#_street2" class="form-label">{{swfAddressForm.addressOptions.street2AddressLabel || 'Street Address 2'}}</label>
         			<input id="#attributes.formID#_street2" type="text" name="street2Address" placeholder="Street Address" class="form-control"
         				ng-model="#attributes.selectedAccountAddress#.address.street2Address" 
         			>
-        			<sw:SwfErrorDisplay propertyIdentifier="street2Address"/>
+        			<sw:SwfErrorDisplay formController="swfAddressForm" propertyIdentifier="street2Address"/>
                 </div>
         		<div class="form-group col-md-3">
         			<label for="#attributes.formID#_city" class="form-label">{{swfAddressForm.addressOptions.cityLabel || 'City'}}</label>
         			<input id="#attributes.formID#_city" type="text" name="city" placeholder="City" class="form-control"
         				ng-model="#attributes.selectedAccountAddress#.address.city" swvalidationrequired="true"
         			>
-                    <sw:SwfErrorDisplay propertyIdentifier="city"/>
+                    <sw:SwfErrorDisplay formController="swfAddressForm" propertyIdentifier="city"/>
                 </div>
         		<div class="form-group col-md-3">
         			<label for="#attributes.formID#_zip" class="form-label">{{swfAddressForm.addressOptions.postalCodeLabel || 'Zip Code'}}</label>
         			<input id="#attributes.formID#_zip" type="text" name="postalCode" placeholder="Zip code" class="form-control"
         				ng-model="#attributes.selectedAccountAddress#.address.postalCode" swvalidationrequired="true"
         			>
-                    <sw:SwfErrorDisplay propertyIdentifier="postalCode"/>
+                    <sw:SwfErrorDisplay formController="swfAddressForm" propertyIdentifier="postalCode"/>
                 </div>
         		<div class="form-group col-md-3" ng-if="!swfAddressForm.addressOptions || swfAddressForm.addressOptions.stateCodeShowFlag" ng-cloak>
         			<label for="#attributes.formID#_state" class="form-label">{{swfAddressForm.addressOptions.stateCodeLabel || 'State'}}</label>
@@ -117,14 +117,14 @@ Notes:
                     </select>
                     <input id="#attributes.formID#_stateInput" type="text" name="stateCode" placeholder="State" class="form-control"
         				ng-model="#attributes.selectedAccountAddress#.address.stateCode" swvalidationrequired="true" ng-if="!slatwall.states.stateCodeOptions.length">
-                    <sw:SwfErrorDisplay propertyIdentifier="stateCode"/>
+                    <sw:SwfErrorDisplay formController="swfAddressForm" propertyIdentifier="stateCode"/>
                 </div>
                 <div class="form-group col-md-3" ng-if="swfAddressForm.addressOptions && swfAddressForm.addressOptions.localityShowFlag">
         			<label for="#attributes.formID#_locality" class="form-label">{{swfAddressForm.addressOptions.localityLabel || 'Locality'}}</label>
         			<input id="#attributes.formID#_locality" type="text" name="locality" placeholder="Zip code" class="form-control"
         				ng-model="#attributes.selectedAccountAddress#.address.locality" swvalidationrequired="true"
         			>
-                    <sw:SwfErrorDisplay propertyIdentifier="postalCode"/>
+                    <sw:SwfErrorDisplay formController="swfAddressForm" propertyIdentifier="postalCode"/>
                 </div>
         		<div class="form-group col-md-3">
         			<label for="#attributes.formID#_country" class="form-label">Country</label>
@@ -136,35 +136,35 @@ Notes:
                         	ng-selected="country.value==#attributes.selectedAccountAddress#.address.countryCode"
                         ></option>
                     </select>
-                    <sw:SwfErrorDisplay propertyIdentifier="countryCode"/>
+                    <sw:SwfErrorDisplay formController="swfAddressForm" propertyIdentifier="countryCode"/>
                 </div>
         		<div class="form-group col-md-6">
         			<label for="#attributes.formID#_phone-number" class="form-label">Phone Number</label>
         			<input id="#attributes.formID#_phone-number" type="tel" name="phoneNumber" placeholder="Phone number" class="form-control"
         				ng-model="#attributes.selectedAccountAddress#.address.phoneNumber" swvalidationrequired="true"
         			>
-                    <sw:SwfErrorDisplay propertyIdentifier="phoneNumber"/>
+                    <sw:SwfErrorDisplay formController="swfAddressForm" propertyIdentifier="phoneNumber"/>
         		</div>
                 <div class="form-group col-md-6">
         			<label for="#attributes.formID#_email" class="form-label">Email Address</label>
         			<input id="#attributes.formID#_email" name="emailAddress" placeholder="Email Address" class="form-control"
         				ng-model="#attributes.selectedAccountAddress#.address.emailAddress" swvalidationrequired="true" swvalidationdatatype="email"
         			>
-                    <sw:SwfErrorDisplay propertyIdentifier="emailAddress"/>
+                    <sw:SwfErrorDisplay formController="swfAddressForm" propertyIdentifier="emailAddress"/>
                 </div>
                 <div class="form-group col-md-6">
         			<label for="#attributes.formID#_company" class="form-label">Company</label>
         			<input id="#attributes.formID#_company" type="text" name="company" placeholder="Company" class="form-control"
         				ng-model="#attributes.selectedAccountAddress#.address.company"
         			>
-        			<sw:SwfErrorDisplay propertyIdentifier="company"/>
+        			<sw:SwfErrorDisplay formController="swfAddressForm" propertyIdentifier="company"/>
         		</div>
                 <div class="form-group col-md-6">
         			<label for="#attributes.formID#_addressNickname" class="form-label">Address Nickname</label>
         			<input id="#attributes.formID#_addressNickname" type="text" name="accountAddressName" placeholder="Address Nickname" class="form-control"
         				ng-model="#attributes.selectedAccountAddress#.accountAddressName"
         			>
-        			<sw:SwfErrorDisplay propertyIdentifier="accountAddressName"/>
+        			<sw:SwfErrorDisplay formController="swfAddressForm" propertyIdentifier="accountAddressName"/>
         		</div>
         	</div>
         
@@ -188,7 +188,7 @@ Notes:
         
             <div class="form-group">
                 <!-- Save Address button -->
-                <button ng-click="swfForm.submitForm()" 
+                <button ng-click="swfAddressForm.submitAddressForm()" 
                 	ng-class="{disabled:slatwall.getRequestByAction('addNewAccountAddress,addShippingAddressUsingAccountAddress').loading}" 
                 	class="btn btn-primary btn-block"
                 >{{(slatwall.getRequestByAction('addNewAccountAddress,addShippingAddressUsingAccountAddress').loading ? '' : 'Save Shipping Address')}}

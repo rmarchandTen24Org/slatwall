@@ -43,6 +43,7 @@ Notes:
 --->
 <!--- You can pass in a object, or just an array of errors --->
 <cfparam name="attributes.propertyIdentifier" type="string" default="" />
+<cfparam name="attributes.formController" type="string" default="swfForm" />
 
 <cfif thisTag.executionMode is "start">
 	<cfinclude template="./tagtemplates/errorDisplay.cfm"/>

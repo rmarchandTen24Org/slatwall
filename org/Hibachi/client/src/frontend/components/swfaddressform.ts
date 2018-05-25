@@ -39,17 +39,18 @@ class SWFAddressFormController extends SWFFormController{
                 console.log(this.addressOptions);
             }
         });
+        
     }
     
-    public $onInit = ()=>{
-        // if(this.form && this.form['countryCode']){
-        //     console.log("I'm a little teapot")
-        //     this.$scope.$watch(angular.bind(this, ()=> {
-        //       return this.form['country'].$modelValue;
-        //     }),this.slatwall.refreshAddressOptions);
-        // }else{
-        //     console.log("I'm not a little teapot", this.form)
-        // }
+    public submitAddressForm = ()=>{
+        this.submitForm().then(result=>{
+            if(result && result.successfulActions.length){
+                console.log(this.ngModel);
+                this.$timeout(()=>{
+                    this.ngModel = null;
+                })
+            }
+        })
     }
     
 }
@@ -70,6 +71,7 @@ class SWFAddressForm extends SWFForm{
         swfForm.controller = SWFAddressFormController;
         swfForm.controllerAs="swfAddressForm";
         swfForm.bindToController['formID'] = '@id';
+        swfForm.bindToController['addressVariable'] = '@';
         return swfForm;
     }
 }
