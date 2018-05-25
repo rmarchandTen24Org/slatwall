@@ -1173,6 +1173,7 @@ component extends="HibachiService"  accessors="true" output="false"
       @ProcessMethod Order_UpdateOrderFulfillment
      */
     public void function updateOrderFulfillment(required any data) {
+        param name="orderID" default="#getHibachiScope().getCart().getOrderID()#";
         var cart = getService("OrderService").processOrder( getHibachiScope().cart(), arguments.data, 'updateOrderFulfillment');
         
         getHibachiScope().addActionResult( "public:cart.updateOrderFulfillment", cart.hasErrors() );

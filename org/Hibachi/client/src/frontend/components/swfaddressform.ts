@@ -29,7 +29,6 @@ class SWFAddressFormController extends SWFFormController{
         $scope.$watch(angular.bind(this,()=>{
             return this.form['countryCode'].$modelValue
         }), (val)=>{
-            console.log(val);
             this.slatwall.getStates(val)
         });
         
@@ -47,7 +46,8 @@ class SWFAddressFormController extends SWFFormController{
             if(result && result.successfulActions.length){
                 console.log(this.ngModel);
                 this.$timeout(()=>{
-                    this.ngModel = null;
+                    this.ngModel.$setViewValue(null);
+                    this.ngModel.$commitViewValue();
                 })
             }
         })

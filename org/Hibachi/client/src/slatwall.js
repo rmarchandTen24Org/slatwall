@@ -40933,8 +40933,8 @@ var PublicService = /** @class */ (function () {
             }
         };
         /** Selects shippingAddress*/
-        this.selectShippingAccountAddress = function (accountAddressID) {
-            _this.doAction('addShippingAddressUsingAccountAddress', { accountAddressID: accountAddressID });
+        this.selectShippingAccountAddress = function (accountAddressID, orderFulfillmentID) {
+            _this.doAction('addShippingAddressUsingAccountAddress', { accountAddressID: accountAddressID, fulfillmentID: orderFulfillmentID });
         };
         /** Selects shippingAddress*/
         this.selectBillingAccountAddress = function (accountAddressID) {
@@ -40976,16 +40976,20 @@ var PublicService = /** @class */ (function () {
         };
         /** Select a shipping method - temporarily changes the selected method on the front end while awaiting official change from server
         */
-        this.selectShippingMethod = function (option, fulfillmentIndex) {
+        this.selectShippingMethod = function (option, orderFulfillment) {
+            var fulfillmentID = '';
+            if (typeof orderFulfillment == 'string') {
+                orderFulfillment = _this.cart.orderFulfillments[orderFulfillment];
+            }
             var data = {
                 'shippingMethodID': option.value,
-                'fulfillmentID': _this.cart.orderFulfillments[fulfillmentIndex].orderFulfillmentID
+                'fulfillmentID': orderFulfillment.orderFulfillmentID
             };
             _this.doAction('addShippingMethodUsingShippingMethodID', data);
-            if (!_this.cart.orderFulfillments[fulfillmentIndex].data.shippingMethod) {
-                _this.cart.orderFulfillments[fulfillmentIndex].data.shippingMethod = {};
+            if (!orderFulfillment.data.shippingMethod) {
+                orderFulfillment.data.shippingMethod = {};
             }
-            _this.cart.orderFulfillments[fulfillmentIndex].data.shippingMethod.shippingMethodID = option.value;
+            orderFulfillment.data.shippingMethod.shippingMethodID = option.value;
         };
         /** Removes promotional code from order*/
         this.removePromoCode = function (code) {
@@ -45099,7 +45103,8 @@ var SWFAddressFormController = /** @class */ (function (_super) {
                 if (result && result.successfulActions.length) {
                     console.log(_this.ngModel);
                     _this.$timeout(function () {
-                        _this.ngModel = null;
+                        _this.ngModel.$setViewValue(null);
+                        _this.ngModel.$commitViewValue();
                     });
                 }
             });
@@ -45109,7 +45114,6 @@ var SWFAddressFormController = /** @class */ (function (_super) {
         $scope.$watch(angular.bind(_this, function () {
             return _this.form['countryCode'].$modelValue;
         }), function (val) {
-            console.log(val);
             _this.slatwall.getStates(val);
         });
         $scope.$watch('slatwall.states.addressOptions', function () {
@@ -45338,23 +45342,35 @@ var SWFNavigationController = /** @class */ (function () {
             _this.fulfillmentTabDisabled = orderRequirementsList.indexOf('account') > -1;
             _this.paymentTabDisabled = _this.fulfillmentTabDisabled || orderRequirementsList.indexOf('fulfillment') > -1;
             _this.reviewTabDisabled = _this.paymentTabDisabled || orderRequirementsList.indexOf('payment') > -1;
+            if (!_this.slatwall.account.accountID) {
+                _this.showTab('account');
+            }
         };
-        this.selectTab = function (orderRequirementsList) {
-            var sections = ['account', 'fulfillment', 'payment'];
+        this.selectTab = function (accountID) {
+            console.log('yao');
             var activeTab = 'review';
-            for (var index = sections.length - 1; index >= 0; index--) {
-                var section = sections[index];
-                if (orderRequirementsList.includes(section)) {
-                    activeTab = section;
+            if (!accountID) {
+                console.log('yao?');
+                var activeTab_1 = 'account';
+            }
+            else {
+                console.log('yaoooo');
+                var orderRequirementsList = _this.slatwall.cart.orderRequirementsList;
+                var sections = ['account', 'fulfillment', 'payment'];
+                for (var index = sections.length - 1; index >= 0; index--) {
+                    var section = sections[index];
+                    if (orderRequirementsList.includes(section)) {
+                        activeTab = section;
+                    }
                 }
             }
+            console.log('yao!!!');
             if (activeTab.length) {
-                console.log(activeTab);
-                _this.tabs[activeTab].tab('show');
+                console.log('yoooooo');
+                _this.showTab(activeTab);
             }
         };
         this.updateView = function (orderRequirementsList) {
-            console.log(orderRequirementsList);
             _this.updateNavbar(orderRequirementsList);
             _this.$timeout(function () {
                 _this.selectTab(orderRequirementsList);
@@ -45362,8 +45378,17 @@ var SWFNavigationController = /** @class */ (function () {
         };
         this.$rootScope = $rootScope;
         this.slatwall = $rootScope.slatwall;
-        $scope.$watch('slatwall.cart.orderRequirementsList', this.updateView);
+        $scope.$watch('slatwall.cart.orderRequirementsList', this.updateNavbar);
+        $scope.$watch('slatwall.account.accountID', this.selectTab);
     }
+    SWFNavigationController.prototype.showTab = function (tab) {
+        var _this = this;
+        console.log(tab);
+        this[tab + 'TabDisabled'] = false;
+        this.$timeout(function () {
+            _this.tabs[tab].tab('show');
+        });
+    };
     return SWFNavigationController;
 }());
 exports.SWFNavigationController = SWFNavigationController;

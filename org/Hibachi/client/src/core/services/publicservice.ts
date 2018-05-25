@@ -642,8 +642,8 @@ class PublicService {
     }
     
     /** Selects shippingAddress*/
-    public selectShippingAccountAddress = (accountAddressID)=>{
-        this.doAction('addShippingAddressUsingAccountAddress', {accountAddressID:accountAddressID});
+    public selectShippingAccountAddress = (accountAddressID,orderFulfillmentID)=>{
+        this.doAction('addShippingAddressUsingAccountAddress', {accountAddressID:accountAddressID,fulfillmentID:orderFulfillmentID});
     }
     
      /** Selects shippingAddress*/
@@ -689,16 +689,20 @@ class PublicService {
 
      /** Select a shipping method - temporarily changes the selected method on the front end while awaiting official change from server
      */
-     public selectShippingMethod = (option, fulfillmentIndex) =>{
+     public selectShippingMethod = (option, orderFulfillment:any) =>{
+         let fulfillmentID = '';
+         if(typeof orderFulfillment == 'string'){
+             orderFulfillment = this.cart.orderFulfillments[orderFulfillment];
+         }
          let data = {
              'shippingMethodID': option.value,
-             'fulfillmentID':this.cart.orderFulfillments[fulfillmentIndex].orderFulfillmentID
+             'fulfillmentID':orderFulfillment.orderFulfillmentID
          };
          this.doAction('addShippingMethodUsingShippingMethodID', data);
-         if(!this.cart.orderFulfillments[fulfillmentIndex].data.shippingMethod){
-             this.cart.orderFulfillments[fulfillmentIndex].data.shippingMethod = {};
+         if(!orderFulfillment.data.shippingMethod){
+             orderFulfillment.data.shippingMethod = {};
          }
-         this.cart.orderFulfillments[fulfillmentIndex].data.shippingMethod.shippingMethodID = option.value;
+         orderFulfillment.data.shippingMethod.shippingMethodID = option.value;
      }
 
      /** Removes promotional code from order*/
