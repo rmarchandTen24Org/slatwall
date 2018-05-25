@@ -40977,9 +40977,16 @@ var PublicService = /** @class */ (function () {
         /** Select a shipping method - temporarily changes the selected method on the front end while awaiting official change from server
         */
         this.selectShippingMethod = function (option, fulfillmentIndex) {
+            var fulfillmentID = '';
+            if (fulfillmentIndex.length == 32) {
+                fulfillmentID = fulfillmentIndex;
+            }
+            else {
+                fulfillmentID = _this.cart.orderFulfillments[fulfillmentIndex].orderFulfillmentID;
+            }
             var data = {
                 'shippingMethodID': option.value,
-                'fulfillmentID': _this.cart.orderFulfillments[fulfillmentIndex].orderFulfillmentID
+                'fulfillmentID': fulfillmentID
             };
             _this.doAction('addShippingMethodUsingShippingMethodID', data);
             if (!_this.cart.orderFulfillments[fulfillmentIndex].data.shippingMethod) {

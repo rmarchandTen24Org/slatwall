@@ -690,9 +690,15 @@ class PublicService {
      /** Select a shipping method - temporarily changes the selected method on the front end while awaiting official change from server
      */
      public selectShippingMethod = (option, fulfillmentIndex) =>{
+         let fulfillmentID = '';
+         if(fulfillmentIndex.length == 32){
+             fulfillmentID = fulfillmentIndex;
+         }else{
+             fulfillmentID = this.cart.orderFulfillments[fulfillmentIndex].orderFulfillmentID;
+         }
          let data = {
              'shippingMethodID': option.value,
-             'fulfillmentID':this.cart.orderFulfillments[fulfillmentIndex].orderFulfillmentID
+             'fulfillmentID':fulfillmentID
          };
          this.doAction('addShippingMethodUsingShippingMethodID', data);
          if(!this.cart.orderFulfillments[fulfillmentIndex].data.shippingMethod){
