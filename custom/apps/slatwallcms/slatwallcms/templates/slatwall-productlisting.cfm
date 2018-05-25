@@ -127,12 +127,13 @@
 
 		    						<span ng-init="OrderItem_Add_#local.formUniqueID# = {skuID:'#local.product['defaultSku_skuID']#'}"></span>
 		    						<form  
-										ng-model="OrderItem_Add_#local.formUniqueID#" 
-										ng-submit="swfForm.submitForm()" 
+										ng-model="OrderItem_Add_#local.formUniqueID#"
+										ng-submit="swfForm.submitForm()"
 										swf-form 
 										data-method="addOrderItem"
 										<!--- use s-redirect-url or f-redirect-url as attributes here if needed ---->
 									>
+		    							<input type="hidden" ng-model="OrderItem_Add_#local.formUniqueID#.skuID" name="skuID" />
 									    <button class="btn btn-primary float-left" >{{(slatwall.getRequestByAction('addOrderItem').loading ? 'Loading...' : 'Buy Now (client side)')}}</button>
 
 									</form>
