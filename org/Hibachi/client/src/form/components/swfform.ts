@@ -31,7 +31,7 @@ class SWFFormController {
         var formData = {};
         for(var key in this.form){
             if(key.indexOf('$')==-1){
-                formData[key]=this.form[key].$modalValue||this.form[key].$viewValue;
+                formData[key]=this.form[key].$modelValue||this.form[key].$viewValue;
             }
         }
         console.log('test',formData);
@@ -43,8 +43,8 @@ class SWFFormController {
         //example of entityName Account_Login
         
         if(this.form.$valid){
-            this.$rootScope.slatwall.doAction(this.method,this.getFormData()).then( (result) =>{
-                if(!result) return;
+            return this.$rootScope.slatwall.doAction(this.method,this.getFormData()).then( (result) =>{
+                if(!result) return result;
                 if(result.successfulActions.length)
                 {
                     //if we have an array of actions and they're all complete, or if we have just one successful action
@@ -59,9 +59,11 @@ class SWFFormController {
                         this.$rootScope.slatwall.redirectExact(this.fRedirectUrl);
                     }
                 }
+                return result;
             });
         }else{
             this.form.$setSubmitted(true);
+            return new Promise((resolve,reject)=>[]);
         }
         
     }
