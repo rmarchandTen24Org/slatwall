@@ -155,8 +155,8 @@ Notes:
 
                                                     <!-- Login Button -->
                                                     <button ng-click="swfForm.submitForm()" ng-class="{disabled:slatwall.getRequestByAction('Login').loading}" class="btn btn-primary btn-block">
-                                                    	{{(slatwall.getRequestByAction('Login').loading ? '' : 'Login & Continue')}}
-                                                    	<i ng-show="slatwall.getRequestByAction('Login').loading" class='fa fa-refresh fa-spin fa-fw'></i>
+                                                    	{{(swfForm.loading ? '' : 'Login & Continue')}}
+                                                    	<i ng-show="swfForm.loading" class='fa fa-refresh fa-spin fa-fw'></i>
                                             		</button>
 
                                                     <!-- Continue as Guest -->
@@ -177,7 +177,7 @@ Notes:
                                 			<h5>Reset Password</h5>
                                             <!-- Reset Password Success Message -->
                                             
-                                            <div ng-show="slatwall.requests[swfForm.method].successfulActions.length" class="alert alert-success">An email with instructions to reset your password has been sent to your inbox.</div>
+                                            <div ng-show="swfForm.successfulActions.length" class="alert alert-success">An email with instructions to reset your password has been sent to your inbox.</div>
 
                                 			<div class="row">
                                                 <div class="col-6 offset-md-3">
@@ -192,9 +192,9 @@ Notes:
                                     				<!-- Login toggle  -->
                                                     <a class="btn btn-link float-left" ng-click="slatwall.currentAccountPage = 'Login'"  role="button" aria-expanded="false" aria-controls="login">&lt;- Back to Login</a>
                                                     
-                                                    <button ng-click="swfForm.submitForm()" ng-class="{disabled:slatwall.getRequestByAction('ForgotPassword').loading}" class="btn btn-primary btn-block">
-                                                    	{{(slatwall.getRequestByAction('ForgotPassword').loading ? '' : 'Reset Password')}}
-                                                    	<i ng-show="slatwall.getRequestByAction('ForgotPassword').loading" class='fa fa-refresh fa-spin fa-fw'></i>
+                                                    <button ng-click="swfForm.submitForm()" ng-class="{disabled:swfForm.loading}" class="btn btn-primary btn-block">
+                                                    	{{(swfForm.loading ? '' : 'Reset Password')}}
+                                                    	<i ng-show="swfForm.loading" class='fa fa-refresh fa-spin fa-fw'></i>
                                                 	</button>
                                                 </div>
                                 			</div>
@@ -205,7 +205,7 @@ Notes:
                                     <div class="collapse" id="createAccount" ng-show="slatwall.currentAccountPage == 'CreateAccount'">
                                 			<h5>Create Account</h5>
 
-                                            <div ng-show="slatwall.requests[swfForm.method].errors.length" class="alert alert-danger">Error creating account. See errors below.</div>
+                                            <div ng-show="swfForm.errors.length" class="alert alert-danger">Error creating account. See errors below.</div>
 
                                             <form 
                                             	ng-model="Account_CreateAccount" 
@@ -269,8 +269,8 @@ Notes:
                                                     	<!-- Login toggle  -->
                                                     	<a class="btn btn-link float-left" ng-click="slatwall.currentAccountPage = 'Login'"  role="button" aria-expanded="false" aria-controls="login">&lt;- Back to Login</a>
                                                     
-                                                        <button type="submit" class="btn btn-primary btn-block" ng-class="{disabled:slatwall.getRequestByAction('CreateAccount').loading}">{{slatwall.getRequestByAction('CreateAccount').loading ? '' : 'Create Account & Continue'}}
-                                                        	<i ng-show="slatwall.getRequestByAction('CreateAccount').loading" class="fa fa-refresh fa-spin fa-fw"></i>
+                                                        <button type="submit" class="btn btn-primary btn-block" ng-class="{disabled:swfForm.loading}">{{swfForm.loading ? '' : 'Create Account & Continue'}}
+                                                        	<i ng-show="swfForm.loading" class="fa fa-refresh fa-spin fa-fw"></i>
                                                         </button>
                                                     </div>
                                             	</div>
@@ -316,8 +316,8 @@ Notes:
                                                     	<!-- Login toggle  -->
                                                     	<a class="btn btn-link float-left" ng-click="slatwall.currentAccountPage = 'Login'"  role="button" aria-expanded="false" aria-controls="login">&lt;- Back to Login</a>
                                                     
-                                                        <button type="submit" class="btn btn-primary btn-block" ng-class="{disabled:slatwall.getRequestByAction('CreateAccount').loading}">{{slatwall.getRequestByAction('CreateAccount').loading ? '' : 'Continue'}}
-                                                        	<i ng-show="slatwall.getRequestByAction('CreateAccount').loading" class="fa fa-refresh fa-spin fa-fw"></i>
+                                                        <button type="submit" class="btn btn-primary btn-block" ng-class="{disabled:swfForm.loading}">{{swfForm.loading ? '' : 'Continue'}}
+                                                        	<i ng-show="swfForm.loading" class="fa fa-refresh fa-spin fa-fw"></i>
                                                         </button>
                                                     </div>
                                             	</div>
@@ -482,8 +482,8 @@ Notes:
 	                                <!-- Create Billing Address form - opens by default if none exist -->
 	                                <h5>Create/Edit Billing Address</h5>
 	
-	                                <div class="alert alert-success"  ng-show="slatwall.requests[swfForm.method].successfulActions.length">Billing Address saved.</div>
-	                                <div class="alert alert-danger"  ng-show="slatwall.requests[swfForm.method].failureActions.length">Error saving billing address. See below for errors.</div>
+	                                <div class="alert alert-success"  ng-show="swfForm.successfulActions.length">Billing Address saved.</div>
+	                                <div class="alert alert-danger"  ng-show="swfForm.failureActions.length">Error saving billing address. See below for errors.</div>
 	
 	                                <div class="row">
 	                					<div class="form-group col-md-6">
@@ -583,10 +583,10 @@ Notes:
 	                				</div>
 	                				<div class="form-group">
 	                                	<button ng-click="swfForm.submitForm()" 
-	                                    	ng-class="{disabled:slatwall.getRequestByAction('addNewAccountAddress,addBillingAddressUsingAccountAddress').loading}" 
+	                                    	ng-class="{disabled:swfForm.loading}" 
 	                                    	class="btn btn-primary btn-block"
-	                                    >{{(slatwall.getRequestByAction('addNewAccountAddress,addBillingAddressUsingAccountAddress').loading ? '' : 'Save Billing Address')}}
-	                                    	<i ng-show="slatwall.getRequestByAction('addNewAccountAddress,addBillingAddressUsingAccountAddress').loading" class='fa fa-refresh fa-spin fa-fw'></i>
+	                                    >{{(swfForm.loading ? '' : 'Save Billing Address')}}
+	                                    	<i ng-show="swfForm.loading" class='fa fa-refresh fa-spin fa-fw'></i>
 	                                    </button>
 	                                    <!-- Close button to close create/edit shipping address & display  -->
 	                                    <button ng-show="slatwall.selectedBillingAccountAddress.accountAddressID.trim().length" 
@@ -679,8 +679,8 @@ Notes:
 													data-method="addOrderPayment"
 													
 												>
-                                					<div class="alert alert-success" ng-show="slatwall.requests[swfForm.method].successfulActions.length">Credit Card Payment added.</div>
-                                                	<div class="alert alert-danger" ng-show="slatwall.requests[swfForm.method].failureActions.length">Error adding credit card payment. See below for errors.</div>
+                                					<div class="alert alert-success" ng-show="swfForm.successfulActions.length">Credit Card Payment added.</div>
+                                                	<div class="alert alert-danger" ng-show="swfForm.failureActions.length">Error adding credit card payment. See below for errors.</div>
 													
                                 					<div class="row">
                                 						<input type="hidden" name="accountAddressID" id="billingAccountAddress-addressID" class="form-control"
@@ -730,10 +730,10 @@ Notes:
 
                                                     <!-- Credit Card Payment Submit & Close buttons -->
                                                     <button ng-click="swfForm.submitForm()" 
-				                                    	ng-class="{disabled:slatwall.getRequestByAction('addOrderPayment').loading}" 
+				                                    	ng-class="{disabled:swfForm.loading}" 
 				                                    	class="btn btn-primary btn-block"
-				                                    >{{(slatwall.getRequestByAction('addOrderPayment').loading ? '' : 'Add Payment')}}
-				                                    	<i ng-show="slatwall.getRequestByAction('addOrderPayment').loading" class='fa fa-refresh fa-spin fa-fw'></i>
+				                                    >{{(swfForm.loading ? '' : 'Add Payment')}}
+				                                    	<span  ng-show="swfForm.loading"><i class='fa fa-refresh fa-spin fa-fw'></i></span>
 				                                    </button>
                                                     <!---<button type="button" name="close" class="btn btn-link">Cancel</button>--->
                                 				</form>
@@ -748,25 +748,47 @@ Notes:
                                         </a>
                                 		<div  role="tabpanel" aria-labelledby="headingTwo" class="collapse">
                                 			<div class="card-body">
+                                               <form 
+                                					ng-model="OrderPayment_addOrderPayment_PO" 
+													swf-form 
+													data-method="addOrderPayment"
+													
+												>
                                                 <!-- Add Payment Success/Fail -->
-                                                <div class="alert alert-success">Credit Card Payment added.</div>
-                                                <div class="alert alert-danger">Error adding credit card payment. See below for errors.</div>
-
-                                                <form action="##">
-                                                    <div class="row">
+                                                <div class="alert alert-success" ng-show="swfForm.successfulActions.length">Purchase order added.</div>
+                                                <div class="alert alert-danger" ng-show="swfForm.failureActions.length">Error adding purchase order payment. See below for errors.</div>
+                                                
+                                                <div class="row">
                                                     <div class="form-group col-md-7">
                                                         <label for="card-name" class="form-label">Purchase Order Number</label>
-                                                        <input type="text" name="purchase-order" placeholder="Purchase Order Number" id="purchase-order" class="form-control" required>
-                                                        <div class="px-2 mt-1 bg-danger text-white"><small>Purchase Order Number Required</small></div>
+                                                        <input 
+                                                            type="text"
+                                                            name="newOrderPayment.purchaseOrderNumber" 
+                                                            placeholder="Purchase Order Number" 
+                                                            id="po-number" 
+                                                            class="form-control" 
+                                							ng-model="OrderPayment_addOrderPayment_PO.purchaseOrderNumber" 
+                                							swvalidationrequired="true"
+                                						>
+                                                        <sw:SwfErrorDisplay propertyIdentifier="newOrderPayment.purchaseOrderNumber"/>
                                                     </div>
                                                 </div>
-
                                                 <!-- Purchase Order Submit & Close buttons -->
-                                                <button type="submit" name="submit" class="btn btn-primary w-25">Apply</button>
-                                                <button type="button" name="addPayment" class="btn btn-primary w-25 disabled"><i class="fa fa-refresh fa-spin fa-fw"></i></button>
-                                                <button type="button" name="close" class="btn btn-link">Cancel</button>
+                                                <button 
+                                                    ng-click="swfForm.submitForm()" 
+			                                    	ng-class="{disabled:swfForm.loading}" 
+			                                    	class="btn btn-primary btn-block"
+			                                    >
+                                                    {{(swfForm.loading ? '' : 'Add Payment')}}
+			                                    	<i 
+			                                    	    ng-show="swfForm.loading" 
+			                                    	    class='fa fa-refresh fa-spin fa-fw'>
+			                                    	</i>
+			                                    </button>
+			                                    <button type="button" name="close" class="btn btn-link">Cancel</button>
                                                 </form>
-                                		</div></div>
+                                		    </div>
+                                		</div>
                                 	</div>
 
                                     <!-- Gift Card -->
@@ -944,50 +966,7 @@ Notes:
             <div class="col-12 col-md-4">
 
                 <!-- Order Summary -->
-                <div class="card mb-5">
-                    <div class="card-header">
-                        <h5 class="mb-0">Order Summary</h5>
-                    </div>
-                    <div class="card-body p-0">
-                        <ul class="list-group list-group-flush">
-                            <li class="list-group-item">
-                                <span>Order Subtotal</span>
-                                <span class="float-right" ng-bind="slatwall.cart.subtotal|currency"></span>
-                                <i class="fa fa-refresh fa-spin fa-fw float-right my-1 mr-1"></i>
-                            </li>
-                            <li class="list-group-item">
-                                <span>Item Discount Total</span>
-                                <span class="text-danger float-right">- {{slatwall.cart.discountTotal|currency}}</span>
-                                <i class="fa fa-refresh fa-spin fa-fw float-right my-1 mr-1"></i>
-                            </li>
-                            <li class="list-group-item">
-                                <span>Order Discount Total</span>
-                                <span class="text-danger float-right">- {{slatwall.cart.discountTotal|currency}}</span>
-                                <i class="fa fa-refresh fa-spin fa-fw float-right my-1 mr-1"></i>
-                            </li>
-                            <li class="list-group-item">
-                                <span>Shipping Discount Total</span>
-                                <span class="text-danger float-right">- {{slatwall.cart.orderFulfillments[0].discountTotal || 0|currency}}</span>
-                                <i class="fa fa-refresh fa-spin fa-fw float-right my-1 mr-1"></i>
-                            </li>
-                            <li class="list-group-item">
-                                <span>Shipping and handling</span>
-                                <span class="float-right" ng-bind="slatwall.cart.fulfillmentTotal|currency"></span>
-                                <i class="fa fa-refresh fa-spin fa-fw float-right my-1 mr-1"></i>
-                            </li>
-                            <li class="list-group-item">
-                                <span>Tax</span>
-                                <span class="float-right" ng-bind="slatwall.cart.taxTotal|currency"></span>
-                                <i class="fa fa-refresh fa-spin fa-fw float-right my-1 mr-1"></i>
-                            </li>
-                            <li class="list-group-item">
-                                <span>Total</span>
-                                <strong class="float-right" ng-bind="slatwall.cart.total|currency"></strong>
-                                <i class="fa fa-refresh fa-spin fa-fw float-right my-1 mr-1"></i>
-                            </li>
-                        </ul>
-                    </div>
-                </div>
+                <cfinclude template="./inc/orderSummary.cfm" />
 
                 <!-- Order Items Summary -->
                 <div class="card mb-5">
@@ -1034,47 +1013,7 @@ Notes:
                 </div>
 
                 <!-- Promotion -->
-                <div class="card mb-4">
-                    <div class="card-header">
-                        <h5 class="mb-0">Promotion Code</h5>
-                    </div>
-                    <div class="card-body">
-                        <!-- Promo success/fail alerts -->
-                        
-
-                        <form  class="mb-1"
-                        	ng-model="Order_addPromotion" 
-							ng-submit="swfForm.submitForm()" 
-							swf-form 
-							data-method="addPromotionCode"
-                        >
-                        	<div class="alert alert-success" ng-show="slatwall.requests[swfForm.method].successfulActions.length">Promotion added.</div>
-                        	<div class="alert alert-danger" ng-show="slatwall.requests[swfForm.method].failureActions.length">Invalid Promotion.</div>
-                            <div class="row">
-                                <div class="col-sm-8 col-7">
-                                    <input type="text" class="form-control form-control-sm" placeholder="Enter Promo Code..." name="promotionCode"
-                                    	ng-model="Order_addPromotion.promotionCode" swvalidationrequired="true"
-                                    />
-                                    <sw:SwfErrorDisplay propertyIdentifier="promotionCode"/>
-                                </div>
-                                <div class="col-sm-4 col-5">
-                                    <!-- Apply promo button -->
-                                    <button type="submit" class="btn btn-secondary btn-sm btn-block" ng-disabled="slatwall.getRequestByAction('addPromotionCode').loading">
-                                    	{{slatwall.getRequestByAction('updateOrderItemQuantity').loading ? '' : 'Apply'}}
-                                    	<i ng-show="slatwall.getRequestByAction('updateOrderItemQuantity').loading" class="fa fa-refresh fa-spin fa-fw"></i>
-                                    	</button>
-                                    <!-- Apply promo loader -->
-                                </div>
-                            </div>
-                        </form>
-
-                        <span class="badge badge-pill badge-primary">10% Special Promo</span>
-                        <button type="button btn-sm" class="btn btn-link btn-sm disabled">Remove</button>
-
-                        <!-- Remove Promo loader -->
-                        <i class="fa fa-refresh fa-spin fa-fw my-1"></i>
-                    </div>
-                </div>
+                <cfinclude template="./inc/promoBox.cfm" />
 
             </div>
         </div>
