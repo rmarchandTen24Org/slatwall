@@ -8545,7 +8545,6 @@ var DelaySubscriber = (function (_super) {
             this.schedule(state, delay_1);
         }
         else {
-            this.unsubscribe();
             source.active = false;
         }
     };
@@ -15393,20 +15392,26 @@ var SWFFormController = /** @class */ (function () {
         };
         this.getFormData = function () {
             var formData = {};
+            console.log(_this.form);
             for (var key in _this.form) {
                 if (key.indexOf('$') == -1) {
                     formData[key] = _this.form[key].$modelValue || _this.form[key].$viewValue;
                 }
             }
-            console.log('test', formData);
+            console.log('test', formData, _this.ngModel);
             return formData;
         };
         this.submitForm = function () {
             //example of entityName Account_Login
             if (_this.form.$valid) {
+                _this.loading = true;
                 return _this.$rootScope.slatwall.doAction(_this.method, _this.getFormData()).then(function (result) {
                     if (!result)
                         return result;
+                    _this.loading = false;
+                    _this.successfulActions = result.successfulActions;
+                    _this.failureActions = result.failureActions;
+                    _this.errors = result.errors;
                     if (result.successfulActions.length) {
                         //if we have an array of actions and they're all complete, or if we have just one successful action
                         if (_this.sRedirectUrl) {
@@ -40524,7 +40529,7 @@ var PublicService = /** @class */ (function () {
             if (typeof address === 'boolean' && !angular.isDefined(refresh)) {
                 refresh = address;
             }
-            if (!angular.isDefined(countryCode))
+            if (!countryCode)
                 countryCode = "US";
             var urlBase = _this.baseActionPath + 'getStateCodeOptionsByCountryCode/';
             if (!_this.getRequestByAction('getStateCodeOptionsByCountryCode') || !_this.getRequestByAction('getStateCodeOptionsByCountryCode').loading || refresh) {
@@ -45119,7 +45124,6 @@ var SWFAddressFormController = /** @class */ (function (_super) {
         $scope.$watch('slatwall.states.addressOptions', function () {
             if (_this.slatwall.states && _this.slatwall.states.addressOptions) {
                 _this.addressOptions = _this.slatwall.states.addressOptions;
-                console.log(_this.addressOptions);
             }
         });
         return _this;
@@ -45347,14 +45351,11 @@ var SWFNavigationController = /** @class */ (function () {
             }
         };
         this.selectTab = function (accountID) {
-            console.log('yao');
             var activeTab = 'review';
             if (!accountID) {
-                console.log('yao?');
                 var activeTab_1 = 'account';
             }
             else {
-                console.log('yaoooo');
                 var orderRequirementsList = _this.slatwall.cart.orderRequirementsList;
                 var sections = ['account', 'fulfillment', 'payment'];
                 for (var index = sections.length - 1; index >= 0; index--) {
@@ -45364,9 +45365,7 @@ var SWFNavigationController = /** @class */ (function () {
                     }
                 }
             }
-            console.log('yao!!!');
             if (activeTab.length) {
-                console.log('yoooooo');
                 _this.showTab(activeTab);
             }
         };
@@ -45383,7 +45382,6 @@ var SWFNavigationController = /** @class */ (function () {
     }
     SWFNavigationController.prototype.showTab = function (tab) {
         var _this = this;
-        console.log(tab);
         this[tab + 'TabDisabled'] = false;
         this.$timeout(function () {
             _this.tabs[tab].tab('show');

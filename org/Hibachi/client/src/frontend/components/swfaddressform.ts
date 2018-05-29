@@ -29,13 +29,12 @@ class SWFAddressFormController extends SWFFormController{
         $scope.$watch(angular.bind(this,()=>{
             return this.form['countryCode'].$modelValue
         }), (val)=>{
-            this.slatwall.getStates(val)
+            this.slatwall.getStates(val);
         });
         
         $scope.$watch('slatwall.states.addressOptions', ()=>{
             if(this.slatwall.states && this.slatwall.states.addressOptions){
                 this.addressOptions = this.slatwall.states.addressOptions;
-                console.log(this.addressOptions);
             }
         });
         

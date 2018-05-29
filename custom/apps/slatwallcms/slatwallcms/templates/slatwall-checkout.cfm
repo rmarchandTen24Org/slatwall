@@ -652,7 +652,7 @@ Notes:
                                             <div class="form-check">
                                                 <input class="form-check-input" type="radio" name="address" 
                                                 	ng-value="accountAddress.accountAddressID" ng-checked="accountAddress.accountAddressID == slatwall.cart.billingAccountAddress.accountAddressID"
-                                                	ng-model="slatwall.cart.billingAccountAddress.accountAddressID" ng-click="slatwall.selectBilliingAccountAddress(accountAddress.accountAddressID)" 
+                                                	ng-model="slatwall.cart.billingAccountAddress.accountAddressID" ng-click="slatwall.selectBillingAccountAddress(accountAddress.accountAddressID)" 
                                                 >
                                                 <label class="form-check-label" for="address1">Selected</label>
                                                 <!-- Select Address Loader -->
