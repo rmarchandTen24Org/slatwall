@@ -1052,8 +1052,8 @@ Notes:
                                         <i ng-show="slatwall.getRequestByAction('updateOrderItemQuantity').loading" class="fa fa-refresh fa-spin fa-fw"></i>
                                     </div>
                                     <div class="col-8 pl-0">
-                                        <small >{{orderItem.extendedPriceAfterDiscount|currency}} <span class="text-muted"><s ng-bind="orderItem.extendedPrice|currency"></s></span></small>
-                                        <strong ng-bind="orderItem.extendedPrice|currency"></strong>
+                                        <small >{{orderItem.extendedUnitPriceAfterDiscount|currency}} <span class="text-muted"><s ng-bind="orderItem.extendedUnitPrice|currency"></s></span></small>
+                                        <strong ng-bind="orderItem.extendedPriceAfterDiscount|currency"></strong>
                                     </div>
                                 </div>
 
