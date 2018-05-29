@@ -729,9 +729,12 @@ component extends="HibachiService"  accessors="true" output="false"
     public any function addBillingAddressUsingAccountAddress(required data){
         var accountAddress = getService('addressService').getAccountAddress(data.accountAddressID);
         
-        var addressData = {
-            address=accountAddress.getAddress()  
-        };
+        if(!isNull(accountAddress)){
+            getHibachiScope().getCart().setBillingAccountAddress(accountAddress);
+            var addressData = {
+                address=accountAddress.getAddress()  
+            };
+        }
         
         return addBillingAddress(addressData);
     }

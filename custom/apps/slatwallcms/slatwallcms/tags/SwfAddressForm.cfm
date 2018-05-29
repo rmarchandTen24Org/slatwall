@@ -198,7 +198,7 @@ Notes:
             <div class="form-group">
                 <!-- Save Address button -->
                 <button ng-click="swfAddressForm.submitAddressForm()" 
-                	ng-class="{swfAddressForm.loading}" 
+                	ng-class="{disabled:swfAddressForm.loading}" 
                 	class="btn btn-primary btn-block"
                 >{{(slatwall.getRequestByAction('#attributes.method#').loading ? '' : 'Save Address')}}
                 	<i ng-show="swfAddressForm.loading" class='fa fa-refresh fa-spin fa-fw'></i>
