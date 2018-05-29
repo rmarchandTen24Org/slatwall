@@ -907,7 +907,7 @@ Notes:
                                     <address class="card">
                                         <div class="card-header">
                                             <span class="float-left"><i class="fa fa-check-circle"></i> Shipping Address</span>
-                                            <a href="##" class="float-right">Edit</a>
+                                            <!---<a href="##" class="float-right">Edit</a>--->
                                         </div>
                                         <div class="card-body">
                                             <strong ng-bind="slatwall.cart.orderFulfillments[0].shippingAddress.name"></strong><br>
@@ -922,7 +922,7 @@ Notes:
                                     <div class="card">
                                         <div class="card-header">
                                             <span class="float-left"><i class="fa fa-check-circle"></i> Shipping Method</span>
-                                            <a href="##" class="float-right">Edit</a>
+                                            <!---<a href="##" class="float-right">Edit</a>--->
                                         </div>
                                         <div class="card-body">
                                         	<strong ng-bind="slatwall.cart.orderFulfillments[0].shippingMethod.shippingMethodName"></strong><br>
@@ -968,7 +968,7 @@ Notes:
                                     <address class="card">
                                         <div class="card-header">
                                             <span class="float-left"><i class="fa fa-check-circle"></i> Billing Address</span>
-                                            <a href="##" class="float-right">Edit</a>
+                                            <!---<a href="##" class="float-right">Edit</a>--->
                                         </div>
                                         <div class="card-body">
                                             <strong ng-bind="slatwall.cart.orderPayments[slatwall.cart.orderPayments.length-1].billingAddress.name"></strong><br>
@@ -983,7 +983,7 @@ Notes:
                                     <div class="card">
                                         <div class="card-header">
                                             <span class="float-left"><i class="fa fa-check-circle"></i> Payment Method</span>
-                                            <a href="##" class="float-right">Edit</a>
+                                            <!---<a href="##" class="float-right">Edit</a>--->
                                         </div>
                                         <div class="card-body" ng-switch="slatwall.cart.orderPayments[slatwall.cart.orderPayments.length-1].creditCardType.toLowerCase()">
                                             <h6>Credit Card</h6>

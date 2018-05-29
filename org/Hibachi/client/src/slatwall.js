@@ -45343,7 +45343,9 @@ var SWFNavigationController = /** @class */ (function () {
         this.paymentTabDisabled = true;
         this.reviewTabDisabled = true;
         this.updateNavbar = function (orderRequirementsList) {
-            _this.accountTabDisabled = orderRequirementsList.indexOf('account') == -1;
+            if (!orderRequirementsList)
+                orderRequirementsList = ' ';
+            _this.accountTabDisabled = orderRequirementsList.indexOf('account') === -1;
             _this.fulfillmentTabDisabled = orderRequirementsList.indexOf('account') > -1;
             _this.paymentTabDisabled = _this.fulfillmentTabDisabled || orderRequirementsList.indexOf('fulfillment') > -1;
             _this.reviewTabDisabled = _this.paymentTabDisabled || orderRequirementsList.indexOf('payment') > -1;
@@ -45365,6 +45367,7 @@ var SWFNavigationController = /** @class */ (function () {
                         activeTab = section;
                     }
                 }
+                _this.updateNavbar(orderRequirementsList);
             }
             if (activeTab.length) {
                 _this.showTab(activeTab);
@@ -45378,6 +45381,8 @@ var SWFNavigationController = /** @class */ (function () {
         };
         this.$rootScope = $rootScope;
         this.slatwall = $rootScope.slatwall;
+        console.log(this.slatwall.cart.orderRequirementsList);
+        this.updateNavbar(this.slatwall.cart.orderRequirementsList);
         $scope.$watch('slatwall.cart.orderRequirementsList', this.updateNavbar);
         $scope.$watch('slatwall.account.accountID', this.selectTab);
     }
