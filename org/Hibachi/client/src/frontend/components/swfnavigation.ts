@@ -12,7 +12,8 @@ class SWFNavigationController{
     public reviewTabDisabled=true;
     
     private updateNavbar = (orderRequirementsList)=>{
-        this.accountTabDisabled = orderRequirementsList.indexOf('account') == -1;
+        if(!orderRequirementsList) orderRequirementsList = ' ';
+        this.accountTabDisabled = orderRequirementsList.indexOf('account') === -1;
         this.fulfillmentTabDisabled = orderRequirementsList.indexOf('account') > -1;
         this.paymentTabDisabled = this.fulfillmentTabDisabled || orderRequirementsList.indexOf('fulfillment') > -1;
         this.reviewTabDisabled = this.paymentTabDisabled || orderRequirementsList.indexOf('payment') > -1;
@@ -36,6 +37,7 @@ class SWFNavigationController{
                     activeTab = section;
                 }
             }
+            this.updateNavbar(orderRequirementsList);
         }
         if(activeTab.length){
             this.showTab(activeTab);
@@ -59,6 +61,8 @@ class SWFNavigationController{
     constructor(private $rootScope, private $scope, private $timeout){
         this.$rootScope = $rootScope;
         this.slatwall = $rootScope.slatwall;
+        console.log(this.slatwall.cart.orderRequirementsList);
+        this.updateNavbar(this.slatwall.cart.orderRequirementsList);
         $scope.$watch('slatwall.cart.orderRequirementsList',this.updateNavbar);
         $scope.$watch('slatwall.account.accountID',this.selectTab);
     }
