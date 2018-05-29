@@ -887,8 +887,8 @@ Notes:
 
                                 <!-- Place Orders & Review Order buttons -->
                                 <!-- Add disabled class until all criteria is met -->
-                                <button type="button" name="review" class="btn btn-secondary w-25" ng-disabled=swfNavigation.reviewTabDisabled ng-click="swfNavigation.showTab('review')">Review Order</button>
-                                <button type="submit" name="submit" class="btn btn-primary w-25" ng-disabled=swfNavigation.reviewTabDisabled >Place Order</button>
+                                <button type="button" name="review" class="btn btn-secondary w-25" ng-disabled="swfNavigation.reviewTabDisabled" ng-click="swfNavigation.showTab('review')">Review Order</button>
+                                <button type="submit" name="submit" class="btn btn-primary w-25" ng-disabled="swfNavigation.reviewTabDisabled" >Place Order</button>
                             </div>
                             <!-- //Payment-tab 3  -->
 
