@@ -38696,6 +38696,7 @@ var $Hibachi = /** @class */ (function () {
             '$rootScope',
             '$location',
             '$anchorScroll',
+            '$injector',
             'requestService',
             'utilityService',
             'formService',
@@ -38703,8 +38704,8 @@ var $Hibachi = /** @class */ (function () {
             'appConfig'
         ];
     }
-    $Hibachi.prototype.$get = function ($window, $q, $http, $timeout, $log, $rootScope, $location, $anchorScroll, requestService, utilityService, formService, rbkeyService, appConfig) {
-        return new HibachiService($window, $q, $http, $timeout, $log, $rootScope, $location, $anchorScroll, requestService, utilityService, formService, rbkeyService, appConfig, this._config, this._jsEntities, this._jsEntityInstances);
+    $Hibachi.prototype.$get = function ($window, $q, $http, $timeout, $log, $rootScope, $location, $anchorScroll, $injector, requestService, utilityService, formService, rbkeyService, appConfig) {
+        return new HibachiService($window, $q, $http, $timeout, $log, $rootScope, $location, $anchorScroll, $injector, requestService, utilityService, formService, rbkeyService, appConfig, this._config, this._jsEntities, this._jsEntityInstances);
     };
     return $Hibachi;
 }());
