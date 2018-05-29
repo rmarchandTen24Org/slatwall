@@ -91,7 +91,6 @@ Notes:
         <div class="row">
             <!-- Checkout body -->
             <div class="col-12 col-md-8">
-
                 <div class="card">
                     <div class="card-header">
                         <!-- Checkout tabbed nav -->
@@ -485,7 +484,7 @@ Notes:
                                     </div>
                                 </div>
                                 <div>
-                			        <button ng-click="swfNavigation.selectTab('payment')" class="btn btn-primary w-25 nav-item" ng-class="{disabled:swfNavigation.paymentTabDisabled}">Continue to Payment</button>
+                			        <button ng-click="swfNavigation.showTab('payment')" class="btn btn-primary w-25 nav-item" ng-disabled="swfNavigation.paymentTabDisabled">Continue to Payment</button>
             			        </div>
                 			</div>
                 			
@@ -888,12 +887,8 @@ Notes:
 
                                 <!-- Place Orders & Review Order buttons -->
                                 <!-- Add disabled class until all criteria is met -->
-                                <button type="button" name="review" class="btn btn-secondary w-25 disabled">Review Order</button>
-                                <button type="button" name="review" class="btn btn-secondary w-25 disabled"><i class="fa fa-refresh fa-spin fa-fw"></i></button>
-					
-                                <button type="submit" name="submit" class="btn btn-primary w-25 disabled">Place Order</button>
-                                <button type="submit" class="btn btn-primary w-25 disabled"><i class="fa fa-refresh fa-spin fa-fw"></i></button>
-
+                                <button type="button" name="review" class="btn btn-secondary w-25" ng-disabled="swfNavigation.reviewTabDisabled" ng-click="swfNavigation.showTab('review')">Review Order</button>
+                                <button type="submit" name="submit" class="btn btn-primary w-25" ng-disabled="swfNavigation.reviewTabDisabled" >Place Order</button>
                             </div>
                             <!-- //Payment-tab 3  -->
 
@@ -1014,7 +1009,7 @@ Notes:
                                 </div>
 
                                 <!-- Place Order Button  -->
-                                <button ng-click="slatwall.doAction('placeOrder')" class="btn btn-primary btn-block" ng-class="{disabled:slatwall.getRequestByAction('placeOrder').loading}">{{slatwall.getRequestByAction('placeOrder').loading ? '' : 'PlaceOrder'}}
+                                <button ng-click="slatwall.doAction('placeOrder')" class="btn btn-primary btn-block" ng-class="{disabled:slatwall.getRequestByAction('placeOrder').loading}">{{slatwall.getRequestByAction('placeOrder').loading ? '' : 'Place Order'}}
                                 	<i ng-show="slatwall.getRequestByAction('placeOrder').loading" class="fa fa-refresh fa-spin fa-fw"></i>
                                 </button>
 
