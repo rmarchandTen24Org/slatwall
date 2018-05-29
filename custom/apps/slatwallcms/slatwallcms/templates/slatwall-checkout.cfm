@@ -347,7 +347,7 @@ Notes:
                                             </div>
                                         </label>--->
                                     </div>--->
-                                    <div ng-if="orderFulfillment.fulfillmentMethod.fulfillmentMethodType='shipping'">
+                                    <div ng-if="orderFulfillment.fulfillmentMethod.fulfillmentMethodType === 'shipping'">
                                         <!-- Select Shipping Method -->
                                         <h5>Select Shipping Method</h5>
         
@@ -363,7 +363,7 @@ Notes:
                                             method="addEditAccountAddress,addShippingAddressUsingAccountAddress"
                                             visible="orderFulfillment.selectedAccountAddress || !slatwall.account.accountAddresses.length"
                                             additionalParameters="{fulfillmentID:orderFulfillment.orderFulfillmentID}"
-                                            formID="shipping" />
+                                            formID="{{orderFulfillment.orderFulfillmentID}}" />
                                             
                                         <!-- Close button for create/edit address - only should show if other addresses exists show address listing on close -->
                                         <button type="button" name="closeAddress" 
@@ -793,7 +793,7 @@ Notes:
                                                             id="po-paymentMethodName" 
                                                             class="form-control" 
                                 							ng-model="OrderPayment_addOrderPayment_PO.paymentMethod.paymentMethodID" 
-                                							ng-init="OrderPayment_addOrderPayment_PO.paymentMethod.paymentMethodID = '50d8cd61009931554764385482347f3a'"
+                                							ng-init="OrderPayment_addOrderPayment_PO.paymentMethod.paymentMethodID = '2c92808363985abf0163ac4ef66f003c'"
                                 						>
                                                         <sw:SwfErrorDisplay propertyIdentifier="newOrderPayment.purchaseOrderNumber"/>
                                                     </div>

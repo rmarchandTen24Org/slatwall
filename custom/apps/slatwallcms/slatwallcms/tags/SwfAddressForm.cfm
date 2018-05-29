@@ -198,10 +198,10 @@ Notes:
             <div class="form-group">
                 <!-- Save Address button -->
                 <button ng-click="swfAddressForm.submitAddressForm()" 
-                	ng-class="{disabled:slatwall.getRequestByAction('#attributes.method#').loading}" 
+                	ng-class="{swfAddressForm.loading}" 
                 	class="btn btn-primary btn-block"
                 >{{(slatwall.getRequestByAction('#attributes.method#').loading ? '' : 'Save Address')}}
-                	<i ng-show="slatwall.getRequestByAction('#attributes.method#').loading" class='fa fa-refresh fa-spin fa-fw'></i>
+                	<i ng-show="swfAddressForm.loading" class='fa fa-refresh fa-spin fa-fw'></i>
                 </button>
                 <!-- Close button to close create/edit shipping address & display  -->
                 <button ng-show="#attributes.selectedAccountAddress#.accountAddressID.trim().length" 
