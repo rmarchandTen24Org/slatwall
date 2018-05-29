@@ -480,7 +480,7 @@ Notes:
                                     </div>
                                 </div>
                                 <div>
-                			        <button ng-click="swfNavigation.changeTab('payment')" class="btn btn-primary w-25 nav-item" ng-class="{disabled:swfNavigation.paymentTabDisabled}">Continue to Payment</button>
+                			        <button ng-click="swfNavigation.selectTab('payment')" class="btn btn-primary w-25 nav-item" ng-class="{disabled:swfNavigation.paymentTabDisabled}">Continue to Payment</button>
             			        </div>
                 			</div>
                 			
@@ -679,10 +679,8 @@ Notes:
                                     <!-- Address block -->
                                     
                                 </div>
-
                                 <!-- Select Payment Method -->
                                 <h5 class="pb-2">Select Payment Method</h5>
-
                                 <!-- Credit Card Info -->
                                 <div role="tablist" aria-multiselectable="true" class="mb-3">
                                 	<div class="card mb-3">
@@ -765,7 +763,7 @@ Notes:
                                         <a aria-expanded="false" aria-controls="collapseTwo" class="collapsed">
                                     		<div id="headingTwo" role="tab" class="card-header">Purchase Order</div>
                                         </a>
-                                		<div  role="tabpanel" aria-labelledby="headingTwo" class="collapse">
+                                		<div role="tabpanel" aria-labelledby="headingTwo" class="collapse" id="poTab">
                                 			<div class="card-body">
                                                <form 
                                 					ng-model="OrderPayment_addOrderPayment_PO" 
@@ -789,6 +787,14 @@ Notes:
                                 							ng-model="OrderPayment_addOrderPayment_PO.purchaseOrderNumber" 
                                 							swvalidationrequired="true"
                                 						>
+                                						<input 
+                                                            type="hidden"
+                                                            name="newOrderPayment.paymentMethod.paymentMethodID" 
+                                                            id="po-paymentMethodName" 
+                                                            class="form-control" 
+                                							ng-model="OrderPayment_addOrderPayment_PO.paymentMethod.paymentMethodID" 
+                                							ng-init="OrderPayment_addOrderPayment_PO.paymentMethod.paymentMethodID = '50d8cd61009931554764385482347f3a'"
+                                						>
                                                         <sw:SwfErrorDisplay propertyIdentifier="newOrderPayment.purchaseOrderNumber"/>
                                                     </div>
                                                 </div>
@@ -804,7 +810,7 @@ Notes:
 			                                    	    class='fa fa-refresh fa-spin fa-fw'>
 			                                    	</i>
 			                                    </button>
-			                                    <button type="button" name="close" class="btn btn-link">Cancel</button>
+			                                    <button type="button" name="close" data-toggle="collapse" href="##poTab" class="btn btn-link">Cancel</button>
                                                 </form>
                                 		    </div>
                                 		</div>
@@ -815,27 +821,58 @@ Notes:
                                         <a  aria-expanded="false" aria-controls="collapseThree" class="collapsed">
                                             <div id="headingThree" role="tab" class="card-header">Gift Card</div>
                                         </a>
-                                        <div  role="tabpanel" aria-labelledby="headingThree" class="collapse">
+                                        <div  role="tabpanel" aria-labelledby="headingThree" class="collapse" id="giftCardTab">
                                             <div class="card-body">
-                                                <!-- Add Payment Success/Fail -->
-                                                <div class="alert alert-success">Gift Card Payment added.</div>
-                                                <div class="alert alert-danger">Error adding gift card payment. See below for errors.</div>
-
-                                                <form action="##">
+                                                <form
+                                                    ng-model="OrderPayment_addOrderPayment_GC" 
+													swf-form 
+													data-method="addOrderPayment"
+                                                >
+                                                    <!-- Add Payment Success/Fail -->
+                                                    <div class="alert alert-success" ng-show="swfForm.successfulActions.length">Gift card added.</div>
+                                                    <div class="alert alert-danger" ng-show="swfForm.failureActions.length">Error adding gift card. See below for errors.</div>
+                                                
                                                     <div class="row">
                                                     <div class="form-group col-md-7">
                                                         <label for="card-name" class="form-label">Gift Card Number</label>
-                                                        <input type="text" name="gift-card" placeholder="Gift Card Number" id="gift-card" class="form-control" required>
-                                                        <div class="px-2 mt-1 bg-danger text-white"><small>Gift Card Number Required</small></div>
+                                                        <input
+                                                            type="text"
+                                                            name="newOrderPayment.giftCardNumber" 
+                                                            placeholder="Gift Card Number" 
+                                                            id="gc-number" 
+                                                            class="form-control" 
+                                							ng-model="OrderPayment_addOrderPayment_GC.giftCard" 
+                                							swvalidationrequired="true"
+                                						> 
+                                						<input 
+                                                            type="hidden"
+                                                            name="newOrderPayment.paymentMethod.paymentMethodID" 
+                                                            id="gc-paymentMethodName" 
+                                                            class="form-control" 
+                                							ng-model="OrderPayment_addOrderPayment_GC.paymentMethod.paymentMethodID"
+                                							ng-init="OrderPayment_addOrderPayment_GC.paymentMethod.paymentMethodID = '50d8cd61009931554764385482347f3a'"
+                                						>
+                                                        <sw:SwfErrorDisplay propertyIdentifier="newOrderPayment.giftCardNumber"/>
                                                     </div>
                                                 </div>
-
+    
                                                 <!-- Gift Card Submit & Close buttons -->
-                                                <button type="submit" name="submit" class="btn btn-primary w-25">Apply</button>
-                                                <button type="button" name="addPayment" class="btn btn-primary w-25 disabled"><i class="fa fa-refresh fa-spin fa-fw"></i></button>
-                                                <button type="button" name="close" class="btn btn-link">Cancel</button>
+                                                <button 
+                                                    ng-click="swfForm.submitForm()" 
+			                                    	ng-class="{disabled:swfForm.loading}" 
+			                                    	class="btn btn-primary btn-block"
+			                                    >
+                                                    {{(swfForm.loading ? '' : 'Add Payment')}}
+			                                    	<i 
+			                                    	    ng-show="swfForm.loading" 
+			                                    	    class='fa fa-refresh fa-spin fa-fw'>
+			                                    	</i>
+			                                    </button>
+			                                    <button type="button" name="close" data-toggle="collapse" href="##giftCardTab" class="btn btn-link">Cancel</button>
+                                                
                                                 </form>
-                                        </div></div>
+                                            </div>
+                                        </div>
                                     </div>
 
                                 </div>
