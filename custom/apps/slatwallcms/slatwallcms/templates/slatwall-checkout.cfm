@@ -91,7 +91,6 @@ Notes:
         <div class="row">
             <!-- Checkout body -->
             <div class="col-12 col-md-8">
-
                 <div class="card">
                     <div class="card-header">
                         <!-- Checkout tabbed nav -->
@@ -480,7 +479,7 @@ Notes:
                                     </div>
                                 </div>
                                 <div>
-                			        <button ng-click="swfNavigation.selectTab('payment')" class="btn btn-primary w-25 nav-item" ng-class="{disabled:swfNavigation.paymentTabDisabled}">Continue to Payment</button>
+                			        <button ng-click="swfNavigation.showTab('payment')" class="btn btn-primary w-25 nav-item" ng-disabled="swfNavigation.paymentTabDisabled">Continue to Payment</button>
             			        </div>
                 			</div>
                 			
@@ -631,15 +630,17 @@ Notes:
                                 <h5>Select Billing Address</h5>
                                 <!-- Billing Dropdown Select -->
                                 <select class="form-control my-3" name="billingAddress" required 
-                                	ng-model="slatwall.cart.billingAccountAddress.accountAddressID"
-                                	ng-change="slatwall.selectBillingAccountAddress(slatwall.cart.orderPayments[slatwall.cart.orderPayments.length-1].billingAccountAddress.accountAddressID)"
+                                	ng-model="billingAddressID"
+                                	ng-change="slatwall.selectBillingAccountAddress(billingAddressID)"
                                 	ng-disabled="slatwall.getRequestByAction('addBillingAddressUsingAccountAddress').loading"
+                                	ng-init="billingAddressID = slatwall.cart.orderPayments[slatwall.cart.orderPayments.length-1].billingAccountAddress.accountAddressID"
                                 >
                                 	<option  value="">Select Account Address</option>
                                     <option ng-repeat="accountAddress in slatwall.account.accountAddresses track by accountAddress.accountAddressID" 
-                                    	ng-selected="accountAddress.accountAddressID == slatwall.cart.orderPayments[slatwall.cart.orderPayments.length-1].billingAccountAddress.accountAddressID"
                                     	ng-value="accountAddress.accountAddressID" 
                                     	ng-bind="accountAddress.getSimpleRepresentation()"
+                                    	 ng-selected="accountAddress.accountAddressID == billingAddressID"
+
                                     >
                                     </option>
                                 </select>
@@ -651,8 +652,8 @@ Notes:
                                                 <div class="form-check">
                                                     
                                                     <input class="form-check-input" type="radio" name="address" 
-                                                    	ng-value="accountAddress.accountAddressID" ng-checked="accountAddress.accountAddressID == slatwall.cart.orderPayments[slatwall.cart.orderPayments.length-1].billingAccountAddress.accountAddressID"
-                                                    	ng-model="slatwall.cart.orderPayments[slatwall.cart.orderPayments.length-1].billingAccountAddress.accountAddressID" ng-click="slatwall.selectBillingAccountAddress(accountAddress.accountAddressID)" 
+                                                    	ng-value="accountAddress.accountAddressID"
+                                                    	ng-model="billingAddressID" ng-click="slatwall.selectBillingAccountAddress(billingAddressID)" 
                                                     >
                                                     
                                                     <label class="form-check-label" for="address1">Selected</label>
@@ -882,12 +883,8 @@ Notes:
 
                                 <!-- Place Orders & Review Order buttons -->
                                 <!-- Add disabled class until all criteria is met -->
-                                <button type="button" name="review" class="btn btn-secondary w-25 disabled">Review Order</button>
-                                <button type="button" name="review" class="btn btn-secondary w-25 disabled"><i class="fa fa-refresh fa-spin fa-fw"></i></button>
-					
-                                <button type="submit" name="submit" class="btn btn-primary w-25 disabled">Place Order</button>
-                                <button type="submit" class="btn btn-primary w-25 disabled"><i class="fa fa-refresh fa-spin fa-fw"></i></button>
-
+                                <button type="button" name="review" class="btn btn-secondary w-25" ng-disabled=swfNavigation.reviewTabDisabled ng-click="swfNavigation.showTab('review')">Review Order</button>
+                                <button type="submit" name="submit" class="btn btn-primary w-25" ng-disabled=swfNavigation.reviewTabDisabled >Place Order</button>
                             </div>
                             <!-- //Payment-tab 3  -->
 
@@ -1008,7 +1005,7 @@ Notes:
                                 </div>
 
                                 <!-- Place Order Button  -->
-                                <button ng-click="slatwall.doAction('placeOrder')" class="btn btn-primary btn-block" ng-class="{disabled:slatwall.getRequestByAction('placeOrder').loading}">{{slatwall.getRequestByAction('placeOrder').loading ? '' : 'PlaceOrder'}}
+                                <button ng-click="slatwall.doAction('placeOrder')" class="btn btn-primary btn-block" ng-class="{disabled:slatwall.getRequestByAction('placeOrder').loading}">{{slatwall.getRequestByAction('placeOrder').loading ? '' : 'Place Order'}}
                                 	<i ng-show="slatwall.getRequestByAction('placeOrder').loading" class="fa fa-refresh fa-spin fa-fw"></i>
                                 </button>
 
