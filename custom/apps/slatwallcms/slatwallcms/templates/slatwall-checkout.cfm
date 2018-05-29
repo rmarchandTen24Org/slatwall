@@ -397,41 +397,46 @@ Notes:
                                                 >
                                                 </option>
                                             </select>
-            
-                                            <div class="card-deck mb-3" ng-repeat="accountAddress in slatwall.account.accountAddresses track by accountAddress.accountAddressID">
-                                                <!-- Shipping Address block selector -->
-                                                <address class="card border-secondary" >
-                                                    <div class="card-header">
-                                                        <div class="form-check">
-                                                            <input class="form-check-input" type="radio" name="address" 
-                                                            	ng-value="accountAddress.accountAddressID" ng-checked="accountAddress.accountAddressID == orderFulfillment.accountAddress.accountAddressID"
-                                                            	ng-model="orderFulfillment.accountAddress.accountAddressID" ng-click="slatwall.selectShippingAccountAddress(accountAddress.accountAddressID,orderFulfillment.orderFulfillmentID)" 
-                                                            >
-                                                            <label class="form-check-label" for="address1">Selected</label>
-                                                            <!-- Select Address Loader -->
-                                                            <i ng-show="slatwall.loadingThisRequest('addShippingAddressUsingAccountAddress',{accountAddressID:accountAddress.accountAddressID})" class="fa fa-refresh fa-spin fa-fw my-1 float-right"></i>
-                                                        </div>
-                                                    </div>
-                                                    <div class="card-body">
-                                                        <strong ng-bind="accountAddress.address.name"></strong><br>
-                                                        {{accountAddress.address.streetAddress}}<br>
-                                                        {{accountAddress.address.street2Address}}<br ng-if="accountAddress.address.street2Address">
-                                                        {{accountAddress.address.city}}, {{accountAddress.address.stateCode}} {{accountAddress.address.postalCode}}<br>
-                                                        {{accountAddress.address.phoneNumber}}
-                                                        <hr>
-                                                        <a href="##" ng-click="slatwall.selectedAccountAddress=accountAddress;" class="card-link float-left">Edit</a>
-                                                        <a href="##" ng-disabled="slatwall.getRequestByAction('removeAccountAddress').loading" 
-                                                        	ng-click="slatwall.deleteAccountAddress(accountAddress.accountAddressID)" class="card-link float-right"
-                                                        >
-                                                        	{{slatwall.getRequestByAction('deleteAccountAddress').loading ? '':'Delete'}}
-                                                        	<i ng-show="slatwall.loadingThisRequest('deleteAccountAddress',{accountAddressID:accountAddress.accountAddressID})" class="fa fa-refresh fa-spin fa-fw my-1 float-right"></i>
-                                                        </a>
-                                                    </div>
-                                                </address>
-            
-                                                <!-- Address block -->
-                                                
-                                            </div>
+                                            <form>
+                                                <div class="card-deck mb-3" ng-repeat="accountAddress in slatwall.account.accountAddresses track by accountAddress.accountAddressID">
+                                                    <!-- Shipping Address block selector -->
+                                                    
+                                                        <address class="card border-secondary" >
+                                                            
+                                                            <div class="card-header">
+                                                                <div class="form-check">
+                                                                    <input class="form-check-input" type="radio" name="address" 
+                                                                    	ng-value="accountAddress.accountAddressID" 
+                                                                    	ng-model="orderFulfillment.accountAddress.accountAddressID" ng-click="slatwall.selectShippingAccountAddress(accountAddress.accountAddressID,orderFulfillment.orderFulfillmentID)" 
+                                                                    >
+                                                                    <label class="form-check-label" for="address1">Selected</label>
+                                                                    <!-- Select Address Loader -->
+                                                                    <i ng-show="slatwall.loadingThisRequest('addShippingAddressUsingAccountAddress',{accountAddressID:accountAddress.accountAddressID})" class="fa fa-refresh fa-spin fa-fw my-1 float-right"></i>
+                                                                </div>
+                                                            </div>
+                                                            
+                                                            <div class="card-body">
+                                                                <strong ng-bind="accountAddress.address.name"></strong><br>
+                                                                {{accountAddress.address.streetAddress}}<br>
+                                                                {{accountAddress.address.street2Address}}<br ng-if="accountAddress.address.street2Address">
+                                                                {{accountAddress.address.city}}, {{accountAddress.address.stateCode}} {{accountAddress.address.postalCode}}<br>
+                                                                {{accountAddress.address.phoneNumber}}
+                                                                <hr>
+                                                                <a href="##" ng-click="slatwall.selectedAccountAddress=accountAddress;" class="card-link float-left">Edit</a>
+                                                                <a href="##" ng-disabled="slatwall.getRequestByAction('removeAccountAddress').loading" 
+                                                                	ng-click="slatwall.deleteAccountAddress(accountAddress.accountAddressID)" class="card-link float-right"
+                                                                >
+                                                                	{{slatwall.getRequestByAction('deleteAccountAddress').loading ? '':'Delete'}}
+                                                                	<i ng-show="slatwall.loadingThisRequest('deleteAccountAddress',{accountAddressID:accountAddress.accountAddressID})" class="fa fa-refresh fa-spin fa-fw my-1 float-right"></i>
+                                                                </a>
+                                                            </div>
+                                                        </address>
+                                                    
+                
+                                                    <!-- Address block -->
+                                                    
+                                                </div>
+                                            </form>
                                         </div>
         
                                         <!-- Shipping Delievery Options -->
@@ -629,14 +634,16 @@ Notes:
                                 <!-- Select Existing Billing address -->
                                 <h5>Select Billing Address</h5>
                                 <!-- Billing Dropdown Select -->
+                                
                                 <select class="form-control my-3" name="billingAddress" required 
-                                	ng-model="billingAddressID"
-                                	ng-change="slatwall.selectBillingAccountAddress(billingAddressID)"
+                                	ng-model="slatwall.cart.billingAccountAddress.accountAddressID"
+                                	ng-change="slatwall.selectBillingAccountAddress(slatwall.cart.billingAccountAddress.accountAddressID)"
                                 	ng-disabled="slatwall.getRequestByAction('addBillingAddressUsingAccountAddress').loading"
                                 	ng-init="billingAddressID = slatwall.cart.orderPayments[slatwall.cart.orderPayments.length-1].billingAccountAddress.accountAddressID"
                                 >
                                 	<option  value="">Select Account Address</option>
                                     <option ng-repeat="accountAddress in slatwall.account.accountAddresses track by accountAddress.accountAddressID" 
+                                    	ng-selected="accountAddress.accountAddressID == slatwall.cart.billingAccountAddress.accountAddressID"
                                     	ng-value="accountAddress.accountAddressID" 
                                     	ng-bind="accountAddress.getSimpleRepresentation()"
                                     	 ng-selected="accountAddress.accountAddressID == billingAddressID"
@@ -652,8 +659,8 @@ Notes:
                                                 <div class="form-check">
                                                     
                                                     <input class="form-check-input" type="radio" name="address" 
-                                                    	ng-value="accountAddress.accountAddressID"
-                                                    	ng-model="billingAddressID" ng-click="slatwall.selectBillingAccountAddress(billingAddressID)" 
+                                                    	ng-value="accountAddress.accountAddressID" 
+                                                    	ng-model="slatwall.cart.billingAccountAddress.accountAddressID" ng-click="slatwall.selectBillingAccountAddress(accountAddress.accountAddressID)" 
                                                     >
                                                     
                                                     <label class="form-check-label" for="address1">Selected</label>
