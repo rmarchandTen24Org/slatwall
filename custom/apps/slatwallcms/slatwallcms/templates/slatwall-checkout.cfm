@@ -639,15 +639,12 @@ Notes:
                                 	ng-model="slatwall.cart.billingAccountAddress.accountAddressID"
                                 	ng-change="slatwall.selectBillingAccountAddress(slatwall.cart.billingAccountAddress.accountAddressID)"
                                 	ng-disabled="slatwall.getRequestByAction('addBillingAddressUsingAccountAddress').loading"
-                                	ng-init="billingAddressID = slatwall.cart.orderPayments[slatwall.cart.orderPayments.length-1].billingAccountAddress.accountAddressID"
                                 >
                                 	<option  value="">Select Account Address</option>
                                     <option ng-repeat="accountAddress in slatwall.account.accountAddresses track by accountAddress.accountAddressID" 
                                     	ng-selected="accountAddress.accountAddressID == slatwall.cart.billingAccountAddress.accountAddressID"
                                     	ng-value="accountAddress.accountAddressID" 
                                     	ng-bind="accountAddress.getSimpleRepresentation()"
-                                    	 ng-selected="accountAddress.accountAddressID == billingAddressID"
-
                                     >
                                     </option>
                                 </select>
