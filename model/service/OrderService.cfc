@@ -863,7 +863,8 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 			arguments.processObject.addError("promotionCode", rbKey('validate.promotionCode.overMaximumUseCount'), true);
 		//If promo site does not match order site, display incorrect site message
 		} else if( 
-			!isNull(pc.getPromotion().getSite()) 
+			!isNull(pc.getPromotion().getSite())
+			&& !isNull(arguments.order.getOrderCreatedSite())
 			&& pc.getPromotion().getSite().getSiteID() != arguments.order.getOrderCreatedSite().getSiteID() 
 		) {
 			arguments.processObject.addError("promotionCode", rbKey('validate.promotionCode.incorrectSite'), true);
