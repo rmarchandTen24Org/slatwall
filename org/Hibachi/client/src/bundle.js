@@ -40366,7 +40366,7 @@ var PublicService = /** @class */ (function () {
             if (typeof address === 'boolean' && !angular.isDefined(refresh)) {
                 refresh = address;
             }
-            if (!angular.isDefined(countryCode))
+            if (!countryCode)
                 countryCode = "US";
             var urlBase = _this.baseActionPath + 'getStateCodeOptionsByCountryCode/';
             if (!_this.getRequestByAction('getStateCodeOptionsByCountryCode') || !_this.getRequestByAction('getStateCodeOptionsByCountryCode').loading || refresh) {
@@ -40775,8 +40775,8 @@ var PublicService = /** @class */ (function () {
             }
         };
         /** Selects shippingAddress*/
-        this.selectShippingAccountAddress = function (accountAddressID) {
-            _this.doAction('addShippingAddressUsingAccountAddress', { accountAddressID: accountAddressID });
+        this.selectShippingAccountAddress = function (accountAddressID, orderFulfillmentID) {
+            _this.doAction('addShippingAddressUsingAccountAddress', { accountAddressID: accountAddressID, fulfillmentID: orderFulfillmentID });
         };
         /** Selects shippingAddress*/
         this.selectBillingAccountAddress = function (accountAddressID) {
@@ -40818,16 +40818,20 @@ var PublicService = /** @class */ (function () {
         };
         /** Select a shipping method - temporarily changes the selected method on the front end while awaiting official change from server
         */
-        this.selectShippingMethod = function (option, fulfillmentIndex) {
+        this.selectShippingMethod = function (option, orderFulfillment) {
+            var fulfillmentID = '';
+            if (typeof orderFulfillment == 'string') {
+                orderFulfillment = _this.cart.orderFulfillments[orderFulfillment];
+            }
             var data = {
                 'shippingMethodID': option.value,
-                'fulfillmentID': _this.cart.orderFulfillments[fulfillmentIndex].orderFulfillmentID
+                'fulfillmentID': orderFulfillment.orderFulfillmentID
             };
             _this.doAction('addShippingMethodUsingShippingMethodID', data);
-            if (!_this.cart.orderFulfillments[fulfillmentIndex].data.shippingMethod) {
-                _this.cart.orderFulfillments[fulfillmentIndex].data.shippingMethod = {};
+            if (!orderFulfillment.data.shippingMethod) {
+                orderFulfillment.data.shippingMethod = {};
             }
-            _this.cart.orderFulfillments[fulfillmentIndex].data.shippingMethod.shippingMethodID = option.value;
+            orderFulfillment.data.shippingMethod.shippingMethodID = option.value;
         };
         /** Removes promotional code from order*/
         this.removePromoCode = function (code) {
@@ -43336,20 +43340,26 @@ var SWFFormController = /** @class */ (function () {
         };
         this.getFormData = function () {
             var formData = {};
+            console.log(_this.form);
             for (var key in _this.form) {
                 if (key.indexOf('$') == -1) {
-                    formData[key] = _this.form[key].$modalValue || _this.form[key].$viewValue;
+                    formData[key] = _this.form[key].$modelValue || _this.form[key].$viewValue;
                 }
             }
-            console.log('test', formData);
+            console.log('test', formData, _this.ngModel);
             return formData;
         };
         this.submitForm = function () {
             //example of entityName Account_Login
             if (_this.form.$valid) {
-                _this.$rootScope.slatwall.doAction(_this.method, _this.getFormData()).then(function (result) {
+                _this.loading = true;
+                return _this.$rootScope.slatwall.doAction(_this.method, _this.getFormData()).then(function (result) {
                     if (!result)
-                        return;
+                        return result;
+                    _this.loading = false;
+                    _this.successfulActions = result.successfulActions;
+                    _this.failureActions = result.failureActions;
+                    _this.errors = result.errors;
                     if (result.successfulActions.length) {
                         //if we have an array of actions and they're all complete, or if we have just one successful action
                         if (_this.sRedirectUrl) {
@@ -43363,10 +43373,12 @@ var SWFFormController = /** @class */ (function () {
                             _this.$rootScope.slatwall.redirectExact(_this.fRedirectUrl);
                         }
                     }
+                    return result;
                 });
             }
             else {
                 _this.form.$setSubmitted(true);
+                return new Promise(function (resolve, reject) { return []; });
             }
         };
     }

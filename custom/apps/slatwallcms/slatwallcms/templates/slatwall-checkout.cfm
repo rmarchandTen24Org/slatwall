@@ -629,56 +629,59 @@ Notes:
 
                                 <!-- Select Existing Billing address -->
                                 <h5>Select Billing Address</h5>
-
                                 <!-- Billing Dropdown Select -->
                                 <select class="form-control my-3" name="billingAddress" required 
                                 	ng-model="slatwall.cart.billingAccountAddress.accountAddressID"
-                                	ng-change="slatwall.selectBillingAccountAddress(slatwall.cart.billingAccountAddress.accountAddressID)"
+                                	ng-change="slatwall.selectBillingAccountAddress(slatwall.cart.orderPayments[slatwall.cart.orderPayments.length-1].billingAccountAddress.accountAddressID)"
                                 	ng-disabled="slatwall.getRequestByAction('addBillingAddressUsingAccountAddress').loading"
                                 >
                                 	<option  value="">Select Account Address</option>
                                     <option ng-repeat="accountAddress in slatwall.account.accountAddresses track by accountAddress.accountAddressID" 
-                                    	ng-selected="accountAddress.accountAddressID == slatwall.cart.billingAccountAddress.accountAddressID"
+                                    	ng-selected="accountAddress.accountAddressID == slatwall.cart.orderPayments[slatwall.cart.orderPayments.length-1].billingAccountAddress.accountAddressID"
                                     	ng-value="accountAddress.accountAddressID" 
                                     	ng-bind="accountAddress.getSimpleRepresentation()"
                                     >
                                     </option>
                                 </select>
-
-                                <div class="card-deck mb-3" ng-repeat="accountAddress in slatwall.account.accountAddresses track by accountAddress.accountAddressID">
-                                    <!-- Shipping Address block selector -->
-                                    <address class="card border-secondary" >
-                                        <div class="card-header">
-                                            <div class="form-check">
-                                                <input class="form-check-input" type="radio" name="address" 
-                                                	ng-value="accountAddress.accountAddressID" ng-checked="accountAddress.accountAddressID == slatwall.cart.billingAccountAddress.accountAddressID"
-                                                	ng-model="slatwall.cart.billingAccountAddress.accountAddressID" ng-click="slatwall.selectBilliingAccountAddress(accountAddress.accountAddressID)" 
-                                                >
-                                                <label class="form-check-label" for="address1">Selected</label>
-                                                <!-- Select Address Loader -->
-                                                <i ng-show="slatwall.getRequestByAction('addBillingAddressUsingAccountAddress').loading" class="fa fa-refresh fa-spin fa-fw my-1 float-right"></i>
+                                <form>
+                                    <div class="card-deck mb-3" ng-repeat="accountAddress in slatwall.account.accountAddresses track by accountAddress.accountAddressID">
+                                        <!-- Shipping Address block selector -->
+                                        <address class="card border-secondary" >
+                                            <div class="card-header">
+                                                <div class="form-check">
+                                                    
+                                                    <input class="form-check-input" type="radio" name="address" 
+                                                    	ng-value="accountAddress.accountAddressID" ng-checked="accountAddress.accountAddressID == slatwall.cart.orderPayments[slatwall.cart.orderPayments.length-1].billingAccountAddress.accountAddressID"
+                                                    	ng-model="slatwall.cart.orderPayments[slatwall.cart.orderPayments.length-1].billingAccountAddress.accountAddressID" ng-click="slatwall.selectBillingAccountAddress(accountAddress.accountAddressID)" 
+                                                    >
+                                                    
+                                                    <label class="form-check-label" for="address1">Selected</label>
+                                                    <!-- Select Address Loader -->
+                                                    <i ng-show="slatwall.getRequestByAction('addBillingAddressUsingAccountAddress').loading" class="fa fa-refresh fa-spin fa-fw my-1 float-right"></i>
+                                                </div>
                                             </div>
-                                        </div>
-                                        <div class="card-body">
-                                            <strong ng-bind="accountAddress.address.name"></strong><br>
-                                            {{accountAddress.address.streetAddress}}<br>
-                                            {{accountAddress.address.street2Address}}<br ng-if="accountAddress.address.street2Address">
-                                            {{accountAddress.address.city}}, {{accountAddress.address.stateCode}} {{accountAddress.address.postalCode}}<br>
-                                            {{accountAddress.address.phoneNumber}}
-                                            <hr>
-                                            <a href="##" ng-click="slatwall.selectedBillingAccountAddress=accountAddress;" class="card-link float-left">Edit</a>
-                                            <a href="##" ng-disabled="slatwall.getRequestByAction('removeAccountAddress').loading" 
-                                            	ng-click="slatwall.deleteAccountAddress(accountAddress.accountAddressID)" class="card-link float-right"
-                                            >
-                                            	{{slatwall.getRequestByAction('deleteAccountAddress').loading ? '':'Delete'}}
-                                            	<i ng-show="slatwall.getRequestByAction('deleteAccountAddress').loading" class="fa fa-refresh fa-spin fa-fw my-1 float-right"></i>
-                                            </a>
-                                        </div>
-                                    </address>
+                                            <div class="card-body">
+                                                <strong ng-bind="accountAddress.address.name"></strong><br>
+                                                {{accountAddress.address.streetAddress}}<br>
+                                                {{accountAddress.address.street2Address}}<br ng-if="accountAddress.address.street2Address">
+                                                {{accountAddress.address.city}}, {{accountAddress.address.stateCode}} {{accountAddress.address.postalCode}}<br>
+                                                {{accountAddress.address.phoneNumber}}
+                                                <hr>
+                                                <a href="##" ng-click="slatwall.selectedBillingAccountAddress=accountAddress;" class="card-link float-left">Edit</a>
+                                                <a href="##" ng-disabled="slatwall.getRequestByAction('removeAccountAddress').loading" 
+                                                	ng-click="slatwall.deleteAccountAddress(accountAddress.accountAddressID)" class="card-link float-right"
+                                                >
+                                                	{{slatwall.getRequestByAction('deleteAccountAddress').loading ? '':'Delete'}}
+                                                	<i ng-show="slatwall.getRequestByAction('deleteAccountAddress').loading" class="fa fa-refresh fa-spin fa-fw my-1 float-right"></i>
+                                                </a>
+                                            </div>
+                                        </address>
+    
+                                        <!-- Address block -->
+                                        
+                                    </div>
+                                </form>
 
-                                    <!-- Address block -->
-                                    
-                                </div>
                                 <!-- Select Payment Method -->
                                 <h5 class="pb-2">Select Payment Method</h5>
                                 <!-- Credit Card Info -->
@@ -701,7 +704,7 @@ Notes:
 													
                                 					<div class="row">
                                 						<input type="hidden" name="accountAddressID" id="billingAccountAddress-addressID" class="form-control"
-	                        								ng-model="slatwall.cart.billingAccountAddress.accountAddressID"
+	                        								ng-model="slatwall.cart.orderPayments[slatwall.cart.orderPayments.length-1].billingAccountAddress.accountAddressID"
 	                        							>
                                 						<div class="form-group col-md-6">
                                 							<label for="card-name" class="form-label">Name on Card</label>
@@ -967,11 +970,11 @@ Notes:
                                             <a href="##" class="float-right">Edit</a>
                                         </div>
                                         <div class="card-body">
-                                            <strong ng-bind="slatwall.cart.orderPayments[0].billingAddress.name"></strong><br>
-                                            {{slatwall.cart.orderPayments[0].billingAddress.streetAddress}}<br>
-                                            {{slatwall.cart.orderPayments[0].billingAddress.street2Address}}<br ng-if="slatwall.cart.orderPayments[0].billingAddress.street2Address"/>
-                                            {{slatwall.cart.orderPayments[0].billingAddress.city}}, {{slatwall.cart.orderPayments[0].billingAddress.stateCode}} {{slatwall.cart.orderPayments[0].billingAddress.postalCode}}<br>
-                                            {{slatwall.cart.orderPayments[0].billingAddress.phoneNumber}}
+                                            <strong ng-bind="slatwall.cart.orderPayments[slatwall.cart.orderPayments.length-1].billingAddress.name"></strong><br>
+                                            {{slatwall.cart.orderPayments[slatwall.cart.orderPayments.length-1].billingAddress.streetAddress}}<br>
+                                            {{slatwall.cart.orderPayments[slatwall.cart.orderPayments.length-1].billingAddress.street2Address}}<br ng-if="slatwall.cart.orderPayments[slatwall.cart.orderPayments.length-1].billingAddress.street2Address"/>
+                                            {{slatwall.cart.orderPayments[slatwall.cart.orderPayments.length-1].billingAddress.city}}, {{slatwall.cart.orderPayments[slatwall.cart.orderPayments.length-1].billingAddress.stateCode}} {{slatwall.cart.orderPayments[slatwall.cart.orderPayments.length-1].billingAddress.postalCode}}<br>
+                                            {{slatwall.cart.orderPayments[slatwall.cart.orderPayments.length-1].billingAddress.phoneNumber}}
                                         </div>
                                     </address>
 
@@ -981,16 +984,16 @@ Notes:
                                             <span class="float-left"><i class="fa fa-check-circle"></i> Payment Method</span>
                                             <a href="##" class="float-right">Edit</a>
                                         </div>
-                                        <div class="card-body" ng-switch="slatwall.cart.orderPayments[0].creditCardType.toLowerCase()">
+                                        <div class="card-body" ng-switch="slatwall.cart.orderPayments[slatwall.cart.orderPayments.length-1].creditCardType.toLowerCase()">
                                             <h6>Credit Card</h6>
                                             <i class="fa fa-cc-visa fa-2x" ng-switch-when="visa"></i>
                                             <i class="fa fa-cc-mastercard fa-2x" ng-switch-when="mastercard"></i>
                                             <i class="fa fa-cc-discover fa-2x" ng-switch-when="discover"></i>
                                             <i class="fa fa-cc-amex fa-2x" ng-switch-when="amex"></i>
 
-                                            ****{{slatwall.cart.orderPayments[0].creditCardLastFour}}
+                                            ****{{slatwall.cart.orderPayments[slatwall.cart.orderPayments.length-1].creditCardLastFour}}
 
-                                            <small class="d-block">Amount: {{slatwall.cart.orderPayments[0].amount|currency}}</small>
+                                            <small class="d-block">Amount: {{slatwall.cart.orderPayments[slatwall.cart.orderPayments.length-1].amount|currency}}</small>
 											<!---TODO:gift card and purchase order
                                             <h6 class="mt-3">Gift Card</h6>
 

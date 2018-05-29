@@ -165,17 +165,19 @@ class PublicService {
 
     /** accessors for states */
     public getStates=(countryCode:string, address:any, refresh=false):any =>  {
+        
        if(address && address.data){
            countryCode = address.data.countrycode || address.countrycode;
        }
        if(typeof address === 'boolean' && !angular.isDefined(refresh)){
        		refresh = address;
        }
-       if (!angular.isDefined(countryCode)) countryCode = "US";
+       if (!countryCode) countryCode = "US";
        
        let urlBase = this.baseActionPath+'getStateCodeOptionsByCountryCode/';
 
        if(!this.getRequestByAction('getStateCodeOptionsByCountryCode') || !this.getRequestByAction('getStateCodeOptionsByCountryCode').loading || refresh){
+           
            this.stateDataPromise = this.getData(urlBase, "states", "?countryCode="+countryCode);
            return this.stateDataPromise;
        }
